@@ -1,0 +1,50 @@
+.pageContainerWrapper {
+  display: flex;
+  height: 100%;
+  width: 100%;
+
+  &.sidebarFirst {
+    flex-direction: row; // Sidebar zuerst (links)
+
+    .pageContainerSidebar {
+      // Stile für die linke Sidebar
+      order: 1;
+    }
+
+    .topbarsBodyContainer {
+      order: 2;
+      width: 100%;
+    }
+  }
+
+  &.topbarFirst {
+    flex-direction: row; // Topbar zuerst, Sidebar rechts
+
+    .pageContainerSidebar {
+      // Stile für die rechte Sidebar
+      order: 2;
+    }
+
+    .topbarsBodyContainer {
+      order: 1;
+      width: 100%;
+    }
+  }
+
+  .topbarsBodyContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    .pageContainerTopbar {
+      width: 100%;
+      height: auto;
+    }
+
+    .pageContainerBody {
+      flex: 1;
+      overflow-y: auto;
+      background-color: #f7fafa;
+    }
+  }
+}

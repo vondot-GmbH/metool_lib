@@ -1,0 +1,32 @@
+.splitLayoutWrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+
+  &ReverseOnMobile {
+    @media (max-width: 830px) {
+      flex-direction: column;
+    }
+  }
+
+  .splitContainerWrapper {
+    height: 100%;
+    width: auto;
+    display: flex;
+    transition: 0.45s all ease;
+  }
+}
+
+.splitLayoutFlexColumn {
+  flex-direction: column;
+}
+
+.nothingSelectedPlaceholder {
+  width: auto;
+
+  &-image {
+    width: 100%;
+    max-width: 500px;
+  }
+}
