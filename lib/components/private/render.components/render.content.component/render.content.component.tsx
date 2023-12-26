@@ -31,7 +31,6 @@ const RenderContent = ({
         layouts={childLayouts}
         breakpoints={{ xl: 1200, md: 996, xs: 480 }}
         cols={{ xl: 12, md: 6, xs: 4 }}
-        autoSize={true}
       >
         {children.map((child) => (
           <div key={child.positioning.i} className={styles.childWidget}>
