@@ -1,9 +1,9 @@
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { Widget } from "../../../../schemas/widget.schemas/widget.schema";
-import { convertToGridLayout } from "../../../../globals/helpers/layout.helper";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.content.comonent.module.scss";
+import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
+import { convertToGridLayout } from "../../../../../globals/helpers/layout.helper";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -25,7 +25,7 @@ const RenderContent = ({
     return (
       <ResponsiveGridLayout
         margin={[15, 15]}
-        onDragStart={(a, b, c, d, e) => e.stopPropagation()}
+        onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
         key={"nested-grid-" + widget.positioning.i}
         className={styles.nestedLayout}
         layouts={childLayouts}

@@ -1,10 +1,10 @@
 import { Responsive, WidthProvider } from "react-grid-layout";
-import { Widget } from "../../../../schemas/widget.schemas/widget.schema";
-import { convertToGridLayout } from "../../../../globals/helpers/layout.helper";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.screen.component.module.scss";
 import RenderContent from "../render.content.component/render.content.component";
+import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
+import { convertToGridLayout } from "../../../../../globals/helpers/layout.helper";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
