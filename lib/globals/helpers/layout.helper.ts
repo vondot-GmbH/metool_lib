@@ -40,3 +40,21 @@ export const convertToGridLayout = (
 
   return layouts as { [key: string]: Layout[] };
 };
+
+export const generateGridLayoutBackground = (args: {
+  cols: { [key in LayoutBreakpoint]: number };
+  rowHeight: number;
+  currentBreakpoint: LayoutBreakpoint;
+}) => {
+  const { cols, rowHeight, currentBreakpoint } = args;
+
+  // calculate column width based on current breakpoint
+  const columnWidth = `calc(100% / ${cols[currentBreakpoint]})`;
+
+  // generate vertical and horizontal lines for grid
+  const verticalLines = `linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 2px)`;
+  const horizontalLines = `linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 2px)`;
+
+  // return grid background value
+  return `${verticalLines} 0 0 / ${columnWidth} 100%, ${horizontalLines} 0 0 / 100% ${rowHeight}px`;
+};

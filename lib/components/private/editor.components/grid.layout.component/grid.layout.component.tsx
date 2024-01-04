@@ -1,95 +1,68 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// GridLayout.tsx
-import React, { useState, useEffect, useCallback } from "react";
-import { Responsive, WidthProvider, Layout } from "react-grid-layout";
-import "react-grid-layout/css/styles.css";
-import "react-resizable/css/styles.css";
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
+import { Responsive, WidthProvider } from "react-grid-layout";
+import {
+  convertToGridLayout,
+  generateGridLayoutBackground,
+} from "../../../../globals/helpers/layout.helper";
+import {
+  LayoutBreakpoint,
+  Widget,
+} from "../../../../schemas/widget.schemas/widget.schema";
+import {
+  BASE_BREAKPOINTS,
+  BASE_COLS,
+} from "../../../../globals/config/grid.layout.config";
+import { useEffect, useState } from "react";
 
 interface GridLayoutProps {
-  items: any[]; // Ersetzen Sie any durch den tatsächlichen Typ Ihrer Items
-  itemRenderer: (item: any) => JSX.Element; // Ersetzen Sie any entsprechend
-  breakpoints: { [key: string]: number };
-  layouts: { [key: string]: Layout[] };
-  cols: { [key: string]: number };
-  width: number;
-  margin: { [key: string]: [number, number] };
-  rowHeight: number;
-  isEditing: boolean;
-  onLayoutChange: (layout: Layout[], breakpoint: string) => void;
-  showGrid: boolean; // Zustand zum Ein- und Ausschalten des Grids
+  children: JSX.Element[];
+  content: Widget[];
+  rowHeight?: number;
+  breakpoints?: { [key: string]: number };
+  cols: { [key in LayoutBreakpoint]: number };
 }
 
-const GridLayout: React.FC<GridLayoutProps> = ({
-  items,
-  itemRenderer,
-  breakpoints,
-  layouts,
-  cols,
-  width,
-  margin,
-  rowHeight,
-  isEditing,
-  onLayoutChange,
-  //   showGrid,
-}) => {
-  const [currentBreakpoint, setCurrentBreakpoint] = useState<string>("");
+const ResponsiveGridLayout = WidthProvider(Responsive);
+type BreakpointType = string;
 
-  // Funktion zum Ermitteln des aktuellen Breakpoints
-  const getCurrentBreakpoint = useCallback(
-    (width: number): string => {
-      let breakpoint = "lg"; // Standardwert als Beispiel
-      for (const [bp, bpWidth] of Object.entries(breakpoints)) {
-        if (width <= bpWidth) {
-          breakpoint = bp;
-          break;
-        }
-      }
-      return breakpoint;
-    },
-    [breakpoints]
-  );
+const GridLayout = ({
+  children,
+  content,
+  rowHeight = 50,
+  breakpoints = BASE_BREAKPOINTS,
+  cols = BASE_COLS,
+}: GridLayoutProps): JSX.Element => {
+  const layouts = convertToGridLayout(content);
+
+  const [currentBreakpoint, setCurrentBreakpoint] = useState("");
+  const [gridBackground, setGridBackground] = useState("");
+
+  const onBreakpointChange = (newBreakpoint: BreakpointType) => {
+    console.log("onBreakpointChange", newBreakpoint);
+    setCurrentBreakpoint(newBreakpoint);
+  };
 
   useEffect(() => {
-    setCurrentBreakpoint(getCurrentBreakpoint(width));
-  }, [width, getCurrentBreakpoint]);
-
-  const onLayoutChangeWrapped = useCallback(
-    (nextLayout: Layout[]) => onLayoutChange(nextLayout, currentBreakpoint),
-    [onLayoutChange, currentBreakpoint]
-  );
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   const gridStyle = useMemo(
-  //     () => ({
-  //       width,
-  //       // Optional: Ändern Sie die Hintergrundfarbe oder fügen Sie ein Bild hinzu, wenn das Grid angezeigt werden soll
-  //       //   background: showGrid ? "rgba(0, 0, 0, 0.1)" : "transparent", // Beispiel für ein einfaches Rastermuster
-  //       background: "black",
-  //     }),
-  //     [width, showGrid]
-  //   );
+    const newGridBackground = generateGridLayoutBackground({
+      cols,
+      rowHeight,
+      currentBreakpoint: currentBreakpoint as LayoutBreakpoint, // TODO ,
+    });
+    setGridBackground(newGridBackground);
+  }, [currentBreakpoint, cols, rowHeight]);
 
   return (
     <ResponsiveGridLayout
-      className="layout"
+      // className={styles.layout}
+      margin={[0, 0]}
+      key={"top-level-grid"}
       layouts={layouts}
       breakpoints={breakpoints}
       cols={cols}
       rowHeight={rowHeight}
-      width={width}
-      margin={margin[currentBreakpoint]}
-      isDraggable={isEditing}
-      isResizable={isEditing}
-      onLayoutChange={onLayoutChangeWrapped}
-      style={{
-        background: "black",
-      }}
+      style={{ background: gridBackground }}
+      onBreakpointChange={onBreakpointChange}
     >
-      {items.map((item) => (
-        <div key={item.id}>{itemRenderer(item)}</div>
-      ))}
+      {children}
     </ResponsiveGridLayout>
   );
 };
