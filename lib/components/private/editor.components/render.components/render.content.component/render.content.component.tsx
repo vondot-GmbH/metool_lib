@@ -1,17 +1,15 @@
-import { Responsive, WidthProvider } from "react-grid-layout";
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.content.comonent.module.scss";
 import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
-import { convertToGridLayout } from "../../../../../globals/helpers/layout.helper";
-
-const ResponsiveGridLayout = WidthProvider(Responsive);
+import GridLayout from "../../grid.layout.component/grid.layout.component";
 
 interface RenderContentProps {
   readonly?: boolean;
   widget: Widget;
 }
 
+// TODO change naming to RenderWidget or RenderWidgetContent
 const RenderContent = ({
   readonly,
   widget,
@@ -21,23 +19,22 @@ const RenderContent = ({
   ): JSX.Element | null => {
     if (!children || children.length === 0) return null;
 
-    const childLayouts = convertToGridLayout(children);
     return (
-      <ResponsiveGridLayout
-        margin={[15, 15]}
-        onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
+      <GridLayout
         key={"nested-grid-" + widget.positioning.i}
-        className={styles.nestedLayout}
-        layouts={childLayouts}
+        content={children}
         breakpoints={{ xl: 1200, md: 996, xs: 480 }}
         cols={{ xl: 12, md: 6, xs: 4 }}
+        rowHeight={25}
+        onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
+        //   className={styles.nestedLayout}
       >
         {children.map((child) => (
           <div key={child.positioning.i} className={styles.childWidget}>
             <RenderContent readonly={readonly} widget={child} />
           </div>
         ))}
-      </ResponsiveGridLayout>
+      </GridLayout>
     );
   };
 

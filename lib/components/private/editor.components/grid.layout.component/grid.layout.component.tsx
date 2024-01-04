@@ -14,22 +14,26 @@ import {
 import { useEffect, useState } from "react";
 
 interface GridLayoutProps {
+  key: string;
   children: JSX.Element[];
   content: Widget[];
   rowHeight?: number;
   breakpoints?: { [key: string]: number };
   cols: { [key in LayoutBreakpoint]: number };
+  onDragStart?: ReactGridLayout.ItemCallback | undefined;
 }
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 type BreakpointType = string;
 
 const GridLayout = ({
+  key,
   children,
   content,
   rowHeight = 50,
   breakpoints = BASE_BREAKPOINTS,
   cols = BASE_COLS,
+  onDragStart,
 }: GridLayoutProps): JSX.Element => {
   const layouts = convertToGridLayout(content);
 
@@ -52,9 +56,10 @@ const GridLayout = ({
 
   return (
     <ResponsiveGridLayout
+      key={key}
       // className={styles.layout}
+      onDragStart={onDragStart}
       margin={[0, 0]}
-      key={"top-level-grid"}
       layouts={layouts}
       breakpoints={breakpoints}
       cols={cols}
