@@ -4,6 +4,10 @@ import styles from "./render.screen.component.module.scss";
 import RenderContent from "../render.content.component/render.content.component";
 import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
+import {
+  BASE_BREAKPOINTS,
+  BASE_COLS,
+} from "../../../../../globals/config/grid.layout.config";
 
 interface RenderScreenProps {
   readonly?: boolean;
@@ -18,9 +22,9 @@ const RenderScreen = ({
     <GridLayout
       key={"top-level-grid"}
       content={content}
-      breakpoints={{ xl: 1200, md: 996, xs: 480 }}
-      cols={{ xl: 22, md: 6, xs: 4 }}
-      rowHeight={25}
+      rowHeight={46}
+      breakpoints={BASE_BREAKPOINTS}
+      cols={BASE_COLS}
     >
       {content.map((widget) => (
         <div key={widget.positioning.i} className={styles.widgetContainer}>

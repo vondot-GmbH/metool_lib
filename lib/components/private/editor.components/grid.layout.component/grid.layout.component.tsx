@@ -7,10 +7,6 @@ import {
   LayoutBreakpoint,
   Widget,
 } from "../../../../schemas/widget.schemas/widget.schema";
-import {
-  BASE_BREAKPOINTS,
-  BASE_COLS,
-} from "../../../../globals/config/grid.layout.config";
 import { useEffect, useState } from "react";
 
 interface GridLayoutProps {
@@ -18,7 +14,7 @@ interface GridLayoutProps {
   children: JSX.Element[];
   content: Widget[];
   rowHeight?: number;
-  breakpoints?: { [key: string]: number };
+  breakpoints: { [key: string]: number };
   cols: { [key in LayoutBreakpoint]: number };
   onDragStart?: ReactGridLayout.ItemCallback | undefined;
 }
@@ -31,17 +27,18 @@ const GridLayout = ({
   children,
   content,
   rowHeight = 50,
-  breakpoints = BASE_BREAKPOINTS,
-  cols = BASE_COLS,
+  breakpoints,
+  cols,
   onDragStart,
 }: GridLayoutProps): JSX.Element => {
   const layouts = convertToGridLayout(content);
 
-  const [currentBreakpoint, setCurrentBreakpoint] = useState("");
+  const [currentBreakpoint, setCurrentBreakpoint] = useState(""); // TODO set initial breakpoint based on window size
   const [gridBackground, setGridBackground] = useState("");
 
   const onBreakpointChange = (newBreakpoint: BreakpointType) => {
     console.log("onBreakpointChange", newBreakpoint);
+    console.log();
     setCurrentBreakpoint(newBreakpoint);
   };
 
@@ -49,7 +46,7 @@ const GridLayout = ({
     const newGridBackground = generateGridLayoutBackground({
       cols,
       rowHeight,
-      currentBreakpoint: currentBreakpoint as LayoutBreakpoint, // TODO ,
+      currentBreakpoint: currentBreakpoint as LayoutBreakpoint, // TODO
     });
     setGridBackground(newGridBackground);
   }, [currentBreakpoint, cols, rowHeight]);
@@ -64,8 +61,9 @@ const GridLayout = ({
       breakpoints={breakpoints}
       cols={cols}
       rowHeight={rowHeight}
-      style={{ background: gridBackground }}
+      style={{ background: gridBackground, height: "100%" }}
       onBreakpointChange={onBreakpointChange}
+      compactType={null}
     >
       {children}
     </ResponsiveGridLayout>

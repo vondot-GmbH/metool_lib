@@ -3,6 +3,10 @@ import "react-resizable/css/styles.css";
 import styles from "./render.content.comonent.module.scss";
 import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
+import {
+  NESTED_BREAKPOINTS,
+  NESTED_COLS,
+} from "../../../../../globals/config/grid.layout.config";
 
 interface RenderContentProps {
   readonly?: boolean;
@@ -23,8 +27,8 @@ const RenderContent = ({
       <GridLayout
         key={"nested-grid-" + widget.positioning.i}
         content={children}
-        breakpoints={{ xl: 1200, md: 996, xs: 480 }}
-        cols={{ xl: 12, md: 6, xs: 4 }}
+        breakpoints={NESTED_BREAKPOINTS}
+        cols={NESTED_COLS}
         rowHeight={25}
         onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
         //   className={styles.nestedLayout}
@@ -40,10 +44,8 @@ const RenderContent = ({
 
   return (
     <div className={styles.widgetContainer}>
-      <div className={styles.demoWidget}>
-        {widget.widgetID}
-        {renderChildrenInGrid(widget.children)}
-      </div>
+      {widget.widgetID}
+      {renderChildrenInGrid(widget.children)}
     </div>
   );
 };

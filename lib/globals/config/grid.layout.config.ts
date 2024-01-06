@@ -6,9 +6,9 @@ export const BASE_BREAKPOINTS = {
 };
 
 export const BASE_COLS = {
-  xl: 12,
-  md: 6,
-  xs: 4,
+  xl: 24,
+  md: 12,
+  xs: 8,
 };
 
 // definition for the nested grid layout on widget level
@@ -19,7 +19,7 @@ export const NESTED_BREAKPOINTS = {
 };
 
 export const NESTED_COLS = {
-  xl: 24,
-  md: 12,
-  xs: 8,
+  xl: 48,
+  md: 24,
+  xs: 16,
 };
