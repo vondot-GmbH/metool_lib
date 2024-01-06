@@ -25,13 +25,13 @@ const RenderContent = ({
 
     return (
       <GridLayout
+        isNested
         key={"nested-grid-" + widget.positioning.i}
         content={children}
         breakpoints={NESTED_BREAKPOINTS}
         cols={NESTED_COLS}
         rowHeight={25}
         onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
-        //   className={styles.nestedLayout}
       >
         {children.map((child) => (
           <div key={child.positioning.i} className={styles.childWidget}>
