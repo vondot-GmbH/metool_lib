@@ -1,6 +1,6 @@
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import styles from "./render.content.comonent.module.scss";
+import styles from "./render.widget.comonent.module.scss";
 import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
 import {
@@ -8,16 +8,12 @@ import {
   NESTED_COLS,
 } from "../../../../../globals/config/grid.layout.config";
 
-interface RenderContentProps {
+interface RenderWidgetProps {
   readonly?: boolean;
   widget: Widget;
 }
 
-// TODO change naming to RenderWidget or RenderWidgetContent
-const RenderContent = ({
-  readonly,
-  widget,
-}: RenderContentProps): JSX.Element => {
+const RenderWidget = ({ readonly, widget }: RenderWidgetProps): JSX.Element => {
   const renderChildrenInGrid = (
     children: Widget[] | undefined
   ): JSX.Element | null => {
@@ -35,7 +31,7 @@ const RenderContent = ({
       >
         {children.map((child) => (
           <div key={child.positioning.i} className={styles.childWidget}>
-            <RenderContent readonly={readonly} widget={child} />
+            <RenderWidget readonly={readonly} widget={child} />
           </div>
         ))}
       </GridLayout>
@@ -50,4 +46,4 @@ const RenderContent = ({
   );
 };
 
-export default RenderContent;
+export default RenderWidget;

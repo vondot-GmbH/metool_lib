@@ -1,7 +1,7 @@
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.screen.component.module.scss";
-import RenderContent from "../render.content.component/render.content.component";
+import RenderWidget from "../render.content.component/render.widget.component";
 import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
 import {
@@ -28,7 +28,7 @@ const RenderScreen = ({
     >
       {content.map((widget) => (
         <div key={widget.positioning.i} className={styles.widgetContainer}>
-          <RenderContent readonly={readonly} widget={widget} />
+          <RenderWidget readonly={readonly} widget={widget} />
         </div>
       ))}
     </GridLayout>
