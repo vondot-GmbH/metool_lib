@@ -1,7 +1,7 @@
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.screen.component.module.scss";
-import RenderWidget from "../render.content.component/render.widget.component";
+import RenderWidget from "../render.widget.component/render.widget.component";
 import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
 import {
