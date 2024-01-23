@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Responsive, WidthProvider } from "react-grid-layout";
 import {
@@ -10,6 +11,8 @@ import {
 } from "../../../../schemas/widget.schemas/widget.schema";
 import { useEffect, useState } from "react";
 import styles from "./grid.layout.component.module.scss";
+import ViewStore from "../../../../stores/view.store";
+import { inject, observer } from "mobx-react";
 
 interface GridLayoutProps {
   key: string;
@@ -24,6 +27,7 @@ interface GridLayoutProps {
   onDragStop?: ReactGridLayout.ItemCallback | undefined;
   onResizeStart?: ReactGridLayout.ItemCallback | undefined;
   onResizeStop?: ReactGridLayout.ItemCallback | undefined;
+  viewStore?: ViewStore;
 }
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -41,14 +45,12 @@ const GridLayout = ({
   onResizeStart: propOnResizeStart,
   onResizeStop: propOnResizeStop,
   isNested = false,
-}: //!
-
-GridLayoutProps): JSX.Element => {
+  viewStore,
+}: GridLayoutProps): JSX.Element => {
   const layouts = convertToGridLayout(content);
 
   const [currentBreakpoint, setCurrentBreakpoint] = useState(""); // TODO set initial breakpoint based on window size
   const [gridBackground, setGridBackground] = useState("");
-
   const [showGrid, setShowGrid] = useState(false);
 
   const onBreakpointChange = (newBreakpoint: BreakpointType) => {
@@ -56,8 +58,6 @@ GridLayoutProps): JSX.Element => {
     console.log();
     setCurrentBreakpoint(newBreakpoint);
   };
-
-  //!
 
   const handleDragStart = (
     layout: any,
@@ -145,4 +145,4 @@ GridLayoutProps): JSX.Element => {
   );
 };
 
-export default GridLayout;
+export default inject("viewStore")(observer(GridLayout));

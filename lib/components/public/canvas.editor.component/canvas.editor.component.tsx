@@ -1,10 +1,14 @@
-import { EXAMPLE_WIDGETS_DATA } from "../../../../src/example.data";
 import MainLayout from "../../../layouts/main.layout/main.layout";
 import { RenderScreen } from "../../../main";
+import { View } from "../../../schemas/view.schemas/view.schema";
 import Column from "../../private/general.components/column.component/column.component";
 import styles from "./canvas.editor.component.module.scss";
 
-const CanvasEditor = (): JSX.Element => {
+interface CanvasEditorProps {
+  view: View;
+}
+
+const CanvasEditor = ({ view }: CanvasEditorProps): JSX.Element => {
   const _buildTopToolBar = (): JSX.Element => {
     return (
       <div className={styles.topBar}>
@@ -29,7 +33,7 @@ const CanvasEditor = (): JSX.Element => {
         <div className={styles.canvasWrapper}>
           <div className={styles.editorCanvasWrapper}>
             <div className={styles.screenWrapper}>
-              <RenderScreen content={EXAMPLE_WIDGETS_DATA} />
+              <RenderScreen content={view.widgets} />
             </div>
           </div>
           <div className={styles.optionSidebar}>option sideBar</div>

@@ -63,6 +63,67 @@ export const EXAMPLE_WIDGETS_DATA: Widget[] = [
     },
     children: [
       {
+        widgetID: "DATA_TABLE_NESTEDDDD",
+        schema: "customer-schema",
+        positioning: {
+          i: "293190ac-9768-40cd-8116-a3944be0f8dasdf88",
+          xs: {
+            x: {
+              value: 0,
+              isInfinity: false,
+            },
+            y: {
+              value: 0,
+              isInfinity: false,
+            },
+            w: {
+              value: 4,
+              isInfinity: false,
+            },
+            h: {
+              value: 3,
+              isInfinity: false,
+            },
+          },
+          md: {
+            x: {
+              value: 0,
+              isInfinity: false,
+            },
+            y: {
+              value: 0,
+              isInfinity: false,
+            },
+            w: {
+              value: 8,
+              isInfinity: false,
+            },
+            h: {
+              value: 3,
+              isInfinity: false,
+            },
+          },
+          xl: {
+            x: {
+              value: 0,
+              isInfinity: false,
+            },
+            y: {
+              value: 0,
+              isInfinity: false,
+            },
+            w: {
+              value: 12,
+              isInfinity: false,
+            },
+            h: {
+              value: 2,
+              isInfinity: false,
+            },
+          },
+        },
+      },
+      {
         widgetID: "DATA_TABLE_NESTED",
         schema: "customer-schema",
         positioning: {

@@ -14,6 +14,7 @@ interface RenderScreenProps {
   content: Widget[];
 }
 
+// TODO rename to render view
 const RenderScreen = ({
   readonly,
   content,
