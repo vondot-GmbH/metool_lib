@@ -1,8 +1,10 @@
 export interface Widget {
-  schema: string;
+  _id?: string;
+  widgetType: string;
   widgetID: string;
   positioning: WidgetLayouts;
-  children?: Widget[];
+  parentID?: string;
+  view: string;
 }
 
 export interface WidgetLayouts {
@@ -25,3 +27,11 @@ export interface PositionValue {
 }
 
 export type LayoutBreakpoint = "xs" | "md" | "xl";
+
+export type WidgetHierarchyMap = Map<string, WidgetHierarchy>;
+
+export interface WidgetHierarchy {
+  widget: Widget;
+  children: string[]; // Speichert nur die IDs der Kinder
+  level: "ROOT" | "NESTED";
+}

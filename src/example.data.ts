@@ -1,9 +1,17 @@
+import { View } from "../lib/schemas/view.schemas/view.schema";
 import { Widget } from "../lib/schemas/widget.schemas/widget.schema";
 
-export const EXAMPLE_WIDGETS_DATA: Widget[] = [
+export const EXAMPLE_VIEW: View = {
+  _id: "5f9e9b6b9I6b4c3017f3b3a0",
+  name: "Customer View",
+};
+
+export const EXAMPLE_WIDGETS_DATA_NEW: Widget[] = [
   {
-    widgetID: "DATA_TABLE",
-    schema: "customer-schema",
+    _id: "5f9e9b6b9c6b4c0017f3b3a1",
+    widgetID: "customerTableWrapper",
+    widgetType: "WIDGET_WRAPPER",
+    view: "5f9e9b6b9I6b4c3017f3b3a0",
     positioning: {
       i: "293190ac-9768-40cd-8116-a1934be0fa56",
       xs: {
@@ -61,143 +69,22 @@ export const EXAMPLE_WIDGETS_DATA: Widget[] = [
         },
       },
     },
-    children: [
-      {
-        widgetID: "DATA_TABLE_NESTEDDDD",
-        schema: "customer-schema",
-        positioning: {
-          i: "293190ac-9768-40cd-8116-a3944be0f8dasdf88",
-          xs: {
-            x: {
-              value: 0,
-              isInfinity: false,
-            },
-            y: {
-              value: 0,
-              isInfinity: false,
-            },
-            w: {
-              value: 4,
-              isInfinity: false,
-            },
-            h: {
-              value: 3,
-              isInfinity: false,
-            },
-          },
-          md: {
-            x: {
-              value: 0,
-              isInfinity: false,
-            },
-            y: {
-              value: 0,
-              isInfinity: false,
-            },
-            w: {
-              value: 8,
-              isInfinity: false,
-            },
-            h: {
-              value: 3,
-              isInfinity: false,
-            },
-          },
-          xl: {
-            x: {
-              value: 0,
-              isInfinity: false,
-            },
-            y: {
-              value: 0,
-              isInfinity: false,
-            },
-            w: {
-              value: 12,
-              isInfinity: false,
-            },
-            h: {
-              value: 2,
-              isInfinity: false,
-            },
-          },
-        },
-      },
-      {
-        widgetID: "DATA_TABLE_NESTED",
-        schema: "customer-schema",
-        positioning: {
-          i: "293190ac-9768-40cd-8116-a3944be0f888",
-          xs: {
-            x: {
-              value: 0,
-              isInfinity: false,
-            },
-            y: {
-              value: 0,
-              isInfinity: false,
-            },
-            w: {
-              value: 4,
-              isInfinity: false,
-            },
-            h: {
-              value: 3,
-              isInfinity: false,
-            },
-          },
-          md: {
-            x: {
-              value: 0,
-              isInfinity: false,
-            },
-            y: {
-              value: 0,
-              isInfinity: false,
-            },
-            w: {
-              value: 8,
-              isInfinity: false,
-            },
-            h: {
-              value: 3,
-              isInfinity: false,
-            },
-          },
-          xl: {
-            x: {
-              value: 0,
-              isInfinity: false,
-            },
-            y: {
-              value: 0,
-              isInfinity: false,
-            },
-            w: {
-              value: 12,
-              isInfinity: false,
-            },
-            h: {
-              value: 2,
-              isInfinity: false,
-            },
-          },
-        },
-      },
-    ],
   },
+
   {
-    widgetID: "FORM",
-    schema: "customer-schema",
+    _id: "5f9e9b6b9c6b4c0017f3b3b5",
+    widgetID: "customerDataTableNested",
+    widgetType: "DATA_TABLE",
+    view: "5f9e9b6b9I6b4c3017f3b3a0",
     positioning: {
-      i: "288d3628-1114-4d6f-8698-6c9f61c8175e",
+      i: "293190ac-9768-40cd-8116-a3944be0f8dasdf88",
       xs: {
         x: {
           value: 0,
           isInfinity: false,
         },
         y: {
-          value: 3,
+          value: 0,
           isInfinity: false,
         },
         w: {
@@ -215,7 +102,7 @@ export const EXAMPLE_WIDGETS_DATA: Widget[] = [
           isInfinity: false,
         },
         y: {
-          value: 3,
+          value: 0,
           isInfinity: false,
         },
         w: {
@@ -223,7 +110,7 @@ export const EXAMPLE_WIDGETS_DATA: Widget[] = [
           isInfinity: false,
         },
         h: {
-          value: 2,
+          value: 3,
           isInfinity: false,
         },
       },
@@ -233,7 +120,7 @@ export const EXAMPLE_WIDGETS_DATA: Widget[] = [
           isInfinity: false,
         },
         y: {
-          value: 2,
+          value: 0,
           isInfinity: false,
         },
         w: {
@@ -241,7 +128,73 @@ export const EXAMPLE_WIDGETS_DATA: Widget[] = [
           isInfinity: false,
         },
         h: {
+          value: 2,
+          isInfinity: false,
+        },
+      },
+    },
+    parentID: "customerTableWrapper",
+  },
+
+  {
+    _id: "5f9e9b6b9c6b4c0017f3b399",
+    widgetID: "customerDataTableNested2",
+    widgetType: "DATA_TABLE",
+    view: "5f9e9b6b9I6b4c3017f3b3a0",
+    parentID: "customerTableWrapper",
+    positioning: {
+      i: "293190ac-9768-40cd-8116-a3944be0f888",
+      xs: {
+        x: {
+          value: 0,
+          isInfinity: false,
+        },
+        y: {
+          value: 0,
+          isInfinity: false,
+        },
+        w: {
           value: 4,
+          isInfinity: false,
+        },
+        h: {
+          value: 3,
+          isInfinity: false,
+        },
+      },
+      md: {
+        x: {
+          value: 0,
+          isInfinity: false,
+        },
+        y: {
+          value: 0,
+          isInfinity: false,
+        },
+        w: {
+          value: 8,
+          isInfinity: false,
+        },
+        h: {
+          value: 3,
+          isInfinity: false,
+        },
+      },
+      xl: {
+        x: {
+          value: 0,
+          isInfinity: false,
+        },
+        y: {
+          value: 0,
+          isInfinity: false,
+        },
+        w: {
+          value: 12,
+          isInfinity: false,
+        },
+        h: {
+          value: 2,
           isInfinity: false,
         },
       },

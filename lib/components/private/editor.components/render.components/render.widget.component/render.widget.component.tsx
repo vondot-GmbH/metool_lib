@@ -1,47 +1,66 @@
+/* eslint-disable no-empty-pattern */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.widget.comonent.module.scss";
-import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
 import {
   NESTED_BREAKPOINTS,
   NESTED_COLS,
 } from "../../../../../globals/config/grid.layout.config";
+import {
+  WidgetHierarchy,
+  WidgetHierarchyMap,
+} from "../../../../../schemas/widget.schemas/widget.schema";
+import { getFilteredWidgetMapByWidgetID } from "../../../../../globals/helpers/widget.helper";
 
 interface RenderWidgetProps {
   readonly?: boolean;
-  widget: Widget;
+  widget: WidgetHierarchy;
+  allWidgets: WidgetHierarchyMap;
 }
 
-const RenderWidget = ({ readonly, widget }: RenderWidgetProps): JSX.Element => {
-  const renderChildrenInGrid = (
-    children: Widget[] | undefined
-  ): JSX.Element | null => {
-    if (!children || children.length === 0) return null;
+const RenderWidget = ({
+  widget,
+  allWidgets,
+  readonly,
+}: RenderWidgetProps): JSX.Element => {
+  const childrenWidgets = getFilteredWidgetMapByWidgetID(
+    widget.children,
+    allWidgets
+  );
 
-    return (
-      <GridLayout
-        isNested
-        key={"nested-grid-" + widget.positioning.i}
-        content={children}
-        breakpoints={NESTED_BREAKPOINTS}
-        cols={NESTED_COLS}
-        rowHeight={25}
-        onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
-      >
-        {children.map((child) => (
-          <div key={child.positioning.i} className={styles.childWidget}>
-            <RenderWidget readonly={readonly} widget={child} />
-          </div>
-        ))}
-      </GridLayout>
-    );
-  };
+  const preparedChildrenWidgets = Array.from(childrenWidgets.values());
 
   return (
     <div className={styles.widgetContainer}>
-      {widget.widgetID}
-      {renderChildrenInGrid(widget.children)}
+      {widget.widget.widgetID}
+
+      {/* Render the children widgets recursively, if they exist */}
+      {preparedChildrenWidgets.length > 0 && (
+        <GridLayout
+          isNested
+          key={"nested-grid-" + widget.widget.positioning.i}
+          content={childrenWidgets}
+          breakpoints={NESTED_BREAKPOINTS}
+          cols={NESTED_COLS}
+          rowHeight={25}
+          onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
+        >
+          {preparedChildrenWidgets.map((childWidget) => (
+            <div
+              key={childWidget.widget.positioning.i}
+              className={styles.childWidget}
+            >
+              <RenderWidget
+                readonly={readonly}
+                widget={childWidget}
+                allWidgets={allWidgets}
+              />
+            </div>
+          ))}
+        </GridLayout>
+      )}
     </div>
   );
 };

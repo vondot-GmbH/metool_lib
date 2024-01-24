@@ -9,6 +9,7 @@ import {
 import {
   LayoutBreakpoint,
   Widget,
+  WidgetHierarchyMap,
 } from "../../../../schemas/widget.schemas/widget.schema";
 import { useEffect, useState } from "react";
 import styles from "./grid.layout.component.module.scss";
@@ -17,8 +18,8 @@ import { inject, observer } from "mobx-react";
 
 interface GridLayoutProps {
   key: string;
-  children: JSX.Element[];
-  content: Widget[];
+  children: React.ReactNode | React.ReactNode[];
+  content: WidgetHierarchyMap;
   rowHeight?: number;
   breakpoints: { [key: string]: number };
   cols: { [key in LayoutBreakpoint]: number };
@@ -48,7 +49,8 @@ const GridLayout = ({
   viewStore,
 }: GridLayoutProps): JSX.Element => {
   const layouts = convertToGridLayout(content);
-
+  console.log("layouts");
+  console.log(layouts);
   const [currentBreakpoint, setCurrentBreakpoint] = useState(""); // TODO set initial breakpoint based on window size
   const [gridBackground, setGridBackground] = useState("");
   const [showGrid, setShowGrid] = useState(false);

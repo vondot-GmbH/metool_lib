@@ -1,14 +1,14 @@
 import MainLayout from "../../../layouts/main.layout/main.layout";
 import { RenderView } from "../../../main";
-import { View } from "../../../schemas/view.schemas/view.schema";
+import { Widget } from "../../../schemas/widget.schemas/widget.schema";
 import Column from "../../private/general.components/column.component/column.component";
 import styles from "./canvas.editor.component.module.scss";
 
 interface CanvasEditorProps {
-  view: View;
+  widgets: Widget[];
 }
 
-const CanvasEditor = ({ view }: CanvasEditorProps): JSX.Element => {
+const CanvasEditor = ({ widgets }: CanvasEditorProps): JSX.Element => {
   const _buildTopToolBar = (): JSX.Element => {
     return (
       <div className={styles.topBar}>
@@ -28,12 +28,12 @@ const CanvasEditor = ({ view }: CanvasEditorProps): JSX.Element => {
   };
 
   return (
-    <MainLayout topBars={[_buildTopToolBar()]} layoutType="sidebarFirst">
+    <MainLayout topBars={[_buildTopToolBar()]}>
       <MainLayout sideBars={[_buildTabBar(), _buildCanvasConfigurationBar()]}>
         <div className={styles.canvasWrapper}>
           <div className={styles.editorCanvasWrapper}>
             <div className={styles.screenWrapper}>
-              <RenderView content={view.widgets} />
+              <RenderView widgets={widgets} />
             </div>
           </div>
           <div className={styles.optionSidebar}>option sideBar</div>

@@ -1,20 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Layout } from "react-grid-layout";
 import {
   LayoutBreakpoint,
-  Widget,
+  WidgetHierarchyMap,
   WidgetLayouts,
   WidgetPositioning,
 } from "../../schemas/widget.schemas/widget.schema";
 
 // convertToGridLayout converts the widget layout to a react-grid-layout layout
 export const convertToGridLayout = (
-  widgets: Widget[]
+  widgets: WidgetHierarchyMap
 ): { [key: string]: Layout[] } => {
   const layouts: { [key in LayoutBreakpoint]?: Layout[] } = {};
 
   // loop through all widgets
-  for (const widget of widgets) {
-    const widgetLayouts: WidgetLayouts = widget.positioning;
+  for (const [id, value] of widgets) {
+    const widgetLayouts: WidgetLayouts = value.widget.positioning;
 
     // loop through all breakpoints of widget layout
     for (const bp of ["xs", "md", "xl"] as LayoutBreakpoint[]) {

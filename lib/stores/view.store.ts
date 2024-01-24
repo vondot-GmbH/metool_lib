@@ -1,9 +1,9 @@
 import { makeAutoObservable } from "mobx";
 import { DataItem } from "../globals/interfaces/pagination.interface";
-import { View } from "../schemas/view.schemas/view.schema";
+import { View_old } from "../schemas/view.schemas/view.schema";
 
 class ViewStore {
-  private _currentView: DataItem<View> = {
+  private _currentView: DataItem<View_old> = {
     data: undefined,
     isLoading: false,
   };
@@ -13,12 +13,12 @@ class ViewStore {
   }
 
   //! Setter
-  setCurrentView = (view: View): void => {
+  setCurrentView = (view: View_old): void => {
     this._currentView.data = view;
   };
 
   //! Getter
-  get currentView(): DataItem<View> | undefined {
+  get currentView(): DataItem<View_old> | undefined {
     if (this._currentView == null) {
       return;
     }

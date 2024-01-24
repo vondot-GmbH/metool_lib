@@ -8,24 +8,41 @@ import {
   BASE_BREAKPOINTS,
   BASE_COLS,
 } from "../../../../../globals/config/grid.layout.config";
+import {
+  getFilteredRootLevelWidgets,
+  structureWidgetsHierarchy,
+} from "../../../../../globals/helpers/widget.helper";
 
 interface RenderScreenProps {
   readonly?: boolean;
-  content: Widget[];
+  widgets: Widget[];
 }
 
-const RenderView = ({ readonly, content }: RenderScreenProps): JSX.Element => {
+const RenderView = ({ widgets, readonly }: RenderScreenProps): JSX.Element => {
+  // TODO: save all structuredWidgets for all levels in a the store
+  const structuredWidgets = structureWidgetsHierarchy(widgets);
+
+  const rootLevelWidgets = getFilteredRootLevelWidgets(structuredWidgets);
+  const preparedRootLevelWidgets = Array.from(rootLevelWidgets.values());
+
   return (
     <GridLayout
       key={"top-level-grid"}
-      content={content}
+      content={rootLevelWidgets}
       rowHeight={46}
       breakpoints={BASE_BREAKPOINTS}
       cols={BASE_COLS}
     >
-      {content.map((widget) => (
-        <div key={widget.positioning.i} className={styles.widgetContainer}>
-          <RenderWidget readonly={readonly} widget={widget} />
+      {preparedRootLevelWidgets.map((rootLevelWidgets) => (
+        <div
+          key={rootLevelWidgets.widget.positioning.i}
+          className={styles.widgetContainer}
+        >
+          <RenderWidget
+            readonly={readonly}
+            widget={rootLevelWidgets}
+            allWidgets={structuredWidgets}
+          />
         </div>
       ))}
     </GridLayout>
