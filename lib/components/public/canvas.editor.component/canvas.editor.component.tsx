@@ -1,5 +1,5 @@
 import MainLayout from "../../../layouts/main.layout/main.layout";
-import { RenderScreen } from "../../../main";
+import { RenderView } from "../../../main";
 import { View } from "../../../schemas/view.schemas/view.schema";
 import Column from "../../private/general.components/column.component/column.component";
 import styles from "./canvas.editor.component.module.scss";
@@ -33,7 +33,7 @@ const CanvasEditor = ({ view }: CanvasEditorProps): JSX.Element => {
         <div className={styles.canvasWrapper}>
           <div className={styles.editorCanvasWrapper}>
             <div className={styles.screenWrapper}>
-              <RenderScreen content={view.widgets} />
+              <RenderView content={view.widgets} />
             </div>
           </div>
           <div className={styles.optionSidebar}>option sideBar</div>

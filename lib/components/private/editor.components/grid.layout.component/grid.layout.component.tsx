@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Responsive, WidthProvider } from "react-grid-layout";
+import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
 import {
   convertToGridLayout,
   generateGridLayoutBackground,
@@ -23,7 +24,6 @@ interface GridLayoutProps {
   cols: { [key in LayoutBreakpoint]: number };
   onDragStart?: ReactGridLayout.ItemCallback | undefined;
   isNested?: boolean;
-  //!
   onDragStop?: ReactGridLayout.ItemCallback | undefined;
   onResizeStart?: ReactGridLayout.ItemCallback | undefined;
   onResizeStop?: ReactGridLayout.ItemCallback | undefined;
@@ -73,12 +73,12 @@ const GridLayout = ({
   };
 
   const handleDragStop = (
-    layout: any,
-    oldItem: any,
-    newItem: any,
-    placeholder: any,
-    event: any,
-    element: any
+    layout: Layout[],
+    oldItem: Layout,
+    newItem: Layout,
+    placeholder: Layout,
+    event: MouseEvent,
+    element: HTMLElement
   ) => {
     setShowGrid(false);
     if (propOnDragStop)
@@ -86,12 +86,12 @@ const GridLayout = ({
   };
 
   const handleResizeStart = (
-    layout: any,
-    oldItem: any,
-    newItem: any,
-    placeholder: any,
-    event: any,
-    element: any
+    layout: Layout[],
+    oldItem: Layout,
+    newItem: Layout,
+    placeholder: Layout,
+    event: MouseEvent,
+    element: HTMLElement
   ) => {
     setShowGrid(true);
     if (propOnResizeStart)
@@ -99,12 +99,12 @@ const GridLayout = ({
   };
 
   const handleResizeStop = (
-    layout: any,
-    oldItem: any,
-    newItem: any,
-    placeholder: any,
-    event: any,
-    element: any
+    layout: Layout[],
+    oldItem: Layout,
+    newItem: Layout,
+    placeholder: Layout,
+    event: MouseEvent,
+    element: HTMLElement
   ) => {
     setShowGrid(false);
     if (propOnResizeStop)
@@ -131,7 +131,6 @@ const GridLayout = ({
       breakpoints={breakpoints}
       cols={cols}
       rowHeight={rowHeight}
-      // style={{ background: gridBackground, height: "100%" }}
       style={{ background: showGrid ? gridBackground : "none", height: "100%" }}
       onBreakpointChange={onBreakpointChange}
       compactType={null}

@@ -5,6 +5,8 @@ import { Provider as MobxProvider } from "mobx-react";
 import WidgetStore from "../lib/stores/widget.store";
 import { EXAMPLE_WIDGETS_DATA } from "./example.data";
 
+// only for testing purposes
+// TODO move store creation to lib
 const viewStore = new ViewStore();
 const widgetStore = new WidgetStore();
 

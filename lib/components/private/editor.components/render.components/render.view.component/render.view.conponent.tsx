@@ -1,6 +1,6 @@
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import styles from "./render.screen.component.module.scss";
+import styles from "./render.view.component.module.scss";
 import RenderWidget from "../render.widget.component/render.widget.component";
 import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
@@ -14,11 +14,7 @@ interface RenderScreenProps {
   content: Widget[];
 }
 
-// TODO rename to render view
-const RenderScreen = ({
-  readonly,
-  content,
-}: RenderScreenProps): JSX.Element => {
+const RenderView = ({ readonly, content }: RenderScreenProps): JSX.Element => {
   return (
     <GridLayout
       key={"top-level-grid"}
@@ -36,4 +32,4 @@ const RenderScreen = ({
   );
 };
 
-export default RenderScreen;
+export default RenderView;
