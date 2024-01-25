@@ -61,6 +61,7 @@ export const getFilteredRootLevelWidgets = (
   return filteredWidgets;
 };
 
+// filter out all given widget ids from the given structured widgets map and return a filtered map
 export const getFilteredWidgetMapByWidgetID = (
   widgetIDs: string[],
   widgets: WidgetHierarchyMap

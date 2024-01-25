@@ -8,7 +8,6 @@ import {
 } from "../../../../globals/helpers/layout.helper";
 import {
   LayoutBreakpoint,
-  Widget,
   WidgetHierarchyMap,
 } from "../../../../schemas/widget.schemas/widget.schema";
 import { useEffect, useState } from "react";

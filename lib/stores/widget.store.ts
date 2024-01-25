@@ -1,26 +1,61 @@
 import { makeAutoObservable } from "mobx";
-import { WidgetState } from "../globals/interfaces/widget.state.interface";
+import {
+  WidgetHierarchy,
+  WidgetHierarchyMap,
+} from "../schemas/widget.schemas/widget.schema";
+import {
+  DynamicWidgetStateMap,
+  WidgetState,
+} from "../globals/interfaces/widget.state.interface";
 
 class WidgetStore {
-  // TODO should we using DataItem type for _widgetStates ?
-  private _widgetStates: Record<string, WidgetState> = {};
+  private _dynamicWidgetStates: DynamicWidgetStateMap = new Map();
+  private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  //! Setter
-  setWidgetState(widgetID: string, newState: WidgetState) {
-    this._widgetStates[widgetID] = newState;
+  //! setter
+  setDynamicWidgetState(widgetID: string, newState: WidgetState) {
+    this._dynamicWidgetStates.set(widgetID, newState);
   }
 
-  //! Getter
-  getWidgetState(widgetID: string): WidgetState | undefined {
-    if (this._widgetStates[widgetID] == null) {
+  setInitialStructuredWidgetHierarchyMap(hierarchyMap: WidgetHierarchyMap) {
+    this._structuredWidgetHierarchy = hierarchyMap;
+  }
+
+  setStructuredWidgetHierarchy(
+    widgetID: string,
+    newHierarchy: WidgetHierarchy
+  ) {
+    this._structuredWidgetHierarchy.set(widgetID, newHierarchy);
+  }
+
+  //! getter
+
+  getStructuredWidgetHierarchyByWidgetID(
+    widgetID: string
+  ): WidgetHierarchy | undefined {
+    if (this._structuredWidgetHierarchy.get(widgetID) == null) {
       return;
     }
 
-    return JSON.parse(JSON.stringify(this._widgetStates[widgetID]));
+    return JSON.parse(
+      JSON.stringify(this._structuredWidgetHierarchy.get(widgetID))
+    );
+  }
+
+  getStructuredData() {
+    return JSON.parse(JSON.stringify(this._structuredWidgetHierarchy));
+  }
+
+  getDynamicStateByWidgetID(widgetID: string): WidgetState | undefined {
+    if (this._dynamicWidgetStates.get(widgetID) == null) {
+      return;
+    }
+
+    return JSON.parse(JSON.stringify(this._dynamicWidgetStates.get(widgetID)));
   }
 }
 

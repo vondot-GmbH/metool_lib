@@ -16,3 +16,5 @@ export interface FormWidgetState extends BaseWidgetState {
 
 // union type for all widget types
 export type WidgetState = TableWidgetState | FormWidgetState;
+
+export type DynamicWidgetStateMap = Map<string, WidgetState>;

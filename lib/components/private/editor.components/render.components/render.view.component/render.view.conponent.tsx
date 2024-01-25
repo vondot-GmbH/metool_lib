@@ -12,16 +12,26 @@ import {
   getFilteredRootLevelWidgets,
   structureWidgetsHierarchy,
 } from "../../../../../globals/helpers/widget.helper";
+import ViewStore from "../../../../../stores/view.store";
+import WidgetStore from "../../../../../stores/widget.store";
+import { inject, observer } from "mobx-react";
 
 interface RenderScreenProps {
   readonly?: boolean;
   widgets: Widget[];
+  viewStore?: ViewStore;
+  widgetStore?: WidgetStore;
 }
 
-const RenderView = ({ widgets, readonly }: RenderScreenProps): JSX.Element => {
-  // TODO: save all structuredWidgets for all levels in a the store
+const RenderView = ({
+  widgets,
+  readonly,
+  widgetStore,
+}: RenderScreenProps): JSX.Element => {
   const structuredWidgets = structureWidgetsHierarchy(widgets);
+  widgetStore?.setInitialStructuredWidgetHierarchyMap(structuredWidgets);
 
+  // TODO store data in state ???
   const rootLevelWidgets = getFilteredRootLevelWidgets(structuredWidgets);
   const preparedRootLevelWidgets = Array.from(rootLevelWidgets.values());
 
@@ -49,4 +59,4 @@ const RenderView = ({ widgets, readonly }: RenderScreenProps): JSX.Element => {
   );
 };
 
-export default RenderView;
+export default inject("viewStore", "widgetStore")(observer(RenderView));

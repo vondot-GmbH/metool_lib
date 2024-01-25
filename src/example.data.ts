@@ -200,4 +200,133 @@ export const EXAMPLE_WIDGETS_DATA_NEW: Widget[] = [
       },
     },
   },
+
+  {
+    _id: "5f9e9b6b9crb4c0017f3b399",
+    widgetID: "customerDataTableNestedInNested",
+    widgetType: "DATA_TABLE",
+    view: "5f9e9b6b9I6b4c3017f3b3a0",
+    parentID: "customerDataTableNested2",
+    positioning: {
+      i: "293d190ac-d9768-40cdd-8116-a39d44be0f888",
+      xs: {
+        x: {
+          value: 0,
+          isInfinity: false,
+        },
+        y: {
+          value: 0,
+          isInfinity: false,
+        },
+        w: {
+          value: 4,
+          isInfinity: false,
+        },
+        h: {
+          value: 3,
+          isInfinity: false,
+        },
+      },
+      md: {
+        x: {
+          value: 0,
+          isInfinity: false,
+        },
+        y: {
+          value: 0,
+          isInfinity: false,
+        },
+        w: {
+          value: 8,
+          isInfinity: false,
+        },
+        h: {
+          value: 3,
+          isInfinity: false,
+        },
+      },
+      xl: {
+        x: {
+          value: 0,
+          isInfinity: false,
+        },
+        y: {
+          value: 0,
+          isInfinity: false,
+        },
+        w: {
+          value: 12,
+          isInfinity: false,
+        },
+        h: {
+          value: 2,
+          isInfinity: false,
+        },
+      },
+    },
+  },
+
+  {
+    _id: "5f9e9b6b9c6b4c0017ffb399",
+    widgetID: "customerDataTableRoot",
+    widgetType: "DATA_TABLE",
+    view: "5f9e9b6b9I6b4c3017f3b3a0",
+    positioning: {
+      i: "293d190ac-d9768-40cdd-8116-da39d44be0df888",
+      xs: {
+        x: {
+          value: 0,
+          isInfinity: false,
+        },
+        y: {
+          value: 0,
+          isInfinity: false,
+        },
+        w: {
+          value: 4,
+          isInfinity: false,
+        },
+        h: {
+          value: 3,
+          isInfinity: false,
+        },
+      },
+      md: {
+        x: {
+          value: 0,
+          isInfinity: false,
+        },
+        y: {
+          value: 0,
+          isInfinity: false,
+        },
+        w: {
+          value: 8,
+          isInfinity: false,
+        },
+        h: {
+          value: 3,
+          isInfinity: false,
+        },
+      },
+      xl: {
+        x: {
+          value: 0,
+          isInfinity: false,
+        },
+        y: {
+          value: 0,
+          isInfinity: false,
+        },
+        w: {
+          value: 12,
+          isInfinity: false,
+        },
+        h: {
+          value: 2,
+          isInfinity: false,
+        },
+      },
+    },
+  },
 ];

@@ -1,11 +1,16 @@
+import { inject, observer } from "mobx-react";
 import MainLayout from "../../../layouts/main.layout/main.layout";
 import { RenderView } from "../../../main";
 import { Widget } from "../../../schemas/widget.schemas/widget.schema";
+import ViewStore from "../../../stores/view.store";
 import Column from "../../private/general.components/column.component/column.component";
 import styles from "./canvas.editor.component.module.scss";
+import WidgetStore from "../../../stores/widget.store";
 
 interface CanvasEditorProps {
   widgets: Widget[];
+  viewStore?: ViewStore;
+  widgetStore?: WidgetStore;
 }
 
 const CanvasEditor = ({ widgets }: CanvasEditorProps): JSX.Element => {
@@ -43,4 +48,4 @@ const CanvasEditor = ({ widgets }: CanvasEditorProps): JSX.Element => {
   );
 };
 
-export default CanvasEditor;
+export default inject("viewStore", "widgetStore")(observer(CanvasEditor));
