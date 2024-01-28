@@ -21,11 +21,14 @@ interface CanvasEditorProps {
 const CanvasEditor = ({
   changeRecordStore,
   widgets,
+  widgetStore,
   onSaveChanges,
 }: CanvasEditorProps): JSX.Element => {
   const handleOnSaveChanges = () => {
     if (changeRecordStore && onSaveChanges) {
       console.log("handleOnSaveChanges");
+      widgetStore?.exportWidgetDataForTesting();
+
       const changes = changeRecordStore?.processReleaseChanges();
 
       if (changes && changes.length != 0) onSaveChanges(changes);

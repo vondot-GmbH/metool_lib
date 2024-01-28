@@ -3,7 +3,7 @@ import { CanvasEditor } from "../lib/main";
 import ViewStore from "../lib/stores/view.store";
 import { Provider as MobxProvider } from "mobx-react";
 import WidgetStore from "../lib/stores/widget.store";
-import { EXAMPLE_DATA_EXPORTED } from "./example.data";
+import { EXAMPLE_WIDGETS_DATA_FINAL } from "./example.data";
 import ChangeRecordStore from "../lib/stores/change.record.store";
 
 // only for testing purposes
@@ -23,7 +23,7 @@ function App() {
     <MobxProvider {...stores}>
       <div className="main-container">
         <CanvasEditor
-          widgets={EXAMPLE_DATA_EXPORTED}
+          widgets={EXAMPLE_WIDGETS_DATA_FINAL}
           onSaveChanges={(changes) => {
             console.log("changes: ", JSON.stringify(changes, null, 2));
           }}

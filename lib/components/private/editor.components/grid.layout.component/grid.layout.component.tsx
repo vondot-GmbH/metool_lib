@@ -1,10 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
+import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import {
-  convertLayoutToPositioning,
-  convertLayoutToPositioningForBreakpoint,
   convertToGridLayout,
   generateGridLayoutBackground,
 } from "../../../../globals/helpers/layout.helper";
@@ -52,6 +49,7 @@ const GridLayout = ({
   widgetStore,
 }: GridLayoutProps): JSX.Element => {
   const layouts = convertToGridLayout(content);
+  const [savedLayouts, setSavedLayouts] = useState(layouts);
 
   const [currentBreakpoint, setCurrentBreakpoint] = useState(""); // TODO set initial breakpoint based on window size
   const [gridBackground, setGridBackground] = useState("");
@@ -60,19 +58,6 @@ const GridLayout = ({
   const onBreakpointChange = (newBreakpoint: BreakpointType) => {
     setCurrentBreakpoint(newBreakpoint);
   };
-
-  // const handleOnLayoutChange = (
-  //   currentLayout: Layout[],
-  //   allLayouts: Layouts
-  // ) => {
-  //   // convert the layout from the grid layout to the positioning layout
-  //   const convertedLayout = convertLayoutToPositioning(allLayouts);
-  //   console.log("convertedLayout");
-  //   console.log(convertedLayout);
-
-  //   // update each widget's positioning in the store based on the new layout
-  //   // widgetStore?.updateWidgetsLayout(convertedLayout);
-  // };
 
   const handleDragStart = (
     layout: any,
@@ -162,7 +147,7 @@ const GridLayout = ({
       key={key}
       className={isNested ? undefined : styles.gridLayout}
       margin={[0, 0]}
-      layouts={layouts}
+      layouts={savedLayouts}
       breakpoints={breakpoints}
       cols={cols}
       rowHeight={rowHeight}
@@ -173,7 +158,9 @@ const GridLayout = ({
       onDragStop={handleDragStop}
       onResizeStart={handleResizeStart}
       onResizeStop={handleResizeStop}
-      // onLayoutChange={handleOnLayoutChange}
+      onLayoutChange={(layout, layouts) => {
+        setSavedLayouts(layouts);
+      }}
     >
       {children}
     </ResponsiveGridLayout>

@@ -73,16 +73,17 @@ class WidgetStore {
 
   //! methods
 
-  getAllWidgetsConvertedFromStructuredData(): Widget[] {
+  exportWidgetDataForTesting(): void {
     const widgets: Widget[] = [];
 
     // loop through all widgets in the map and add the widget to the array
-    for (const [id, value] of this._structuredWidgetHierarchy) {
-      console.log(id);
-      widgets.push(value.widget);
+    for (const change of this.changeRecordStore.getChangeRecords()) {
+      widgets.push(change.data);
     }
 
-    return widgets;
+    console.log("export widgets: ------");
+    console.log(JSON.parse(JSON.stringify(widgets)));
+    console.log("--------");
   }
 
   updateWidgetPositioningForBreakpoint(
@@ -135,11 +136,11 @@ class WidgetStore {
       currentBreakpoint
     );
 
-    // Durchlaufen aller aktualisierten Widgets
+    // loop through all updated widgets and update the positioning for the current breakpoint
     for (const widgetID in convertedLayouts) {
       const widgetLayouts = convertedLayouts[widgetID];
 
-      // Überprüfen, ob für den aktuellen Breakpoint ein Layout vorhanden ist
+      // check if the widget exists
       if (widgetLayouts && widgetLayouts[currentBreakpoint]) {
         const widgetPositioning = widgetLayouts[currentBreakpoint];
 
@@ -150,7 +151,7 @@ class WidgetStore {
             widgetPositioning
           );
 
-          // Aktualisieren des Change Record Stores
+          // update the change record store
           this.changeRecordStore.setChangeWidgetRecord(
             widgetID,
             "UPDATE",

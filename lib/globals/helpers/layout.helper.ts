@@ -48,21 +48,21 @@ export const convertLayoutToPositioningForBreakpoint = (
 ): Record<string, WidgetLayouts> => {
   const positioningRecord: Record<string, WidgetLayouts> = {};
 
-  // Gehe durch alle Layout-Elemente für den aktuellen Breakpoint
+  // go through all layout elements
   for (const item of layout) {
-    const widgetId = item.i; // Speichere die Widget-ID in einer Variablen
+    const widgetId = item.i;
 
-    // Initialisiere das Positioning-Record für dieses Widget, falls es noch nicht existiert
+    // init positioning record for this widget if it does not exist
     if (!positioningRecord[widgetId]) {
       positioningRecord[widgetId] = {
         i: widgetId,
         xs: undefined,
         md: undefined,
-        xl: undefined,
+        xl: undefined, // TODO make this dynamic
       };
     }
 
-    // Aktualisiere das Positioning-Record mit den neuen Werten für den aktuellen Breakpoint
+    // update the positioning record with the new values for the current breakpoint
     const newPositioning: WidgetPositioning = {
       x: { value: item.x, isInfinity: false },
       y: { value: item.y, isInfinity: false },
@@ -70,6 +70,7 @@ export const convertLayoutToPositioningForBreakpoint = (
       h: { value: item.h, isInfinity: false },
     };
 
+    // update the positioning record with the new values
     positioningRecord[widgetId][currentBreakpoint] = newPositioning;
   }
 
@@ -95,7 +96,7 @@ export const convertLayoutToPositioning = (
       if (!positioningRecord[item.i]) {
         positioningRecord[item.i] = {
           i: item.i,
-          xs: undefined,
+          xs: undefined, // TODO make this dynamic
           md: undefined,
           xl: undefined,
         };
