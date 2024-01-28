@@ -9,9 +9,9 @@ export interface Widget {
 
 export interface WidgetLayouts {
   i: string;
-  xs: WidgetPositioning;
-  md: WidgetPositioning;
-  xl: WidgetPositioning;
+  xs: WidgetPositioning | undefined;
+  md: WidgetPositioning | undefined;
+  xl: WidgetPositioning | undefined;
 }
 
 export interface WidgetPositioning {

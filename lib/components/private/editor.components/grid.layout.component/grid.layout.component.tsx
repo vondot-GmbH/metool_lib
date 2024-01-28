@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
 import {
+  convertLayoutToPositioning,
   convertToGridLayout,
   generateGridLayoutBackground,
 } from "../../../../globals/helpers/layout.helper";
@@ -14,6 +15,7 @@ import { useEffect, useState } from "react";
 import styles from "./grid.layout.component.module.scss";
 import ViewStore from "../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
+import WidgetStore from "../../../../stores/widget.store";
 
 interface GridLayoutProps {
   key: string;
@@ -28,6 +30,7 @@ interface GridLayoutProps {
   onResizeStart?: ReactGridLayout.ItemCallback | undefined;
   onResizeStop?: ReactGridLayout.ItemCallback | undefined;
   viewStore?: ViewStore;
+  widgetStore?: WidgetStore;
 }
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -45,19 +48,33 @@ const GridLayout = ({
   onResizeStart: propOnResizeStart,
   onResizeStop: propOnResizeStop,
   isNested = false,
-  viewStore,
+  widgetStore,
 }: GridLayoutProps): JSX.Element => {
   const layouts = convertToGridLayout(content);
-  console.log("layouts");
-  console.log(layouts);
+
   const [currentBreakpoint, setCurrentBreakpoint] = useState(""); // TODO set initial breakpoint based on window size
   const [gridBackground, setGridBackground] = useState("");
   const [showGrid, setShowGrid] = useState(false);
 
   const onBreakpointChange = (newBreakpoint: BreakpointType) => {
-    console.log("onBreakpointChange", newBreakpoint);
-    console.log();
     setCurrentBreakpoint(newBreakpoint);
+  };
+
+  const handleOnLayoutChange = (
+    currentLayout: Layout[],
+    allLayouts: Layouts
+  ) => {
+    // convert the layout from the grid layout to the positioning layout
+    const convertedLayout = convertLayoutToPositioning(allLayouts);
+
+    // update each widget's positioning in the store based on the new layout
+    widgetStore?.updateWidgetsLayout(convertedLayout);
+
+    const widgetsToExport =
+      widgetStore?.getAllWidgetsConvertedFromStructuredData();
+    console.log("-----------export-----------------------");
+    console.log(JSON.stringify(widgetsToExport));
+    console.log("----------------------------------------");
   };
 
   const handleDragStart = (
@@ -112,8 +129,6 @@ const GridLayout = ({
       propOnResizeStop(layout, oldItem, newItem, placeholder, event, element);
   };
 
-  //!
-
   useEffect(() => {
     const newGridBackground = generateGridLayoutBackground({
       cols,
@@ -139,10 +154,11 @@ const GridLayout = ({
       onDragStop={handleDragStop}
       onResizeStart={handleResizeStart}
       onResizeStop={handleResizeStop}
+      onLayoutChange={handleOnLayoutChange}
     >
       {children}
     </ResponsiveGridLayout>
   );
 };
 
-export default inject("viewStore")(observer(GridLayout));
+export default inject("viewStore", "widgetStore")(observer(GridLayout));

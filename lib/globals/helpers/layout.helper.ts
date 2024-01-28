@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Layout } from "react-grid-layout";
+import { Layout, Layouts } from "react-grid-layout";
 import {
   LayoutBreakpoint,
   WidgetHierarchyMap,
@@ -40,6 +40,53 @@ export const convertToGridLayout = (
   }
 
   return layouts as { [key: string]: Layout[] };
+};
+
+export const convertLayoutToPositioning = (
+  allLayouts: Layouts
+): Record<string, WidgetLayouts> => {
+  const positioningRecord: Record<string, WidgetLayouts> = {};
+
+  // go through all breakpoints in the layout
+  for (const breakpointKey in allLayouts) {
+    // if breakpoint does not exist, skip it
+    if (!(breakpointKey in allLayouts)) continue;
+
+    const breakpoint = breakpointKey as LayoutBreakpoint;
+    const layouts = allLayouts[breakpoint];
+
+    // go through all layouts elements in the breakpoint
+    for (const item of layouts) {
+      // init positioning record for this widget if it does not exist
+      if (!positioningRecord[item.i]) {
+        positioningRecord[item.i] = {
+          i: item.i,
+          xs: undefined,
+          md: undefined,
+          xl: undefined,
+        };
+
+        // initialize all breakpoints dynamically
+        for (const bpKey in allLayouts) {
+          // if breakpoint does not exist, skip it
+          if (!(bpKey in allLayouts)) continue;
+
+          const bp = bpKey as LayoutBreakpoint;
+          positioningRecord[item.i][bp] = undefined;
+        }
+      }
+
+      // update the positioning record with the new values
+      positioningRecord[item.i][breakpoint] = {
+        x: { value: item.x, isInfinity: false },
+        y: { value: item.y, isInfinity: false },
+        w: { value: item.w, isInfinity: false },
+        h: { value: item.h, isInfinity: false },
+      };
+    }
+  }
+
+  return positioningRecord;
 };
 
 export const generateGridLayoutBackground = (args: {
