@@ -42,6 +42,40 @@ export const convertToGridLayout = (
   return layouts as { [key: string]: Layout[] };
 };
 
+export const convertLayoutToPositioningForBreakpoint = (
+  layout: Layout[],
+  currentBreakpoint: LayoutBreakpoint
+): Record<string, WidgetLayouts> => {
+  const positioningRecord: Record<string, WidgetLayouts> = {};
+
+  // Gehe durch alle Layout-Elemente für den aktuellen Breakpoint
+  for (const item of layout) {
+    const widgetId = item.i; // Speichere die Widget-ID in einer Variablen
+
+    // Initialisiere das Positioning-Record für dieses Widget, falls es noch nicht existiert
+    if (!positioningRecord[widgetId]) {
+      positioningRecord[widgetId] = {
+        i: widgetId,
+        xs: undefined,
+        md: undefined,
+        xl: undefined,
+      };
+    }
+
+    // Aktualisiere das Positioning-Record mit den neuen Werten für den aktuellen Breakpoint
+    const newPositioning: WidgetPositioning = {
+      x: { value: item.x, isInfinity: false },
+      y: { value: item.y, isInfinity: false },
+      w: { value: item.w, isInfinity: false },
+      h: { value: item.h, isInfinity: false },
+    };
+
+    positioningRecord[widgetId][currentBreakpoint] = newPositioning;
+  }
+
+  return positioningRecord;
+};
+
 export const convertLayoutToPositioning = (
   allLayouts: Layouts
 ): Record<string, WidgetLayouts> => {

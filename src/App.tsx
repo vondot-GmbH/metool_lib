@@ -9,8 +9,8 @@ import ChangeRecordStore from "../lib/stores/change.record.store";
 // only for testing purposes
 
 const viewStore = new ViewStore();
-const widgetStore = new WidgetStore();
 const changeRecordStore = new ChangeRecordStore();
+const widgetStore = new WidgetStore(changeRecordStore);
 
 const stores = {
   viewStore,
@@ -22,7 +22,12 @@ function App() {
   return (
     <MobxProvider {...stores}>
       <div className="main-container">
-        <CanvasEditor widgets={EXAMPLE_DATA_EXPORTED} />
+        <CanvasEditor
+          widgets={EXAMPLE_DATA_EXPORTED}
+          onSaveChanges={(changes) => {
+            console.log("changes: ", JSON.stringify(changes, null, 2));
+          }}
+        />
       </div>
     </MobxProvider>
   );

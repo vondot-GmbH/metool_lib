@@ -4,6 +4,7 @@
 import { Layout, Layouts, Responsive, WidthProvider } from "react-grid-layout";
 import {
   convertLayoutToPositioning,
+  convertLayoutToPositioningForBreakpoint,
   convertToGridLayout,
   generateGridLayoutBackground,
 } from "../../../../globals/helpers/layout.helper";
@@ -60,22 +61,18 @@ const GridLayout = ({
     setCurrentBreakpoint(newBreakpoint);
   };
 
-  const handleOnLayoutChange = (
-    currentLayout: Layout[],
-    allLayouts: Layouts
-  ) => {
-    // convert the layout from the grid layout to the positioning layout
-    const convertedLayout = convertLayoutToPositioning(allLayouts);
+  // const handleOnLayoutChange = (
+  //   currentLayout: Layout[],
+  //   allLayouts: Layouts
+  // ) => {
+  //   // convert the layout from the grid layout to the positioning layout
+  //   const convertedLayout = convertLayoutToPositioning(allLayouts);
+  //   console.log("convertedLayout");
+  //   console.log(convertedLayout);
 
-    // update each widget's positioning in the store based on the new layout
-    widgetStore?.updateWidgetsLayout(convertedLayout);
-
-    const widgetsToExport =
-      widgetStore?.getAllWidgetsConvertedFromStructuredData();
-    console.log("-----------export-----------------------");
-    console.log(JSON.stringify(widgetsToExport));
-    console.log("----------------------------------------");
-  };
+  //   // update each widget's positioning in the store based on the new layout
+  //   // widgetStore?.updateWidgetsLayout(convertedLayout);
+  // };
 
   const handleDragStart = (
     layout: any,
@@ -85,7 +82,11 @@ const GridLayout = ({
     event: any,
     element: any
   ) => {
+    event.stopPropagation();
+    event.preventDefault();
     setShowGrid(true);
+    console.log(event.target);
+
     if (propOnDragStart)
       propOnDragStart(layout, oldItem, newItem, placeholder, event, element);
   };
@@ -98,7 +99,15 @@ const GridLayout = ({
     event: MouseEvent,
     element: HTMLElement
   ) => {
+    event.stopPropagation();
+    event.preventDefault();
     setShowGrid(false);
+
+    widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
+      layout,
+      currentBreakpoint as LayoutBreakpoint
+    );
+
     if (propOnDragStop)
       propOnDragStop(layout, oldItem, newItem, placeholder, event, element);
   };
@@ -111,6 +120,8 @@ const GridLayout = ({
     event: MouseEvent,
     element: HTMLElement
   ) => {
+    event.stopPropagation();
+    event.preventDefault();
     setShowGrid(true);
     if (propOnResizeStart)
       propOnResizeStart(layout, oldItem, newItem, placeholder, event, element);
@@ -124,7 +135,15 @@ const GridLayout = ({
     event: MouseEvent,
     element: HTMLElement
   ) => {
+    event.stopPropagation();
+    event.preventDefault();
     setShowGrid(false);
+
+    widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
+      layout,
+      currentBreakpoint as LayoutBreakpoint
+    );
+
     if (propOnResizeStop)
       propOnResizeStop(layout, oldItem, newItem, placeholder, event, element);
   };
@@ -154,7 +173,7 @@ const GridLayout = ({
       onDragStop={handleDragStop}
       onResizeStart={handleResizeStart}
       onResizeStop={handleResizeStop}
-      onLayoutChange={handleOnLayoutChange}
+      // onLayoutChange={handleOnLayoutChange}
     >
       {children}
     </ResponsiveGridLayout>

@@ -42,6 +42,7 @@ const RenderView = ({
       rowHeight={46}
       breakpoints={BASE_BREAKPOINTS}
       cols={BASE_COLS}
+      onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
     >
       {preparedRootLevelWidgets.map((rootLevelWidgets) => (
         <div

@@ -1,21 +1,29 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeAutoObservable } from "mobx";
 import {
+  LayoutBreakpoint,
   Widget,
   WidgetHierarchy,
   WidgetHierarchyMap,
   WidgetLayouts,
+  WidgetPositioning,
 } from "../schemas/widget.schemas/widget.schema";
 import {
   DynamicWidgetStateMap,
   WidgetState,
 } from "../globals/interfaces/widget.state.interface";
+import ChangeRecordStore from "./change.record.store";
+import { Layout } from "react-grid-layout";
+import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
 
 class WidgetStore {
   private _dynamicWidgetStates: DynamicWidgetStateMap = new Map();
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
 
-  constructor() {
+  private changeRecordStore: ChangeRecordStore;
+
+  constructor(changeRecordStore: ChangeRecordStore) {
+    this.changeRecordStore = changeRecordStore;
     makeAutoObservable(this);
   }
 
@@ -77,6 +85,23 @@ class WidgetStore {
     return widgets;
   }
 
+  updateWidgetPositioningForBreakpoint(
+    widgetID: string,
+    breakpoint: LayoutBreakpoint,
+    positioning: WidgetPositioning
+  ): void {
+    const widgetHierarchy =
+      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+
+    if (widgetHierarchy != null) {
+      // update the positioning for the breakpoint
+      widgetHierarchy.widget.positioning[breakpoint] = positioning;
+
+      // update the widget with the new positioning
+      this.setStructuredWidgetHierarchy(widgetID, widgetHierarchy);
+    }
+  }
+
   updateWidgetsLayout(updatedLayouts: Record<string, WidgetLayouts>): void {
     // loop through all updated widgets
     for (const widgetID in updatedLayouts) {
@@ -90,6 +115,48 @@ class WidgetStore {
 
         // update the widget with the new layout
         this.setStructuredWidgetHierarchy(widgetID, widgetHierarchy);
+
+        // update the change record store
+        this.changeRecordStore.setChangeWidgetRecord(
+          widgetID,
+          "UPDATE",
+          widgetHierarchy.widget
+        );
+      }
+    }
+  }
+
+  updateWidgetsLayoutForCurrentBreakpoint(
+    updatedLayouts: Layout[],
+    currentBreakpoint: LayoutBreakpoint
+  ): void {
+    const convertedLayouts = convertLayoutToPositioningForBreakpoint(
+      updatedLayouts,
+      currentBreakpoint
+    );
+
+    // Durchlaufen aller aktualisierten Widgets
+    for (const widgetID in convertedLayouts) {
+      const widgetLayouts = convertedLayouts[widgetID];
+
+      // Überprüfen, ob für den aktuellen Breakpoint ein Layout vorhanden ist
+      if (widgetLayouts && widgetLayouts[currentBreakpoint]) {
+        const widgetPositioning = widgetLayouts[currentBreakpoint];
+
+        if (widgetPositioning) {
+          this.updateWidgetPositioningForBreakpoint(
+            widgetID,
+            currentBreakpoint,
+            widgetPositioning
+          );
+
+          // Aktualisieren des Change Record Stores
+          this.changeRecordStore.setChangeWidgetRecord(
+            widgetID,
+            "UPDATE",
+            this.getStructuredWidgetHierarchyByWidgetID(widgetID)?.widget
+          );
+        }
       }
     }
   }

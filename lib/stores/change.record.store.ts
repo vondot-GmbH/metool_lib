@@ -25,6 +25,12 @@ class ChangeRecordStore {
     this._changeRecords.clear();
   }
 
+  processReleaseChanges() {
+    const changeRecords = this.getChangeRecords();
+    this.clearChangeRecords();
+    return changeRecords;
+  }
+
   updateExistingChangeRecordData(widgetID: string, data: any): void {
     const existingRecord = this._changeRecords.get(widgetID);
     if (existingRecord) {
