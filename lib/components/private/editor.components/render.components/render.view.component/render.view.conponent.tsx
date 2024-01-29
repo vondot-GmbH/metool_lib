@@ -25,7 +25,7 @@ interface RenderScreenProps {
 
 const RenderView = ({
   widgets,
-  readonly,
+  readonly = true,
   widgetStore,
 }: RenderScreenProps): JSX.Element => {
   const structuredWidgets = structureWidgetsHierarchy(widgets);
@@ -51,7 +51,7 @@ const RenderView = ({
         >
           <RenderWidget
             readonly={readonly}
-            widget={rootLevelWidgets}
+            widgetToRender={rootLevelWidgets}
             allWidgets={structuredWidgets}
           />
         </div>

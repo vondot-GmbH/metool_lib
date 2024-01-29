@@ -14,31 +14,73 @@ import { getFilteredWidgetMapByWidgetID } from "../../../../../globals/helpers/w
 import { inject, observer } from "mobx-react";
 import ViewStore from "../../../../../stores/view.store";
 import WidgetStore from "../../../../../stores/widget.store";
+import { useState } from "react";
+import WidgetContextMenu from "../../widget.context.menu.component/widget.context.menu.component";
 
 interface RenderWidgetProps {
   readonly?: boolean;
-  widget: WidgetHierarchy;
+  widgetToRender: WidgetHierarchy;
   allWidgets: WidgetHierarchyMap;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
 }
 
 const RenderWidget = ({
-  widget,
+  widgetToRender,
   allWidgets,
   readonly,
+  widgetStore,
+  viewStore,
 }: RenderWidgetProps): JSX.Element => {
+  const [contextMenu, setContextMenu] = useState({
+    isOpen: false,
+    anchorPoint: { x: 0, y: 0 },
+  });
+
+  const handleCloseMenu = () => {
+    setContextMenu({ isOpen: false, anchorPoint: { x: 0, y: 0 } });
+    widgetStore?.setSelectWidget(undefined);
+  };
+
+  const handleOnContextMenu = (
+    event: React.MouseEvent<HTMLDivElement>,
+    widgetID: string
+  ) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    widgetStore?.setSelectWidget(widgetID);
+
+    setContextMenu({
+      isOpen: true,
+      anchorPoint: { x: event.pageX, y: event.pageY },
+    });
+  };
+
   // get nested widgets for the current widget
   const childrenWidgets = getFilteredWidgetMapByWidgetID(
-    widget.children,
+    widgetToRender.children,
     allWidgets
   );
 
-  // convert the map to an array for rendering purposes
-  const preparedChildrenWidgets = Array.from(childrenWidgets.values());
+  const renderContextMenu = (): JSX.Element | null => {
+    if (!contextMenu.isOpen) return null;
+
+    return (
+      <WidgetContextMenu
+        isOpen={contextMenu.isOpen}
+        anchorPoint={contextMenu.anchorPoint}
+        onClose={handleCloseMenu}
+        widgetID={widgetToRender.widget.widgetID}
+      />
+    );
+  };
 
   // render nested widgets if there are any nested widgets
   const renderNestedWidgets = (): JSX.Element | null => {
+    // convert the map to an array for rendering purposes
+    const preparedChildrenWidgets = Array.from(childrenWidgets.values());
+
     // if there are no nested widgets, return null
     if (preparedChildrenWidgets == null || preparedChildrenWidgets.length < 1) {
       return null;
@@ -48,7 +90,7 @@ const RenderWidget = ({
     return (
       <GridLayout
         isNested
-        key={"nested-grid-" + widget.widget.positioning.i}
+        key={"nested-grid-" + widgetToRender.widget.positioning.i}
         content={childrenWidgets}
         breakpoints={NESTED_BREAKPOINTS}
         cols={NESTED_COLS}
@@ -62,8 +104,10 @@ const RenderWidget = ({
           >
             <RenderWidget
               readonly={readonly}
-              widget={childWidget}
+              widgetToRender={childWidget}
               allWidgets={allWidgets}
+              widgetStore={widgetStore}
+              viewStore={viewStore}
             />
           </div>
         ))}
@@ -72,9 +116,15 @@ const RenderWidget = ({
   };
 
   return (
-    <div className={styles.widgetContainer}>
-      {widget.widget.widgetID}
+    <div
+      className={styles.widgetContainer}
+      onContextMenu={(e) =>
+        !readonly && handleOnContextMenu(e, widgetToRender.widget.widgetID)
+      }
+    >
+      {widgetToRender.widget.widgetID}
       {renderNestedWidgets()}
+      {renderContextMenu()}
     </div>
   );
 };

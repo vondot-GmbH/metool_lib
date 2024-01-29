@@ -24,9 +24,9 @@ const CanvasEditor = ({
   widgetStore,
   onSaveChanges,
 }: CanvasEditorProps): JSX.Element => {
+  // TODO
   const handleOnSaveChanges = () => {
     if (changeRecordStore && onSaveChanges) {
-      console.log("handleOnSaveChanges");
       widgetStore?.exportWidgetDataForTesting();
 
       const changes = changeRecordStore?.processReleaseChanges();
@@ -62,10 +62,12 @@ const CanvasEditor = ({
         <div className={styles.canvasWrapper}>
           <div className={styles.editorCanvasWrapper}>
             <div className={styles.screenWrapper}>
-              <RenderView widgets={widgets} />
+              <RenderView widgets={widgets} readonly={false} />
             </div>
           </div>
-          <div className={styles.optionSidebar}>option sideBar</div>
+          <div className={styles.optionSidebar}>
+            {widgetStore?.getSelectedWidget()?.widget.widgetID}
+          </div>
         </div>
       </MainLayout>
     </MainLayout>

@@ -14,7 +14,7 @@ export const convertToGridLayout = (
   const layouts: { [key in LayoutBreakpoint]?: Layout[] } = {};
 
   // loop through all widgets
-  for (const [id, value] of widgets) {
+  for (const [_id, value] of widgets) {
     const widgetLayouts: WidgetLayouts = value.widget.positioning;
 
     // loop through all breakpoints of widget layout

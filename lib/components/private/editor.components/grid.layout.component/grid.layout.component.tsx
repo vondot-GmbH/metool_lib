@@ -70,7 +70,6 @@ const GridLayout = ({
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(true);
-    console.log(event.target);
 
     if (propOnDragStart)
       propOnDragStart(layout, oldItem, newItem, placeholder, event, element);
@@ -158,7 +157,7 @@ const GridLayout = ({
       onDragStop={handleDragStop}
       onResizeStart={handleResizeStart}
       onResizeStop={handleResizeStop}
-      onLayoutChange={(layout, layouts) => {
+      onLayoutChange={(_layout, layouts) => {
         setSavedLayouts(layouts);
       }}
     >

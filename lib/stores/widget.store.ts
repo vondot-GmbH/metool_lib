@@ -20,6 +20,8 @@ class WidgetStore {
   private _dynamicWidgetStates: DynamicWidgetStateMap = new Map();
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
 
+  private _selectedWidget: WidgetHierarchy | undefined;
+
   private changeRecordStore: ChangeRecordStore;
 
   constructor(changeRecordStore: ChangeRecordStore) {
@@ -43,6 +45,19 @@ class WidgetStore {
     newHierarchy: WidgetHierarchy
   ): void {
     this._structuredWidgetHierarchy.set(widgetID, newHierarchy);
+  }
+
+  setSelectWidget(widgetID: string | undefined): void {
+    if (widgetID == null) {
+      this._selectedWidget = undefined;
+      return;
+    }
+
+    const selectedWidget = this._structuredWidgetHierarchy.get(widgetID);
+
+    if (selectedWidget != null) {
+      this._selectedWidget = selectedWidget;
+    }
   }
 
   //! getter
@@ -69,6 +84,14 @@ class WidgetStore {
     }
 
     return JSON.parse(JSON.stringify(this._dynamicWidgetStates.get(widgetID)));
+  }
+
+  getSelectedWidget(): WidgetHierarchy | undefined {
+    if (this._selectedWidget == null) {
+      return;
+    }
+
+    return JSON.parse(JSON.stringify(this._selectedWidget));
   }
 
   //! methods
