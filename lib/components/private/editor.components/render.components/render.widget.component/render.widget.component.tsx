@@ -13,9 +13,9 @@ import {
 import { getFilteredWidgetMapByWidgetID } from "../../../../../globals/helpers/widget.helper";
 import { inject, observer } from "mobx-react";
 import ViewStore from "../../../../../stores/view.store";
-import WidgetStore from "../../../../../stores/widget.store";
-import { useState } from "react";
+
 import WidgetContextMenu from "../../widget.context.menu.component/widget.context.menu.component";
+import WidgetStore from "../../../../../stores/widget.store";
 
 interface RenderWidgetProps {
   readonly?: boolean;
@@ -32,13 +32,14 @@ const RenderWidget = ({
   widgetStore,
   viewStore,
 }: RenderWidgetProps): JSX.Element => {
-  const [contextMenu, setContextMenu] = useState({
-    isOpen: false,
-    anchorPoint: { x: 0, y: 0 },
-  });
+  const contextMenu = widgetStore?.getContextMenuState();
 
   const handleCloseMenu = () => {
-    setContextMenu({ isOpen: false, anchorPoint: { x: 0, y: 0 } });
+    widgetStore?.setContextMenuState({
+      isOpen: false,
+      anchorPoint: { x: 0, y: 0 },
+      selectedWidgetID: null,
+    });
     widgetStore?.setSelectWidget(undefined);
   };
 
@@ -51,10 +52,31 @@ const RenderWidget = ({
 
     widgetStore?.setSelectWidget(widgetID);
 
-    setContextMenu({
+    widgetStore?.setContextMenuState({
       isOpen: true,
-      anchorPoint: { x: event.pageX, y: event.pageY },
+      anchorPoint: {
+        x: event.clientX + window.scrollX,
+        y: event.clientY + window.scrollY,
+      },
+      selectedWidgetID: widgetID,
     });
+  };
+
+  const renderContextMenu = (): JSX.Element | null => {
+    if (
+      !contextMenu?.isOpen ||
+      contextMenu?.selectedWidgetID != widgetToRender.widget.widgetID
+    ) {
+      return null;
+    }
+
+    return (
+      <WidgetContextMenu
+        isOpen={contextMenu.isOpen}
+        anchorPoint={contextMenu.anchorPoint}
+        onClose={handleCloseMenu}
+      />
+    );
   };
 
   // get nested widgets for the current widget
@@ -62,19 +84,6 @@ const RenderWidget = ({
     widgetToRender.children,
     allWidgets
   );
-
-  const renderContextMenu = (): JSX.Element | null => {
-    if (!contextMenu.isOpen) return null;
-
-    return (
-      <WidgetContextMenu
-        isOpen={contextMenu.isOpen}
-        anchorPoint={contextMenu.anchorPoint}
-        onClose={handleCloseMenu}
-        widgetID={widgetToRender.widget.widgetID}
-      />
-    );
-  };
 
   // render nested widgets if there are any nested widgets
   const renderNestedWidgets = (): JSX.Element | null => {

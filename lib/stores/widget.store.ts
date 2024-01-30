@@ -10,6 +10,7 @@ import {
 } from "../schemas/widget.schemas/widget.schema";
 import {
   DynamicWidgetStateMap,
+  WidgetContextMenu,
   WidgetState,
 } from "../globals/interfaces/widget.state.interface";
 import ChangeRecordStore from "./change.record.store";
@@ -21,6 +22,12 @@ class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
 
   private _selectedWidget: WidgetHierarchy | undefined;
+
+  private _contextMenu: WidgetContextMenu = {
+    isOpen: false,
+    anchorPoint: { x: 0, y: 0 },
+    selectedWidgetID: null,
+  };
 
   private changeRecordStore: ChangeRecordStore;
 
@@ -60,6 +67,10 @@ class WidgetStore {
     }
   }
 
+  setContextMenuState(contextMenu: WidgetContextMenu): void {
+    this._contextMenu = contextMenu;
+  }
+
   //! getter
 
   getStructuredWidgetHierarchyByWidgetID(
@@ -94,6 +105,10 @@ class WidgetStore {
     return JSON.parse(JSON.stringify(this._selectedWidget));
   }
 
+  getContextMenuState(): WidgetContextMenu {
+    return JSON.parse(JSON.stringify(this._contextMenu));
+  }
+
   //! methods
 
   exportWidgetDataForTesting(): void {
@@ -103,10 +118,6 @@ class WidgetStore {
     for (const change of this.changeRecordStore.getChangeRecords()) {
       widgets.push(change.data);
     }
-
-    console.log("export widgets: ------");
-    console.log(JSON.parse(JSON.stringify(widgets)));
-    console.log("--------");
   }
 
   updateWidgetPositioningForBreakpoint(

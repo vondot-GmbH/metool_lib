@@ -1,45 +1,55 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
-import { useRef } from "react";
-import { useClickedOutside } from "../../../../globals/helpers/hook.helper";
+
 import ControlledMenu from "../../general.components/context.menu.components/controlled.menu.component/controlled.menu.component";
 import MenuItem from "../../general.components/context.menu.components/menu.item.component/menu.item.component";
+import WidgetStore from "../../../../stores/widget.store";
+import { useEffect } from "react";
 
 interface WidgetContextMenuProps {
   isOpen: boolean;
   anchorPoint: { x: number; y: number };
   onClose: () => void;
-  widgetID: string;
+  widgetStore?: WidgetStore;
 }
 
 const WidgetContextMenu = ({
   isOpen,
   anchorPoint,
   onClose,
-  widgetID,
+  widgetStore,
 }: WidgetContextMenuProps): JSX.Element => {
-  const menuRef = useRef(null);
-  useClickedOutside(menuRef, onClose); // TODO the menu is not closing if the click is on the widget
+  const handleDeleteWidget = () => {
+    console.log(
+      "delete widget " + widgetStore?.getContextMenuState().selectedWidgetID
+    );
+  };
 
-  // const handleDeleteWidget = (e: any) => {
-  //   console.log("delete widget");
-  // };
+  // add event listener to close menu on click outside
+  useEffect(() => {
+    document.addEventListener("click", () => {
+      if (isOpen) onClose();
+    });
+
+    return () => {
+      document.removeEventListener("click", () => {
+        if (isOpen) onClose();
+      });
+    };
+  }, [isOpen, onClose]);
 
   return (
     <ControlledMenu anchorPoint={anchorPoint} onClose={onClose} isOpen={isOpen}>
       <MenuItem
-        onClick={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-          console.log("delete widget");
+        onClick={() => {
+          handleDeleteWidget();
         }}
       >
         delete selected widget
       </MenuItem>
 
-      <MenuItem>item2</MenuItem>
-      <MenuItem>item3</MenuItem>
-      <MenuItem>item4</MenuItem>
+      <MenuItem>item 2</MenuItem>
+      <MenuItem>item 3</MenuItem>
+      <MenuItem>item 4</MenuItem>
     </ControlledMenu>
   );
 };

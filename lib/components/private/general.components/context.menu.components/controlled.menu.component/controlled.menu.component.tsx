@@ -1,3 +1,4 @@
+import ReactDOM from "react-dom";
 import styles from "./controlled.menu.component.module.scss";
 
 interface ControlledMenuProps {
@@ -15,18 +16,24 @@ const ControlledMenu = ({
 }: ControlledMenuProps): JSX.Element | null => {
   if (!isOpen) return null;
 
-  console.log(anchorPoint);
+  const overlayStyles: React.CSSProperties = {
+    position: "fixed",
+    top: anchorPoint.y,
+    left: anchorPoint.x,
+    zIndex: 999,
+  };
 
-  return (
-    <>
-      <div className={styles.overlay} onClick={onClose} />
-      <div
-        className={styles.menu}
-        style={{ top: `${anchorPoint.y}px`, left: `${anchorPoint.x}px` }}
-      >
-        {children}
-      </div>
-    </>
+  const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    e.preventDefault();
+    onClose();
+  };
+
+  return ReactDOM.createPortal(
+    <div style={overlayStyles} onClick={handleOverlayClick}>
+      <div className={styles.menu}>{children}</div>
+    </div>,
+    document.body
   );
 };
 

@@ -18,3 +18,9 @@ export interface FormWidgetState extends BaseWidgetState {
 export type WidgetState = TableWidgetState | FormWidgetState;
 
 export type DynamicWidgetStateMap = Map<string, WidgetState>;
+
+export interface WidgetContextMenu {
+  isOpen: boolean;
+  anchorPoint: { x: number; y: number };
+  selectedWidgetID: string | null;
+}
