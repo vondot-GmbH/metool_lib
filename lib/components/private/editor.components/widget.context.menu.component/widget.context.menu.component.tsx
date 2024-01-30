@@ -19,9 +19,14 @@ const WidgetContextMenu = ({
   widgetStore,
 }: WidgetContextMenuProps): JSX.Element => {
   const handleDeleteWidget = () => {
-    console.log(
-      "delete widget " + widgetStore?.getContextMenuState().selectedWidgetID
-    );
+    const widgetToDelte = widgetStore?.getContextMenuState().selectedWidgetID;
+
+    if (widgetToDelte == null) {
+      console.log("no widget selected");
+      return;
+    }
+
+    widgetStore?.deleteWidget(widgetToDelte);
   };
 
   // add event listener to close menu on click outside

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { makeAutoObservable } from "mobx";
 import {
   LayoutBreakpoint,
@@ -194,6 +193,38 @@ class WidgetStore {
         }
       }
     }
+  }
+
+  deleteWidget(widgetID: string): void {
+    console.log("before delete widget");
+    console.log(this.getStructuredData());
+
+    // get the widget to delete from the map
+    const widgetToDelete =
+      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+
+    // check if the widget exists
+    if (widgetToDelete == null) {
+      return;
+    }
+
+    // get the children of the widget to delete
+    const childrenIDs = widgetToDelete.children;
+
+    // delete all children of the widget to delete
+    for (const childID of childrenIDs) {
+      console.log("delete child::: ", childID);
+      this.deleteWidget(childID);
+    }
+
+    // delete the widget from the map
+    this._structuredWidgetHierarchy.delete(widgetID);
+
+    // log the map
+    console.log("after delete widget");
+    console.log(this.getStructuredData());
+
+    // TODO update the change record store and consider that created widgets have to be deleted but without a delete record (ony remove the create record)
   }
 }
 
