@@ -2,19 +2,20 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.view.component.module.scss";
 import RenderWidget from "../render.widget.component/render.widget.component";
-import { Widget } from "../../../../../schemas/widget.schemas/widget.schema";
+import {
+  Widget,
+  WidgetHierarchyMap,
+} from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
 import {
   BASE_BREAKPOINTS,
   BASE_COLS,
 } from "../../../../../globals/config/grid.layout.config";
-import {
-  getFilteredRootLevelWidgets,
-  structureWidgetsHierarchy,
-} from "../../../../../globals/helpers/widget.helper";
+import { getFilteredRootLevelWidgets } from "../../../../../globals/helpers/widget.helper";
 import ViewStore from "../../../../../stores/view.store";
 import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
+import { useMemo } from "react";
 
 interface RenderScreenProps {
   readonly?: boolean;
@@ -28,12 +29,17 @@ const RenderView = ({
   readonly = true,
   widgetStore,
 }: RenderScreenProps): JSX.Element => {
-  const structuredWidgets = structureWidgetsHierarchy(widgets);
-  widgetStore?.setInitialStructuredWidgetHierarchyMap(structuredWidgets);
+  const structuredWidgets = useMemo(() => {
+    return widgetStore?.setInitialWidgetAndConvert(widgets);
+  }, [widgetStore, widgets]);
 
-  // TODO store data in state ???
-  const rootLevelWidgets = getFilteredRootLevelWidgets(structuredWidgets);
-  const preparedRootLevelWidgets = Array.from(rootLevelWidgets.values());
+  const rootLevelWidgets = useMemo(() => {
+    return getFilteredRootLevelWidgets(structuredWidgets as WidgetHierarchyMap);
+  }, [structuredWidgets]);
+
+  const preparedRootLevelWidgets = useMemo(() => {
+    return Array.from(rootLevelWidgets.values());
+  }, [rootLevelWidgets]);
 
   return (
     <GridLayout
@@ -52,7 +58,7 @@ const RenderView = ({
           <RenderWidget
             readonly={readonly}
             widgetToRender={rootLevelWidgets}
-            allWidgets={structuredWidgets}
+            // key={rootLevelWidgets.widget.positioning.i + i}
           />
         </div>
       ))}

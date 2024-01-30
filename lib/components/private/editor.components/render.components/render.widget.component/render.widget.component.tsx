@@ -6,10 +6,7 @@ import {
   NESTED_BREAKPOINTS,
   NESTED_COLS,
 } from "../../../../../globals/config/grid.layout.config";
-import {
-  WidgetHierarchy,
-  WidgetHierarchyMap,
-} from "../../../../../schemas/widget.schemas/widget.schema";
+import { WidgetHierarchy } from "../../../../../schemas/widget.schemas/widget.schema";
 import { getFilteredWidgetMapByWidgetID } from "../../../../../globals/helpers/widget.helper";
 import { inject, observer } from "mobx-react";
 import ViewStore from "../../../../../stores/view.store";
@@ -20,19 +17,18 @@ import WidgetStore from "../../../../../stores/widget.store";
 interface RenderWidgetProps {
   readonly?: boolean;
   widgetToRender: WidgetHierarchy;
-  allWidgets: WidgetHierarchyMap;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
 }
 
 const RenderWidget = ({
   widgetToRender,
-  allWidgets,
   readonly,
   widgetStore,
   viewStore,
 }: RenderWidgetProps): JSX.Element => {
   const contextMenu = widgetStore?.getContextMenuState();
+  const allWidgets = widgetStore?.getStructuredData();
 
   const handleCloseMenu = () => {
     widgetStore?.setContextMenuState({
@@ -114,7 +110,6 @@ const RenderWidget = ({
             <RenderWidget
               readonly={readonly}
               widgetToRender={childWidget}
-              allWidgets={allWidgets}
               widgetStore={widgetStore}
               viewStore={viewStore}
             />

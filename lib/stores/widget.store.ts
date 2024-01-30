@@ -15,6 +15,7 @@ import {
 import ChangeRecordStore from "./change.record.store";
 import { Layout } from "react-grid-layout";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
+import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 
 class WidgetStore {
   private _dynamicWidgetStates: DynamicWidgetStateMap = new Map();
@@ -40,10 +41,10 @@ class WidgetStore {
     this._dynamicWidgetStates.set(widgetID, newState);
   }
 
-  setInitialStructuredWidgetHierarchyMap(
-    hierarchyMap: WidgetHierarchyMap
-  ): void {
-    this._structuredWidgetHierarchy = hierarchyMap;
+  setInitialWidgetAndConvert(widgets: Widget[]): WidgetHierarchyMap {
+    const structuredWidgets = structureWidgetsHierarchy(widgets);
+    this._structuredWidgetHierarchy = structuredWidgets;
+    return structuredWidgets;
   }
 
   setStructuredWidgetHierarchy(
