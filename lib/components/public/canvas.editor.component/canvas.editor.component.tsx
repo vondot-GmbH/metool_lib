@@ -9,6 +9,12 @@ import WidgetStore from "../../../stores/widget.store";
 import { ChangeRecord } from "../../../globals/interfaces/change.record.interface";
 import ChangeRecordStore from "../../../stores/change.record.store";
 import Row from "../../private/general.components/row.component/row.component";
+import ResizableSidebar from "../../private/general.components/resizable.sidbear.component/resizable.sidebar.component";
+import IconTabBar from "../../private/general.components/icon.tab.bar.component/icon.tab.bar.component";
+import { useState } from "react";
+import { faSquarePlus } from "@fortawesome/free-regular-svg-icons/faSquarePlus";
+import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons/faXmarkCircle";
+import SidebarWrapper from "../../private/general.components/sidebar.wrapper.component/sidebar.wrapper.component";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -24,6 +30,9 @@ const CanvasEditor = ({
   widgetStore,
   onSaveChanges,
 }: CanvasEditorProps): JSX.Element => {
+  const [selectedConfigurationBar, setSelectedConfigurationBar] =
+    useState<string>("WIDGETS");
+
   // TODO
   const handleOnSaveChanges = () => {
     if (changeRecordStore && onSaveChanges) {
@@ -48,12 +57,36 @@ const CanvasEditor = ({
     );
   };
 
-  const _buildCanvasConfigurationBar = (): JSX.Element => {
-    return <div className={styles.canvasConfigurationBar}>_buildWidgetBar</div>;
+  const _buildCanvasConfigurationBar = (): JSX.Element | null => {
+    return (
+      <ResizableSidebar initialWidth={250} minWidth={150}>
+        <SidebarWrapper title="test">
+          <div>content</div>
+        </SidebarWrapper>
+      </ResizableSidebar>
+    );
   };
 
   const _buildTabBar = (): JSX.Element => {
-    return <div className={styles.tabSideBar}></div>;
+    return (
+      <IconTabBar
+        style={{ borderRight: "1px solid #e0e0e0" }}
+        tabs={[
+          {
+            icon: faSquarePlus,
+            name: "WIDGETS",
+          },
+          {
+            icon: faXmarkCircle,
+            name: "test2",
+          },
+        ]}
+        onSelect={(name: string) => {
+          setSelectedConfigurationBar(name);
+        }}
+        selected={selectedConfigurationBar}
+      />
+    );
   };
 
   return (

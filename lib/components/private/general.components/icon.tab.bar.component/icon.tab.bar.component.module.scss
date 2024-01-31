@@ -1,0 +1,18 @@
+.tabBar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+
+  .tabItem {
+    padding: 7px;
+    margin: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .selected {
+    background-color: #d1d1d18f;
+  }
+}
