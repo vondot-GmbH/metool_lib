@@ -14,7 +14,9 @@ import IconTabBar from "../../private/general.components/icon.tab.bar.component/
 import { useState } from "react";
 import { faSquarePlus } from "@fortawesome/free-regular-svg-icons/faSquarePlus";
 import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons/faXmarkCircle";
-import SidebarWrapper from "../../private/general.components/sidebar.wrapper.component/sidebar.wrapper.component";
+import ComponentWrapper from "../../private/general.components/component.wrapper.component/component.wrapper.component";
+import Headline from "../../private/general.components/text.components/headline.component/headline.component";
+import WidgetSidebar from "../../private/editor.components/editor.bar.components/widget.sidebar.component/widget.sidebar.component";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -48,7 +50,7 @@ const CanvasEditor = ({
     return (
       <Row className={styles.topBar} alignItems="center">
         <Column justifyContent="flex-start">
-          <p>Project Name </p>
+          <Headline>Project Name</Headline>
         </Column>
         <Column justifyContent="flex-start">
           <button onClick={() => handleOnSaveChanges()}>Save Changes</button>
@@ -59,10 +61,10 @@ const CanvasEditor = ({
 
   const _buildCanvasConfigurationBar = (): JSX.Element | null => {
     return (
-      <ResizableSidebar initialWidth={250} minWidth={150}>
-        <SidebarWrapper title="test">
-          <div>content</div>
-        </SidebarWrapper>
+      <ResizableSidebar initialWidth={230} minWidth={150}>
+        <ComponentWrapper title="Widgets">
+          <WidgetSidebar />
+        </ComponentWrapper>
       </ResizableSidebar>
     );
   };

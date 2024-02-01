@@ -1,0 +1,16 @@
+.widgetSidebar {
+  .widgetPreviewContainer {
+    max-width: 100px;
+
+    .imageWrapper {
+      background-color: rgba(199, 199, 199, 0.182);
+      border: 1px solid #0000001e;
+      padding: 12px 23px;
+      border-radius: 10px;
+    }
+
+    .widgetTitle {
+      text-align: center;
+    }
+  }
+}
