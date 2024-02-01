@@ -11,6 +11,7 @@ import {
 } from "../../../../schemas/widget.schemas/widget.schema";
 import { useEffect, useState } from "react";
 import styles from "./grid.layout.component.module.scss";
+import { v4 as UUID } from "uuid";
 import ViewStore from "../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../stores/widget.store";
@@ -29,6 +30,7 @@ interface GridLayoutProps {
   onResizeStop?: ReactGridLayout.ItemCallback | undefined;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
+  parentWidgetID?: string;
 }
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -47,6 +49,7 @@ const GridLayout = ({
   onResizeStop: propOnResizeStop,
   isNested = false,
   widgetStore,
+  parentWidgetID,
 }: GridLayoutProps): JSX.Element => {
   const layouts = convertToGridLayout(content);
   const [savedLayouts, setSavedLayouts] = useState(layouts);
@@ -57,6 +60,53 @@ const GridLayout = ({
 
   const onBreakpointChange = (newBreakpoint: BreakpointType) => {
     setCurrentBreakpoint(newBreakpoint);
+  };
+
+  // TODO
+  const handleDrop = (layout: any, layoutItem: any, event: any): void => {
+    if (currentBreakpoint == null) {
+      return;
+    }
+
+    const widgetID = UUID();
+
+    const layoutNEW: Layout = {
+      i: widgetID,
+      h: 2,
+      w: 5,
+      x: layoutItem.x,
+      y: layoutItem.y,
+    };
+
+    console.log("layoutNEW");
+    console.log(layoutNEW);
+
+    console.log("savedLayouts");
+    console.log(savedLayouts);
+
+    console.log("content: and parent: ", parentWidgetID);
+    console.log(content);
+
+    const updatedLayoutsForCurrentBreakpoint = [
+      ...(savedLayouts[currentBreakpoint] || []),
+      layoutNEW,
+    ];
+
+    const updatedSavedLayouts = {
+      ...savedLayouts,
+      [currentBreakpoint]: updatedLayoutsForCurrentBreakpoint,
+    };
+
+    const widgetType = event.dataTransfer.getData("text");
+
+    widgetStore?.addWidget({
+      currentBreakpoint: currentBreakpoint as LayoutBreakpoint,
+      layout: layoutNEW,
+      parentID: parentWidgetID ?? null,
+      widgetType,
+    });
+
+    setSavedLayouts(updatedSavedLayouts);
   };
 
   const handleDragStart = (
@@ -157,6 +207,8 @@ const GridLayout = ({
       onDragStop={handleDragStop}
       onResizeStart={handleResizeStart}
       onResizeStop={handleResizeStop}
+      onDrop={handleDrop}
+      isDroppable={true}
       onLayoutChange={(_layout, layouts) => {
         setSavedLayouts(layouts);
       }}

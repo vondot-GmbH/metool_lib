@@ -197,9 +197,6 @@ class WidgetStore {
   }
 
   deleteWidget(widgetID: string): void {
-    console.log("before delete widget");
-    console.log(this.getStructuredData());
-
     // get the widget to delete from the map
     const widgetToDelete =
       this.getStructuredWidgetHierarchyByWidgetID(widgetID);
@@ -214,18 +211,66 @@ class WidgetStore {
 
     // delete all children of the widget to delete
     for (const childID of childrenIDs) {
-      console.log("delete child::: ", childID);
       this.deleteWidget(childID);
     }
 
     // delete the widget from the map
     this._structuredWidgetHierarchy.delete(widgetID);
 
-    // log the map
-    console.log("after delete widget");
+    // TODO update the change record store and consider that created widgets have to be deleted but without a delete record (ony remove the create record)
+  }
+
+  addWidget(args: {
+    widgetType: string;
+    layout: Layout;
+    parentID: string | null;
+    currentBreakpoint: LayoutBreakpoint;
+  }): void {
+    const { widgetType, layout, parentID, currentBreakpoint } = args;
+
+    const widgetID = layout.i;
+
+    // create the new widget object
+    const newWidget: WidgetHierarchy = {
+      widget: {
+        widgetID,
+        widgetType,
+        view: "",
+        positioning: {
+          i: widgetID,
+          md: undefined,
+          xl: undefined,
+          xs: undefined,
+
+          [currentBreakpoint]: {
+            x: layout.x,
+            y: layout.y,
+            w: layout.w,
+            h: layout.h,
+          },
+        },
+      },
+      children: [],
+      level: parentID ? "NESTED" : "ROOT",
+    };
+
+    // add the new widget to the map
+    this._structuredWidgetHierarchy.set(widgetID, newWidget);
+
+    // check if the widget has a parent widget and add the widget to the children of the parent widget
+    if (parentID) {
+      const parentWidget = this._structuredWidgetHierarchy.get(parentID);
+
+      if (parentWidget) {
+        parentWidget.children.push(widgetID);
+        this._structuredWidgetHierarchy.set(parentID, parentWidget);
+      }
+    }
+
+    console.log("after add widget");
     console.log(this.getStructuredData());
 
-    // TODO update the change record store and consider that created widgets have to be deleted but without a delete record (ony remove the create record)
+    // TODO add create change record to change record store
   }
 }
 

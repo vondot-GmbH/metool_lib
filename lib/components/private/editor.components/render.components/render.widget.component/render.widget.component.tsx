@@ -10,9 +10,9 @@ import { WidgetHierarchy } from "../../../../../schemas/widget.schemas/widget.sc
 import { getFilteredWidgetMapByWidgetID } from "../../../../../globals/helpers/widget.helper";
 import { inject, observer } from "mobx-react";
 import ViewStore from "../../../../../stores/view.store";
-
 import WidgetContextMenu from "../../widget.context.menu.component/widget.context.menu.component";
 import WidgetStore from "../../../../../stores/widget.store";
+import classNames from "classnames";
 
 interface RenderWidgetProps {
   readonly?: boolean;
@@ -27,8 +27,17 @@ const RenderWidget = ({
   widgetStore,
   viewStore,
 }: RenderWidgetProps): JSX.Element => {
+  let widgetContainerClassName = classNames(styles.widgetContainer);
   const contextMenu = widgetStore?.getContextMenuState();
   const allWidgets = widgetStore?.getStructuredData();
+
+  // if the widget is selected, add the selected widget class
+  if (
+    widgetToRender.widget.widgetID ==
+    widgetStore?.getSelectedWidget()?.widget.widgetID
+  ) {
+    widgetContainerClassName += ` ${styles.selectedWidget}`;
+  }
 
   const handleCloseMenu = () => {
     widgetStore?.setContextMenuState({
@@ -81,6 +90,11 @@ const RenderWidget = ({
     allWidgets
   );
 
+  console.log("RenderWidget:::: children widgets", childrenWidgets);
+  console.log("RenderWidget:::: widgetToRender", widgetToRender);
+
+  // TODO here is the problem the new widget is in allWidgets but not in widgetToRender.children,
+
   // render nested widgets if there are any nested widgets
   const renderNestedWidgets = (): JSX.Element | null => {
     // convert the map to an array for rendering purposes
@@ -94,6 +108,7 @@ const RenderWidget = ({
     // orherwise render the nested widgets in a new grid layout
     return (
       <GridLayout
+        parentWidgetID={widgetToRender.widget.widgetID}
         isNested
         key={"nested-grid-" + widgetToRender.widget.positioning.i}
         content={childrenWidgets}
@@ -121,7 +136,7 @@ const RenderWidget = ({
 
   return (
     <div
-      className={styles.widgetContainer}
+      className={widgetContainerClassName}
       onContextMenu={(e) =>
         !readonly && handleOnContextMenu(e, widgetToRender.widget.widgetID)
       }

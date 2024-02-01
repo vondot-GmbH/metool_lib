@@ -4,6 +4,10 @@
   overflow: hidden;
 }
 
+.selectedWidget {
+  background-color: rgba(0, 0, 0, 0.219);
+}
+
 .childWidget {
   border: 1px solid #ccc;
 }
