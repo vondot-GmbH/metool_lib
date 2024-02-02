@@ -17,6 +17,8 @@ import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons/faXmarkCircle
 import Headline from "../../private/general.components/text.components/headline.component/headline.component";
 import WidgetSidebar from "../../private/editor.components/editor.bar.components/widget.sidebar.component/widget.sidebar.component";
 import StateSidebar from "../../private/editor.components/editor.bar.components/state.sidebar.component/state.sidebar.component";
+import SizedContainer from "../../private/general.components/sized.container.component/sized.container.component";
+import FilledButton from "../../private/general.components/filled.button.component/filled.button.component";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -49,10 +51,15 @@ const CanvasEditor = ({
     return (
       <Row className={styles.topBar} alignItems="center">
         <Column justifyContent="flex-start">
-          <Headline>Project Name</Headline>
+          <Headline className="ml-20">Project Name</Headline>
         </Column>
-        <Column justifyContent="flex-start">
-          <button onClick={() => handleOnSaveChanges()}>Save Changes</button>
+        <Column alignItems="flex-end">
+          <SizedContainer size="s">
+            <FilledButton
+              label="export changes"
+              onClick={handleOnSaveChanges}
+            />
+          </SizedContainer>
         </Column>
       </Row>
     );

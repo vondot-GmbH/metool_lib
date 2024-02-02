@@ -21,7 +21,7 @@ const WidgetSidebar = ({}: WidgetSidebarProps): JSX.Element => {
         <div className={styles.imageWrapper}>
           <Image size="S" imageUrl={fallbackImage} />
         </div>
-        <RunningText className={styles.widgetTitle}>WIDGET</RunningText>
+        <RunningText className={styles.widgetTitle}>component</RunningText>
       </Column>
     );
   };

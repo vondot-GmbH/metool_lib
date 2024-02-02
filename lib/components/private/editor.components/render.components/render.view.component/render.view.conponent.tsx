@@ -16,7 +16,7 @@ import ViewStore from "../../../../../stores/view.store";
 import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
 import { useMemo } from "react";
-
+import "../../../../../styles/index.css";
 interface RenderScreenProps {
   readonly?: boolean;
   widgets: Widget[];
