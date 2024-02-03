@@ -33,13 +33,13 @@ const RenderView = ({
     return widgetStore?.setInitialWidgetAndConvert(widgets);
   }, [widgetStore, widgets]);
 
-  const rootLevelWidgets = useMemo(() => {
-    return getFilteredRootLevelWidgets(structuredWidgets as WidgetHierarchyMap);
-  }, [structuredWidgets]);
+  const rootLevelWidgets = getFilteredRootLevelWidgets(
+    structuredWidgets as WidgetHierarchyMap
+  );
 
-  const preparedRootLevelWidgets = useMemo(() => {
-    return Array.from(rootLevelWidgets.values());
-  }, [rootLevelWidgets]);
+  const preparedRootLevelWidgets = Array.from(rootLevelWidgets.values());
+
+  // console.log("preparedRootLevelWidgets", preparedRootLevelWidgets);
 
   return (
     <GridLayout

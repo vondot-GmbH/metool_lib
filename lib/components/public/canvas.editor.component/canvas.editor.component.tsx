@@ -40,10 +40,12 @@ const CanvasEditor = ({
   // TODO
   const handleOnSaveChanges = () => {
     if (changeRecordStore && onSaveChanges) {
-      widgetStore?.exportWidgetDataForTesting();
-      const changes = changeRecordStore?.processReleaseChanges();
+      // const changes = changeRecordStore?.processReleaseChanges();
 
-      if (changes && changes.length != 0) onSaveChanges(changes);
+      // if (changes && changes.length != 0) onSaveChanges(changes);
+
+      const widget = widgetStore?.getStructuredData();
+      console.log(JSON.stringify(widget, null, 2));
     }
   };
 

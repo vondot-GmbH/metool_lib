@@ -1,13 +1,19 @@
 .widgetSidebar {
   .widgetPreviewContainer {
-    max-width: 100px;
+    max-width: 72px;
+    width: 100%;
     cursor: grab;
 
     .imageWrapper {
       background-color: rgba(199, 199, 199, 0.182);
       border: 1px solid #0000001e;
-      padding: 12px 23px;
-      border-radius: 10px;
+      width: 100%;
+      border-radius: 6px;
+      height: 55px;
+
+      .widgetIcon {
+        padding: 3px;
+      }
     }
 
     .widgetTitle {

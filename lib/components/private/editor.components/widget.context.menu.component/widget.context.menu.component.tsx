@@ -22,11 +22,10 @@ const WidgetContextMenu = ({
     const widgetToDelte = widgetStore?.getContextMenuState().selectedWidgetID;
 
     if (widgetToDelte == null) {
-      console.log("no widget selected");
       return;
     }
 
-    widgetStore?.deleteWidget(widgetToDelte);
+    widgetStore?.deleteWidgetNEW(widgetToDelte);
   };
 
   // add event listener to close menu on click outside

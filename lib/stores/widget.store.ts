@@ -44,7 +44,7 @@ class WidgetStore {
   setInitialWidgetAndConvert(widgets: Widget[]): WidgetHierarchyMap {
     const structuredWidgets = structureWidgetsHierarchy(widgets);
     this._structuredWidgetHierarchy = structuredWidgets;
-    return structuredWidgets;
+    return this._structuredWidgetHierarchy;
   }
 
   setStructuredWidgetHierarchy(
@@ -110,15 +110,6 @@ class WidgetStore {
   }
 
   //! methods
-
-  exportWidgetDataForTesting(): void {
-    const widgets: Widget[] = [];
-
-    // loop through all widgets in the map and add the widget to the array
-    for (const change of this.changeRecordStore.getChangeRecords()) {
-      widgets.push(change.data);
-    }
-  }
 
   updateWidgetPositioningForBreakpoint(
     widgetID: string,
@@ -197,6 +188,8 @@ class WidgetStore {
   }
 
   deleteWidget(widgetID: string): void {
+    console.log("deleteWidget:: ", widgetID);
+
     // get the widget to delete from the map
     const widgetToDelete =
       this.getStructuredWidgetHierarchyByWidgetID(widgetID);
@@ -217,7 +210,55 @@ class WidgetStore {
     // delete the widget from the map
     this._structuredWidgetHierarchy.delete(widgetID);
 
-    // TODO update the change record store and consider that created widgets have to be deleted but without a delete record (ony remove the create record)
+    // set the change record for the widget to delete
+    this.changeRecordStore.setChangeWidgetRecord(
+      widgetID,
+      "DELETE",
+      widgetToDelete.widget
+    );
+  }
+
+  deleteWidgetNEW(widgetID: string, isRootCall = true): void {
+    console.log("deleteWidget:: ", widgetID);
+
+    // get the widget to delete from the map
+    const widgetToDelete =
+      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+
+    // check if the widget exists
+    if (widgetToDelete == null) {
+      return;
+    }
+
+    // if this is the root call (not a recursive call), update the parent widget's children list
+    if (isRootCall && widgetToDelete.level === "NESTED") {
+      for (const [parentID, parentWidget] of this._structuredWidgetHierarchy) {
+        const childIndex = parentWidget.children.indexOf(widgetID);
+        if (childIndex !== -1) {
+          parentWidget.children.splice(childIndex, 1); // Remove the widgetID from the parent's children list
+          this._structuredWidgetHierarchy.set(parentID, parentWidget); // Update the parent widget in the hierarchy
+          break; // Break after updating the parent, as each widget should only have one parent
+        }
+      }
+    }
+
+    // get the children of the widget to delete
+    const childrenIDs = widgetToDelete.children;
+
+    // delete all children of the widget to delete
+    for (const childID of childrenIDs) {
+      this.deleteWidgetNEW(childID, false); // Pass false to indicate this is a recursive call, not the root call
+    }
+
+    // delete the widget from the map
+    this._structuredWidgetHierarchy.delete(widgetID);
+
+    // set the change record for the widget to delete
+    this.changeRecordStore.setChangeWidgetRecord(
+      widgetID,
+      "DELETE",
+      widgetToDelete.widget
+    );
   }
 
   addWidget(args: {
@@ -254,6 +295,10 @@ class WidgetStore {
       level: parentID ? "NESTED" : "ROOT",
     };
 
+    if (parentID) {
+      newWidget.widget.parentID = parentID;
+    }
+
     // add the new widget to the map
     this._structuredWidgetHierarchy.set(widgetID, newWidget);
 
@@ -267,10 +312,12 @@ class WidgetStore {
       }
     }
 
-    console.log("after add widget");
-    console.log(this.getStructuredData());
-
-    // TODO add create change record to change record store
+    // set the change record for the new widget
+    this.changeRecordStore.setChangeWidgetRecord(
+      widgetID,
+      "CREATE",
+      newWidget.widget
+    );
   }
 }
 

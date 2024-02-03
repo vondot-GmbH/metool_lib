@@ -78,15 +78,6 @@ const GridLayout = ({
       y: layoutItem.y,
     };
 
-    console.log("layoutNEW");
-    console.log(layoutNEW);
-
-    console.log("savedLayouts");
-    console.log(savedLayouts);
-
-    console.log("content: and parent: ", parentWidgetID);
-    console.log(content);
-
     const updatedLayoutsForCurrentBreakpoint = [
       ...(savedLayouts[currentBreakpoint] || []),
       layoutNEW,

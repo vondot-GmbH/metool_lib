@@ -90,8 +90,8 @@ const RenderWidget = ({
     allWidgets
   );
 
-  console.log("RenderWidget:::: children widgets", childrenWidgets);
-  console.log("RenderWidget:::: widgetToRender", widgetToRender);
+  // console.log("RenderWidget:::: children widgets", childrenWidgets);
+  // console.log("RenderWidget:::: widgetToRender", widgetToRender);
 
   // TODO here is the problem the new widget is in allWidgets but not in widgetToRender.children,
 

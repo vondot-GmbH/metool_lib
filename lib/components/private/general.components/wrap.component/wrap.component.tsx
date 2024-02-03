@@ -13,6 +13,7 @@ interface WrapProps {
   alignItems?: "flex-start" | "flex-end" | "center" | "stretch" | "baseline";
   children: React.ReactNode | React.ReactNode[];
   className?: string;
+  gap?: string;
   onClick?: () => void;
 }
 
@@ -21,6 +22,7 @@ const Wrap = ({
   alignItems,
   children,
   className,
+  gap,
   onClick,
 }: WrapProps): JSX.Element => {
   const wrapContainerClassName = classNames(styles.wrapContainer, className);
@@ -28,7 +30,7 @@ const Wrap = ({
   return (
     <div
       className={wrapContainerClassName}
-      style={{ justifyContent, alignItems }}
+      style={{ justifyContent, alignItems, gap }}
       onClick={onClick}
     >
       {children}

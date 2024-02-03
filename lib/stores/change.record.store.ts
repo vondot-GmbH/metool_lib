@@ -33,6 +33,7 @@ class ChangeRecordStore {
 
   updateExistingChangeRecordData(widgetID: string, data: any): void {
     const existingRecord = this._changeRecords.get(widgetID);
+
     if (existingRecord) {
       existingRecord.data = data;
     }
@@ -44,7 +45,6 @@ class ChangeRecordStore {
     data: any
   ): void {
     const existingRecord = this._changeRecords.get(widgetID);
-
     const documentID = data?._id != null ? data._id : null;
 
     // cehck if the record already exists and if it does, check if the action is the same
@@ -54,8 +54,18 @@ class ChangeRecordStore {
       existingRecord.action === "CREATE" &&
       action === "UPDATE"
     ) {
-      // if the action is the same, update the data
+      // if the action is the same, only update the data
       this.updateExistingChangeRecordData(widgetID, data);
+      return;
+    }
+
+    // if a widget has a create record and then is deleted, only remove the create record instead of adding a delete record
+    if (
+      existingRecord &&
+      existingRecord.action === "CREATE" &&
+      action === "DELETE"
+    ) {
+      this._changeRecords.delete(widgetID);
       return;
     }
 
