@@ -13,7 +13,7 @@ import ViewStore from "../../../../../stores/view.store";
 import WidgetContextMenu from "../../widget.context.menu.component/widget.context.menu.component";
 import WidgetStore from "../../../../../stores/widget.store";
 import classNames from "classnames";
-import Config from "../../../../../config/config.provider";
+import ConfigProvider from "../../../../../config/config.provider";
 import React from "react";
 
 interface RenderWidgetProps {
@@ -29,7 +29,7 @@ const RenderWidget = ({
   widgetStore,
   viewStore,
 }: RenderWidgetProps): JSX.Element => {
-  const registeredWidgets = Config.getInstance().getRegisteredWidgets();
+  const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
   let widgetContainerClassName = classNames(styles.widgetContainer);
   const contextMenu = widgetStore?.getContextMenuState();
   const allWidgets = widgetStore?.getStructuredData();

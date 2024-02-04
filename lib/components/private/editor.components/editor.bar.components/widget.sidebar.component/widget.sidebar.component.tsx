@@ -7,30 +7,33 @@ import fallbackImage from "../../../../../assets/icons/fallback_image.png";
 import Column from "../../../general.components/column.component/column.component";
 import ComponentWrapper from "../../../general.components/component.wrapper.component/component.wrapper.component";
 import Row from "../../../general.components/row.component/row.component";
+import ConfigProvider from "../../../../../config/config.provider";
 
 interface WidgetSidebarProps {}
 
 const WidgetSidebar = ({}: WidgetSidebarProps): JSX.Element => {
-  const _buildWidgetItem = (): JSX.Element => {
+  const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
+
+  const _buildWidgetItem = (args: {
+    type: string;
+    icon: string;
+    name: string;
+  }): JSX.Element => {
     return (
       <Column
         className={styles.widgetPreviewContainer}
         alignItems="center"
         draggable={true}
-        onDragStart={(e) => e.dataTransfer.setData("text/plain", "TEST_TEST")}
+        onDragStart={(e) => e.dataTransfer.setData("text/plain", args.type)}
       >
         <Row
           className={styles.imageWrapper}
           justifyContent="center"
           alignItems="center"
         >
-          <Image
-            size="S"
-            imageUrl={fallbackImage}
-            className={styles.widgetIcon}
-          />
+          <Image size="S" imageUrl={args.icon} className={styles.widgetIcon} />
         </Row>
-        <RunningText className={styles.widgetTitle}>component</RunningText>
+        <RunningText className={styles.widgetTitle}>{args.name}</RunningText>
       </Column>
     );
   };
@@ -42,12 +45,17 @@ const WidgetSidebar = ({}: WidgetSidebarProps): JSX.Element => {
         justifyContent="center"
         gap="12px 8px"
       >
-        {_buildWidgetItem()}
-        {_buildWidgetItem()}
-        {_buildWidgetItem()}
-        {_buildWidgetItem()}
-        {_buildWidgetItem()}
-        {_buildWidgetItem()}
+        {registeredWidgets.map((widget) => {
+          return (
+            <>
+              {_buildWidgetItem({
+                icon: widget.icon || fallbackImage,
+                name: widget.name,
+                type: widget.type,
+              })}
+            </>
+          );
+        })}
       </Wrap>
     </ComponentWrapper>
   );

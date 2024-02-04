@@ -14,7 +14,7 @@ const changeRecordStore = new ChangeRecordStore();
 const widgetStore = new WidgetStore(changeRecordStore);
 
 Init({
-  widgets: [TableWidget],
+  widgets: [TableWidget, TableWidget],
 });
 
 const stores = {

@@ -2,7 +2,7 @@ export { default as RenderView } from "./components/private/editor.components/re
 export { default as CanvasEditor } from "./components/public/canvas.editor.component/canvas.editor.component";
 
 // widgets
-export { TableWidgetConfig as TableWidget } from "./components/public/widgets/table.widget/table.widget.config";
+export { TableWidgetConfig as TableWidget } from "./components/public/widget.components/table.widget/table.widget.config";
 
 // config
 export { default as Init } from "./config/init";
