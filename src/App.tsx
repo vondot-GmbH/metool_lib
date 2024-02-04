@@ -1,16 +1,21 @@
 import "./App.css";
-import { CanvasEditor } from "../lib/main";
+import { CanvasEditor, Init } from "../lib/main";
 import ViewStore from "../lib/stores/view.store";
 import { Provider as MobxProvider } from "mobx-react";
 import WidgetStore from "../lib/stores/widget.store";
 import { EXAMPLE_WIDGETS_DATA_FINAL } from "./example.data";
 import ChangeRecordStore from "../lib/stores/change.record.store";
+import { TableWidget } from "../lib/main";
 
 // only for testing purposes
 
 const viewStore = new ViewStore();
 const changeRecordStore = new ChangeRecordStore();
 const widgetStore = new WidgetStore(changeRecordStore);
+
+Init({
+  widgets: [TableWidget],
+});
 
 const stores = {
   viewStore,

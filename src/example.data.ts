@@ -6,10 +6,6 @@ export const EXAMPLE_VIEW: View = {
   name: "Customer View",
 };
 
-//!
-
-//!
-
 export const EXAMPLE_WIDGETS_DATA_FINAL: Widget[] = [
   {
     _id: "5f9e9b6b9c6b4c0017f3b3b5",
@@ -78,7 +74,7 @@ export const EXAMPLE_WIDGETS_DATA_FINAL: Widget[] = [
   {
     _id: "5f9e9b6b9c6b4c0017f3b399",
     widgetID: "customerDataTableNested2",
-    widgetType: "DATA_TABLE",
+    widgetType: "TableWidget",
     view: "5f9e9b6b9I6b4c3017f3b3a0",
     parentID: "customerTableWrapper",
     positioning: {

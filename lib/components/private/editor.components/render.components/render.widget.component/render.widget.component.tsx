@@ -13,6 +13,8 @@ import ViewStore from "../../../../../stores/view.store";
 import WidgetContextMenu from "../../widget.context.menu.component/widget.context.menu.component";
 import WidgetStore from "../../../../../stores/widget.store";
 import classNames from "classnames";
+import Config from "../../../../../config/config.provider";
+import React from "react";
 
 interface RenderWidgetProps {
   readonly?: boolean;
@@ -27,6 +29,7 @@ const RenderWidget = ({
   widgetStore,
   viewStore,
 }: RenderWidgetProps): JSX.Element => {
+  const registeredWidgets = Config.getInstance().getRegisteredWidgets();
   let widgetContainerClassName = classNames(styles.widgetContainer);
   const contextMenu = widgetStore?.getContextMenuState();
   const allWidgets = widgetStore?.getStructuredData();
@@ -90,11 +93,6 @@ const RenderWidget = ({
     allWidgets
   );
 
-  // console.log("RenderWidget:::: children widgets", childrenWidgets);
-  // console.log("RenderWidget:::: widgetToRender", widgetToRender);
-
-  // TODO here is the problem the new widget is in allWidgets but not in widgetToRender.children,
-
   // render nested widgets if there are any nested widgets
   const renderNestedWidgets = (): JSX.Element | null => {
     // convert the map to an array for rendering purposes
@@ -134,6 +132,22 @@ const RenderWidget = ({
     );
   };
 
+  // render the widget component based on the widget type and the registered widgets
+  const renderWidgetComponent = (widgetType: string): JSX.Element => {
+    // find the widget in the registered widgets
+    const widget = registeredWidgets?.find(
+      (widget) => widget.type === widgetType
+    );
+
+    if (!widget || !widget.component) {
+      return <div>Widget not found</div>;
+    }
+    // render the widget component if it exists
+    const WidgetComponent = widget.component as React.ComponentType<any>;
+
+    return React.createElement(WidgetComponent);
+  };
+
   return (
     <div
       className={widgetContainerClassName}
@@ -141,7 +155,7 @@ const RenderWidget = ({
         !readonly && handleOnContextMenu(e, widgetToRender.widget.widgetID)
       }
     >
-      {widgetToRender.widget.widgetID}
+      {renderWidgetComponent(widgetToRender.widget.widgetType)}
       {renderNestedWidgets()}
       {renderContextMenu()}
     </div>
