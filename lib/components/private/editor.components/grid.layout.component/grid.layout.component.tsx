@@ -58,6 +58,14 @@ const GridLayout = ({
   const [gridBackground, setGridBackground] = useState("");
   const [showGrid, setShowGrid] = useState(false);
 
+  const gridBackgroundStyle = {
+    background: showGrid ? gridBackground : "none",
+  } as any;
+
+  if (isNested) {
+    gridBackgroundStyle.height = "100%";
+  }
+
   const onBreakpointChange = (newBreakpoint: BreakpointType) => {
     setCurrentBreakpoint(newBreakpoint);
   };
@@ -191,7 +199,7 @@ const GridLayout = ({
       breakpoints={breakpoints}
       cols={cols}
       rowHeight={rowHeight}
-      style={{ background: showGrid ? gridBackground : "none", height: "100%" }}
+      style={gridBackgroundStyle}
       onBreakpointChange={onBreakpointChange}
       compactType={null}
       onDragStart={handleDragStart}

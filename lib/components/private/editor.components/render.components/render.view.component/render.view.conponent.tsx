@@ -45,7 +45,7 @@ const RenderView = ({
     <GridLayout
       key={"top-level-grid"}
       content={rootLevelWidgets}
-      rowHeight={46}
+      rowHeight={30}
       breakpoints={BASE_BREAKPOINTS}
       cols={BASE_COLS}
       onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}

@@ -114,7 +114,7 @@ const RenderWidget = ({
         content={childrenWidgets}
         breakpoints={NESTED_BREAKPOINTS}
         cols={NESTED_COLS}
-        rowHeight={25}
+        rowHeight={20}
         onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
       >
         {preparedChildrenWidgets.map((childWidget) => (
