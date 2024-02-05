@@ -1,0 +1,19 @@
+.breakpointSettings {
+  height: 100%;
+  display: flex;
+  align-items: center;
+
+  .breakpointIcon {
+    padding: 13px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #d1d1d18f;
+    }
+  }
+
+  .selected {
+    background-color: #d1d1d18f;
+  }
+}

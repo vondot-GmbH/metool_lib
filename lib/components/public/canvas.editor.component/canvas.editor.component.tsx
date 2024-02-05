@@ -19,12 +19,16 @@ import WidgetSidebar from "../../private/editor.components/editor.bar.components
 import StateSidebar from "../../private/editor.components/editor.bar.components/state.sidebar.component/state.sidebar.component";
 import SizedContainer from "../../private/general.components/sized.container.component/sized.container.component";
 import FilledButton from "../../private/general.components/filled.button.component/filled.button.component";
+import EditorStore from "../../../stores/editor.store";
+import BreakpointSettings from "../../private/editor.components/breakpoint.settings.component/breakpoint.settings.component";
+import ResizableScreenWrapper from "../../private/editor.components/resizable.screen.wrapper.component/resizable.screen.wrapper.component";
 
 interface CanvasEditorProps {
   widgets: Widget[];
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   changeRecordStore?: ChangeRecordStore;
+  editorStore?: EditorStore;
   onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 }
 
@@ -55,6 +59,9 @@ const CanvasEditor = ({
         <Column justifyContent="flex-start">
           <Headline className="ml-20">Project Name</Headline>
         </Column>
+
+        <BreakpointSettings />
+
         <Column alignItems="flex-end">
           <SizedContainer size="s">
             <FilledButton
@@ -110,9 +117,9 @@ const CanvasEditor = ({
       <MainLayout sideBars={[_buildTabBar(), _buildCanvasConfigurationBar()]}>
         <div className={styles.canvasWrapper}>
           <div className={styles.editorCanvasWrapper}>
-            <div className={styles.screenWrapper}>
+            <ResizableScreenWrapper initialWidth={900} maxWidth={2000}>
               <RenderView widgets={widgets} readonly={false} />
-            </div>
+            </ResizableScreenWrapper>
           </div>
           <div className={styles.optionSidebar}>
             {widgetStore?.getSelectedWidget()?.widget.widgetID}
@@ -126,5 +133,6 @@ const CanvasEditor = ({
 export default inject(
   "viewStore",
   "widgetStore",
-  "changeRecordStore"
+  "changeRecordStore",
+  "editorStore"
 )(observer(CanvasEditor));

@@ -21,6 +21,7 @@ const WidgetSidebar = ({}: WidgetSidebarProps): JSX.Element => {
   }): JSX.Element => {
     return (
       <Column
+        key={args.type}
         className={styles.widgetPreviewContainer}
         alignItems="center"
         draggable={true}

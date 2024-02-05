@@ -11,6 +11,7 @@ import ViewStore from "../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../stores/widget.store";
 import ConfigProvider from "../../../../config/config.provider";
+import EditorStore from "../../../../stores/editor.store";
 
 interface GridLayoutProps {
   key: string;
@@ -23,11 +24,11 @@ interface GridLayoutProps {
   onResizeStop?: ReactGridLayout.ItemCallback | undefined;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
+  editorStore?: EditorStore;
   parentWidgetID?: string;
 }
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
-type BreakpointType = string;
 
 const GridLayout = ({
   key,
@@ -39,9 +40,12 @@ const GridLayout = ({
   onResizeStop: propOnResizeStop,
   isNested = false,
   widgetStore,
+  editorStore,
   parentWidgetID,
 }: GridLayoutProps): JSX.Element => {
-  const [currentBreakpoint, setCurrentBreakpoint] = useState(""); // TODO set initial breakpoint based on window size
+  // const [currentBreakpoint, setCurrentBreakpoint] = useState(""); // TODO set initial breakpoint based on window size
+  const currentBreakpoint = editorStore?.currentBreakpoint ?? "";
+
   const [gridBackground, setGridBackground] = useState("");
   const [showGrid, setShowGrid] = useState(false);
 
@@ -71,8 +75,8 @@ const GridLayout = ({
     gridBackgroundStyle.height = "100%";
   }
 
-  const onBreakpointChange = (newBreakpoint: BreakpointType) => {
-    setCurrentBreakpoint(newBreakpoint);
+  const onBreakpointChange = (newBreakpoint: string) => {
+    editorStore?.setCurrentBreakpoint(newBreakpoint);
   };
 
   // TODO
@@ -224,4 +228,8 @@ const GridLayout = ({
   );
 };
 
-export default inject("viewStore", "widgetStore")(observer(GridLayout));
+export default inject(
+  "viewStore",
+  "widgetStore",
+  "editorStore"
+)(observer(GridLayout));

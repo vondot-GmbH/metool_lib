@@ -7,12 +7,10 @@ import { EXAMPLE_WIDGETS_DATA_RENAMED } from "./example.data";
 import ChangeRecordStore from "../lib/stores/change.record.store";
 import { TableWidget } from "../lib/main";
 import Gleap from "Gleap";
+import EditorStore from "../lib/stores/editor.store";
+import { faAngry, faHardDrive } from "@fortawesome/free-regular-svg-icons";
 
 // only for testing purposes
-
-const viewStore = new ViewStore();
-const changeRecordStore = new ChangeRecordStore();
-const widgetStore = new WidgetStore(changeRecordStore);
 
 Init({
   widgets: [TableWidget, TableWidget],
@@ -21,21 +19,21 @@ Init({
       large: {
         cols: 48,
         rowHeight: 30,
-        icon: "icon",
+        icon: faAngry,
         title: "Large",
         breakpoint: 1200,
       },
       medium: {
         cols: 24,
         rowHeight: 30,
-        icon: "icon",
+        icon: faHardDrive,
         title: "Medium",
         breakpoint: 768,
       },
       small: {
         cols: 16,
         rowHeight: 30,
-        icon: "icon",
+        icon: faHardDrive,
         title: "Small",
         breakpoint: 480,
       },
@@ -44,21 +42,21 @@ Init({
       large: {
         cols: 24,
         rowHeight: 30,
-        icon: "icon",
+        icon: faAngry,
         title: "Large",
         breakpoint: 1200,
       },
       medium: {
         cols: 12,
         rowHeight: 30,
-        icon: "icon",
+        icon: faHardDrive,
         title: "Medium",
         breakpoint: 996,
       },
       small: {
         cols: 8,
         rowHeight: 30,
-        icon: "icon",
+        icon: faHardDrive,
         title: "Small",
         breakpoint: 480,
       },
@@ -68,10 +66,16 @@ Init({
 
 Gleap.initialize("YZ6N1CITLut6MeqEhbITgwBid7oB7nc6");
 
+const viewStore = new ViewStore();
+const changeRecordStore = new ChangeRecordStore();
+const widgetStore = new WidgetStore(changeRecordStore);
+const editorStore = new EditorStore();
+
 const stores = {
   viewStore,
   widgetStore,
   changeRecordStore,
+  editorStore,
 };
 
 function App() {

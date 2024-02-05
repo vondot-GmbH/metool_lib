@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { makeAutoObservable } from "mobx";
 import { ChangeRecord } from "../globals/interfaces/change.record.interface";
 

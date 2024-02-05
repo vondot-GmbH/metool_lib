@@ -1,3 +1,5 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+
 export interface WidgetConfig {
   name: string;
   type: string;
@@ -9,7 +11,7 @@ export interface BreakpointConfig {
   cols: number;
   rowHeight: number;
   breakpoint: number;
-  icon?: string;
+  icon?: IconProp;
   title?: string;
 }
 
