@@ -1,25 +1,50 @@
-// definition for the base grid layout on root level
-export const BASE_BREAKPOINTS = {
-  xl: 1200,
-  md: 996,
-  xs: 480,
-};
+import { LayoutConfig } from "../interfaces/config.interface";
 
-export const BASE_COLS = {
-  xl: 24,
-  md: 12,
-  xs: 8,
-};
-
-// definition for the nested grid layout on widget level
-export const NESTED_BREAKPOINTS = {
-  xl: 1200,
-  md: 768,
-  xs: 480,
-};
-
-export const NESTED_COLS = {
-  xl: 48,
-  md: 24,
-  xs: 16,
+export const DEFAULT_LAYOUT_CONFIG: LayoutConfig = {
+  nested: {
+    xl: {
+      cols: 48,
+      rowHeight: 30,
+      icon: "icon",
+      title: "Large",
+      breakpoint: 1200,
+    },
+    md: {
+      cols: 24,
+      rowHeight: 30,
+      icon: "icon",
+      title: "Medium",
+      breakpoint: 768,
+    },
+    xs: {
+      cols: 16,
+      rowHeight: 30,
+      icon: "icon",
+      title: "Small",
+      breakpoint: 480,
+    },
+  },
+  root: {
+    xl: {
+      cols: 24,
+      rowHeight: 30,
+      icon: "icon",
+      title: "Large",
+      breakpoint: 1200,
+    },
+    md: {
+      cols: 12,
+      rowHeight: 30,
+      icon: "icon",
+      title: "Medium",
+      breakpoint: 996,
+    },
+    xs: {
+      cols: 8,
+      rowHeight: 30,
+      icon: "icon",
+      title: "Small",
+      breakpoint: 480,
+    },
+  },
 };

@@ -7,10 +7,6 @@ import {
   WidgetHierarchyMap,
 } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
-import {
-  BASE_BREAKPOINTS,
-  BASE_COLS,
-} from "../../../../../globals/config/grid.layout.config";
 import { getFilteredRootLevelWidgets } from "../../../../../globals/helpers/widget.helper";
 import ViewStore from "../../../../../stores/view.store";
 import WidgetStore from "../../../../../stores/widget.store";
@@ -39,15 +35,10 @@ const RenderView = ({
 
   const preparedRootLevelWidgets = Array.from(rootLevelWidgets.values());
 
-  // console.log("preparedRootLevelWidgets", preparedRootLevelWidgets);
-
   return (
     <GridLayout
       key={"top-level-grid"}
       content={rootLevelWidgets}
-      rowHeight={30}
-      breakpoints={BASE_BREAKPOINTS}
-      cols={BASE_COLS}
       onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
     >
       {preparedRootLevelWidgets.map((rootLevelWidgets) => (

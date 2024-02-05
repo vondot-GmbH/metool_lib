@@ -6,3 +6,9 @@ export { TableWidgetConfig as TableWidget } from "./components/public/widget.com
 
 // config
 export { default as Init } from "./config/init";
+
+// types
+export type {
+  WidgetConfig,
+  LayoutConfig,
+} from "./globals/interfaces/config.interface";

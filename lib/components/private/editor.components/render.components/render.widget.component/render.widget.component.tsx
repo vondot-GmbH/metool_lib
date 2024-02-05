@@ -2,10 +2,6 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.widget.comonent.module.scss";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
-import {
-  NESTED_BREAKPOINTS,
-  NESTED_COLS,
-} from "../../../../../globals/config/grid.layout.config";
 import { WidgetHierarchy } from "../../../../../schemas/widget.schemas/widget.schema";
 import { getFilteredWidgetMapByWidgetID } from "../../../../../globals/helpers/widget.helper";
 import { inject, observer } from "mobx-react";
@@ -110,9 +106,6 @@ const RenderWidget = ({
         isNested
         key={"nested-grid-" + widgetToRender.widget.positioning.i}
         content={childrenWidgets}
-        breakpoints={NESTED_BREAKPOINTS}
-        cols={NESTED_COLS}
-        rowHeight={20}
         onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
       >
         {preparedChildrenWidgets.map((childWidget) => (

@@ -1,34 +1,31 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Layout, Layouts } from "react-grid-layout";
+import { Layout } from "react-grid-layout";
 import {
-  LayoutBreakpoint,
   WidgetHierarchyMap,
   WidgetLayouts,
   WidgetPositioning,
 } from "../../schemas/widget.schemas/widget.schema";
 
-// convertToGridLayout converts the widget layout to a react-grid-layout layout
+// convert widgets to the grid layout format for react-grid-layout
 export const convertToGridLayout = (
-  widgets: WidgetHierarchyMap
+  widgets: WidgetHierarchyMap,
+  breakpoints: { [key: string]: number }
 ): { [key: string]: Layout[] } => {
-  const layouts: { [key in LayoutBreakpoint]?: Layout[] } = {};
+  const layouts: { [key: string]: Layout[] } = {};
+  const breakpointKeys = Object.keys(breakpoints);
 
-  // loop through all widgets
   for (const [_id, value] of widgets) {
     const widgetLayouts: WidgetLayouts = value.widget.positioning;
 
-    // loop through all breakpoints of widget layout
-    for (const bp of ["xs", "md", "xl"] as LayoutBreakpoint[]) {
-      const pos: WidgetPositioning | undefined = widgetLayouts[bp];
+    breakpointKeys.forEach((bp) => {
+      const pos: any = widgetLayouts[bp];
 
       if (pos) {
-        // if breakpoint does not exist, create it
         if (!layouts[bp]) {
           layouts[bp] = [];
         }
 
-        // add position to breakpoint
-        layouts[bp]!.push({
+        layouts[bp].push({
           i: widgetLayouts.i,
           x: pos.x.value,
           y: pos.y.value,
@@ -36,33 +33,32 @@ export const convertToGridLayout = (
           h: pos.h.value,
         });
       }
-    }
+    });
   }
 
-  return layouts as { [key: string]: Layout[] };
+  return layouts;
 };
 
+// convert grid layouts to widget positioning for the store
 export const convertLayoutToPositioningForBreakpoint = (
   layout: Layout[],
-  currentBreakpoint: LayoutBreakpoint
+  currentBreakpoint: string,
+  breakpoints: { [key: string]: number }
 ): Record<string, WidgetLayouts> => {
   const positioningRecord: Record<string, WidgetLayouts> = {};
+  const breakpointKeys = Object.keys(breakpoints);
 
-  // go through all layout elements
   for (const item of layout) {
     const widgetId = item.i;
 
-    // init positioning record for this widget if it does not exist
     if (!positioningRecord[widgetId]) {
-      positioningRecord[widgetId] = {
-        i: widgetId,
-        xs: undefined,
-        md: undefined,
-        xl: undefined, // TODO make this dynamic
-      };
+      positioningRecord[widgetId] = { i: widgetId };
+
+      breakpointKeys.forEach((bp) => {
+        positioningRecord[widgetId][bp] = undefined;
+      });
     }
 
-    // update the positioning record with the new values for the current breakpoint
     const newPositioning: WidgetPositioning = {
       x: { value: item.x, isInfinity: false },
       y: { value: item.y, isInfinity: false },
@@ -70,64 +66,17 @@ export const convertLayoutToPositioningForBreakpoint = (
       h: { value: item.h, isInfinity: false },
     };
 
-    // update the positioning record with the new values
     positioningRecord[widgetId][currentBreakpoint] = newPositioning;
   }
 
   return positioningRecord;
 };
 
-export const convertLayoutToPositioning = (
-  allLayouts: Layouts
-): Record<string, WidgetLayouts> => {
-  const positioningRecord: Record<string, WidgetLayouts> = {};
-
-  // go through all breakpoints in the layout
-  for (const breakpointKey in allLayouts) {
-    // if breakpoint does not exist, skip it
-    if (!(breakpointKey in allLayouts)) continue;
-
-    const breakpoint = breakpointKey as LayoutBreakpoint;
-    const layouts = allLayouts[breakpoint];
-
-    // go through all layouts elements in the breakpoint
-    for (const item of layouts) {
-      // init positioning record for this widget if it does not exist
-      if (!positioningRecord[item.i]) {
-        positioningRecord[item.i] = {
-          i: item.i,
-          xs: undefined, // TODO make this dynamic
-          md: undefined,
-          xl: undefined,
-        };
-
-        // initialize all breakpoints dynamically
-        for (const bpKey in allLayouts) {
-          // if breakpoint does not exist, skip it
-          if (!(bpKey in allLayouts)) continue;
-
-          const bp = bpKey as LayoutBreakpoint;
-          positioningRecord[item.i][bp] = undefined;
-        }
-      }
-
-      // update the positioning record with the new values
-      positioningRecord[item.i][breakpoint] = {
-        x: { value: item.x, isInfinity: false },
-        y: { value: item.y, isInfinity: false },
-        w: { value: item.w, isInfinity: false },
-        h: { value: item.h, isInfinity: false },
-      };
-    }
-  }
-
-  return positioningRecord;
-};
-
+// generate grid layout background based on current breakpoint
 export const generateGridLayoutBackground = (args: {
-  cols: { [key in LayoutBreakpoint]: number };
+  cols: { [key: string]: number };
   rowHeight: number;
-  currentBreakpoint: LayoutBreakpoint;
+  currentBreakpoint: string;
 }) => {
   const { cols, rowHeight, currentBreakpoint } = args;
 

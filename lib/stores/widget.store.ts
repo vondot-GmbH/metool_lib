@@ -1,6 +1,5 @@
 import { makeAutoObservable } from "mobx";
 import {
-  LayoutBreakpoint,
   Widget,
   WidgetHierarchy,
   WidgetHierarchyMap,
@@ -14,8 +13,8 @@ import {
 } from "../globals/interfaces/widget.state.interface";
 import ChangeRecordStore from "./change.record.store";
 import { Layout } from "react-grid-layout";
-import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
 import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
+import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
 
 class WidgetStore {
   private _dynamicWidgetStates: DynamicWidgetStateMap = new Map();
@@ -113,7 +112,7 @@ class WidgetStore {
 
   updateWidgetPositioningForBreakpoint(
     widgetID: string,
-    breakpoint: LayoutBreakpoint,
+    breakpoint: string,
     positioning: WidgetPositioning
   ): void {
     const widgetHierarchy =
@@ -154,11 +153,13 @@ class WidgetStore {
 
   updateWidgetsLayoutForCurrentBreakpoint(
     updatedLayouts: Layout[],
-    currentBreakpoint: LayoutBreakpoint
+    currentBreakpoint: string,
+    breakPoints: { [key: string]: number }
   ): void {
     const convertedLayouts = convertLayoutToPositioningForBreakpoint(
       updatedLayouts,
-      currentBreakpoint
+      currentBreakpoint,
+      breakPoints
     );
 
     // loop through all updated widgets and update the positioning for the current breakpoint
@@ -173,7 +174,7 @@ class WidgetStore {
           this.updateWidgetPositioningForBreakpoint(
             widgetID,
             currentBreakpoint,
-            widgetPositioning
+            widgetPositioning as WidgetPositioning
           );
 
           // update the change record store
@@ -187,40 +188,7 @@ class WidgetStore {
     }
   }
 
-  deleteWidget(widgetID: string): void {
-    console.log("deleteWidget:: ", widgetID);
-
-    // get the widget to delete from the map
-    const widgetToDelete =
-      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
-
-    // check if the widget exists
-    if (widgetToDelete == null) {
-      return;
-    }
-
-    // get the children of the widget to delete
-    const childrenIDs = widgetToDelete.children;
-
-    // delete all children of the widget to delete
-    for (const childID of childrenIDs) {
-      this.deleteWidget(childID);
-    }
-
-    // delete the widget from the map
-    this._structuredWidgetHierarchy.delete(widgetID);
-
-    // set the change record for the widget to delete
-    this.changeRecordStore.setChangeWidgetRecord(
-      widgetID,
-      "DELETE",
-      widgetToDelete.widget
-    );
-  }
-
-  deleteWidgetNEW(widgetID: string, isRootCall = true): void {
-    console.log("deleteWidget:: ", widgetID);
-
+  deleteWidget(widgetID: string, isRootCall = true): void {
     // get the widget to delete from the map
     const widgetToDelete =
       this.getStructuredWidgetHierarchyByWidgetID(widgetID);
@@ -234,10 +202,12 @@ class WidgetStore {
     if (isRootCall && widgetToDelete.level === "NESTED") {
       for (const [parentID, parentWidget] of this._structuredWidgetHierarchy) {
         const childIndex = parentWidget.children.indexOf(widgetID);
+
         if (childIndex !== -1) {
-          parentWidget.children.splice(childIndex, 1); // Remove the widgetID from the parent's children list
-          this._structuredWidgetHierarchy.set(parentID, parentWidget); // Update the parent widget in the hierarchy
-          break; // Break after updating the parent, as each widget should only have one parent
+          // remove the widget from the parent widget's children list
+          parentWidget.children.splice(childIndex, 1);
+          this._structuredWidgetHierarchy.set(parentID, parentWidget);
+          break;
         }
       }
     }
@@ -247,7 +217,7 @@ class WidgetStore {
 
     // delete all children of the widget to delete
     for (const childID of childrenIDs) {
-      this.deleteWidgetNEW(childID, false); // Pass false to indicate this is a recursive call, not the root call
+      this.deleteWidget(childID, false);
     }
 
     // delete the widget from the map
@@ -265,7 +235,7 @@ class WidgetStore {
     widgetType: string;
     layout: Layout;
     parentID: string | null;
-    currentBreakpoint: LayoutBreakpoint;
+    currentBreakpoint: string;
   }): void {
     const { widgetType, layout, parentID, currentBreakpoint } = args;
 
@@ -279,9 +249,6 @@ class WidgetStore {
         view: "",
         positioning: {
           i: widgetID,
-          md: undefined,
-          xl: undefined,
-          xs: undefined,
 
           [currentBreakpoint]: {
             x: layout.x,
@@ -289,7 +256,7 @@ class WidgetStore {
             w: layout.w,
             h: layout.h,
           },
-        },
+        } as any,
       },
       children: [],
       level: parentID ? "NESTED" : "ROOT",

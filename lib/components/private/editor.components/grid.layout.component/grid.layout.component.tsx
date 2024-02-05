@@ -1,28 +1,21 @@
-/* eslint-disable react-refresh/only-export-components */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import {
   convertToGridLayout,
   generateGridLayoutBackground,
 } from "../../../../globals/helpers/layout.helper";
-import {
-  LayoutBreakpoint,
-  WidgetHierarchyMap,
-} from "../../../../schemas/widget.schemas/widget.schema";
+import { WidgetHierarchyMap } from "../../../../schemas/widget.schemas/widget.schema";
 import { useEffect, useState } from "react";
 import styles from "./grid.layout.component.module.scss";
 import { v4 as UUID } from "uuid";
 import ViewStore from "../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../stores/widget.store";
+import ConfigProvider from "../../../../config/config.provider";
 
 interface GridLayoutProps {
   key: string;
   children: React.ReactNode | React.ReactNode[];
   content: WidgetHierarchyMap;
-  rowHeight?: number;
-  breakpoints: { [key: string]: number };
-  cols: { [key in LayoutBreakpoint]: number };
   onDragStart?: ReactGridLayout.ItemCallback | undefined;
   isNested?: boolean;
   onDragStop?: ReactGridLayout.ItemCallback | undefined;
@@ -40,9 +33,6 @@ const GridLayout = ({
   key,
   children,
   content,
-  rowHeight = 50,
-  breakpoints,
-  cols,
   onDragStart: propOnDragStart,
   onDragStop: propOnDragStop,
   onResizeStart: propOnResizeStart,
@@ -51,12 +41,27 @@ const GridLayout = ({
   widgetStore,
   parentWidgetID,
 }: GridLayoutProps): JSX.Element => {
-  const layouts = convertToGridLayout(content);
-  const [savedLayouts, setSavedLayouts] = useState(layouts);
-
   const [currentBreakpoint, setCurrentBreakpoint] = useState(""); // TODO set initial breakpoint based on window size
   const [gridBackground, setGridBackground] = useState("");
   const [showGrid, setShowGrid] = useState(false);
+
+  const configProvider = ConfigProvider.getInstance();
+
+  const breakpoints = configProvider.getBreakpointsForAllLayouts(
+    isNested ? "nested" : "root"
+  );
+
+  const rowHeight = configProvider.getRowHeight(
+    isNested ? "nested" : "root",
+    currentBreakpoint
+  );
+
+  const cols = configProvider.getColsForAllLayouts(
+    isNested ? "nested" : "root"
+  );
+
+  const layouts = convertToGridLayout(content, breakpoints);
+  const [savedLayouts, setSavedLayouts] = useState(layouts);
 
   const gridBackgroundStyle = {
     background: showGrid ? gridBackground : "none",
@@ -99,7 +104,7 @@ const GridLayout = ({
     const widgetType = event.dataTransfer.getData("text");
 
     widgetStore?.addWidget({
-      currentBreakpoint: currentBreakpoint as LayoutBreakpoint,
+      currentBreakpoint: currentBreakpoint,
       layout: layoutNEW,
       parentID: parentWidgetID ?? null,
       widgetType,
@@ -138,7 +143,8 @@ const GridLayout = ({
 
     widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
       layout,
-      currentBreakpoint as LayoutBreakpoint
+      currentBreakpoint,
+      breakpoints
     );
 
     if (propOnDragStop)
@@ -174,7 +180,8 @@ const GridLayout = ({
 
     widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
       layout,
-      currentBreakpoint as LayoutBreakpoint
+      currentBreakpoint,
+      breakpoints
     );
 
     if (propOnResizeStop)
@@ -185,7 +192,7 @@ const GridLayout = ({
     const newGridBackground = generateGridLayoutBackground({
       cols,
       rowHeight,
-      currentBreakpoint: currentBreakpoint as LayoutBreakpoint, // TODO
+      currentBreakpoint: currentBreakpoint,
     });
     setGridBackground(newGridBackground);
   }, [currentBreakpoint, cols, rowHeight]);

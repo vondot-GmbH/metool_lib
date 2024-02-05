@@ -9,9 +9,7 @@ export interface Widget {
 
 export interface WidgetLayouts {
   i: string;
-  xs: WidgetPositioning | undefined;
-  md: WidgetPositioning | undefined;
-  xl: WidgetPositioning | undefined;
+  [breakpoint: string]: WidgetPositioning | undefined | string;
 }
 
 export interface WidgetPositioning {
@@ -26,12 +24,10 @@ export interface PositionValue {
   isInfinity: boolean;
 }
 
-export type LayoutBreakpoint = "xs" | "md" | "xl";
-
 export type WidgetHierarchyMap = Map<string, WidgetHierarchy>;
 
 export interface WidgetHierarchy {
   widget: Widget;
-  children: string[]; // Speichert nur die IDs der Kinder
+  children: string[];
   level: "ROOT" | "NESTED";
 }
