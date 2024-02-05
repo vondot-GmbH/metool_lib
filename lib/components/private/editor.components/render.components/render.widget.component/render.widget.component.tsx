@@ -42,7 +42,7 @@ const RenderWidget = ({
     widgetContainerClassName += ` ${styles.selectedWidget}`;
   }
 
-  const handleCloseMenu = () => {
+  const handleCloseContextMenu = () => {
     widgetStore?.setContextMenuState({
       isOpen: false,
       anchorPoint: { x: 0, y: 0 },
@@ -82,7 +82,7 @@ const RenderWidget = ({
       <WidgetContextMenu
         isOpen={contextMenu.isOpen}
         anchorPoint={contextMenu.anchorPoint}
-        onClose={handleCloseMenu}
+        onClose={handleCloseContextMenu}
       />
     );
   };

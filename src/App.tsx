@@ -6,6 +6,7 @@ import WidgetStore from "../lib/stores/widget.store";
 import { EXAMPLE_WIDGETS_DATA_FINAL } from "./example.data";
 import ChangeRecordStore from "../lib/stores/change.record.store";
 import { TableWidget } from "../lib/main";
+import Gleap from "Gleap";
 
 // only for testing purposes
 
@@ -16,6 +17,8 @@ const widgetStore = new WidgetStore(changeRecordStore);
 Init({
   widgets: [TableWidget, TableWidget],
 });
+
+Gleap.initialize("YZ6N1CITLut6MeqEhbITgwBid7oB7nc6");
 
 const stores = {
   viewStore,
