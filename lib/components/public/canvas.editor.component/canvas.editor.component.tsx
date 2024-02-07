@@ -43,6 +43,7 @@ const CanvasEditor = ({
     useState<string>("Widgets");
 
   useEffect(() => {
+    // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
     editorStore?.initializeEditorBreakpointConfig();
   }, []);
 

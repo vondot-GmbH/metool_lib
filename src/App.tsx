@@ -62,7 +62,7 @@ Init({
         rowHeight: 30,
         icon: faHardDrive,
         title: "Small",
-        breakpoint: 200,
+        breakpoint: 440,
       },
     },
   },

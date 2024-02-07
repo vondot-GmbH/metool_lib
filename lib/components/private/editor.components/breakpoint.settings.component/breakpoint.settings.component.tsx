@@ -19,38 +19,13 @@ const BreakpointSettings = ({
   const preparedLayoutConfigs = prepareLayoutConfigs(layoutConfig);
 
   const handleBreakpointChange = (breakpointKey: string) => {
-    const config = editorStore?.breakpointEditorConfig;
-    const selectedConfig = config?.[breakpointKey];
+    const config = editorStore?.breakpointEditorConfig[breakpointKey];
 
-    if (selectedConfig) {
-      let screenWidth;
-      if (
-        selectedConfig.minWidth !== null &&
-        selectedConfig.maxWidth !== null
-      ) {
-        // Beide Werte sind vorhanden, setzen Sie screenWidth auf den Mittelwert
-        screenWidth = (selectedConfig.minWidth + selectedConfig.maxWidth) / 2;
-      } else if (
-        selectedConfig.maxWidth === null &&
-        selectedConfig.minWidth !== null
-      ) {
-        // Nur minWidth ist vorhanden
-        screenWidth = selectedConfig.minWidth + 100; // Addieren Sie 100, um innerhalb des Breakpoints zu bleiben
-      } else if (
-        selectedConfig.minWidth === null &&
-        selectedConfig.maxWidth !== null
-      ) {
-        // Nur maxWidth ist vorhanden
-        screenWidth = selectedConfig.maxWidth - 100; // Subtrahieren Sie 100, um innerhalb des Breakpoints zu bleiben
-      } else {
-        // Weder minWidth noch maxWidth sind vorhanden, nutzen Sie einen Standardwert
-        screenWidth = 500; // Oder ein anderer sinnvoller Standardwert
-      }
+    // TODO find a better way to set the current screen width
+    const screenWidth = config?.minWidth ?? 300;
 
-      console.log("set curren sceen width:::: ", screenWidth);
-      editorStore?.setCurrentScreenWidth(screenWidth);
-      editorStore?.setCurrentBreakpoint(breakpointKey);
-    }
+    editorStore?.setCurrentScreenWidth(screenWidth);
+    editorStore?.setCurrentBreakpoint(breakpointKey);
   };
 
   const _buildBreakpointItem = (preparedLayoutConfigs: any): JSX.Element => {

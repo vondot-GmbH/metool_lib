@@ -22,7 +22,6 @@ const ResizableScreenWrapper = ({
 
   useEffect(() => {
     if (editorConfig) {
-      console.log("editorConfig", editorConfig);
       setMinWidth(editorConfig.minWidth);
       setMaxWidth(editorConfig.maxWidth);
     }
@@ -30,44 +29,7 @@ const ResizableScreenWrapper = ({
 
   useEffect(() => {
     setWidth(editorStore?.currentScreenWidth ?? 500);
-    console.log("current break point::: ", editorStore?.currentBreakpoint);
   }, [editorStore?.currentScreenWidth]);
-
-  // handle mouse down event for resizing
-  // const handleMouseDown = (e: {
-  //   preventDefault: () => void;
-  //   clientX: number;
-  // }) => {
-  //   e.preventDefault();
-  //   // get the dimensions of the sidebar and the initial mouse position.
-  //   // because it can be that the sidebar is not at the left edge of the screen.
-  //   const sidebarRect = sidebarRef.current?.getBoundingClientRect();
-  //   const initialMouseX = e.clientX - (sidebarRect ? sidebarRect.left : 0);
-
-  //   // handle mouse move during resizing.
-  //   const handleMouseMove = (e: { clientX: number }) => {
-  //     if (!sidebarRect) return;
-  //     const widthChange = e.clientX - sidebarRect.left - initialMouseX;
-
-  //     // Calculate the new width of the sidebar within the min and max width.
-  //     const newWidth = Math.min(
-  //       Math.max(width + widthChange, minWidth),
-  //       maxWidth
-  //     );
-  //     setWidth(newWidth);
-  //     editorStore?.setCurrentScreenWidth(newWidth);
-  //   };
-
-  //   // handle mouse up event for resizing (stop resizing)
-  //   const handleMouseUp = () => {
-  //     document.removeEventListener("mousemove", handleMouseMove);
-  //     document.removeEventListener("mouseup", handleMouseUp);
-  //   };
-
-  //   // Add event listeners for mouse move and mouse up events
-  //   document.addEventListener("mousemove", handleMouseMove);
-  //   document.addEventListener("mouseup", handleMouseUp);
-  // };
 
   // handle mouse down event for resizing
   const handleMouseDown = (e: {

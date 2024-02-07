@@ -42,37 +42,33 @@ class EditorStore {
     return this._breakpointEditorConfig;
   }
 
+  // calculate the max and min width for each breakpoint based on the layout config
   initializeEditorBreakpointConfig() {
     const layoutConfig = ConfigProvider.getInstance().getLayoutConfig();
     const rootConfig = layoutConfig.root;
 
-    const newConfig: {
-      [key: string]: { minWidth: number | null; maxWidth: number | null };
-    } = {};
+    const newConfig = {} as any;
 
-    // Konvertierung der rootConfig in ein Array und Sortierung basierend auf der breakpoint-Weite
+    // convert the layout config to a format that is easier to use in the editor component
     const sortedBreakpoints = Object.entries(rootConfig).sort(
       (a, b) => a[1].breakpoint - b[1].breakpoint
     );
 
-    sortedBreakpoints.forEach(([breakpoint, config], index) => {
-      const isLastBreakpoint = index === sortedBreakpoints.length - 1;
-      const isFirstBreakpoint = index === 0;
+    sortedBreakpoints.forEach(([breakpoint], index) => {
+      // for the first breakpoint, the min width is null
+      const minWidth =
+        index === 0 ? null : sortedBreakpoints[index - 1][1].breakpoint;
 
-      // Für den ersten Breakpoint gibt es keine Min-Breite
-      const minWidth = isFirstBreakpoint
-        ? null
-        : sortedBreakpoints[index - 1][1].breakpoint;
-
-      // Für den letzten Breakpoint gibt es keine Max-Breite
-      const maxWidth = isLastBreakpoint ? null : config.breakpoint - 1;
+      // calculate the max width for the current breakpoint by taking the next breakpoint and subtracting 1
+      const maxWidth =
+        index === sortedBreakpoints.length - 1
+          ? null
+          : sortedBreakpoints[index + 1][1].breakpoint - 1;
 
       newConfig[breakpoint] = { minWidth, maxWidth };
     });
 
     this._breakpointEditorConfig = newConfig;
-    console.log("breakpointEditorConfig");
-    console.log(JSON.stringify(this._breakpointEditorConfig, null, 2));
   }
 }
 
