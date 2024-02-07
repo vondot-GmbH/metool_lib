@@ -43,8 +43,11 @@ const GridLayout = ({
   editorStore,
   parentWidgetID,
 }: GridLayoutProps): JSX.Element => {
-  // const [currentBreakpoint, setCurrentBreakpoint] = useState(""); // TODO set initial breakpoint based on window size
-  const currentBreakpoint = editorStore?.currentBreakpoint ?? "";
+  const [localCurrentBreakpoint, setLocalCurrentBreakpoint] = useState("");
+
+  const currentBreakpoint = isNested
+    ? localCurrentBreakpoint ?? ""
+    : editorStore?.currentBreakpoint ?? "";
 
   const [gridBackground, setGridBackground] = useState("");
   const [showGrid, setShowGrid] = useState(false);
@@ -76,7 +79,13 @@ const GridLayout = ({
   }
 
   const onBreakpointChange = (newBreakpoint: string) => {
-    editorStore?.setCurrentBreakpoint(newBreakpoint);
+    if (isNested) {
+      console.log("--nested level BREAKPOINT CHANGE: ", newBreakpoint);
+      setLocalCurrentBreakpoint(newBreakpoint);
+    } else {
+      console.log("---rootLEVEL BREAKPOINT CHANGE: ", newBreakpoint);
+      editorStore?.setCurrentBreakpoint(newBreakpoint);
+    }
   };
 
   // TODO
@@ -151,6 +160,8 @@ const GridLayout = ({
       breakpoints
     );
 
+    console.log("handleDragStop: ", currentBreakpoint);
+
     if (propOnDragStop)
       propOnDragStop(layout, oldItem, newItem, placeholder, event, element);
   };
@@ -188,6 +199,11 @@ const GridLayout = ({
       breakpoints
     );
 
+    console.log("handleDragStop: ", currentBreakpoint, " isnested: ", isNested);
+    console.log("handleResizeStop: ", layout);
+
+    console.log("current width :: ", editorStore?.currentScreenWidth);
+
     if (propOnResizeStop)
       propOnResizeStop(layout, oldItem, newItem, placeholder, event, element);
   };
@@ -201,6 +217,32 @@ const GridLayout = ({
     setGridBackground(newGridBackground);
   }, [currentBreakpoint, cols, rowHeight]);
 
+  if (isNested) {
+    <ResponsiveGridLayout
+      key={key}
+      className={isNested ? undefined : styles.gridLayout}
+      margin={[0, 0]}
+      layouts={savedLayouts}
+      breakpoints={breakpoints}
+      cols={cols}
+      rowHeight={rowHeight}
+      style={gridBackgroundStyle}
+      onBreakpointChange={onBreakpointChange}
+      compactType={null}
+      onDragStart={handleDragStart}
+      onDragStop={handleDragStop}
+      onResizeStart={handleResizeStart}
+      onResizeStop={handleResizeStop}
+      onDrop={handleDrop}
+      isDroppable={true}
+      onLayoutChange={(_layout, layouts) => {
+        setSavedLayouts(layouts);
+      }}
+    >
+      {children}
+    </ResponsiveGridLayout>;
+  }
+
   return (
     <ResponsiveGridLayout
       key={key}
@@ -208,6 +250,7 @@ const GridLayout = ({
       margin={[0, 0]}
       layouts={savedLayouts}
       breakpoints={breakpoints}
+      breakpoint={currentBreakpoint}
       cols={cols}
       rowHeight={rowHeight}
       style={gridBackgroundStyle}

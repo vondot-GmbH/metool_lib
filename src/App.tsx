@@ -8,7 +8,11 @@ import ChangeRecordStore from "../lib/stores/change.record.store";
 import { TableWidget } from "../lib/main";
 import Gleap from "Gleap";
 import EditorStore from "../lib/stores/editor.store";
-import { faAngry, faHardDrive } from "@fortawesome/free-regular-svg-icons";
+import {
+  faAngry,
+  faHardDrive,
+  faHandPointer,
+} from "@fortawesome/free-regular-svg-icons";
 
 // only for testing purposes
 
@@ -26,22 +30,22 @@ Init({
       medium: {
         cols: 24,
         rowHeight: 30,
-        icon: faHardDrive,
+        icon: faHandPointer,
         title: "Medium",
-        breakpoint: 768,
+        breakpoint: 900,
       },
       small: {
         cols: 16,
         rowHeight: 30,
         icon: faHardDrive,
         title: "Small",
-        breakpoint: 480,
+        breakpoint: 440,
       },
     },
     root: {
       large: {
         cols: 24,
-        rowHeight: 30,
+        rowHeight: 30, // TODO define rowHeight on higher level
         icon: faAngry,
         title: "Large",
         breakpoint: 1200,
@@ -51,14 +55,14 @@ Init({
         rowHeight: 30,
         icon: faHardDrive,
         title: "Medium",
-        breakpoint: 996,
+        breakpoint: 900,
       },
       small: {
         cols: 8,
         rowHeight: 30,
         icon: faHardDrive,
         title: "Small",
-        breakpoint: 480,
+        breakpoint: 200,
       },
     },
   },

@@ -11,7 +11,7 @@ import ChangeRecordStore from "../../../stores/change.record.store";
 import Row from "../../private/general.components/row.component/row.component";
 import ResizableSidebar from "../../private/general.components/resizable.sidbear.component/resizable.sidebar.component";
 import IconTabBar from "../../private/general.components/icon.tab.bar.component/icon.tab.bar.component";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { faSquarePlus } from "@fortawesome/free-regular-svg-icons/faSquarePlus";
 import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons/faXmarkCircle";
 import Headline from "../../private/general.components/text.components/headline.component/headline.component";
@@ -37,9 +37,14 @@ const CanvasEditor = ({
   widgets,
   widgetStore,
   onSaveChanges,
+  editorStore,
 }: CanvasEditorProps): JSX.Element => {
   const [selectedConfigurationBar, setSelectedConfigurationBar] =
     useState<string>("Widgets");
+
+  useEffect(() => {
+    editorStore?.initializeEditorBreakpointConfig();
+  }, []);
 
   // TODO
   const handleOnSaveChanges = () => {
@@ -117,7 +122,7 @@ const CanvasEditor = ({
       <MainLayout sideBars={[_buildTabBar(), _buildCanvasConfigurationBar()]}>
         <div className={styles.canvasWrapper}>
           <div className={styles.editorCanvasWrapper}>
-            <ResizableScreenWrapper initialWidth={900} maxWidth={2000}>
+            <ResizableScreenWrapper>
               <RenderView widgets={widgets} readonly={false} />
             </ResizableScreenWrapper>
           </div>

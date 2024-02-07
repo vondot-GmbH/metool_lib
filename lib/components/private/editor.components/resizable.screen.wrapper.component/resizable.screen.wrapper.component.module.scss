@@ -1,22 +1,52 @@
-.resizer {
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 10px;
-  height: 100%;
-  cursor: ew-resize;
-  background-color: #4869e2;
-}
-
 .screenWrapper {
   position: relative;
-
   box-sizing: border-box;
-  min-height: 100%;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-  background-color: rgba(255, 255, 255, 0.646);
   max-width: 90%;
-  width: 100%;
+  min-height: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+
+  .contentContainer {
+    height: 100%;
+    overflow-y: scroll;
+    box-sizing: content-box;
+    background-color: #1414143d;
+    width: calc(100% - 30px);
+  }
+
+  .visualGuideRight {
+    position: absolute;
+    right: 10px;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    z-index: 10;
+  }
+
+  .visualGuideLeft {
+    position: absolute;
+    left: 10px;
+    top: 0;
+    width: 4px;
+    height: 100%;
+    z-index: 10;
+  }
+
+  .centralResizer {
+    position: absolute;
+    right: 0px;
+    top: 45%;
+    width: 15px;
+    height: 45px;
+    cursor: ew-resize;
+    background-color: #2496ff;
+    z-index: 12;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+  }
+
+  .hover {
+    background-color: #2496ff;
+  }
 }

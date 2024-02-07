@@ -4,6 +4,7 @@ import ConfigProvider from "../../../../config/config.provider";
 import { LayoutConfig } from "../../../../main";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./breakpoint.settings.component.module.scss";
+import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
 
 interface BreakpointSettingsProps {
   editorStore?: EditorStore;
@@ -17,6 +18,41 @@ const BreakpointSettings = ({
   const currentBreakpoint = editorStore?.currentBreakpoint;
   const preparedLayoutConfigs = prepareLayoutConfigs(layoutConfig);
 
+  const handleBreakpointChange = (breakpointKey: string) => {
+    const config = editorStore?.breakpointEditorConfig;
+    const selectedConfig = config?.[breakpointKey];
+
+    if (selectedConfig) {
+      let screenWidth;
+      if (
+        selectedConfig.minWidth !== null &&
+        selectedConfig.maxWidth !== null
+      ) {
+        // Beide Werte sind vorhanden, setzen Sie screenWidth auf den Mittelwert
+        screenWidth = (selectedConfig.minWidth + selectedConfig.maxWidth) / 2;
+      } else if (
+        selectedConfig.maxWidth === null &&
+        selectedConfig.minWidth !== null
+      ) {
+        // Nur minWidth ist vorhanden
+        screenWidth = selectedConfig.minWidth + 100; // Addieren Sie 100, um innerhalb des Breakpoints zu bleiben
+      } else if (
+        selectedConfig.minWidth === null &&
+        selectedConfig.maxWidth !== null
+      ) {
+        // Nur maxWidth ist vorhanden
+        screenWidth = selectedConfig.maxWidth - 100; // Subtrahieren Sie 100, um innerhalb des Breakpoints zu bleiben
+      } else {
+        // Weder minWidth noch maxWidth sind vorhanden, nutzen Sie einen Standardwert
+        screenWidth = 500; // Oder ein anderer sinnvoller Standardwert
+      }
+
+      console.log("set curren sceen width:::: ", screenWidth);
+      editorStore?.setCurrentScreenWidth(screenWidth);
+      editorStore?.setCurrentBreakpoint(breakpointKey);
+    }
+  };
+
   const _buildBreakpointItem = (preparedLayoutConfigs: any): JSX.Element => {
     const selected = currentBreakpoint === preparedLayoutConfigs.key;
 
@@ -26,9 +62,7 @@ const BreakpointSettings = ({
         className={`${styles.breakpointIcon} ${
           selected ? styles.selected : ""
         }`}
-        onClick={() =>
-          editorStore?.setCurrentBreakpoint(preparedLayoutConfigs.key)
-        }
+        onClick={() => handleBreakpointChange(preparedLayoutConfigs.key)}
       />
     );
   };
@@ -38,6 +72,14 @@ const BreakpointSettings = ({
       {preparedLayoutConfigs.map((layoutConfig) => {
         return <div>{_buildBreakpointItem(layoutConfig)}</div>;
       })}
+
+      <div className={styles.currentScreenWidth}>
+        {editorStore?.currentScreenWidth} PX | MAX:{" "}
+        {editorStore?.breakpointEditorConfigForCurrentBreakpoint?.maxWidth} PX |{" "}
+        MIN: {editorStore?.breakpointEditorConfigForCurrentBreakpoint?.minWidth}{" "}
+        PX
+      </div>
+      <RunningText>{editorStore?.currentBreakpoint}</RunningText>
     </div>
   );
 };
