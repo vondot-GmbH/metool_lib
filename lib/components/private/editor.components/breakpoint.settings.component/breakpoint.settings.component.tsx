@@ -48,13 +48,9 @@ const BreakpointSettings = ({
         return <div>{_buildBreakpointItem(layoutConfig)}</div>;
       })}
 
-      <div className={styles.currentScreenWidth}>
-        {editorStore?.currentScreenWidth} PX | MAX:{" "}
-        {editorStore?.breakpointEditorConfigForCurrentBreakpoint?.maxWidth} PX |{" "}
-        MIN: {editorStore?.breakpointEditorConfigForCurrentBreakpoint?.minWidth}{" "}
-        PX
-      </div>
-      <RunningText>{editorStore?.currentBreakpoint}</RunningText>
+      <RunningText className={styles.currentBreakpoint}>
+        {editorStore?.currentBreakpoint}
+      </RunningText>
     </div>
   );
 };

@@ -45,7 +45,7 @@ Init({
     root: {
       large: {
         cols: 24,
-        rowHeight: 30, // TODO define rowHeight on higher level
+        rowHeight: 30,
         icon: faAngry,
         title: "Large",
         breakpoint: 1200,

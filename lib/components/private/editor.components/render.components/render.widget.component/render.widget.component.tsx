@@ -138,7 +138,10 @@ const RenderWidget = ({
     // render the widget component if it exists
     const WidgetComponent = widget.component as React.ComponentType<any>;
 
-    return React.createElement(WidgetComponent);
+    return React.createElement(WidgetComponent, {
+      widgetID: widgetToRender.widget.widgetID,
+      widgetStore,
+    });
   };
 
   return (

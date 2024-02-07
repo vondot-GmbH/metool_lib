@@ -1,10 +1,10 @@
 import { WidgetConfig } from "../../../../globals/interfaces/config.interface";
-import { TableWidget } from "./table.widget.component";
 import TableWidgetIcon from "./icon.svg";
+import tableWidgetComponent from "./table.widget.component";
 
 export const TableWidgetConfig: WidgetConfig = {
   name: "table",
   type: "DATA_TABLE",
-  component: TableWidget,
+  component: tableWidgetComponent,
   icon: TableWidgetIcon,
 };
