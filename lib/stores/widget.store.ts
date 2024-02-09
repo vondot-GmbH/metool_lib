@@ -6,22 +6,19 @@ import {
   WidgetLayouts,
   WidgetPositioning,
 } from "../schemas/widget.schemas/widget.schema";
-import {
-  DynamicWidgetStateMap,
-  WidgetContextMenu,
-  WidgetState,
-} from "../globals/interfaces/widget.state.interface";
+import { WidgetContextMenu } from "../globals/interfaces/widget.state.interface";
 import ChangeRecordStore from "./change.record.store";
 import { Layout } from "react-grid-layout";
 import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
 
 class WidgetStore {
-  private _dynamicWidgetStates: DynamicWidgetStateMap = new Map();
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
 
+  // TODO maby move this to editor store
   private _selectedWidget: WidgetHierarchy | undefined;
 
+  // TODO maby move this to editor store
   private _contextMenu: WidgetContextMenu = {
     isOpen: false,
     anchorPoint: { x: 0, y: 0 },
@@ -36,9 +33,6 @@ class WidgetStore {
   }
 
   //! setter
-  setDynamicWidgetState(widgetID: string, newState: WidgetState): void {
-    this._dynamicWidgetStates.set(widgetID, newState);
-  }
 
   setInitialWidgetAndConvert(widgets: Widget[]): WidgetHierarchyMap {
     const structuredWidgets = structureWidgetsHierarchy(widgets);
@@ -86,14 +80,6 @@ class WidgetStore {
 
   getStructuredData() {
     return JSON.parse(JSON.stringify(this._structuredWidgetHierarchy));
-  }
-
-  getDynamicStateByWidgetID(widgetID: string): WidgetState | undefined {
-    if (this._dynamicWidgetStates.get(widgetID) == null) {
-      return;
-    }
-
-    return JSON.parse(JSON.stringify(this._dynamicWidgetStates.get(widgetID)));
   }
 
   getSelectedWidget(): WidgetHierarchy | undefined {

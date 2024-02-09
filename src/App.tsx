@@ -13,6 +13,7 @@ import {
   faHardDrive,
   faHandPointer,
 } from "@fortawesome/free-regular-svg-icons";
+import StateStore from "../lib/stores/state.store";
 
 // only for testing purposes
 
@@ -74,12 +75,14 @@ const viewStore = new ViewStore();
 const changeRecordStore = new ChangeRecordStore();
 const widgetStore = new WidgetStore(changeRecordStore);
 const editorStore = new EditorStore();
+const stateStore = new StateStore();
 
 const stores = {
   viewStore,
   widgetStore,
   changeRecordStore,
   editorStore,
+  stateStore,
 };
 
 function App() {

@@ -14,7 +14,6 @@ import IconTabBar from "../../private/general.components/icon.tab.bar.component/
 import { useEffect, useState } from "react";
 import { faSquarePlus } from "@fortawesome/free-regular-svg-icons/faSquarePlus";
 import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons/faXmarkCircle";
-import Headline from "../../private/general.components/text.components/headline.component/headline.component";
 import WidgetSidebar from "../../private/editor.components/editor.bar.components/widget.sidebar.component/widget.sidebar.component";
 import StateSidebar from "../../private/editor.components/editor.bar.components/state.sidebar.component/state.sidebar.component";
 import SizedContainer from "../../private/general.components/sized.container.component/sized.container.component";
@@ -22,6 +21,7 @@ import FilledButton from "../../private/general.components/filled.button.compone
 import EditorStore from "../../../stores/editor.store";
 import BreakpointSettings from "../../private/editor.components/breakpoint.settings.component/breakpoint.settings.component";
 import ResizableScreenWrapper from "../../private/editor.components/resizable.screen.wrapper.component/resizable.screen.wrapper.component";
+import TitleText from "../../private/general.components/text.components/title.text.component/title.text.component";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -63,7 +63,7 @@ const CanvasEditor = ({
     return (
       <Row className={styles.topBar} alignItems="center">
         <Column justifyContent="flex-start">
-          <Headline className="ml-20">Project Name</Headline>
+          <TitleText className="ml-20">Project Name</TitleText>
         </Column>
 
         <BreakpointSettings />
