@@ -151,6 +151,7 @@ const GridLayout = ({
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(true);
+    editorStore?.setVisualWidgetOutlineGuide(true);
 
     if (propOnDragStart)
       propOnDragStart(layout, oldItem, newItem, placeholder, event, element);
@@ -167,6 +168,7 @@ const GridLayout = ({
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(false);
+    editorStore?.setVisualWidgetOutlineGuide(false);
 
     widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
       layout,
@@ -189,6 +191,8 @@ const GridLayout = ({
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(true);
+    editorStore?.setVisualWidgetOutlineGuide(true);
+
     if (propOnResizeStart)
       propOnResizeStart(layout, oldItem, newItem, placeholder, event, element);
   };
@@ -204,6 +208,7 @@ const GridLayout = ({
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(false);
+    editorStore?.setVisualWidgetOutlineGuide(false);
 
     widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
       layout,

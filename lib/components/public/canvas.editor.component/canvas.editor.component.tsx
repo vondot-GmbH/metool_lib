@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
 import MainLayout from "../../../layouts/main.layout/main.layout";
 import { RenderView } from "../../../main";
@@ -44,6 +43,7 @@ const CanvasEditor = ({
 }: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
+  const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
 
   const [selectedConfigurationBar, setSelectedConfigurationBar] =
     useState<string>("Widgets");
@@ -54,6 +54,7 @@ const CanvasEditor = ({
   }, []);
 
   // TODO
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleOnSaveChanges = () => {
     if (changeRecordStore && onSaveChanges) {
       // const changes = changeRecordStore?.processReleaseChanges();
@@ -161,7 +162,11 @@ const CanvasEditor = ({
         <div className={styles.canvasWrapper}>
           <div className={styles.editorCanvasWrapper}>
             <ResizableScreenWrapper>
-              <RenderView widgets={widgets} readonly={readonly} />
+              <RenderView
+                widgets={widgets}
+                readonly={readonly}
+                showVisualWidgetOutline={showVisualWidgetOutline}
+              />
             </ResizableScreenWrapper>
           </div>
           {_buildOptionSidebar()}

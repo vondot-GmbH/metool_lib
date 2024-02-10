@@ -4,16 +4,22 @@
   padding: 10px;
   box-sizing: border-box;
   position: relative;
-  border: 1px solid transparent;
+  border: 1.5px solid transparent;
   overflow: visible;
 }
 
 .hovered {
-  border: 1px solid #00000095;
+  border: 1.5px solid #00000095;
 }
 
 .selected {
-  border: 1px solid #2496ff;
+  border: 1.5px solid #2496ff;
+}
+
+.visualWidgetOutlineGuide {
+  &:not(.selected) {
+    border: 1.5px dotted #2496ff;
+  }
 }
 
 .widgetType {

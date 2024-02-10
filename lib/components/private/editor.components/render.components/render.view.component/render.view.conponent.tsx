@@ -13,17 +13,20 @@ import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
 import { useMemo } from "react";
 import "../../../../../styles/index.css";
+
 interface RenderScreenProps {
   readonly?: boolean;
   widgets: Widget[];
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
+  showVisualWidgetOutline?: boolean;
 }
 
 const RenderView = ({
   widgets,
   readonly = true,
   widgetStore,
+  showVisualWidgetOutline = false,
 }: RenderScreenProps): JSX.Element => {
   const structuredWidgets = useMemo(() => {
     return widgetStore?.setInitialWidgetAndConvert(widgets);
@@ -49,6 +52,7 @@ const RenderView = ({
           className={styles.widgetContainer}
         >
           <RenderWidget
+            showVisualWidgetOutline={showVisualWidgetOutline}
             readonly={readonly}
             widgetToRender={rootLevelWidgets}
             key={rootLevelWidgets.widget.positioning.i}

@@ -18,6 +18,7 @@ interface RenderWidgetProps {
   widgetToRender: WidgetHierarchy;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
+  showVisualWidgetOutline: boolean;
 }
 
 const RenderWidget = ({
@@ -25,6 +26,7 @@ const RenderWidget = ({
   readonly,
   widgetStore,
   viewStore,
+  showVisualWidgetOutline,
 }: RenderWidgetProps): JSX.Element => {
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
   // let widgetContainerClassName = classNames(styles.widgetContainer);
@@ -48,6 +50,7 @@ const RenderWidget = ({
   const widgetContainerClassName = classNames(styles.widgetContainer, {
     [styles.hovered]: hoveredWidgetID === widgetToRender.widget.widgetID,
     [styles.selected]: selectedWidgetID === widgetToRender.widget.widgetID,
+    [styles.visualWidgetOutlineGuide]: showVisualWidgetOutline,
   });
 
   const handleCloseContextMenu = () => {
@@ -129,6 +132,7 @@ const RenderWidget = ({
             className={styles.childWidget}
           >
             <RenderWidget
+              showVisualWidgetOutline={showVisualWidgetOutline}
               key={childWidget.widget.positioning.i}
               readonly={readonly}
               widgetToRender={childWidget}

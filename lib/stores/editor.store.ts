@@ -12,7 +12,9 @@ class EditorStore {
 
   private _currentScreenWidth: number = 0;
 
-  private mode: EditorMode = EditorMode.EDIT;
+  private _mode: EditorMode = EditorMode.EDIT;
+
+  private _visualWidgetOutlineGuide: boolean = false;
 
   constructor() {
     makeAutoObservable(this);
@@ -28,8 +30,12 @@ class EditorStore {
   }
 
   changeEditorMode(mode: EditorMode) {
-    this.mode = mode;
+    this._mode = mode;
   }
+
+  setVisualWidgetOutlineGuide = (value: boolean) => {
+    this._visualWidgetOutlineGuide = value;
+  };
 
   //! Getter
 
@@ -50,7 +56,11 @@ class EditorStore {
   }
 
   get editorMode(): EditorMode {
-    return this.mode;
+    return this._mode;
+  }
+
+  get visualWidgetOutlineGuideState(): boolean {
+    return this._visualWidgetOutlineGuide;
   }
 
   // calculate the max and min width for each breakpoint based on the layout config
