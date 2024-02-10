@@ -29,7 +29,6 @@ const RenderWidget = ({
   showVisualWidgetOutline,
 }: RenderWidgetProps): JSX.Element => {
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
-  // let widgetContainerClassName = classNames(styles.widgetContainer);
   const contextMenu = widgetStore?.getContextMenuState();
   const allWidgets = widgetStore?.getStructuredData();
   const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
@@ -39,11 +38,14 @@ const RenderWidget = ({
   );
 
   const handleHoverWidget = (event: any, widgetID: string) => {
+    if (readonly) return;
+
     event.stopPropagation();
     setHoveredWidgetID(widgetID);
   };
 
   const handleLeaveWidget = () => {
+    if (readonly) return;
     setHoveredWidgetID(undefined);
   };
 
@@ -54,12 +56,14 @@ const RenderWidget = ({
   });
 
   const handleCloseContextMenu = () => {
+    if (readonly) return;
+
     widgetStore?.setContextMenuState({
       isOpen: false,
       anchorPoint: { x: 0, y: 0 },
       selectedWidgetID: null,
     });
-    widgetStore?.setSelectWidget(undefined);
+    // widgetStore?.setSelectWidget(undefined);
   };
 
   const handleOnContextMenu = (
@@ -185,7 +189,7 @@ const RenderWidget = ({
       onMouseEnter={(e) => handleHoverWidget(e, widgetToRender.widget.widgetID)}
       onMouseLeave={handleLeaveWidget}
     >
-      {hoveredWidgetID === widgetToRender.widget.widgetID && (
+      {hoveredWidgetID === widgetToRender.widget.widgetID && !readonly && (
         <div className={styles.widgetType}>
           <SmallText> {widgetToRender.widget.widgetType}</SmallText>
         </div>

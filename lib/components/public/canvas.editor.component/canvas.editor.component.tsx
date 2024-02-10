@@ -23,7 +23,10 @@ import ResizableScreenWrapper from "../../private/editor.components/resizable.sc
 import TitleText from "../../private/general.components/text.components/title.text.component/title.text.component";
 import { EditorMode } from "../../../globals/enums/editor.enum";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlayCircle } from "@fortawesome/free-regular-svg-icons";
+import {
+  faCircleXmark,
+  faPlayCircle,
+} from "@fortawesome/free-regular-svg-icons";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -79,7 +82,9 @@ const CanvasEditor = ({
           <SizedContainer size="s">
             <Column alignItems="center">
               <FontAwesomeIcon
-                icon={faPlayCircle}
+                icon={
+                  editorMode == EditorMode.EDIT ? faPlayCircle : faCircleXmark
+                }
                 size="lg"
                 style={{ cursor: "pointer" }}
                 onClick={() => {
@@ -89,6 +94,7 @@ const CanvasEditor = ({
                       ? EditorMode.PREVIEW
                       : EditorMode.EDIT;
                   editorStore?.changeEditorMode(mode);
+                  widgetStore?.setSelectWidget(undefined);
                 }}
               />
             </Column>
