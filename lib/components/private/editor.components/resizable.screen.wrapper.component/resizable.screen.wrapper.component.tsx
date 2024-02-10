@@ -15,7 +15,11 @@ const ResizableScreenWrapper = ({
   const editorConfig = editorStore?.breakpointEditorConfigForCurrentBreakpoint;
   const [width, setWidth] = useState(500);
   const [isHovering, setIsHovering] = useState(false);
+  const [isResizing, setIsResizing] = useState(false);
+
   const sidebarRef = useRef<HTMLDivElement>(null);
+  const initialMouseXRef = useRef<number>(0);
+  const initialWidthRef = useRef<number>(500);
 
   const [minWidth, setMinWidth] = useState<number | null>(null);
   const [maxWidth, setMaxWidth] = useState<number | null>(null);
@@ -31,35 +35,45 @@ const ResizableScreenWrapper = ({
     setWidth(editorStore?.currentScreenWidth ?? 500);
   }, [editorStore?.currentScreenWidth]);
 
-  // handle mouse down event for resizing
-  const handleMouseDown = (e: {
-    preventDefault: () => void;
-    clientX: number;
-  }) => {
-    e.preventDefault();
-    const sidebarRect = sidebarRef.current?.getBoundingClientRect();
-    const initialMouseX = e.clientX - (sidebarRect ? sidebarRect.left : 0);
+  useEffect(() => {
+    const handleMouseMove = (e: any) => {
+      if (!isResizing) return;
 
-    const handleMouseMove = (e: { clientX: number }) => {
-      if (!sidebarRect) return;
-      const widthChange = e.clientX - sidebarRect.left - initialMouseX;
-
-      // Verwenden Sie 0 als Standardwert für minWidth und Infinity für maxWidth, wenn diese null sind
-      const effectiveMinWidth = minWidth !== null ? minWidth : 0;
-      const effectiveMaxWidth = maxWidth !== null ? maxWidth : Infinity;
-
+      const widthChange = e.clientX - initialMouseXRef.current;
       const newWidth = Math.min(
-        Math.max(width + widthChange, effectiveMinWidth),
-        effectiveMaxWidth
+        Math.max(initialWidthRef.current + widthChange, minWidth ?? 0),
+        maxWidth ?? Infinity
       );
+
       setWidth(newWidth);
       editorStore?.setCurrentScreenWidth(newWidth);
     };
 
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", () => {
+    const handleMouseUp = () => {
+      setIsResizing(false);
       document.removeEventListener("mousemove", handleMouseMove);
-    });
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    if (isResizing) {
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      if (isResizing) {
+        document.removeEventListener("mousemove", handleMouseMove);
+        document.removeEventListener("mouseup", handleMouseUp);
+      }
+    };
+  }, [isResizing, minWidth, maxWidth, editorStore]);
+
+  const handleMouseDown = (e: any) => {
+    e.preventDefault();
+    setIsResizing(true);
+
+    initialMouseXRef.current = e.clientX;
+    initialWidthRef.current = width;
   };
 
   return (
@@ -71,12 +85,12 @@ const ResizableScreenWrapper = ({
       <div className={styles.contentContainer}>{children}</div>
       <div
         className={`${styles.visualGuideRight} ${
-          isHovering ? styles.hover : ""
+          isHovering || isResizing ? styles.hover : ""
         }`}
       ></div>
       <div
         className={`${styles.visualGuideLeft} ${
-          isHovering ? styles.hover : ""
+          isHovering || isResizing ? styles.hover : ""
         }`}
       ></div>
       <div
@@ -84,7 +98,15 @@ const ResizableScreenWrapper = ({
         onMouseDown={handleMouseDown}
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
-      ></div>
+      >
+        <div className={styles.resizerIcon}></div>
+      </div>
+      <div
+        className={styles.sreenWidth}
+        style={{ display: isHovering || isResizing ? "block" : "none" }}
+      >
+        {width} PX
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import ConfigProvider from "../config/config.provider";
+import { EditorMode } from "../globals/enums/editor.enum";
 
 class EditorStore {
   private _currentBreakpoint: string = "";
@@ -10,6 +11,8 @@ class EditorStore {
   } = {};
 
   private _currentScreenWidth: number = 0;
+
+  private mode: EditorMode = EditorMode.EDIT;
 
   constructor() {
     makeAutoObservable(this);
@@ -22,6 +25,10 @@ class EditorStore {
 
   setCurrentScreenWidth(width: number) {
     this._currentScreenWidth = width;
+  }
+
+  changeEditorMode(mode: EditorMode) {
+    this.mode = mode;
   }
 
   //! Getter
@@ -40,6 +47,10 @@ class EditorStore {
 
   get breakpointEditorConfig() {
     return this._breakpointEditorConfig;
+  }
+
+  get editorMode(): EditorMode {
+    return this.mode;
   }
 
   // calculate the max and min width for each breakpoint based on the layout config

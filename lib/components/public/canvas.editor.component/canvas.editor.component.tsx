@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
 import MainLayout from "../../../layouts/main.layout/main.layout";
 import { RenderView } from "../../../main";
@@ -17,11 +18,13 @@ import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons/faXmarkCircle
 import WidgetSidebar from "../../private/editor.components/editor.bar.components/widget.sidebar.component/widget.sidebar.component";
 import StateSidebar from "../../private/editor.components/editor.bar.components/state.sidebar.component/state.sidebar.component";
 import SizedContainer from "../../private/general.components/sized.container.component/sized.container.component";
-import FilledButton from "../../private/general.components/filled.button.component/filled.button.component";
 import EditorStore from "../../../stores/editor.store";
 import BreakpointSettings from "../../private/editor.components/breakpoint.settings.component/breakpoint.settings.component";
 import ResizableScreenWrapper from "../../private/editor.components/resizable.screen.wrapper.component/resizable.screen.wrapper.component";
 import TitleText from "../../private/general.components/text.components/title.text.component/title.text.component";
+import { EditorMode } from "../../../globals/enums/editor.enum";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlayCircle } from "@fortawesome/free-regular-svg-icons";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -39,6 +42,9 @@ const CanvasEditor = ({
   onSaveChanges,
   editorStore,
 }: CanvasEditorProps): JSX.Element => {
+  const editorMode = editorStore?.editorMode;
+  const readonly = editorMode == EditorMode.PREVIEW;
+
   const [selectedConfigurationBar, setSelectedConfigurationBar] =
     useState<string>("Widgets");
 
@@ -70,10 +76,21 @@ const CanvasEditor = ({
 
         <Column alignItems="flex-end">
           <SizedContainer size="s">
-            <FilledButton
-              label="export changes"
-              onClick={handleOnSaveChanges}
-            />
+            <Column alignItems="center">
+              <FontAwesomeIcon
+                icon={faPlayCircle}
+                size="lg"
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  // TODO make this more pretty
+                  const mode =
+                    editorMode == EditorMode.EDIT
+                      ? EditorMode.PREVIEW
+                      : EditorMode.EDIT;
+                  editorStore?.changeEditorMode(mode);
+                }}
+              />
+            </Column>
           </SizedContainer>
         </Column>
       </Row>
@@ -81,6 +98,10 @@ const CanvasEditor = ({
   };
 
   const _buildCanvasConfigurationBar = (): JSX.Element | null => {
+    if (editorStore?.editorMode != EditorMode.EDIT) {
+      return null;
+    }
+
     let sidebarToRender: JSX.Element | null = null;
 
     if (selectedConfigurationBar == "Widgets") {
@@ -96,10 +117,14 @@ const CanvasEditor = ({
     );
   };
 
-  const _buildTabBar = (): JSX.Element => {
+  const _buildTabBar = (): JSX.Element | null => {
+    if (editorStore?.editorMode != EditorMode.EDIT) {
+      return null;
+    }
+
     return (
       <IconTabBar
-        style={{ borderRight: "1px solid #e0e0e0" }}
+        style={{ borderRight: "1px solid #e0e0e0" }} // TODO
         tabs={[
           {
             icon: faSquarePlus,
@@ -118,18 +143,28 @@ const CanvasEditor = ({
     );
   };
 
+  const _buildOptionSidebar = (): JSX.Element | null => {
+    if (editorStore?.editorMode != EditorMode.EDIT) {
+      return null;
+    }
+
+    return (
+      <div className={styles.optionSidebar}>
+        {widgetStore?.getSelectedWidget()?.widget.widgetID}
+      </div>
+    );
+  };
+
   return (
     <MainLayout topBars={[_buildTopToolBar()]}>
       <MainLayout sideBars={[_buildTabBar(), _buildCanvasConfigurationBar()]}>
         <div className={styles.canvasWrapper}>
           <div className={styles.editorCanvasWrapper}>
             <ResizableScreenWrapper>
-              <RenderView widgets={widgets} readonly={false} />
+              <RenderView widgets={widgets} readonly={readonly} />
             </ResizableScreenWrapper>
           </div>
-          <div className={styles.optionSidebar}>
-            {widgetStore?.getSelectedWidget()?.widget.widgetID}
-          </div>
+          {_buildOptionSidebar()}
         </div>
       </MainLayout>
     </MainLayout>
