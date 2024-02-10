@@ -1,11 +1,35 @@
 .widgetContainer {
-  background-color: #ffffff;
   height: 100%;
   overflow: hidden;
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative;
+  border: 1px solid transparent;
+  overflow: visible;
 }
 
-.selectedWidget {
-  background-color: rgba(0, 0, 0, 0.219);
+.hovered {
+  border: 1px solid #00000095;
+}
+
+.selected {
+  border: 1px solid #2496ff;
+}
+
+.widgetType {
+  position: absolute;
+  top: -23px;
+  left: -1px;
+  background-color: #2496ff;
+  padding: 3px 5px;
+  z-index: 100000;
+  border-radius: 2px;
+}
+
+.widgetContentWrapper {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
 }
 
 .childWidget {

@@ -10,7 +10,8 @@ import WidgetContextMenu from "../../widget.context.menu.component/widget.contex
 import WidgetStore from "../../../../../stores/widget.store";
 import classNames from "classnames";
 import ConfigProvider from "../../../../../config/config.provider";
-import React from "react";
+import React, { useState } from "react";
+import SmallText from "../../../general.components/text.components/small.text.component/small.text.component";
 
 interface RenderWidgetProps {
   readonly?: boolean;
@@ -26,18 +27,28 @@ const RenderWidget = ({
   viewStore,
 }: RenderWidgetProps): JSX.Element => {
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
-  let widgetContainerClassName = classNames(styles.widgetContainer);
+  // let widgetContainerClassName = classNames(styles.widgetContainer);
   const contextMenu = widgetStore?.getContextMenuState();
   const allWidgets = widgetStore?.getStructuredData();
   const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
 
-  // if the widget is selected, add the selected widget class
-  if (
-    widgetToRender.widget.widgetID ==
-    widgetStore?.getSelectedWidget()?.widget.widgetID
-  ) {
-    widgetContainerClassName += ` ${styles.selectedWidget}`;
-  }
+  const [hoveredWidgetID, setHoveredWidgetID] = useState<string | undefined>(
+    "customerDataTableNested"
+  );
+
+  const handleHoverWidget = (event: any, widgetID: string) => {
+    event.stopPropagation();
+    setHoveredWidgetID(widgetID);
+  };
+
+  const handleLeaveWidget = () => {
+    setHoveredWidgetID(undefined);
+  };
+
+  const widgetContainerClassName = classNames(styles.widgetContainer, {
+    [styles.hovered]: hoveredWidgetID === widgetToRender.widget.widgetID,
+    [styles.selected]: selectedWidgetID === widgetToRender.widget.widgetID,
+  });
 
   const handleCloseContextMenu = () => {
     widgetStore?.setContextMenuState({
@@ -52,6 +63,8 @@ const RenderWidget = ({
     event: React.MouseEvent<HTMLDivElement>,
     widgetID: string
   ) => {
+    if (readonly) return;
+
     event.preventDefault();
     event.stopPropagation();
 
@@ -153,6 +166,7 @@ const RenderWidget = ({
   ) => {
     if (readonly) return;
     event.stopPropagation();
+    event.preventDefault();
     widgetStore?.setSelectWidget(widgetID);
   };
 
@@ -160,13 +174,24 @@ const RenderWidget = ({
     <div
       onClick={(e) => handleWidgetClick(e, widgetToRender.widget.widgetID)}
       className={widgetContainerClassName}
+      data-widget-type={widgetToRender.widget.widgetType}
       onContextMenu={(e) =>
-        !readonly && handleOnContextMenu(e, widgetToRender.widget.widgetID)
+        handleOnContextMenu(e, widgetToRender.widget.widgetID)
       }
+      onMouseEnter={(e) => handleHoverWidget(e, widgetToRender.widget.widgetID)}
+      onMouseLeave={handleLeaveWidget}
     >
-      {renderWidgetComponent(widgetToRender.widget.widgetType)}
-      {renderNestedWidgets()}
-      {renderContextMenu()}
+      {hoveredWidgetID === widgetToRender.widget.widgetID && (
+        <div className={styles.widgetType}>
+          <SmallText> {widgetToRender.widget.widgetType}</SmallText>
+        </div>
+      )}
+
+      <div className={styles.widgetContentWrapper}>
+        {renderWidgetComponent(widgetToRender.widget.widgetType)}
+        {renderNestedWidgets()}
+        {renderContextMenu()}
+      </div>
     </div>
   );
 };

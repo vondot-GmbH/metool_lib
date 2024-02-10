@@ -85,14 +85,9 @@ const GridLayout = ({
     return dynamic;
   }, [selectedWidgetID, savedLayouts, readonly]);
 
-  // const dynamicLayouts = convertDynamicLayouts(
-  //   selectedWidgetID,
-  //   savedLayouts,
-  //   readonly
-  // );
-
   const gridBackgroundStyle = {
     background: showGrid ? gridBackground : "none",
+    height: "100%",
   } as any;
 
   if (isNested) {
@@ -241,7 +236,7 @@ const GridLayout = ({
       rowHeight={rowHeight}
       style={gridBackgroundStyle}
       onBreakpointChange={onBreakpointChange}
-      compactType={null}
+      useCSSTransforms={false}
       onDragStart={handleDragStart}
       onDragStop={handleDragStop}
       onResizeStart={handleResizeStart}

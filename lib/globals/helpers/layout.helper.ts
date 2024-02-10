@@ -72,19 +72,33 @@ export const convertLayoutToPositioningForBreakpoint = (
   return positioningRecord;
 };
 
+// adding static properties to the layout
+// only for display purposes in the editor (not for saving)
 export const convertDynamicLayouts = (
   selectedWidgetID: string | undefined,
   layouts: any,
   readonly: boolean
 ) => {
-  return Object.keys(layouts).reduce((acc: any, breakpoint) => {
-    acc[breakpoint] = layouts[breakpoint].map((layout: any) => ({
-      ...layout,
-      // Setzt 'static' basierend auf dem 'readonly'-Status oder ob das Widget das ausgewählte ist
-      static: readonly || (selectedWidgetID !== layout.i && !readonly),
-    }));
-    return acc;
-  }, {});
+  const result = {} as any;
+
+  // go through each breakpoint
+  for (const breakpoint of Object.keys(layouts)) {
+    const layoutsForBreakpoint = layouts[breakpoint];
+    result[breakpoint] = [];
+
+    // go through each layout for the current breakpoint and add the adjusted layout to the result
+    for (const layout of layoutsForBreakpoint) {
+      // if the grid is readonly or the selected widget is not the current widget, set the layout to static
+      const isStatic = readonly || (selectedWidgetID !== layout.i && !readonly);
+
+      result[breakpoint].push({
+        ...layout,
+        static: isStatic,
+      });
+    }
+  }
+
+  return result;
 };
 
 // generate grid layout background based on current breakpoint
