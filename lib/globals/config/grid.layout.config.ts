@@ -5,7 +5,7 @@ export const DEFAULT_LAYOUT_CONFIG: LayoutConfig = {
     xl: {
       cols: 48,
       rowHeight: 30,
-      icon: "icon",
+      icon: "icon", // TODO
       title: "Large",
       breakpoint: 1200,
     },

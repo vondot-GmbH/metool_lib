@@ -29,6 +29,7 @@ const RenderWidget = ({
   let widgetContainerClassName = classNames(styles.widgetContainer);
   const contextMenu = widgetStore?.getContextMenuState();
   const allWidgets = widgetStore?.getStructuredData();
+  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
 
   // if the widget is selected, add the selected widget class
   if (
@@ -102,6 +103,7 @@ const RenderWidget = ({
     // orherwise render the nested widgets in a new grid layout
     return (
       <GridLayout
+        selectedWidgetID={selectedWidgetID}
         parentWidgetID={widgetToRender.widget.widgetID}
         isNested
         key={"nested-grid-" + widgetToRender.widget.positioning.i}
@@ -114,6 +116,7 @@ const RenderWidget = ({
             className={styles.childWidget}
           >
             <RenderWidget
+              key={childWidget.widget.positioning.i}
               readonly={readonly}
               widgetToRender={childWidget}
               widgetStore={widgetStore}
@@ -144,8 +147,18 @@ const RenderWidget = ({
     });
   };
 
+  const handleWidgetClick = (
+    event: React.MouseEvent<HTMLDivElement>,
+    widgetID: string
+  ) => {
+    if (readonly) return;
+    event.stopPropagation();
+    widgetStore?.setSelectWidget(widgetID);
+  };
+
   return (
     <div
+      onClick={(e) => handleWidgetClick(e, widgetToRender.widget.widgetID)}
       className={widgetContainerClassName}
       onContextMenu={(e) =>
         !readonly && handleOnContextMenu(e, widgetToRender.widget.widgetID)

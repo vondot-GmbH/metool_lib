@@ -1,10 +1,11 @@
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import {
+  convertDynamicLayouts,
   convertToGridLayout,
   generateGridLayoutBackground,
 } from "../../../../globals/helpers/layout.helper";
 import { WidgetHierarchyMap } from "../../../../schemas/widget.schemas/widget.schema";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import styles from "./grid.layout.component.module.scss";
 import { v4 as UUID } from "uuid";
 import ViewStore from "../../../../stores/view.store";
@@ -26,12 +27,14 @@ interface GridLayoutProps {
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
   parentWidgetID?: string;
+  readonly?: boolean;
+  selectedWidgetID: string | undefined;
 }
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const GridLayout = ({
-  key,
+  key = "grid-layout",
   children,
   content,
   onDragStart: propOnDragStart,
@@ -42,6 +45,8 @@ const GridLayout = ({
   widgetStore,
   editorStore,
   parentWidgetID,
+  readonly = false,
+  selectedWidgetID,
 }: GridLayoutProps): JSX.Element => {
   const [localCurrentBreakpoint, setLocalCurrentBreakpoint] = useState("");
 
@@ -69,6 +74,22 @@ const GridLayout = ({
 
   const layouts = convertToGridLayout(content, breakpoints);
   const [savedLayouts, setSavedLayouts] = useState(layouts);
+
+  const dynamicLayouts = useMemo(() => {
+    const dynamic = convertDynamicLayouts(
+      selectedWidgetID,
+      savedLayouts,
+      readonly
+    );
+
+    return dynamic;
+  }, [selectedWidgetID, savedLayouts, readonly]);
+
+  // const dynamicLayouts = convertDynamicLayouts(
+  //   selectedWidgetID,
+  //   savedLayouts,
+  //   readonly
+  // );
 
   const gridBackgroundStyle = {
     background: showGrid ? gridBackground : "none",
@@ -213,7 +234,7 @@ const GridLayout = ({
       key={key}
       className={isNested ? undefined : styles.gridLayout}
       margin={[0, 0]}
-      layouts={savedLayouts}
+      layouts={dynamicLayouts}
       breakpoints={breakpoints}
       breakpoint={isNested ? undefined : editorStore?.currentBreakpoint}
       cols={cols}

@@ -34,9 +34,11 @@ const RenderView = ({
   );
 
   const preparedRootLevelWidgets = Array.from(rootLevelWidgets.values());
+  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
 
   return (
     <GridLayout
+      selectedWidgetID={selectedWidgetID}
       key={"top-level-grid"}
       content={rootLevelWidgets}
       onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
@@ -49,7 +51,7 @@ const RenderView = ({
           <RenderWidget
             readonly={readonly}
             widgetToRender={rootLevelWidgets}
-            // key={rootLevelWidgets.widget.positioning.i + i}
+            key={rootLevelWidgets.widget.positioning.i}
           />
         </div>
       ))}

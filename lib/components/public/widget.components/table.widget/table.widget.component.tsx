@@ -44,7 +44,7 @@ const TableWidget: React.FC<TableWidgetProps> = ({
       {
         child: (
           <Column>
-            <RunningText>{user.name}</RunningText>
+            <RunningText>{widgetID}</RunningText>
           </Column>
         ),
       },

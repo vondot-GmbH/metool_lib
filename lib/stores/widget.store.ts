@@ -55,9 +55,12 @@ class WidgetStore {
 
     const selectedWidget = this._structuredWidgetHierarchy.get(widgetID);
 
-    if (selectedWidget != null) {
-      this._selectedWidget = selectedWidget;
+    if (selectedWidget == null) {
+      this._selectedWidget = undefined;
+      return;
     }
+
+    this._selectedWidget = selectedWidget;
   }
 
   setContextMenuState(contextMenu: WidgetContextMenu): void {
@@ -83,11 +86,11 @@ class WidgetStore {
   }
 
   getSelectedWidget(): WidgetHierarchy | undefined {
-    if (this._selectedWidget == null) {
-      return;
-    }
+    // if (this._selectedWidget == null) {
+    //   return;
+    // }
 
-    return JSON.parse(JSON.stringify(this._selectedWidget));
+    return this._selectedWidget;
   }
 
   getContextMenuState(): WidgetContextMenu {

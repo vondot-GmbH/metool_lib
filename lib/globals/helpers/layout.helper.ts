@@ -72,6 +72,21 @@ export const convertLayoutToPositioningForBreakpoint = (
   return positioningRecord;
 };
 
+export const convertDynamicLayouts = (
+  selectedWidgetID: string | undefined,
+  layouts: any,
+  readonly: boolean
+) => {
+  return Object.keys(layouts).reduce((acc: any, breakpoint) => {
+    acc[breakpoint] = layouts[breakpoint].map((layout: any) => ({
+      ...layout,
+      // Setzt 'static' basierend auf dem 'readonly'-Status oder ob das Widget das ausgewählte ist
+      static: readonly || (selectedWidgetID !== layout.i && !readonly),
+    }));
+    return acc;
+  }, {});
+};
+
 // generate grid layout background based on current breakpoint
 export const generateGridLayoutBackground = (args: {
   cols: { [key: string]: number };
