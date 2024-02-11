@@ -5,6 +5,7 @@ import { LayoutConfig } from "../../../../main";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./breakpoint.settings.component.module.scss";
 import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
+import Column from "../../general.components/column.component/column.component";
 
 interface BreakpointSettingsProps {
   editorStore?: EditorStore;
@@ -48,9 +49,9 @@ const BreakpointSettings = ({
         return <div>{_buildBreakpointItem(layoutConfig)}</div>;
       })}
 
-      <RunningText className={styles.currentBreakpoint}>
-        {editorStore?.currentBreakpoint}
-      </RunningText>
+      <Column alignItems="center" className={styles.currentBreakpoint}>
+        <RunningText>{editorStore?.currentBreakpoint}</RunningText>
+      </Column>
     </div>
   );
 };

@@ -34,7 +34,7 @@ const TableWidget: React.FC<TableWidgetProps> = ({
   const columns = [
     { flex: 1, child: <RunningText>name</RunningText> },
     { flex: 1, child: <RunningText>Alter</RunningText> },
-    { flex: 2, child: <RunningText>Email</RunningText> },
+    { flex: 1, child: <RunningText>Email</RunningText> },
   ];
 
   // Komponente für die Anzeige der Datenzeile

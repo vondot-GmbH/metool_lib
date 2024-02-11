@@ -62,6 +62,10 @@ const CanvasEditor = ({
     if (changeRecordStore && onSaveChanges) {
       // const changes = changeRecordStore?.processReleaseChanges();
 
+      const widgetss = widgetStore?.exportWidgetsTEST();
+
+      console.log(widgetss);
+
       // if (changes && changes.length != 0) onSaveChanges(changes);
 
       const widget = widgetStore?.getStructuredData();
@@ -71,15 +75,20 @@ const CanvasEditor = ({
 
   const _buildTopToolBar = (): JSX.Element => {
     return (
-      <Row className={styles.topBar} alignItems="center">
-        <Column justifyContent="flex-start">
-          <TitleText className="ml-20">Project Name</TitleText>
-        </Column>
-
+      <Row
+        className={styles.topBar}
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <SizedContainer size="s">
+          <Column justifyContent="flex-start">
+            <TitleText className="ml-20">Project Name</TitleText>
+          </Column>
+        </SizedContainer>
         <BreakpointSettings />
 
-        <Column alignItems="flex-end">
-          <SizedContainer size="s">
+        <SizedContainer size="s">
+          <Column alignItems="flex-end">
             <Column alignItems="center">
               <FontAwesomeIcon
                 icon={
@@ -95,11 +104,12 @@ const CanvasEditor = ({
                       : EditorMode.EDIT;
                   editorStore?.changeEditorMode(mode);
                   widgetStore?.setSelectWidget(undefined);
+                  handleOnSaveChanges();
                 }}
               />
             </Column>
-          </SizedContainer>
-        </Column>
+          </Column>
+        </SizedContainer>
       </Row>
     );
   };

@@ -2,11 +2,15 @@
   height: 100%;
   display: flex;
   align-items: center;
+  border-left: 1px solid #d1d1d1;
+  border-right: 1px solid #d1d1d1;
+  padding-left: 10px;
 
   .breakpointIcon {
     padding: 13px;
     border-radius: 4px;
     cursor: pointer;
+    margin: 0 1px;
 
     &:hover {
       background-color: #d1d1d18f;
@@ -18,6 +22,7 @@
   }
 
   .currentBreakpoint {
-    margin-left: 15px;
+    margin: 0 15px;
+    width: 60px;
   }
 }

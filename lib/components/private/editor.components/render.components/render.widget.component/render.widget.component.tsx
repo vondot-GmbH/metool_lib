@@ -2,7 +2,10 @@ import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.widget.comonent.module.scss";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
-import { WidgetHierarchy } from "../../../../../schemas/widget.schemas/widget.schema";
+import {
+  WidgetHierarchy,
+  WidgetHierarchyMap,
+} from "../../../../../schemas/widget.schemas/widget.schema";
 import { getFilteredWidgetMapByWidgetID } from "../../../../../globals/helpers/widget.helper";
 import { inject, observer } from "mobx-react";
 import ViewStore from "../../../../../stores/view.store";
@@ -107,7 +110,7 @@ const RenderWidget = ({
   // get nested widgets for the current widget
   const childrenWidgets = getFilteredWidgetMapByWidgetID(
     widgetToRender.children,
-    allWidgets
+    allWidgets as WidgetHierarchyMap
   );
 
   // render nested widgets if there are any nested widgets
