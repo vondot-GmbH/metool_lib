@@ -171,6 +171,17 @@ const RenderWidget = ({
     });
   };
 
+  const renderWidgetTypeLabel = () => {
+    return (
+      hoveredWidgetID === widgetToRender.widget.widgetID &&
+      !readonly && (
+        <div className={styles.widgetType}>
+          <SmallText> {widgetToRender.widget.widgetType}</SmallText>
+        </div>
+      )
+    );
+  };
+
   const handleWidgetClick = (
     event: React.MouseEvent<HTMLDivElement>,
     widgetID: string
@@ -192,11 +203,7 @@ const RenderWidget = ({
       onMouseEnter={(e) => handleHoverWidget(e, widgetToRender.widget.widgetID)}
       onMouseLeave={handleLeaveWidget}
     >
-      {hoveredWidgetID === widgetToRender.widget.widgetID && !readonly && (
-        <div className={styles.widgetType}>
-          <SmallText> {widgetToRender.widget.widgetType}</SmallText>
-        </div>
-      )}
+      {renderWidgetTypeLabel()}
 
       <div className={styles.widgetContentWrapper}>
         {renderWidgetComponent(widgetToRender.widget.widgetType)}

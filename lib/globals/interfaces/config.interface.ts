@@ -5,6 +5,7 @@ export interface WidgetConfig {
   type: string;
   component: React.ComponentType<any>;
   icon: string;
+  canHaveChildren: boolean;
 }
 
 export interface BreakpointConfig {

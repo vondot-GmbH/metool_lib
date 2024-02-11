@@ -7,4 +7,5 @@ export const TableWidgetConfig: WidgetConfig = {
   type: "DATA_TABLE",
   component: tableWidgetComponent,
   icon: TableWidgetIcon,
+  canHaveChildren: false,
 };
