@@ -24,8 +24,8 @@
 
 .widgetType {
   position: absolute;
-  top: -23px;
-  left: -1px;
+  top: 4px;
+  left: 4px;
   background-color: #2496ff;
   padding: 3px 5px;
   z-index: 100000;
@@ -39,5 +39,5 @@
 }
 
 .childWidget {
-  border: 1px solid #ccc; // TODO
+  // border: 1px solid #ccc;
 }

@@ -11,13 +11,7 @@ const ContainerWidget: React.FC<ContainerWidgetProps> = ({
   widgetID,
   children,
 }): JSX.Element => {
-  return (
-    <div className={styles.containerWidget}>
-      {widgetID}
-
-      {children}
-    </div>
-  );
+  return <div className={styles.containerWidget}>{children}</div>;
 };
 
 export default inject("widgetStore", "stateStore")(observer(ContainerWidget));

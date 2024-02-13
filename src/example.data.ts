@@ -133,7 +133,7 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
   {
     _id: "5f9e9b6b9c6b4c0017f3b399",
     widgetID: "customerDataTableNested2",
-    widgetType: "TableWidget",
+    widgetType: "DATA_TABLE",
     view: "5f9e9b6b9I6b4c3017f3b3a0",
     parentID: "customerTableWrapper",
     positioning: {
