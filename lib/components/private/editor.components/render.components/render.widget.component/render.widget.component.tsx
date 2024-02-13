@@ -15,12 +15,15 @@ import classNames from "classnames";
 import ConfigProvider from "../../../../../config/config.provider";
 import React, { useState } from "react";
 import SmallText from "../../../general.components/text.components/small.text.component/small.text.component";
+import { WidgetConfig } from "../../../../../main";
+import StateStore from "../../../../../stores/state.store";
 
 interface RenderWidgetProps {
   readonly?: boolean;
   widgetToRender: WidgetHierarchy;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
+  stateStore?: StateStore;
   showVisualWidgetOutline: boolean;
 }
 
@@ -29,6 +32,7 @@ const RenderWidget = ({
   readonly,
   widgetStore,
   viewStore,
+  stateStore,
   showVisualWidgetOutline,
 }: RenderWidgetProps): JSX.Element => {
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
@@ -114,13 +118,30 @@ const RenderWidget = ({
   );
 
   // render nested widgets if there are any nested widgets
-  const renderNestedWidgets = (): JSX.Element | null => {
+  const renderNestedWidgets = (widget: WidgetConfig): JSX.Element | null => {
+    // if the widget cannot have children, return null
+    if (!widget.canHaveChildren) {
+      return null;
+    }
+
     // convert the map to an array for rendering purposes
     const preparedChildrenWidgets = Array.from(childrenWidgets.values());
 
-    // if there are no nested widgets, return null
+    // if there are no nested widgets, return empty grid layout to allow for drag and drop
+    // TODO
     if (preparedChildrenWidgets == null || preparedChildrenWidgets.length < 1) {
-      return null;
+      return (
+        <GridLayout
+          selectedWidgetID={selectedWidgetID}
+          parentWidgetID={widgetToRender.widget.widgetID}
+          isNested
+          key={"nested-grid-" + widgetToRender.widget.positioning.i}
+          content={childrenWidgets}
+          onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
+        >
+          <div></div>
+        </GridLayout>
+      );
     }
 
     // orherwise render the nested widgets in a new grid layout
@@ -133,7 +154,7 @@ const RenderWidget = ({
         content={childrenWidgets}
         onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
       >
-        {preparedChildrenWidgets.map((childWidget) => (
+        {preparedChildrenWidgets.map((childWidget: WidgetHierarchy) => (
           <div
             key={childWidget.widget.positioning.i}
             className={styles.childWidget}
@@ -168,6 +189,8 @@ const RenderWidget = ({
     return React.createElement(WidgetComponent, {
       widgetID: widgetToRender.widget.widgetID,
       widgetStore,
+      stateStore,
+      children: renderNestedWidgets(widget),
     });
   };
 
@@ -207,11 +230,15 @@ const RenderWidget = ({
 
       <div className={styles.widgetContentWrapper}>
         {renderWidgetComponent(widgetToRender.widget.widgetType)}
-        {renderNestedWidgets()}
+        {/* {renderNestedWidgets()} */}
         {renderContextMenu()}
       </div>
     </div>
   );
 };
 
-export default inject("viewStore", "widgetStore")(observer(RenderWidget));
+export default inject(
+  "viewStore",
+  "widgetStore",
+  "stateStore"
+)(observer(RenderWidget));
