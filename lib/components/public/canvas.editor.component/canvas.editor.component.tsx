@@ -27,6 +27,8 @@ import {
   faCircleXmark,
   faPlayCircle,
 } from "@fortawesome/free-regular-svg-icons";
+import CollapsibleSection from "../../private/general.components/collapsible.section.component/collapsible.section.component";
+import RunningText from "../../private/general.components/text.components/running.text.component/running.text.component";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -167,7 +169,22 @@ const CanvasEditor = ({
 
     return (
       <div className={styles.optionSidebar}>
-        {widgetStore?.getSelectedWidget()?.widget.widgetID}
+        <RunningText>
+          {widgetStore?.getSelectedWidget()?.widget.widgetID ??
+            "No widget selected"}
+        </RunningText>
+
+        <CollapsibleSection title="Content">
+          <RunningText>option</RunningText>
+        </CollapsibleSection>
+
+        <CollapsibleSection title="Interaction">
+          <RunningText>option</RunningText>
+        </CollapsibleSection>
+
+        <CollapsibleSection title="Appearance">
+          <RunningText>option</RunningText>
+        </CollapsibleSection>
       </div>
     );
   };
