@@ -1,0 +1,53 @@
+.multiFieldDropdownWrapper {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  overflow: hidden;
+  margin-bottom: 20px;
+
+  .multiFieldDropdownHeader {
+    padding: 15px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    svg {
+      cursor: pointer;
+      color: #007bff;
+    }
+  }
+
+  .multiFieldDropdownItem {
+    padding: 10px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #f0f0f0;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  .multiFieldPopup {
+    padding: 20px;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .multiFieldPopupSaveButton {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+
+    svg {
+      cursor: pointer;
+      color: #28a745;
+    }
+  }
+}

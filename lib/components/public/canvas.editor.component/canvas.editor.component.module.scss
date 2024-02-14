@@ -24,7 +24,7 @@
 
   .optionSidebar {
     border-left: 0.5px solid rgb(112, 106, 106);
-    width: 300px;
+    width: 320px;
     overflow: hidden;
     height: 100%;
   }
@@ -36,4 +36,9 @@
     align-items: center;
     flex-direction: column;
   }
+}
+
+.popup {
+  background-color: white;
+  width: 100%;
 }

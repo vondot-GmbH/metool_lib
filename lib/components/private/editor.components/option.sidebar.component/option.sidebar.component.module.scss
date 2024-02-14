@@ -1,0 +1,28 @@
+.optionSidebar {
+  border-left: 0.5px solid rgb(112, 106, 106);
+  width: 320px;
+  overflow: hidden;
+  height: 100%;
+
+  .sidebarHeader {
+    padding: 10px;
+    max-height: 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .widgetInfoWrapper {
+      margin-bottom: 5px;
+      .widgetIcon {
+        width: 20px;
+        height: auto;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .sidebarContent {
+    background-color: #f2f4f4;
+    height: 100%;
+  }
+}

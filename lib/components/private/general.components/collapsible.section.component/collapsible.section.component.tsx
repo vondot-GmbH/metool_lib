@@ -12,7 +12,7 @@ interface CollapsibleSectionProps {
 }
 
 const CollapsibleSection = ({ title, children }: CollapsibleSectionProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   const toggleOpen = () => setIsOpen(!isOpen);
 

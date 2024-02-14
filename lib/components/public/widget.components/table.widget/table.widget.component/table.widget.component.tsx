@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
-import WidgetStore from "../../../../stores/widget.store";
-import StateStore from "../../../../stores/state.store";
-import { TableWidgetState } from "../../../../globals/interfaces/widget.state.interface";
+import WidgetStore from "../../../../../stores/widget.store";
+import StateStore from "../../../../../stores/state.store";
+import { TableWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
 import { useEffect } from "react";
-import ListDataTable from "../../../private/general.components/table.component/data.table.component";
-import Column from "../../../private/general.components/column.component/column.component";
-import RunningText from "../../../private/general.components/text.components/running.text.component/running.text.component";
+import ListDataTable from "../../../../private/general.components/table.component/data.table.component";
+import Column from "../../../../private/general.components/column.component/column.component";
+import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 
 interface TableWidgetProps {
   widgetID: string;

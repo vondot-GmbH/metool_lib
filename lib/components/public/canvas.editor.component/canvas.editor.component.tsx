@@ -27,8 +27,8 @@ import {
   faCircleXmark,
   faPlayCircle,
 } from "@fortawesome/free-regular-svg-icons";
-import CollapsibleSection from "../../private/general.components/collapsible.section.component/collapsible.section.component";
-import RunningText from "../../private/general.components/text.components/running.text.component/running.text.component";
+import ConfigProvider from "../../../config/config.provider";
+import React from "react";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -49,6 +49,9 @@ const CanvasEditor = ({
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
   const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
+  const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
+  const selectedWidgetType =
+    widgetStore?.getSelectedWidget()?.widget.widgetType;
 
   const [selectedConfigurationBar, setSelectedConfigurationBar] =
     useState<string>("Widgets");
@@ -167,26 +170,24 @@ const CanvasEditor = ({
       return null;
     }
 
-    return (
-      <div className={styles.optionSidebar}>
-        <RunningText>
-          {widgetStore?.getSelectedWidget()?.widget.widgetID ??
-            "No widget selected"}
-        </RunningText>
-
-        <CollapsibleSection title="Content">
-          <RunningText>option</RunningText>
-        </CollapsibleSection>
-
-        <CollapsibleSection title="Interaction">
-          <RunningText>option</RunningText>
-        </CollapsibleSection>
-
-        <CollapsibleSection title="Appearance">
-          <RunningText>option</RunningText>
-        </CollapsibleSection>
-      </div>
+    // find the widget that is currently selected
+    const selectedWidgetConfig = registeredWidgets?.find(
+      (widget) => widget.type === selectedWidgetType
     );
+
+    // check if the widget has a sidebar component
+    if (!selectedWidgetConfig || !selectedWidgetConfig.sidebarComponent) {
+      return <div className={styles.optionSidebar}>Sidebar not found</div>;
+    }
+
+    // render the widget sidebar component if it exists
+    const SidebarComponent =
+      selectedWidgetConfig.sidebarComponent as React.ComponentType<any>;
+
+    return React.createElement(SidebarComponent, {
+      widgetStore,
+      selectedWidgetConfig,
+    });
   };
 
   return (

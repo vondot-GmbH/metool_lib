@@ -6,6 +6,7 @@ export interface WidgetConfig {
   component: React.ComponentType<any>;
   icon: string;
   canHaveChildren: boolean;
+  sidebarComponent?: React.ComponentType<any>;
 }
 
 export interface BreakpointConfig {
