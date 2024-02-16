@@ -89,9 +89,7 @@ class WidgetStore {
       return;
     }
 
-    return JSON.parse(
-      JSON.stringify(this._structuredWidgetHierarchy.get(widgetID))
-    );
+    return this._structuredWidgetHierarchy.get(widgetID);
   }
 
   getStructuredData(): WidgetHierarchyMap {
@@ -111,6 +109,33 @@ class WidgetStore {
   }
 
   //! methods
+
+  updateWidgetOption(widgetID: string, optionName: string, value: any): void {
+    const widgetHierarchy =
+      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+
+    if (widgetHierarchy != null) {
+      const options = widgetHierarchy.widget.options ?? {};
+
+      options[optionName] = value;
+      this.setStructuredWidgetHierarchy(widgetID, widgetHierarchy);
+
+      this.changeRecordStore.setChangeWidgetRecord(
+        widgetID,
+        "UPDATE",
+        widgetHierarchy.widget
+      );
+    }
+  }
+
+  getWidgetOption(widgetID: string, optionName: string): any {
+    const widgetHierarchy =
+      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+
+    if (widgetHierarchy != null) {
+      return widgetHierarchy.widget.options?.[optionName] ?? null;
+    }
+  }
 
   updateWidgetPositioningForBreakpoint(
     widgetID: string,

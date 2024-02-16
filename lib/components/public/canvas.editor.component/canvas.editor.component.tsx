@@ -27,8 +27,10 @@ import {
   faCircleXmark,
   faPlayCircle,
 } from "@fortawesome/free-regular-svg-icons";
-import ConfigProvider from "../../../config/config.provider";
-import React from "react";
+
+import OptionSidebar, {
+  SidebarProvider,
+} from "../../private/editor.components/option.sidebar.component/option.sidebar.component";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -49,9 +51,6 @@ const CanvasEditor = ({
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
   const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
-  const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
-  const selectedWidgetType =
-    widgetStore?.getSelectedWidget()?.widget.widgetType;
 
   const [selectedConfigurationBar, setSelectedConfigurationBar] =
     useState<string>("Widgets");
@@ -165,46 +164,23 @@ const CanvasEditor = ({
     );
   };
 
-  const _buildOptionSidebar = (): JSX.Element | null => {
-    if (editorStore?.editorMode != EditorMode.EDIT) {
-      return null;
-    }
-
-    // find the widget that is currently selected
-    const selectedWidgetConfig = registeredWidgets?.find(
-      (widget) => widget.type === selectedWidgetType
-    );
-
-    // check if the widget has a sidebar component
-    if (!selectedWidgetConfig || !selectedWidgetConfig.sidebarComponent) {
-      return <div className={styles.optionSidebar}>Sidebar not found</div>;
-    }
-
-    // render the widget sidebar component if it exists
-    const SidebarComponent =
-      selectedWidgetConfig.sidebarComponent as React.ComponentType<any>;
-
-    return React.createElement(SidebarComponent, {
-      widgetStore,
-      selectedWidgetConfig,
-    });
-  };
-
   return (
     <MainLayout topBars={[_buildTopToolBar()]}>
       <MainLayout sideBars={[_buildTabBar(), _buildCanvasConfigurationBar()]}>
-        <div className={styles.canvasWrapper}>
-          <div className={styles.editorCanvasWrapper}>
-            <ResizableScreenWrapper>
-              <RenderView
-                widgets={widgets}
-                readonly={readonly}
-                showVisualWidgetOutline={showVisualWidgetOutline}
-              />
-            </ResizableScreenWrapper>
+        <SidebarProvider>
+          <div className={styles.canvasWrapper}>
+            <div className={styles.editorCanvasWrapper}>
+              <ResizableScreenWrapper>
+                <RenderView
+                  widgets={widgets}
+                  readonly={readonly}
+                  showVisualWidgetOutline={showVisualWidgetOutline}
+                />
+              </ResizableScreenWrapper>
+            </div>
+            <OptionSidebar />
           </div>
-          {_buildOptionSidebar()}
-        </div>
+        </SidebarProvider>
       </MainLayout>
     </MainLayout>
   );

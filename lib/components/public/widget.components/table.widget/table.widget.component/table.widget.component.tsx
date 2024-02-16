@@ -48,6 +48,7 @@ const TableWidget: React.FC<TableWidgetProps> = ({
           </Column>
         ),
       },
+
       {
         child: (
           <Column>

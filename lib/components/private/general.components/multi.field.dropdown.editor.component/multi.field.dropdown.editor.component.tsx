@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./multi.field.dropdown.editor.component.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
@@ -23,6 +23,11 @@ const MultiFieldDropdownEditor = ({
   onAdd,
 }: MultiFieldDropdownEditorProps) => {
   const [selectedItem, setSelectedItem] = useState<any | null>(null);
+  const [savedItems, setSavedItems] = useState<any[]>(items);
+
+  useEffect(() => {
+    setSavedItems(items);
+  }, [items]);
 
   const handleItemClick = (item: any): void => {
     setSelectedItem(item);
@@ -44,15 +49,16 @@ const MultiFieldDropdownEditor = ({
           />
         )}
       </div>
-      {items.map((item, index) => (
-        <div
-          key={index}
-          className={styles.multiFieldDropdownItem}
-          onClick={() => handleItemClick(item)}
-        >
-          {renderListItem(item, index)}
-        </div>
-      ))}
+      {savedItems &&
+        savedItems.map((item, index) => (
+          <div
+            key={index}
+            className={styles.multiFieldDropdownItem}
+            onClick={() => handleItemClick(item)}
+          >
+            {renderListItem(item, index)}
+          </div>
+        ))}
       {selectedItem &&
         renderDetailView &&
         renderDetailView(selectedItem, closeDetailView)}

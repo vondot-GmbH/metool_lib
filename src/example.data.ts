@@ -193,6 +193,22 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
         },
       },
     },
+    options: {
+      columns: [
+        {
+          source: "test",
+          label: "test",
+          flex: 1,
+          algin: "CENTER",
+        },
+        {
+          source: "test1",
+          label: "test1",
+          flex: 1,
+          algin: "LEFT",
+        },
+      ],
+    },
   },
   {
     _id: "5f9e9b6b9c6b4c0017ffb399",
@@ -255,6 +271,22 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
           isInfinity: false,
         },
       },
+    },
+    options: {
+      columns: [
+        {
+          source: "name",
+          label: "Name",
+          flex: 1,
+          algin: "CENTER",
+        },
+        {
+          source: "email",
+          label: "Email",
+          flex: 1,
+          algin: "LEFT",
+        },
+      ],
     },
   },
 ];

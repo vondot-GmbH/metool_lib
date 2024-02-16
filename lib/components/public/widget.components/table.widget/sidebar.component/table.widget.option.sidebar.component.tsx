@@ -1,14 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
-// import styles from "./container.widget.component.module.scss";
-import OptionSidebar, {
-  ViewProps,
-} from "../../../../private/editor.components/option.sidebar.component/option.sidebar.component";
 import WidgetStore from "../../../../../stores/widget.store";
 import { WidgetConfig } from "../../../../../main";
 import MultiFieldDropdownEditor from "../../../../private/general.components/multi.field.dropdown.editor.component/multi.field.dropdown.editor.component";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
+import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
+import { faArrowAltCircleDown } from "@fortawesome/free-regular-svg-icons";
+import { useSidebar } from "../../../../private/editor.components/option.sidebar.component/option.sidebar.component";
+
+interface TableColumn {
+  source: string;
+  label: string;
+  flex: number;
+  algin: "START" | "CENTER" | "END";
+}
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -17,61 +23,85 @@ interface TableWidgetOptionSidebarProps {
 
 const TableWidgetOptionSidebar = ({
   selectedWidgetConfig,
+  widgetStore,
 }: TableWidgetOptionSidebarProps): JSX.Element => {
-  const DetailView = ({
-    popView,
-    item,
-  }: {
-    popView: () => void;
-    item: any;
-  }) => (
-    <div>
-      <CollapsibleSection title="Meine Einträge">
-        <RunningText>
-          Hier können Sie die Einträge für die Tabelle verwalten.
-        </RunningText>
-      </CollapsibleSection>
-    </div>
-  );
+  const selectedWidget = widgetStore?.getSelectedWidget();
+  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
+  const columnOptions: TableColumn[] = widgetStore?.getWidgetOption(
+    selectedWidgetID ?? "",
+    "columns"
+  ); // TODO
 
-  const MainView = ({ pushView, popView }: ViewProps) => (
+  const { pushView, views, titles, popView } = useSidebar();
+
+  const handleAddColumn = (): void => {
+    const newColumn = {
+      source: "newColumn",
+      label: "Neue Spalte",
+      flex: 1,
+      algin: "START",
+    };
+
+    const newColumnOptions = [...columnOptions, { ...newColumn }];
+
+    widgetStore?.updateWidgetOption(
+      selectedWidgetID ?? "",
+      "columns",
+      newColumnOptions
+    );
+  };
+
+  const DetailView = () => (
     <div>
-      <CollapsibleSection title="Meine Einträge">
-        <MultiFieldDropdownEditor
-          label="Content"
-          items={[
-            { label: "Eintrag 1" },
-            { label: "Eintrag 2" },
-            { label: "Eintrag 3" },
+      <CollapsibleSection title="Content">
+        <MultiSwitch
+          label="Meine Einträge 2"
+          initialValue="option 1"
+          onChange={(value) => {
+            console.log(value);
+          }}
+          options={[
+            {
+              icon: faArrowAltCircleDown,
+              value: "option 1",
+            },
+            {
+              label: "2",
+              value: "option 22",
+            },
+            {
+              label: "3",
+              value: "option 322",
+            },
+            {
+              label: "3",
+              value: "option 2",
+            },
           ]}
-          renderListItem={(item) => (
-            <div
-              onClick={() =>
-                pushView(
-                  () => <DetailView item={item} popView={popView} />,
-                  `Detailansicht für ${item.label}`
-                )
-              }
-            >
-              <RunningText>{item.label}</RunningText>
-            </div>
-          )}
         />
-      </CollapsibleSection>
-
-      <CollapsibleSection title="Meine Einträge">
-        <RunningText>
-          Hier können Sie die Einträge für die Tabelle verwalten.
-        </RunningText>
       </CollapsibleSection>
     </div>
   );
 
   return (
-    <OptionSidebar
-      selectedWidgetConfig={selectedWidgetConfig}
-      initialView={MainView}
-    />
+    <div>
+      <CollapsibleSection title="Content">
+        <MultiFieldDropdownEditor
+          label="Spalten"
+          items={columnOptions}
+          renderListItem={(item) => (
+            <div
+              onClick={() => {
+                pushView(<DetailView />, `${item.label}`);
+              }}
+            >
+              <RunningText>{item.label}</RunningText>
+            </div>
+          )}
+          onAdd={handleAddColumn}
+        />
+      </CollapsibleSection>
+    </div>
   );
 };
 

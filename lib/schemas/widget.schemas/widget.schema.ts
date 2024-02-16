@@ -5,6 +5,7 @@ export interface Widget {
   positioning: WidgetLayouts;
   parentID?: string;
   view: string;
+  options?: Record<string, any>;
 }
 
 export interface WidgetLayouts {
