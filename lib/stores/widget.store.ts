@@ -115,10 +115,16 @@ class WidgetStore {
       this.getStructuredWidgetHierarchyByWidgetID(widgetID);
 
     if (widgetHierarchy != null) {
-      const options = widgetHierarchy.widget.options ?? {};
+      const updatedWidgetHierarchy = JSON.parse(
+        JSON.stringify(widgetHierarchy)
+      );
+
+      const options = updatedWidgetHierarchy.widget.options ?? {};
 
       options[optionName] = value;
-      this.setStructuredWidgetHierarchy(widgetID, widgetHierarchy);
+      updatedWidgetHierarchy.widget.options = options;
+
+      this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
 
       this.changeRecordStore.setChangeWidgetRecord(
         widgetID,

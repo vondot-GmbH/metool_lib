@@ -1,13 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
-import { WidgetConfig } from "../../../../../main";
 import MultiFieldDropdownEditor from "../../../../private/general.components/multi.field.dropdown.editor.component/multi.field.dropdown.editor.component";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
 import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
-import { faArrowAltCircleDown } from "@fortawesome/free-regular-svg-icons";
 import { useSidebar } from "../../../../private/editor.components/option.sidebar.component/option.sidebar.component";
+import TextInput from "../../../../private/general.components/outlined.text.input.component/outlined.text.input.component";
 
 interface TableColumn {
   source: string;
@@ -18,31 +17,36 @@ interface TableColumn {
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
-  selectedWidgetConfig: WidgetConfig;
 }
 
 const TableWidgetOptionSidebar = ({
-  selectedWidgetConfig,
   widgetStore,
 }: TableWidgetOptionSidebarProps): JSX.Element => {
-  const selectedWidget = widgetStore?.getSelectedWidget();
   const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
+
+  // TODO
   const columnOptions: TableColumn[] = widgetStore?.getWidgetOption(
     selectedWidgetID ?? "",
     "columns"
-  ); // TODO
+  );
 
-  const { pushView, views, titles, popView } = useSidebar();
+  const { pushView, popView } = useSidebar();
 
   const handleAddColumn = (): void => {
     const newColumn = {
-      source: "newColumn",
+      source: "email",
       label: "Neue Spalte",
       flex: 1,
       algin: "START",
     };
 
-    const newColumnOptions = [...columnOptions, { ...newColumn }];
+    let newColumnOptions = [newColumn];
+
+    if (columnOptions) {
+      newColumnOptions = [...columnOptions, newColumn];
+    }
+
+    console.log(newColumnOptions);
 
     widgetStore?.updateWidgetOption(
       selectedWidgetID ?? "",
@@ -51,33 +55,73 @@ const TableWidgetOptionSidebar = ({
     );
   };
 
-  const DetailView = () => (
+  const DetailView = ({
+    tableColumn,
+  }: {
+    tableColumn: TableColumn;
+  }): JSX.Element => (
     <div>
       <CollapsibleSection title="Content">
         <MultiSwitch
-          label="Meine Einträge 2"
-          initialValue="option 1"
+          label="Algin"
+          initialValue={tableColumn.algin}
           onChange={(value) => {
-            console.log(value);
+            if (columnOptions) {
+              const newColumnOptions = columnOptions.map((column) => {
+                if (column.source === tableColumn.source) {
+                  return {
+                    ...column,
+                    algin: value,
+                  };
+                }
+                return column;
+              });
+
+              widgetStore?.updateWidgetOption(
+                selectedWidgetID ?? "",
+                "columns",
+                newColumnOptions
+              );
+            }
           }}
           options={[
             {
-              icon: faArrowAltCircleDown,
-              value: "option 1",
+              label: "Left",
+              value: "LEFT",
             },
             {
-              label: "2",
-              value: "option 22",
+              label: "Center",
+              value: "CENTER",
             },
             {
-              label: "3",
-              value: "option 322",
-            },
-            {
-              label: "3",
-              value: "option 2",
+              label: "Right",
+              value: "RIGHT",
             },
           ]}
+        />
+
+        <TextInput
+          label="Label"
+          value={tableColumn.label}
+          onValueChange={(value) => {
+            if (columnOptions) {
+              const newColumnOptions = columnOptions.map((column) => {
+                if (column.source === tableColumn.source) {
+                  return {
+                    ...column,
+                    label: value,
+                  };
+                }
+                return column;
+              });
+
+              widgetStore?.updateWidgetOption(
+                selectedWidgetID ?? "",
+                "columns",
+                newColumnOptions
+              );
+            }
+          }}
         />
       </CollapsibleSection>
     </div>
@@ -87,12 +131,12 @@ const TableWidgetOptionSidebar = ({
     <div>
       <CollapsibleSection title="Content">
         <MultiFieldDropdownEditor
-          label="Spalten"
+          label="Columns"
           items={columnOptions}
-          renderListItem={(item) => (
+          renderListItem={(item: TableColumn) => (
             <div
               onClick={() => {
-                pushView(<DetailView />, `${item.label}`);
+                pushView(<DetailView tableColumn={item} />, `${item.label}`);
               }}
             >
               <RunningText>{item.label}</RunningText>
@@ -100,6 +144,10 @@ const TableWidgetOptionSidebar = ({
           )}
           onAdd={handleAddColumn}
         />
+      </CollapsibleSection>
+
+      <CollapsibleSection title="Interaction">
+        Interaction...
       </CollapsibleSection>
     </div>
   );

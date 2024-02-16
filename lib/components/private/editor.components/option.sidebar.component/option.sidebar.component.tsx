@@ -81,8 +81,6 @@ const OptionSidebar = ({ widgetStore, editorStore }: OptionSidebarProps) => {
       (widget) => widget.type === selectedWidgetType
     );
 
-    console.log("selectedWidgetConfig", selectedWidgetConfig);
-
     if (!selectedWidgetConfig || !selectedWidgetConfig.sidebarComponent) {
       return;
     }

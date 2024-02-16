@@ -144,7 +144,7 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
           isInfinity: false,
         },
         y: {
-          value: 25,
+          value: 1,
           isInfinity: false,
         },
         w: {
@@ -196,14 +196,14 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
     options: {
       columns: [
         {
-          source: "test",
-          label: "test",
+          source: "id",
+          label: "id",
           flex: 1,
           algin: "CENTER",
         },
         {
-          source: "test1",
-          label: "test1",
+          source: "name",
+          label: "name",
           flex: 1,
           algin: "LEFT",
         },
@@ -275,14 +275,14 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
     options: {
       columns: [
         {
-          source: "name",
-          label: "Name",
+          source: "id",
+          label: "id",
           flex: 1,
           algin: "CENTER",
         },
         {
-          source: "email",
-          label: "Email",
+          source: "name",
+          label: "name",
           flex: 1,
           algin: "LEFT",
         },

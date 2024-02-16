@@ -26,6 +26,7 @@ const WidgetContextMenu = ({
     }
 
     widgetStore?.deleteWidget(widgetToDelte);
+    widgetStore?.setSelectWidget(undefined);
   };
 
   // add event listener to close menu on click outside

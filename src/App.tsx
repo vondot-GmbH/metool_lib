@@ -8,11 +8,7 @@ import ChangeRecordStore from "../lib/stores/change.record.store";
 import { TableWidget } from "../lib/main";
 import Gleap from "Gleap";
 import EditorStore from "../lib/stores/editor.store";
-import {
-  faAngry,
-  faHardDrive,
-  faHandPointer,
-} from "@fortawesome/free-regular-svg-icons";
+import { faHardDrive } from "@fortawesome/free-regular-svg-icons";
 import StateStore from "../lib/stores/state.store";
 
 // only for testing purposes
@@ -24,14 +20,14 @@ Init({
       large: {
         cols: 48,
         rowHeight: 30,
-        icon: faAngry,
+        icon: faHardDrive,
         title: "Large",
         breakpoint: 1200,
       },
       medium: {
         cols: 24,
         rowHeight: 30,
-        icon: faHandPointer,
+        icon: faHardDrive,
         title: "Medium",
         breakpoint: 900,
       },
@@ -47,7 +43,7 @@ Init({
       large: {
         cols: 24,
         rowHeight: 30,
-        icon: faAngry,
+        icon: faHardDrive,
         title: "Large",
         breakpoint: 1200,
       },

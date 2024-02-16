@@ -1,119 +1,45 @@
-.outlined-text-input-container {
+.wrapper {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  border: 1px solid #ccc; // Beispielwert
+  border-radius: 8px;
+  padding: 8px 12px;
+  background-color: white;
+
+  &:focus-within {
+    border-color: #007bff; // Beispielwert
+  }
+}
+
+.wrapperWithError {
+  border-color: #dc3545; // Beispielwert
+}
+
+.wrapperWithIcon {
+  padding-left: 34px;
+}
+
+.icon {
+  position: absolute;
+  left: 12px;
+}
+
+.input {
   width: 100%;
-  margin-top: 5px;
+  border: none;
+  outline: none;
+
+  &::placeholder {
+    color: #6c757d; // Beispielwert
+  }
+}
+
+.inputWithError {
+  // Zusätzliche Styles für fehlerhafte Eingabe
+}
+
+.label {
   margin-bottom: 5px;
-
-  &-info-tag {
-    padding: 3px 8px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
-    margin-right: -3px;
-
-    color: black;
-    border: 1.5px solid grey;
-    border-bottom: none;
-
-    &:hover {
-      background-color: red;
-    }
-  }
-
-  &-wrapper {
-    position: relative;
-    width: 100%;
-
-    .default-input-field {
-      width: calc(100% - 20px);
-      font-size: 15px;
-      outline: none;
-      border-radius: 8px;
-      padding: 10px 10px;
-      transition: 0.1s ease-out;
-
-      color: black;
-      border: 1.5px solid grey;
-
-      &--info-label-active {
-        border-top-right-radius: 0px !important;
-      }
-
-      &:focus {
-        color: black;
-        border: 1.5px solid red;
-      }
-
-      &:focus + .default-input-field-label {
-        top: 0;
-        left: 0;
-        transform: translateY(-120%);
-        font-weight: 400;
-        font-size: 12px;
-
-        color: red;
-      }
-
-      &:not(:placeholder-shown) + .default-input-field-label {
-        top: 0;
-        left: 0;
-        transform: translateY(-120%);
-        font-weight: 400;
-        font-size: 13px;
-
-        color: #919191;
-      }
-
-      &:not(:focus):placeholder-shown + .default-input-field-label {
-        display: none;
-      }
-
-      &--error {
-        border: 1.4px solid red;
-      }
-
-      &--disabled {
-        background-color: white;
-        cursor: not-allowed;
-      }
-    }
-
-    .default-input-field-label {
-      position: absolute;
-      font-size: 15px;
-      left: 10px;
-      top: 0px;
-      transform: translateY(70%);
-      padding: 0px 5px;
-      transition: 0.1s ease-out;
-      transform-origin: left top;
-      pointer-events: none;
-
-      color: #acadb6;
-
-      &--error {
-        color: red;
-      }
-    }
-
-    .suffix-icon {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: gray;
-      cursor: pointer;
-
-      color: black;
-    }
-  }
-
-  .validation-message {
-    height: 10px;
-    color: red;
-  }
+  margin-top: 10px;
 }

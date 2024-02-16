@@ -70,7 +70,6 @@ const RenderWidget = ({
       anchorPoint: { x: 0, y: 0 },
       selectedWidgetID: null,
     });
-    // widgetStore?.setSelectWidget(undefined);
   };
 
   const handleOnContextMenu = (
@@ -230,7 +229,6 @@ const RenderWidget = ({
 
       <div className={styles.widgetContentWrapper}>
         {renderWidgetComponent(widgetToRender.widget.widgetType)}
-        {/* {renderNestedWidgets()} */}
         {renderContextMenu()}
       </div>
     </div>

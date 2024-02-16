@@ -24,46 +24,38 @@ const TableWidget: React.FC<TableWidgetProps> = ({
     stateStore?.initializeWidgetStates(widgetID, _getInitialTableWidgetState());
   }, []);
 
+  const columnOptions: any[] = widgetStore?.getWidgetOption(
+    widgetID ?? "",
+    "columns"
+  );
+
   const usersData = [
     { id: "1", name: "Alice", age: 30, email: "alice@example.com" },
     { id: "2", name: "Bob", age: 24, email: "bob@example.com" },
     { id: "3", name: "Charlie", age: 28, email: "charlie@example.com" },
   ];
 
-  // Spaltendefinitionen
-  const columns = [
-    { flex: 1, child: <RunningText>name</RunningText> },
-    { flex: 1, child: <RunningText>Alter</RunningText> },
-    { flex: 1, child: <RunningText>Email</RunningText> },
-  ];
+  const columns =
+    columnOptions != null
+      ? columnOptions.map((col) => ({
+          flex: col.flex,
+          child: <RunningText>{col.label}</RunningText>,
+        }))
+      : [{ flex: 1, child: <RunningText>No Data</RunningText> }]; // Standardspalte, wenn keine Spaltenoptionen vorhanden sind
 
-  // Komponente für die Anzeige der Datenzeile
-  const dataTableItemBuilder = (user: any, index: any) => ({
-    key: user.id,
-    children: [
-      {
-        child: (
-          <Column>
-            <RunningText>{widgetID}</RunningText>
-          </Column>
-        ),
-      },
-
-      {
-        child: (
-          <Column>
-            <RunningText>{user.age}</RunningText>
-          </Column>
-        ),
-      },
-      {
-        child: (
-          <Column>
-            <RunningText>{user.email}</RunningText>
-          </Column>
-        ),
-      },
-    ],
+  // Funktion, um die Datenzeilen zu bauen
+  const dataTableItemBuilder = (user: any) => ({
+    key: user.id ?? "no-data",
+    children:
+      columnOptions != null
+        ? columnOptions.map((col) => ({
+            child: (
+              <Column>
+                <RunningText>{user[col.source]}</RunningText>
+              </Column>
+            ),
+          }))
+        : [{ child: <RunningText>No Data</RunningText> }], // Standardzelle, wenn keine Daten vorhanden sind
   });
 
   return (
@@ -71,7 +63,7 @@ const TableWidget: React.FC<TableWidgetProps> = ({
       data={usersData}
       columns={columns}
       dataTableItemBuilder={dataTableItemBuilder}
-      onClick={(user) => alert(`Clicked on user: ${user.name}`)}
+      onClick={(user) => console.log(`Clicked on user: ${user.name}`)}
     />
   );
 };

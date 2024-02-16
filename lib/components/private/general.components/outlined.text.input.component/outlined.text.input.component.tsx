@@ -1,123 +1,66 @@
-import React, { useState } from "react";
+import React, {
+  ForwardedRef,
+  InputHTMLAttributes,
+  forwardRef,
+  useState,
+} from "react";
 import classNames from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import styles from "./outlined.text.input.component.module.scss";
-import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
-import SmallText from "../text.components/small.text.component/small.text.component";
+import Column from "../column.component/column.component";
+import RunningText from "../text.components/running.text.component/running.text.component";
 
-interface OutlinedTextInputProps {
-  className?: string;
-  inputRef?: any;
+interface TextInputProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "className"> {
   label?: string;
-  name?: string;
-  placeholder?: string;
-  type?: React.InputHTMLAttributes<HTMLInputElement>["type"];
-  suffixIcon?: React.ReactNode;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
-  validationMessage?: string;
-  value?: string | number | Date;
-  initialValue?: string;
-  onChange?: (value: string | null) => void;
-  infoLabel?: string;
-  onInfoLabelClick?: () => void;
-  disabled?: boolean;
-  allowDecimalNumbers?: boolean;
+  icon?: IconProp;
+  onValueChange?: (value: string) => void;
+  hasError?: boolean;
 }
 
-const OutlinedTextInput = ({
-  className,
-  label,
-  name,
-  inputRef,
-  placeholder,
-  type = "text",
-  suffixIcon,
-  onClick,
-  validationMessage,
-  value,
-  initialValue,
-  onChange,
-  infoLabel,
-  onInfoLabelClick,
-  disabled = false,
-  allowDecimalNumbers = false,
-}: OutlinedTextInputProps): JSX.Element => {
-  const [showPassword, setShowPassword] = useState(true);
-  const [inputType, setInputType] = useState(type);
+const TextInput = forwardRef(
+  (
+    { label, icon, hasError, onValueChange, ...props }: TextInputProps,
+    ref: ForwardedRef<HTMLInputElement>
+  ): JSX.Element => {
+    const [inputValue, setInputValue] = useState(props.value);
 
-  const outlinedTextInputClassName = classNames(
-    styles.outlinedTextInputContainer,
-    { [styles.valiadtionBorder]: validationMessage != null },
-    { [styles.mt10Mb15]: label != null },
-    className
-  );
+    const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
+      onValueChange?.(event.target.value);
+    };
 
-  const inputFieldClass = classNames(styles.defaultInputField, {
-    [styles.defaultInputFieldDisabled]: disabled,
-    [styles.defaultInputFieldError]: validationMessage != null,
-    [styles.defaultInputFieldInfoLabelActive]:
-      infoLabel != null && infoLabel.length > 0,
-  });
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+      setInputValue(event.target.value);
+      // Hier nicht onValueChange aufrufen, da wir warten bis onBlur ausgelöst wird
+    };
 
-  const inputLabelClass = classNames(styles.defaultInputFieldLabel, {
-    [styles.defaultInputFieldLabelError]: validationMessage != null,
-  });
+    const inputWrapperClasses = classNames(styles.wrapper, {
+      [styles.wrapperWithError]: hasError,
+      [styles.wrapperWithIcon]: !!icon,
+    });
 
-  if (type === "password") {
-    suffixIcon = showPassword ? (
-      <FontAwesomeIcon icon={faEye} />
-    ) : (
-      <FontAwesomeIcon icon={faEyeSlash} />
+    const inputClasses = classNames(styles.input, {
+      [styles.inputWithError]: hasError,
+    });
+
+    return (
+      <Column>
+        {label && <RunningText className={styles.label}>{label}</RunningText>}
+        <div className={inputWrapperClasses}>
+          {icon && <FontAwesomeIcon className={styles.icon} icon={icon} />}
+          <input
+            {...props}
+            value={inputValue}
+            ref={ref}
+            className={inputClasses}
+            onChange={handleChange}
+            onBlur={handleBlur}
+          />
+        </div>
+      </Column>
     );
   }
+);
 
-  return (
-    <div className={outlinedTextInputClassName}>
-      {infoLabel != null && (
-        <div
-          className={styles.outlinedTextInputContainerInfoTag}
-          onClick={onInfoLabelClick}
-        >
-          {infoLabel}
-        </div>
-      )}
-      <div className={styles.outlinedTextInputContainerWrapper}>
-        <div
-          className={styles.suffixIcon}
-          onClick={() => {
-            if (type !== "password") {
-              return onClick;
-            } else {
-              setShowPassword(!showPassword);
-              setInputType(showPassword ? "text" : "password");
-            }
-          }}
-        >
-          {suffixIcon}
-        </div>
-        <input
-          step={
-            inputType === "number" && allowDecimalNumbers ? "0.01" : undefined
-          }
-          name={name}
-          ref={inputRef}
-          className={inputFieldClass}
-          type={inputType}
-          placeholder={placeholder}
-          value={value != null ? value.toString() : undefined}
-          readOnly={disabled}
-          defaultValue={initialValue}
-          onChange={(event) => onChange && onChange(event.target.value)}
-        />
-        {label != null && <label className={inputLabelClass}>{label}</label>}
-      </div>
-      {validationMessage != null && (
-        <SmallText className={styles.validationMessage}>
-          {validationMessage}
-        </SmallText>
-      )}
-    </div>
-  );
-};
-
-export default OutlinedTextInput;
+export default TextInput;
