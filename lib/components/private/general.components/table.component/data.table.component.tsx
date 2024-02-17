@@ -1,231 +1,129 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React from "react";
 import classNames from "classnames";
 import styles from "./data.table.component.module.scss";
-import RunningText from "../text.components/running.text.component/running.text.component";
 import Skeleton from "react-loading-skeleton";
+import React, { useState } from "react";
 
-interface DataTableHeader {
-  flex?: number;
-  child?: JSX.Element;
+interface TableColumn {
+  label: string;
+  dataIndex: string;
+  resizable?: boolean;
+  minWidth?: number; // Minimale Breite der Spalte
+  maxWidth?: number; // Maximale Breite der Spalte
+  render?: (text: any, record: any, index: number) => JSX.Element;
 }
 
-interface DataRow {
-  children: DataTableRowCell[];
-  className?: string;
-  key: string;
-}
-
-interface DataTableRowCell {
-  child: JSX.Element;
-  className?: string;
-}
-
-interface ListDataTableProps<T> {
+interface TableProps<T> {
+  columns: TableColumn[];
   data: T[];
-  columns: DataTableHeader[];
-  dataTableItemBuilder: (data: T, index: number) => DataRow;
-  itemClassName?: string;
-  tableClassName?: string;
-  onClick?: (data: T) => void;
-  gap?: number;
-  disableHeader?: boolean;
-  sortable?: boolean;
-  onSortEnd?: (oldIndex: number, newIndex: number) => void;
-  noDataMessage?: string;
+  rowKey: keyof T;
   isLoading?: boolean;
+  noDataText?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-const ListDataTable = <T extends unknown>({
-  data,
+function Table<T extends { [key: string]: any }>({
   columns,
-  gap = 0,
-  dataTableItemBuilder,
-  itemClassName,
-  tableClassName,
-  onClick,
-  disableHeader = false,
-  sortable = false,
-  onSortEnd,
-  noDataMessage,
-  isLoading,
-}: ListDataTableProps<T>): JSX.Element => {
-  const listDataTableClassName = classNames(
-    styles.listDataTable,
-    tableClassName
+  data,
+  rowKey,
+  isLoading = false,
+  noDataText = "Keine Daten verfügbar",
+}: TableProps<T>): JSX.Element {
+  const [columnWidths, setColumnWidths] = useState(
+    columns.map((column) => column.minWidth || 100)
   );
 
-  const _prepareHeader = (): JSX.Element => {
-    const headersAreSet = columns.find((column) => column.child != null);
+  const handleMouseDown = (columnIndex: number, event: React.MouseEvent) => {
+    const startX = event.clientX;
+    const startWidth = columnWidths[columnIndex];
 
-    if (!headersAreSet) {
-      return <></>;
-    }
+    const handleMouseMove = (e: MouseEvent) => {
+      let currentWidth = startWidth + e.clientX - startX;
+      const minWidth = columns[columnIndex].minWidth || 50; // in case of no minWidth, use 50 as default
+      const maxWidth = columns[columnIndex].maxWidth || Infinity; // in case of no maxWidth, use Infinity as default
 
-    return (
-      <div className={styles.listDataTableHeader} style={{ gap: gap ?? 0 }}>
-        {columns.map((column, index) => {
-          return (
-            <div
-              key={index}
-              className={styles.listDataTableHeaderItem}
-              style={{
-                flex: column.flex ?? 1,
-              }}
-            >
-              {column.child}
-            </div>
-          );
-        })}
-      </div>
-    );
+      // consider min and max width of the column
+      currentWidth = Math.max(minWidth, Math.min(maxWidth, currentWidth));
+
+      const newWidths = [...columnWidths];
+      newWidths[columnIndex] = currentWidth;
+      setColumnWidths(newWidths);
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
   };
 
-  const _prepareRows = (): JSX.Element => {
-    return (
-      <div className={styles.listDataTableBody}>
-        <div className={styles.listDataTableBodyItemWrapper}>
-          {isLoading && <SkeletonListDataTableItem count={4} />}
+  const renderResizableHandle = (columnIndex: number) => (
+    <div
+      className={styles.resizeHandle}
+      onMouseDown={(e) => handleMouseDown(columnIndex, e)}
+    />
+  );
 
-          {!isLoading &&
-            noDataMessage != null &&
-            (data == null || data.length === 0) && (
-              <div className={styles.listDataTableBodyItem}>
-                <RunningText>{noDataMessage}</RunningText>
-              </div>
-            )}
+  const renderTableBody = () => (
+    <tbody>
+      {isLoading
+        ? renderLoadingState()
+        : data.length > 0
+        ? renderDataRows()
+        : renderNoData()}
+    </tbody>
+  );
 
-          {!isLoading &&
-            data.map((dataItem: any, index) => {
-              if (dataItem == null) {
-                return <></>;
-              }
-              return (
-                <React.Fragment key={dataItem.key || index}>
-                  {_prepareDataTableItem(
-                    dataTableItemBuilder(dataItem, index),
-                    dataItem
-                  )}
-                  {index !== data.length - 1 && (
-                    <div className={styles.listDataTableBodyItemSeparator} />
-                  )}
-                </React.Fragment>
-              );
-            })}
-        </div>
-      </div>
-    );
-  };
+  const renderLoadingState = () => (
+    <tr>
+      <td colSpan={columns.length}>
+        <Skeleton count={1} />
+      </td>
+    </tr>
+  );
 
-  // const _prepareSortableRows = (): JSX.Element => {
-  //   if (data == null) {
-  //     return <></>;
-  //   }
-  //   return (
-  //     <div className={styles.listDataTableBody}>
-  //       <div className={styles.listDataTableBodyItemWrapper}>
-  //         <SortableList
-  //           data={data}
-  //           onSortEnd={onSortEnd}
-  //           itemBuilder={(dataItem, index) => {
-  //             return (
-  //               <>
-  //                 <div style={{ zIndex: 100 }}>
-  //                   {_prepareDataTableItem(
-  //                     dataTableItemBuilder(dataItem, index),
-  //                     dataItem
-  //                   )}
-  //                 </div>
-  //                 <Spacer />
-  //               </>
-  //             );
-  //           }}
-  //         />
-  //       </div>
-  //     </div>
-  //   );
-  // };
+  const renderTableHeader = () => (
+    <thead>
+      <tr>
+        {columns.map((column, index) => (
+          <th key={column.label} style={{ width: `${columnWidths[index]}px` }}>
+            {column.label}
+            {column.resizable && renderResizableHandle(index)}
+          </th>
+        ))}
+        <th className={styles.fillColumnHeader} />
+      </tr>
+    </thead>
+  );
 
-  const _prepareSortableRows = (): JSX.Element => {
-    return <div>sortable</div>;
-  };
+  const renderDataRows = () =>
+    data.map((record, index) => (
+      <tr key={record[rowKey]}>
+        {columns.map((column) => (
+          <td key={column.dataIndex}>
+            {column.render
+              ? column.render(record[column.dataIndex], record, index)
+              : record[column.dataIndex]}
+          </td>
+        ))}
+        <td className={styles.fillColumn} />
+      </tr>
+    ));
 
-  const _prepareDataTableItem = (
-    dataRow: DataRow,
-    dataItem: any
-  ): JSX.Element => {
-    return (
-      <div
-        key={dataRow.key}
-        className={classNames(
-          styles.listDataTableBodyItem,
-          dataRow.className,
-          itemClassName
-        )}
-        style={{ gap: gap ?? 0 }}
-        onClick={() => onClick?.(dataItem)}
-      >
-        {dataRow.children.map((dataRowItem, index) => {
-          return (
-            <div
-              className={classNames(
-                styles.listDataTableBodyItemCell,
-                dataRowItem.className
-              )}
-              key={index}
-              style={{
-                flex: columns[index].flex ?? 1,
-              }}
-            >
-              {dataRowItem.child}
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
+  const renderNoData = () => (
+    <tr>
+      <td colSpan={columns.length}>{noDataText}</td>
+    </tr>
+  );
 
   return (
-    <div className={listDataTableClassName}>
-      {!isLoading &&
-        data != null &&
-        data.length !== 0 &&
-        !disableHeader &&
-        _prepareHeader()}
-      {!sortable ? _prepareRows() : _prepareSortableRows()}
+    <div className={classNames(styles.tableContainer)}>
+      <table className={classNames(styles.table)}>
+        {renderTableHeader()}
+        {renderTableBody()}
+      </table>
     </div>
   );
-};
+}
 
-export default ListDataTable;
-
-export const SkeletonListDataTableItem = ({
-  count = 1,
-}: {
-  count?: number;
-}): JSX.Element => {
-  return (
-    <>
-      {Array.from({ length: count }, (_, i) => (
-        <div key={i} className={styles.skeletonListDataItemWrapper}>
-          <Skeleton count={1} width={40} height={40} />
-          <div className={styles.skeletonListDataItemTextContainer}>
-            <Skeleton
-              count={1}
-              style={{
-                fontSize: "15px",
-              }}
-            />
-            <Skeleton
-              count={1}
-              style={{
-                fontSize: "15px",
-              }}
-            />
-          </div>
-        </div>
-      ))}
-    </>
-  );
-};
+export default Table;

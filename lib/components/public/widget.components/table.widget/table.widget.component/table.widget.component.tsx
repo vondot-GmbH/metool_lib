@@ -4,9 +4,9 @@ import WidgetStore from "../../../../../stores/widget.store";
 import StateStore from "../../../../../stores/state.store";
 import { TableWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
 import { useEffect } from "react";
-import ListDataTable from "../../../../private/general.components/table.component/data.table.component";
 import Column from "../../../../private/general.components/column.component/column.component";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
+import Table from "../../../../private/general.components/table.component/data.table.component";
 
 interface TableWidgetProps {
   widgetID: string;
@@ -59,11 +59,49 @@ const TableWidget: React.FC<TableWidgetProps> = ({
   });
 
   return (
-    <ListDataTable
-      data={usersData}
-      columns={columns}
-      dataTableItemBuilder={dataTableItemBuilder}
-      onClick={(user) => console.log(`Clicked on user: ${user.name}`)}
+    <Table
+      columns={[
+        {
+          label: "Name",
+          dataIndex: "name",
+          resizable: true,
+          render: (name: string) => (
+            <RunningText>{name} 1 mmmmmmmmammasmsfdmfmmasmsafmsm</RunningText>
+          ),
+        },
+        {
+          label: "Age",
+          dataIndex: "age",
+          resizable: true,
+          render: (age: number) => <RunningText>{age} 1</RunningText>,
+        },
+        {
+          label: "Email",
+          dataIndex: "email",
+          resizable: true,
+          render: (email: string) => <RunningText>{email} 2</RunningText>,
+        },
+      ]}
+      data={[
+        {
+          id: "1",
+          name: "Alice",
+          age: 30,
+          email: "test@test.at",
+        },
+        {
+          id: "2",
+          name: "Bob",
+          age: 24,
+          email: "test@test.com",
+        },
+      ]}
+      rowKey="id"
+
+      // data={usersData}
+      // columns={columns}
+      // dataTableItemBuilder={dataTableItemBuilder}
+      // onClick={(user) => console.log(`Clicked on user: ${user.name}`)}
     />
   );
 };
