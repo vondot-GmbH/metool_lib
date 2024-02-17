@@ -5,10 +5,14 @@ import React, { useState } from "react";
 
 interface TableColumn {
   label: string;
-  dataIndex: string;
+  source: string;
   resizable?: boolean;
-  minWidth?: number; // Minimale Breite der Spalte
-  maxWidth?: number; // Maximale Breite der Spalte
+  minWidth?: number;
+  maxWidth?: number;
+  textAlign?: "left" | "center" | "right";
+  headerColor?: string;
+  rowColor?: string;
+  borderBottomColor?: string;
   render?: (text: any, record: any, index: number) => JSX.Element;
 }
 
@@ -86,7 +90,14 @@ function Table<T extends { [key: string]: any }>({
     <thead>
       <tr>
         {columns.map((column, index) => (
-          <th key={column.label} style={{ width: `${columnWidths[index]}px` }}>
+          <th
+            key={column.label}
+            style={{
+              width: `${columnWidths[index]}px`,
+              textAlign: column.textAlign || "left",
+              backgroundColor: column.headerColor || "#f5f5f5",
+            }}
+          >
             {column.label}
             {column.resizable && renderResizableHandle(index)}
           </th>
@@ -100,10 +111,17 @@ function Table<T extends { [key: string]: any }>({
     data.map((record, index) => (
       <tr key={record[rowKey]}>
         {columns.map((column) => (
-          <td key={column.dataIndex}>
+          <td
+            key={column.source}
+            style={{
+              textAlign: column.textAlign || "left",
+              backgroundColor: column.rowColor || "transparent",
+              borderBottomColor: column.borderBottomColor || "#eaeaea",
+            }}
+          >
             {column.render
-              ? column.render(record[column.dataIndex], record, index)
-              : record[column.dataIndex]}
+              ? column.render(record[column.source], record, index)
+              : record[column.source]}
           </td>
         ))}
         <td className={styles.fillColumn} />

@@ -14,7 +14,7 @@ interface MultiSwitchProps {
   key?: string;
   label?: string;
   options: Option[];
-  initialValue?: string;
+  initialValue?: string | undefined;
   onChange?: (value: string) => void;
 }
 

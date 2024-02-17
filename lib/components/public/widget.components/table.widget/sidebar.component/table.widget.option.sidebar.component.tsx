@@ -4,16 +4,9 @@ import WidgetStore from "../../../../../stores/widget.store";
 import MultiFieldDropdownEditor from "../../../../private/general.components/multi.field.dropdown.editor.component/multi.field.dropdown.editor.component";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
-import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
 import { useSidebar } from "../../../../private/editor.components/option.sidebar.component/option.sidebar.component";
-import TextInput from "../../../../private/general.components/outlined.text.input.component/outlined.text.input.component";
-
-interface TableColumn {
-  source: string;
-  label: string;
-  flex: number;
-  algin: "LEFT" | "CENTER" | "RIGHT";
-}
+import { TableColumn } from "../schemas/table.widget.schema";
+import { TableWidgetColumnDetailView } from "./table.widget.column.detail.view.comonent";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -34,11 +27,14 @@ const TableWidgetOptionSidebar = ({
 
   const handleAddColumn = (): void => {
     const newColumn = {
-      source: "email",
+      source: "neue Spalte",
       label: "Neue Spalte",
-      flex: 1,
-      algin: "CENTER",
-    };
+      textAlign: "left",
+      format: "string",
+      maxWidth: 200,
+      minWidth: 100,
+      resizable: true,
+    } as TableColumn;
 
     let newColumnOptions = [newColumn];
 
@@ -55,78 +51,6 @@ const TableWidgetOptionSidebar = ({
     );
   };
 
-  const DetailView = ({
-    tableColumn,
-  }: {
-    tableColumn: TableColumn;
-  }): JSX.Element => (
-    <div>
-      <CollapsibleSection title="Content">
-        <MultiSwitch
-          label="Algin"
-          initialValue={tableColumn.algin}
-          onChange={(value) => {
-            if (columnOptions) {
-              const newColumnOptions = columnOptions.map((column) => {
-                if (column.source === tableColumn.source) {
-                  return {
-                    ...column,
-                    algin: value,
-                  };
-                }
-                return column;
-              });
-
-              widgetStore?.updateWidgetOption(
-                selectedWidgetID ?? "",
-                "columns",
-                newColumnOptions
-              );
-            }
-          }}
-          options={[
-            {
-              label: "Left",
-              value: "LEFT",
-            },
-            {
-              label: "Center",
-              value: "CENTER",
-            },
-            {
-              label: "Right",
-              value: "RIGHT",
-            },
-          ]}
-        />
-
-        <TextInput
-          label="Label"
-          value={tableColumn.label}
-          onValueChange={(value) => {
-            if (columnOptions) {
-              const newColumnOptions = columnOptions.map((column) => {
-                if (column.source === tableColumn.source) {
-                  return {
-                    ...column,
-                    label: value,
-                  };
-                }
-                return column;
-              });
-
-              widgetStore?.updateWidgetOption(
-                selectedWidgetID ?? "",
-                "columns",
-                newColumnOptions
-              );
-            }
-          }}
-        />
-      </CollapsibleSection>
-    </div>
-  );
-
   return (
     <div>
       <CollapsibleSection title="Content">
@@ -136,10 +60,17 @@ const TableWidgetOptionSidebar = ({
           renderListItem={(item: TableColumn) => (
             <div
               onClick={() => {
-                pushView(<DetailView tableColumn={item} />, `${item.label}`);
+                pushView(
+                  <TableWidgetColumnDetailView
+                    tableColumn={item}
+                    selectedWidgetID={selectedWidgetID}
+                    widgetStore={widgetStore}
+                  />,
+                  `${item.source}`
+                );
               }}
             >
-              <RunningText>{item.label}</RunningText>
+              <RunningText>{item.source}</RunningText>
             </div>
           )}
           onAdd={handleAddColumn}

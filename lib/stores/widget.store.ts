@@ -134,12 +134,63 @@ class WidgetStore {
     }
   }
 
+  updateWidgetOptionArrayItem<T>({
+    widgetID,
+    optionName,
+    finder,
+    updater,
+  }: {
+    widgetID: string;
+    optionName: string;
+    finder: (item: T) => boolean;
+    updater: (item: T) => T;
+  }): void {
+    const widgetHierarchy =
+      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+
+    if (widgetHierarchy != null) {
+      // Tiefenkopie von widgetHierarchy um Mutationen zu vermeiden
+      const updatedWidgetHierarchy = JSON.parse(
+        JSON.stringify(widgetHierarchy)
+      );
+
+      // Hole das spezifische Optionsarray und führe das Update durch
+      const optionsArray: T[] =
+        updatedWidgetHierarchy.widget.options?.[optionName] ?? [];
+      const updatedOptionsArray = optionsArray.map((item) =>
+        finder(item) ? updater(item) : item
+      );
+
+      // Setze das aktualisierte Array in die Widget-Optionen
+      updatedWidgetHierarchy.widget.options[optionName] = updatedOptionsArray;
+
+      // Aktualisiere die Widget-Hierarchie
+      this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
+
+      // Protokolliere die Änderung im changeRecordStore
+      this.changeRecordStore.setChangeWidgetRecord(
+        widgetID,
+        "UPDATE",
+        widgetHierarchy.widget
+      );
+    }
+  }
+
   getWidgetOption(widgetID: string, optionName: string): any {
     const widgetHierarchy =
       this.getStructuredWidgetHierarchyByWidgetID(widgetID);
 
     if (widgetHierarchy != null) {
       return widgetHierarchy.widget.options?.[optionName] ?? null;
+    }
+  }
+
+  getAllOptionsForWidget(widgetID: string): any {
+    const widgetHierarchy =
+      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+
+    if (widgetHierarchy != null) {
+      return widgetHierarchy.widget.options ?? {};
     }
   }
 
