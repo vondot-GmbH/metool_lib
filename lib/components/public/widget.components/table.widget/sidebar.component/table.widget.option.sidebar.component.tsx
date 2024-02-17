@@ -12,7 +12,7 @@ interface TableColumn {
   source: string;
   label: string;
   flex: number;
-  algin: "START" | "CENTER" | "END";
+  algin: "LEFT" | "CENTER" | "RIGHT";
 }
 
 interface TableWidgetOptionSidebarProps {
@@ -37,7 +37,7 @@ const TableWidgetOptionSidebar = ({
       source: "email",
       label: "Neue Spalte",
       flex: 1,
-      algin: "START",
+      algin: "CENTER",
     };
 
     let newColumnOptions = [newColumn];

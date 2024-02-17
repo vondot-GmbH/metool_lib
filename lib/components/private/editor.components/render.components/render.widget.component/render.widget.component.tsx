@@ -216,7 +216,9 @@ const RenderWidget = ({
 
   return (
     <div
-      onClick={(e) => handleWidgetClick(e, widgetToRender.widget.widgetID)}
+      onDoubleClick={(e) =>
+        handleWidgetClick(e, widgetToRender.widget.widgetID)
+      }
       className={widgetContainerClassName}
       data-widget-type={widgetToRender.widget.widgetType}
       onContextMenu={(e) =>
