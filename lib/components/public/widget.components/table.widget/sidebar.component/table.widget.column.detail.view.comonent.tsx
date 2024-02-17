@@ -25,7 +25,7 @@ export const TableWidgetColumnDetailView = ({
             widgetID: selectedWidgetID ?? "",
             optionName: "columns",
             finder: (column: TableColumn) =>
-              column.source === tableColumn.source,
+              column.columnID === tableColumn.columnID,
             updater: (column: TableColumn) => ({
               ...column,
               source: value,
@@ -33,7 +33,6 @@ export const TableWidgetColumnDetailView = ({
           });
         }}
       />
-
       <MultiSwitch
         label="Text Align"
         initialValue={tableColumn.textAlign}
@@ -42,7 +41,7 @@ export const TableWidgetColumnDetailView = ({
             widgetID: selectedWidgetID ?? "",
             optionName: "columns",
             finder: (column: TableColumn) =>
-              column.source === tableColumn.source,
+              column.columnID === tableColumn.columnID,
             updater: (column: TableColumn) => ({
               ...column,
               textAlign: value as any,
@@ -64,7 +63,6 @@ export const TableWidgetColumnDetailView = ({
           },
         ]}
       />
-
       <TextInput
         label="Label"
         value={tableColumn.label}
@@ -73,7 +71,7 @@ export const TableWidgetColumnDetailView = ({
             widgetID: selectedWidgetID ?? "",
             optionName: "label",
             finder: (column: TableColumn) =>
-              column.source === tableColumn.source,
+              column.columnID === tableColumn.columnID,
             updater: (column: TableColumn) => ({
               ...column,
               label: value,
@@ -81,19 +79,20 @@ export const TableWidgetColumnDetailView = ({
           });
         }}
       />
-
+      // TODO this doesn't work
       <MultiSwitch
         label="Resizability"
         initialValue={tableColumn?.resizable?.toString()}
         onChange={(value) => {
+          // TODO improve method
           widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
             widgetID: selectedWidgetID ?? "",
             optionName: "resizable",
             finder: (column: TableColumn) =>
-              column.source === tableColumn.source,
+              column.columnID === tableColumn.columnID,
             updater: (column: TableColumn) => ({
               ...column,
-              resizable: value === "true",
+              resizable: value.toString() === "true",
             }),
           });
         }}

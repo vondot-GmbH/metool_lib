@@ -5,8 +5,10 @@ import MultiFieldDropdownEditor from "../../../../private/general.components/mul
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
 import { useSidebar } from "../../../../private/editor.components/option.sidebar.component/option.sidebar.component";
-import { TableColumn } from "../schemas/table.widget.schema";
+import { TableColumn, TableOptions } from "../schemas/table.widget.schema";
 import { TableWidgetColumnDetailView } from "./table.widget.column.detail.view.comonent";
+import TextInput from "../../../../private/general.components/outlined.text.input.component/outlined.text.input.component";
+import { v4 as UUID } from "uuid";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -23,10 +25,15 @@ const TableWidgetOptionSidebar = ({
     "columns"
   );
 
+  const tableOptions: TableOptions = widgetStore?.getAllOptionsForWidget(
+    selectedWidgetID ?? ""
+  );
+
   const { pushView, popView } = useSidebar();
 
   const handleAddColumn = (): void => {
     const newColumn = {
+      columnID: UUID(),
       source: "neue Spalte",
       label: "Neue Spalte",
       textAlign: "left",
@@ -41,8 +48,6 @@ const TableWidgetOptionSidebar = ({
     if (columnOptions) {
       newColumnOptions = [...columnOptions, newColumn];
     }
-
-    console.log(newColumnOptions);
 
     widgetStore?.updateWidgetOption(
       selectedWidgetID ?? "",
@@ -77,8 +82,45 @@ const TableWidgetOptionSidebar = ({
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title="Interaction">
-        Interaction...
+      <CollapsibleSection title="Style">
+        <TextInput
+          type="color"
+          label="Header Color"
+          value={tableOptions.headerColor}
+          onValueChange={(value) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "headerColor",
+              value
+            );
+          }}
+        />
+
+        <TextInput
+          type="color"
+          label="Row Color"
+          value={tableOptions.rowColor}
+          onValueChange={(value) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "rowColor",
+              value
+            );
+          }}
+        />
+
+        <TextInput
+          type="color"
+          label="Border Color"
+          value={tableOptions.rowBorderColor}
+          onValueChange={(value) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "rowBorderColor",
+              value
+            );
+          }}
+        />
       </CollapsibleSection>
     </div>
   );

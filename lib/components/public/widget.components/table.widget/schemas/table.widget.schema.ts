@@ -7,6 +7,7 @@ export interface TableOptions {
 }
 
 export interface TableColumn {
+  columnID: string;
   source: string;
   label: string;
   textAlign: "left" | "center" | "right";

@@ -173,6 +173,8 @@ class WidgetStore {
         "UPDATE",
         widgetHierarchy.widget
       );
+
+      console.log(updatedWidgetHierarchy.widget.options);
     }
   }
 

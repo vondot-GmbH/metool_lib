@@ -196,12 +196,14 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
     options: {
       columns: [
         {
+          columnID: "5f9e9b6asdfasfc6b4c00diffb399",
           source: "id",
           label: "id",
           flex: 1,
           algin: "CENTER",
         },
         {
+          columnID: "5f9pd936b9c6b4c00ppffb399",
           source: "name",
           label: "name",
           flex: 1,
@@ -277,11 +279,13 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
     options: {
       columns: [
         {
+          columnID: "5f9e9b6b9c6b4c0017f3b399",
           source: "id",
           label: "id",
           textAlign: "CENTER",
         },
         {
+          columnID: "5f9e9b6b9c6b4c00diffb399",
           source: "name",
           label: "name",
           textAlign: "right",
