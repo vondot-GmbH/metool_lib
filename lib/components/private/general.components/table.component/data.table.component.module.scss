@@ -12,10 +12,19 @@
     position: relative;
   }
 
-  .rowHover {
+  .selectionColumn {
+    width: 25px;
+    text-align: center;
+  }
+
+  .rowHover:not(.rowSelected) {
     &:hover {
       background-color: var(--row-hover-color, transparent);
     }
+  }
+
+  .rowSelected {
+    background-color: var(--row-selected-color, transparent);
   }
 
   .fillColumn,

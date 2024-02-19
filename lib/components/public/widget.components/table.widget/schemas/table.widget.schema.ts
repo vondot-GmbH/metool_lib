@@ -7,6 +7,8 @@ export interface TableOptions {
   borderBottomColor?: string;
   rowHoverColor?: string;
   emptyStateText: string;
+  rowSelectionBackgroundColor?: string;
+  rowSelectionType: "single" | "multiple" | "none";
 }
 
 export interface TableColumn {

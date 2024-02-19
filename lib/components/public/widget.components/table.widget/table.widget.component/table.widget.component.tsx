@@ -13,14 +13,20 @@ interface TableWidgetProps {
   stateStore?: StateStore;
 }
 
-const TableWidget: React.FC<TableWidgetProps> = ({
+const TableWidget = ({
   widgetID,
   widgetStore,
   stateStore,
-}): JSX.Element => {
+}: TableWidgetProps): JSX.Element => {
   useEffect(() => {
-    stateStore?.initializeWidgetStates(widgetID, _getInitialTableWidgetState());
+    stateStore?.initializeWidgetStates(
+      widgetID,
+      _getInitialTableWidgetState(tableOptions?.rowSelectionType)
+    );
   }, []);
+
+  console.log("widgetID++++");
+  console.log(widgetID);
 
   const tableOptions: TableOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);
@@ -42,6 +48,22 @@ const TableWidget: React.FC<TableWidgetProps> = ({
     }));
   };
 
+  const handleSelectionDataChange = (selectedData: any) => {
+    if (tableOptions?.rowSelectionType === "single") {
+      stateStore?.setWidgetStateValue(
+        widgetID,
+        "selectedSourceRow",
+        selectedData
+      );
+    } else if (tableOptions?.rowSelectionType === "multiple") {
+      stateStore?.setWidgetStateValue(
+        widgetID,
+        "selectedSourceRows",
+        selectedData
+      );
+    }
+  };
+
   return (
     <Table
       columns={(prepareColumns(tableOptions) as any[]) || []}
@@ -52,17 +74,37 @@ const TableWidget: React.FC<TableWidgetProps> = ({
       defaultHeaderBackgroundColor={tableOptions?.headerBackgroundColor}
       defaultRowBackgroundColor={tableOptions?.rowBackgroundColor}
       rowHoverColor={tableOptions?.rowHoverColor}
+      rowSelectionType={tableOptions?.rowSelectionType}
+      rowSelectionBackgroundColor={tableOptions?.rowSelectionBackgroundColor}
+      onSelectionDataChange={(selectedData) => {
+        handleSelectionDataChange(selectedData);
+      }}
+      onSelectionIndexChange={(selectedIndexes) => {
+        console.log("selectedIndexes");
+        console.log(selectedIndexes);
+      }}
     />
   );
 };
 
-const _getInitialTableWidgetState = (): TableWidgetState => {
-  return {
+const _getInitialTableWidgetState = (
+  rowSelectionType: "single" | "multiple" | "none"
+): TableWidgetState => {
+  const tableState = {
     disabled: null,
     hidden: null,
     isLoading: null,
-    selectedItem: null,
   } as TableWidgetState;
+
+  if (rowSelectionType === "single") {
+    tableState.selectedSourceRow = null;
+    tableState.selectedDataIndex = null;
+  } else if (rowSelectionType === "multiple") {
+    tableState.selectedDataIndexes = null;
+    tableState.selectedSourceRows = null;
+  }
+
+  return tableState as TableWidgetState;
 };
 
 export default inject("widgetStore", "stateStore")(observer(TableWidget));

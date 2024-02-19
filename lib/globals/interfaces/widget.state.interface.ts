@@ -7,12 +7,13 @@ export interface BaseWidgetState {
 
 // state for specific widget types
 export interface TableWidgetState extends BaseWidgetState {
-  selectedItem: string | null;
+  selectedSourceRow?: string | null;
+  selectedDataIndex?: number | null;
+  selectedSourceRows?: string[] | null;
+  selectedDataIndexes?: number[] | null;
 }
 
-export interface FormWidgetState extends BaseWidgetState {
-  selectedField: string | null;
-}
+export interface FormWidgetState extends BaseWidgetState {}
 
 // union type for all widget types
 export type WidgetState = TableWidgetState | FormWidgetState;

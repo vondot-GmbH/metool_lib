@@ -163,6 +163,8 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
       rowHoverColor: "#cfcfcf",
       borderBottomColor: "#cfcfcf",
       rowBackgroundColor: "transparent",
+      rowSelectionBackgroundColor: "#f7fafa",
+      rowSelectionType: "multiple",
     },
   },
 
@@ -257,6 +259,8 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
       rowHoverColor: "#cfcfcf",
       borderBottomColor: "#cfcfcf",
       rowBackgroundColor: "transparent",
+      rowSelectionBackgroundColor: "#f7fafa",
+      rowSelectionType: "single",
     },
   },
   {
@@ -356,6 +360,8 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
       rowHoverColor: "#cfcfcf",
       borderBottomColor: "#cfcfcf",
       rowBackgroundColor: "transparent",
+      rowSelectionBackgroundColor: "#f7fafa",
+      rowSelectionType: "single",
     },
   },
 ];

@@ -110,6 +110,7 @@ class WidgetStore {
 
   //! methods
 
+  // update a single option of a widget by the widgetID and the option name
   updateWidgetOption(widgetID: string, optionName: string, value: any): void {
     const widgetHierarchy =
       this.getStructuredWidgetHierarchyByWidgetID(widgetID);
@@ -129,11 +130,12 @@ class WidgetStore {
       this.changeRecordStore.setChangeWidgetRecord(
         widgetID,
         "UPDATE",
-        widgetHierarchy.widget
+        updatedWidgetHierarchy.widget
       );
     }
   }
 
+  // update a single element of an option array of a widget
   updateWidgetOptionArrayItem<T>({
     widgetID,
     optionName,
@@ -157,9 +159,6 @@ class WidgetStore {
       const optionsArray: T[] =
         updatedWidgetHierarchy.widget.options?.[optionName] ?? [];
 
-      console.log("optionsArray: ");
-      console.log(JSON.stringify(optionsArray, null, 2));
-
       const updatedOptionsArray = optionsArray.map((item) => {
         if (item[identifierField] === identifierValue) {
           return { ...item, ...updatedProperties };
@@ -171,19 +170,11 @@ class WidgetStore {
 
       this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
 
-      console.log("updatedWidgetHierarchy: ");
-
-      console.log(
-        JSON.stringify(updatedWidgetHierarchy.widget.options, null, 2)
-      );
-
       this.changeRecordStore.setChangeWidgetRecord(
         widgetID,
         "UPDATE",
-        widgetHierarchy.widget
+        updatedWidgetHierarchy.widget
       );
-    } else {
-      console.log("widgetHierarchy is null");
     }
   }
 

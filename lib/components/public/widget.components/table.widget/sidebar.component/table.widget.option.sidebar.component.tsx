@@ -9,6 +9,7 @@ import { TableColumn, TableOptions } from "../schemas/table.widget.schema";
 import { TableWidgetColumnDetailView } from "./table.widget.column.detail.view.comonent";
 import TextInput from "../../../../private/general.components/outlined.text.input.component/outlined.text.input.component";
 import { v4 as UUID } from "uuid";
+import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -133,6 +134,34 @@ const TableWidgetOptionSidebar = ({
               value
             );
           }}
+        />
+      </CollapsibleSection>
+
+      <CollapsibleSection title="Interaction">
+        <MultiSwitch
+          label="Row Selection"
+          initialValue={tableOptions.rowSelectionType}
+          onChange={(value) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "rowSelectionType",
+              value
+            );
+          }}
+          options={[
+            {
+              label: "Single",
+              value: "single",
+            },
+            {
+              label: "Multiple",
+              value: "multiple",
+            },
+            {
+              label: "None",
+              value: "none",
+            },
+          ]}
         />
       </CollapsibleSection>
     </div>
