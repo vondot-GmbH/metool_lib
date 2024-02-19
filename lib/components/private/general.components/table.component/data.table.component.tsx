@@ -10,8 +10,8 @@ interface TableColumn {
   minWidth?: number;
   maxWidth?: number;
   textAlign?: "left" | "center" | "right";
-  headerColor?: string;
-  rowColor?: string;
+  headerBackgroundColor?: string;
+  rowBackgroundColor?: string;
   borderBottomColor?: string;
   render?: (text: any, record: any, index: number) => JSX.Element;
 }
@@ -91,11 +91,11 @@ function Table<T extends { [key: string]: any }>({
       <tr>
         {columns.map((column, index) => (
           <th
-            key={column.label}
+            key={column.label + index}
             style={{
               width: `${columnWidths[index]}px`,
               textAlign: column.textAlign || "left",
-              backgroundColor: column.headerColor || "#f5f5f5",
+              backgroundColor: column.headerBackgroundColor || "#f5f5f5",
             }}
           >
             {column.label}
@@ -115,8 +115,9 @@ function Table<T extends { [key: string]: any }>({
             key={column.source}
             style={{
               textAlign: column.textAlign || "left",
-              backgroundColor: column.rowColor || "transparent",
-              borderBottomColor: column.borderBottomColor || "#eaeaea",
+              backgroundColor: column.rowBackgroundColor || "transparent",
+              borderBottom:
+                "1px solid " + (column.borderBottomColor || "transparent"),
             }}
           >
             {column.render

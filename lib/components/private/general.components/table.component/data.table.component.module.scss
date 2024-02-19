@@ -1,6 +1,6 @@
 .tableContainer {
   overflow-x: auto;
-  margin: 1rem 0;
+  // margin: 100px 0;
 }
 
 .table {
@@ -10,13 +10,14 @@
 
   th,
   td {
-    padding: 0.5rem;
-    border-bottom: 1px solid transparent;
+    padding: 10px;
+    // border-bottom: 1px solid transparent;
     position: relative;
   }
 
   tbody tr:hover {
-    background-color: #f0f0f0;
+    z-index: 100;
+    background-color: red;
   }
 
   .fillColumn,

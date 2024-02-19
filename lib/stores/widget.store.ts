@@ -137,44 +137,53 @@ class WidgetStore {
   updateWidgetOptionArrayItem<T>({
     widgetID,
     optionName,
-    finder,
-    updater,
+    identifierField,
+    identifierValue,
+    updatedProperties,
   }: {
     widgetID: string;
     optionName: string;
-    finder: (item: T) => boolean;
-    updater: (item: T) => T;
+    identifierField: keyof T;
+    identifierValue: any;
+    updatedProperties: Partial<T>;
   }): void {
     const widgetHierarchy =
       this.getStructuredWidgetHierarchyByWidgetID(widgetID);
 
     if (widgetHierarchy != null) {
-      // Tiefenkopie von widgetHierarchy um Mutationen zu vermeiden
       const updatedWidgetHierarchy = JSON.parse(
         JSON.stringify(widgetHierarchy)
       );
-
-      // Hole das spezifische Optionsarray und führe das Update durch
       const optionsArray: T[] =
         updatedWidgetHierarchy.widget.options?.[optionName] ?? [];
-      const updatedOptionsArray = optionsArray.map((item) =>
-        finder(item) ? updater(item) : item
-      );
 
-      // Setze das aktualisierte Array in die Widget-Optionen
+      console.log("optionsArray: ");
+      console.log(JSON.stringify(optionsArray, null, 2));
+
+      const updatedOptionsArray = optionsArray.map((item) => {
+        if (item[identifierField] === identifierValue) {
+          return { ...item, ...updatedProperties };
+        }
+        return item;
+      });
+
       updatedWidgetHierarchy.widget.options[optionName] = updatedOptionsArray;
 
-      // Aktualisiere die Widget-Hierarchie
       this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
 
-      // Protokolliere die Änderung im changeRecordStore
+      console.log("updatedWidgetHierarchy: ");
+
+      console.log(
+        JSON.stringify(updatedWidgetHierarchy.widget.options, null, 2)
+      );
+
       this.changeRecordStore.setChangeWidgetRecord(
         widgetID,
         "UPDATE",
         widgetHierarchy.widget
       );
-
-      console.log(updatedWidgetHierarchy.widget.options);
+    } else {
+      console.log("widgetHierarchy is null");
     }
   }
 

@@ -15,24 +15,37 @@ interface TextInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "className"> {
   label?: string;
   icon?: IconProp;
-  onValueChange?: (value: string) => void;
+  onValueChange?: (value: string | number) => void;
   hasError?: boolean;
 }
 
 const TextInput = forwardRef(
   (
-    { label, icon, hasError, onValueChange, ...props }: TextInputProps,
+    {
+      label,
+      icon,
+      hasError,
+      onValueChange,
+      type = "text",
+      ...props
+    }: TextInputProps,
     ref: ForwardedRef<HTMLInputElement>
   ): JSX.Element => {
     const [inputValue, setInputValue] = useState(props.value);
 
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
-      onValueChange?.(event.target.value);
+      if (type === "number" && onValueChange) {
+        const value = parseFloat(event.target.value);
+        if (!isNaN(value)) {
+          onValueChange(value);
+        }
+      } else {
+        onValueChange?.(event.target.value);
+      }
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
       setInputValue(event.target.value);
-      // Hier nicht onValueChange aufrufen, da wir warten bis onBlur ausgelöst wird
     };
 
     const inputWrapperClasses = classNames(styles.wrapper, {
@@ -51,6 +64,7 @@ const TextInput = forwardRef(
           {icon && <FontAwesomeIcon className={styles.icon} icon={icon} />}
           <input
             {...props}
+            type={type}
             value={inputValue}
             ref={ref}
             className={inputClasses}

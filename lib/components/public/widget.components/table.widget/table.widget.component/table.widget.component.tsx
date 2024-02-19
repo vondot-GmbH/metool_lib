@@ -36,10 +36,12 @@ const TableWidget: React.FC<TableWidgetProps> = ({
   const prepareColumns = (tableOptions: TableOptions): TableColumn[] => {
     return tableOptions?.columns?.map((column) => ({
       ...column,
-      headerColor: column?.headerColor || tableOptions.headerColor,
-      rowColor: column.rowColor || tableOptions.rowColor,
+      headerBackgroundColor:
+        column?.headerBackgroundColor || tableOptions.headerBackgroundColor,
+      rowBackgroundColor:
+        column.rowBackgroundColor || tableOptions.rowBackgroundColor,
       borderBottomColor:
-        column.borderBottomColor || tableOptions.rowBorderColor,
+        column.borderBottomColor || tableOptions.borderBottomColor,
       render: (value: any) => <RunningText>{value}</RunningText>,
     }));
   };

@@ -14,99 +14,222 @@ export const TableWidgetColumnDetailView = ({
   tableColumn,
   widgetStore,
   selectedWidgetID,
-}: DetailViewProps): JSX.Element => (
-  <div>
-    <CollapsibleSection title="Content">
-      <TextInput
-        label="Source"
-        value={tableColumn.source}
-        onValueChange={(value) => {
-          widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
-            widgetID: selectedWidgetID ?? "",
-            optionName: "columns",
-            finder: (column: TableColumn) =>
-              column.columnID === tableColumn.columnID,
-            updater: (column: TableColumn) => ({
-              ...column,
-              source: value,
-            }),
-          });
-        }}
-      />
-      <MultiSwitch
-        label="Text Align"
-        initialValue={tableColumn.textAlign}
-        onChange={(value) => {
-          widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
-            widgetID: selectedWidgetID ?? "",
-            optionName: "columns",
-            finder: (column: TableColumn) =>
-              column.columnID === tableColumn.columnID,
-            updater: (column: TableColumn) => ({
-              ...column,
-              textAlign: value as any,
-            }),
-          });
-        }}
-        options={[
-          {
-            label: "Left",
-            value: "left",
-          },
-          {
-            label: "Center",
-            value: "center",
-          },
-          {
-            label: "Right",
-            value: "right",
-          },
-        ]}
-      />
-      <TextInput
-        label="Label"
-        value={tableColumn.label}
-        onValueChange={(value) => {
-          widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
-            widgetID: selectedWidgetID ?? "",
-            optionName: "label",
-            finder: (column: TableColumn) =>
-              column.columnID === tableColumn.columnID,
-            updater: (column: TableColumn) => ({
-              ...column,
-              label: value,
-            }),
-          });
-        }}
-      />
-      // TODO this doesn't work
-      <MultiSwitch
-        label="Resizability"
-        initialValue={tableColumn?.resizable?.toString()}
-        onChange={(value) => {
-          // TODO improve method
-          widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
-            widgetID: selectedWidgetID ?? "",
-            optionName: "resizable",
-            finder: (column: TableColumn) =>
-              column.columnID === tableColumn.columnID,
-            updater: (column: TableColumn) => ({
-              ...column,
-              resizable: value.toString() === "true",
-            }),
-          });
-        }}
-        options={[
-          {
-            label: "True",
-            value: "true",
-          },
-          {
-            label: "False",
-            value: "false",
-          },
-        ]}
-      />
-    </CollapsibleSection>
-  </div>
-);
+}: DetailViewProps): JSX.Element => {
+  return (
+    <div>
+      <CollapsibleSection title="Content">
+        <TextInput
+          label="Source"
+          value={tableColumn.source}
+          onValueChange={(value) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  source: value as string,
+                },
+              });
+            }
+          }}
+        />
+
+        <TextInput
+          label="Label"
+          value={tableColumn.label}
+          onValueChange={(value) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  label: value as string,
+                },
+              });
+            }
+          }}
+        />
+
+        <MultiSwitch
+          label="Resizability"
+          initialValue={tableColumn?.resizable?.toString()}
+          onChange={(value) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  resizable: value === "true",
+                },
+              });
+            }
+          }}
+          options={[
+            {
+              label: "True",
+              value: "true",
+            },
+            {
+              label: "False",
+              value: "false",
+            },
+          ]}
+        />
+
+        <TextInput
+          label="Min Width"
+          value={tableColumn.minWidth}
+          type="number"
+          onValueChange={(value) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  minWidth: value as number,
+                },
+              });
+            }
+          }}
+        />
+
+        <TextInput
+          label="Max Width"
+          value={tableColumn.maxWidth}
+          type="number"
+          onValueChange={(value) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  maxWidth: value as number,
+                },
+              });
+            }
+          }}
+        />
+      </CollapsibleSection>
+
+      <CollapsibleSection title="Style">
+        <MultiSwitch
+          label="Text Align"
+          initialValue={tableColumn.textAlign}
+          onChange={(value: any) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  textAlign: value,
+                },
+              });
+            }
+          }}
+          options={[
+            {
+              label: "Left",
+              value: "left",
+            },
+            {
+              label: "Center",
+              value: "center",
+            },
+            {
+              label: "Right",
+              value: "right",
+            },
+          ]}
+        />
+
+        <TextInput
+          label="Header Background Color"
+          value={tableColumn.headerBackgroundColor}
+          type="color"
+          onValueChange={(value) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  headerBackgroundColor: value as string,
+                },
+              });
+            }
+          }}
+        />
+
+        <TextInput
+          label="Row Background Color"
+          value={tableColumn.rowBackgroundColor}
+          type="color"
+          onValueChange={(value) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  rowBackgroundColor: value as string,
+                },
+              });
+            }
+          }}
+        />
+
+        <TextInput
+          label="Row Text Color"
+          value={tableColumn.rowTextColor}
+          type="color"
+          onValueChange={(value) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  rowTextColor: value as string,
+                },
+              });
+            }
+          }}
+        />
+
+        <TextInput
+          label="Header Text Color"
+          value={tableColumn.headerTextColor}
+          type="color"
+          onValueChange={(value) => {
+            if (value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  headerTextColor: value as string,
+                },
+              });
+            }
+          }}
+        />
+      </CollapsibleSection>
+    </div>
+  );
+};

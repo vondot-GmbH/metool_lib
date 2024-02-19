@@ -85,12 +85,12 @@ const TableWidgetOptionSidebar = ({
       <CollapsibleSection title="Style">
         <TextInput
           type="color"
-          label="Header Color"
-          value={tableOptions.headerColor}
+          label="Header Background Color"
+          value={tableOptions.headerBackgroundColor}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
-              "headerColor",
+              "headerBackgroundColor",
               value
             );
           }}
@@ -98,12 +98,38 @@ const TableWidgetOptionSidebar = ({
 
         <TextInput
           type="color"
-          label="Row Color"
-          value={tableOptions.rowColor}
+          label="Row Background Color"
+          value={tableOptions.rowBackgroundColor}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
-              "rowColor",
+              "rowBackgroundColor",
+              value
+            );
+          }}
+        />
+
+        <TextInput
+          type="color"
+          label="Header Text Color"
+          value={tableOptions.headerTextColor}
+          onValueChange={(value) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "headerTextColor",
+              value
+            );
+          }}
+        />
+
+        <TextInput
+          type="color"
+          label="Row Text Color"
+          value={tableOptions.rowTextColor}
+          onValueChange={(value) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "rowTextColor",
               value
             );
           }}
@@ -112,11 +138,11 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Border Color"
-          value={tableOptions.rowBorderColor}
+          value={tableOptions.borderBottomColor}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
-              "rowBorderColor",
+              "borderBottomColor",
               value
             );
           }}
