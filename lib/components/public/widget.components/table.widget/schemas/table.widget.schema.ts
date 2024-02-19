@@ -1,8 +1,11 @@
 export interface TableOptions {
   columns: TableColumn[];
-  headerColor: string;
-  rowColor: string;
-  rowBorderColor: string;
+  headerTextColor?: string; // TODO not used
+  rowTextColor?: string; // TODO not used
+  headerBackgroundColor?: string;
+  rowBackgroundColor?: string;
+  borderBottomColor?: string;
+  rowHoverColor?: string;
   emptyStateText: string;
 }
 
@@ -15,7 +18,8 @@ export interface TableColumn {
   resizable?: boolean;
   minWidth?: number;
   maxWidth?: number;
-  headerColor?: string;
-  rowColor?: string;
-  borderBottomColor?: string;
+  headerTextColor?: string; // TODO not used
+  rowTextColor?: string; // TODO not used
+  headerBackgroundColor?: string;
+  rowBackgroundColor?: string;
 }

@@ -1,28 +1,27 @@
-.tableContainer {
+.tableWrapper {
   overflow-x: auto;
-  // margin: 100px 0;
 }
 
-.table {
+.tableContainer {
   min-width: 100%;
   border-collapse: collapse;
   text-align: left;
 
-  th,
-  td {
+  .tableCell {
     padding: 10px;
-    // border-bottom: 1px solid transparent;
     position: relative;
   }
 
-  tbody tr:hover {
-    z-index: 100;
-    background-color: red;
+  .rowHover {
+    &:hover {
+      background-color: var(--row-hover-color, transparent);
+    }
   }
 
   .fillColumn,
   .fillColumnHeader {
     width: auto;
+    border-bottom: 1px solid transparent;
   }
 }
 

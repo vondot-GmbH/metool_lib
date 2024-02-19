@@ -22,6 +22,10 @@ interface TableProps<T> {
   rowKey: keyof T;
   isLoading?: boolean;
   noDataText?: string;
+  defaultHeaderBackgroundColor?: string;
+  defaultRowBackgroundColor?: string;
+  defaultBorderBottomColor?: string;
+  rowHoverColor?: string;
 }
 
 function Table<T extends { [key: string]: any }>({
@@ -30,10 +34,18 @@ function Table<T extends { [key: string]: any }>({
   rowKey,
   isLoading = false,
   noDataText = "Keine Daten verfügbar",
+  defaultHeaderBackgroundColor = "transparent",
+  defaultRowBackgroundColor = "transparent",
+  defaultBorderBottomColor = "transparent",
+  rowHoverColor = "transparent",
 }: TableProps<T>): JSX.Element {
   const [columnWidths, setColumnWidths] = useState(
     columns.map((column) => column.minWidth || 100)
   );
+
+  const tableRowStyle = rowHoverColor
+    ? ({ "--row-hover-color": rowHoverColor } as React.CSSProperties)
+    : {};
 
   const handleMouseDown = (columnIndex: number, event: React.MouseEvent) => {
     const startX = event.clientX;
@@ -91,33 +103,47 @@ function Table<T extends { [key: string]: any }>({
       <tr>
         {columns.map((column, index) => (
           <th
+            className={styles.tableCell}
             key={column.label + index}
             style={{
               width: `${columnWidths[index]}px`,
               textAlign: column.textAlign || "left",
-              backgroundColor: column.headerBackgroundColor || "#f5f5f5",
+              backgroundColor:
+                column.headerBackgroundColor || defaultHeaderBackgroundColor,
             }}
           >
             {column.label}
             {column.resizable && renderResizableHandle(index)}
           </th>
         ))}
-        <th className={styles.fillColumnHeader} />
+        <th
+          className={styles.fillColumnHeader}
+          style={{
+            backgroundColor: defaultHeaderBackgroundColor,
+          }}
+        />
       </tr>
     </thead>
   );
 
   const renderDataRows = () =>
     data.map((record, index) => (
-      <tr key={record[rowKey]}>
+      <tr
+        key={record[rowKey]}
+        className={styles.rowHover}
+        style={tableRowStyle}
+      >
         {columns.map((column) => (
           <td
+            className={styles.tableCell}
             key={column.source}
             style={{
               textAlign: column.textAlign || "left",
-              backgroundColor: column.rowBackgroundColor || "transparent",
+              backgroundColor:
+                column.rowBackgroundColor || defaultRowBackgroundColor,
               borderBottom:
-                "1px solid " + (column.borderBottomColor || "transparent"),
+                "1px solid " +
+                (column.borderBottomColor || defaultBorderBottomColor),
             }}
           >
             {column.render
@@ -125,7 +151,13 @@ function Table<T extends { [key: string]: any }>({
               : record[column.source]}
           </td>
         ))}
-        <td className={styles.fillColumn} />
+        <td
+          className={styles.fillColumn}
+          style={{
+            backgroundColor: defaultRowBackgroundColor,
+            borderBottom: "1px solid " + defaultBorderBottomColor,
+          }}
+        />
       </tr>
     ));
 
@@ -136,8 +168,8 @@ function Table<T extends { [key: string]: any }>({
   );
 
   return (
-    <div className={classNames(styles.tableContainer)}>
-      <table className={classNames(styles.table)}>
+    <div className={classNames(styles.tableWrapper)}>
+      <table className={classNames(styles.tableContainer)}>
         {renderTableHeader()}
         {renderTableBody()}
       </table>

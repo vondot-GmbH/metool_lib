@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
 import StateStore from "../../../../../stores/state.store";
@@ -36,12 +35,9 @@ const TableWidget: React.FC<TableWidgetProps> = ({
   const prepareColumns = (tableOptions: TableOptions): TableColumn[] => {
     return tableOptions?.columns?.map((column) => ({
       ...column,
-      headerBackgroundColor:
-        column?.headerBackgroundColor || tableOptions.headerBackgroundColor,
-      rowBackgroundColor:
-        column.rowBackgroundColor || tableOptions.rowBackgroundColor,
-      borderBottomColor:
-        column.borderBottomColor || tableOptions.borderBottomColor,
+      headerBackgroundColor: column?.headerBackgroundColor,
+      rowBackgroundColor: column.rowBackgroundColor,
+      borderBottomColor: tableOptions.borderBottomColor,
       render: (value: any) => <RunningText>{value}</RunningText>,
     }));
   };
@@ -52,6 +48,10 @@ const TableWidget: React.FC<TableWidgetProps> = ({
       data={usersData}
       rowKey="id"
       noDataText="No data available"
+      defaultBorderBottomColor={tableOptions?.borderBottomColor}
+      defaultHeaderBackgroundColor={tableOptions?.headerBackgroundColor}
+      defaultRowBackgroundColor={tableOptions?.rowBackgroundColor}
+      rowHoverColor={tableOptions?.rowHoverColor}
     />
   );
 };

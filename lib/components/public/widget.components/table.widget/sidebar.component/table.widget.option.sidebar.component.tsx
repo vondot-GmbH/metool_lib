@@ -111,25 +111,12 @@ const TableWidgetOptionSidebar = ({
 
         <TextInput
           type="color"
-          label="Header Text Color"
-          value={tableOptions.headerTextColor}
+          label="Row Hover Color"
+          value={tableOptions.rowHoverColor}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
-              "headerTextColor",
-              value
-            );
-          }}
-        />
-
-        <TextInput
-          type="color"
-          label="Row Text Color"
-          value={tableOptions.rowTextColor}
-          onValueChange={(value) => {
-            widgetStore?.updateWidgetOption(
-              selectedWidgetID ?? "",
-              "rowTextColor",
+              "rowHoverColor",
               value
             );
           }}
