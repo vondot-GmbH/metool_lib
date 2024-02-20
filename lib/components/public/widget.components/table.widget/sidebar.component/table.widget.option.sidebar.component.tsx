@@ -11,6 +11,7 @@ import TextInput from "../../../../private/general.components/outlined.text.inpu
 import { v4 as UUID } from "uuid";
 import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
 import SpacingEditor from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
+import defaultStyles from "../../../../../styles/index.module.scss";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -89,6 +90,7 @@ const TableWidgetOptionSidebar = ({
           type="color"
           label="Header Background Color"
           value={tableOptions.headerBackgroundColor}
+          className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
@@ -102,6 +104,7 @@ const TableWidgetOptionSidebar = ({
           type="color"
           label="Row Background Color"
           value={tableOptions.rowBackgroundColor}
+          className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
@@ -115,6 +118,7 @@ const TableWidgetOptionSidebar = ({
           type="color"
           label="Row Hover Color"
           value={tableOptions.rowHoverColor}
+          className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
@@ -128,6 +132,7 @@ const TableWidgetOptionSidebar = ({
           type="color"
           label="Border Color"
           value={tableOptions.borderBottomColor}
+          className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
@@ -138,6 +143,7 @@ const TableWidgetOptionSidebar = ({
         />
 
         <SpacingEditor
+          className={defaultStyles.mt10}
           label="Cell Padding"
           types={["padding"]}
           initialValues={{
@@ -163,6 +169,7 @@ const TableWidgetOptionSidebar = ({
         <MultiSwitch
           label="Row Selection"
           initialValue={tableOptions.rowSelectionType}
+          className={defaultStyles.mt10}
           onChange={(value) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",

@@ -3,6 +3,7 @@ import CollapsibleSection from "../../../../private/general.components/collapsib
 import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
 import TextInput from "../../../../private/general.components/outlined.text.input.component/outlined.text.input.component";
 import { TableColumn } from "../schemas/table.widget.schema";
+import defaultStyles from "../../../../../styles/index.module.scss";
 
 interface DetailViewProps {
   tableColumn: TableColumn;
@@ -39,6 +40,7 @@ export const TableWidgetColumnDetailView = ({
         <TextInput
           label="Label"
           value={tableColumn.label}
+          className={defaultStyles.mt10}
           onValueChange={(value) => {
             if (value != null) {
               widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
@@ -57,6 +59,7 @@ export const TableWidgetColumnDetailView = ({
         <MultiSwitch
           label="Resizability"
           initialValue={tableColumn?.resizable?.toString()}
+          className={defaultStyles.mt10}
           onChange={(value) => {
             if (value != null) {
               widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
@@ -85,6 +88,7 @@ export const TableWidgetColumnDetailView = ({
         <TextInput
           label="Min Width"
           value={tableColumn.minWidth}
+          className={defaultStyles.mt10}
           type="number"
           onValueChange={(value) => {
             if (value != null) {
@@ -104,6 +108,7 @@ export const TableWidgetColumnDetailView = ({
         <TextInput
           label="Max Width"
           value={tableColumn.maxWidth}
+          className={defaultStyles.mt10}
           type="number"
           onValueChange={(value) => {
             if (value != null) {
@@ -125,6 +130,7 @@ export const TableWidgetColumnDetailView = ({
         <MultiSwitch
           label="Text Align"
           initialValue={tableColumn.textAlign}
+          className={defaultStyles.mt10}
           onChange={(value: any) => {
             if (value != null) {
               widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
@@ -157,6 +163,7 @@ export const TableWidgetColumnDetailView = ({
         <TextInput
           label="Header Background Color"
           value={tableColumn.headerBackgroundColor}
+          className={defaultStyles.mt10}
           type="color"
           onValueChange={(value) => {
             if (value != null) {
@@ -176,6 +183,7 @@ export const TableWidgetColumnDetailView = ({
         <TextInput
           label="Row Background Color"
           value={tableColumn.rowBackgroundColor}
+          className={defaultStyles.mt10}
           type="color"
           onValueChange={(value) => {
             if (value != null) {
@@ -195,6 +203,7 @@ export const TableWidgetColumnDetailView = ({
         <TextInput
           label="Row Text Color"
           value={tableColumn.rowTextColor}
+          className={defaultStyles.mt10}
           type="color"
           onValueChange={(value) => {
             if (value != null) {
@@ -214,6 +223,7 @@ export const TableWidgetColumnDetailView = ({
         <TextInput
           label="Header Text Color"
           value={tableColumn.headerTextColor}
+          className={defaultStyles.mt10}
           type="color"
           onValueChange={(value) => {
             if (value != null) {

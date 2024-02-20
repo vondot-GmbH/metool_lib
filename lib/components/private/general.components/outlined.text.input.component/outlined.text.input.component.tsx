@@ -17,6 +17,7 @@ interface TextInputProps
   icon?: IconProp;
   onValueChange?: (value: string | number) => void;
   hasError?: boolean;
+  className?: string;
 }
 
 const TextInput = forwardRef(
@@ -27,6 +28,7 @@ const TextInput = forwardRef(
       hasError,
       onValueChange,
       type = "text",
+      className,
       ...props
     }: TextInputProps,
     ref: ForwardedRef<HTMLInputElement>
@@ -58,7 +60,7 @@ const TextInput = forwardRef(
     });
 
     return (
-      <Column>
+      <Column className={className}>
         {label && <RunningText className={styles.label}>{label}</RunningText>}
         <div className={inputWrapperClasses}>
           {icon && <FontAwesomeIcon className={styles.icon} icon={icon} />}

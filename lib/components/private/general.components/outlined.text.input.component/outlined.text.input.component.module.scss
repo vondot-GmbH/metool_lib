@@ -2,18 +2,18 @@
   position: relative;
   display: flex;
   align-items: center;
-  border: 1px solid #ccc; // Beispielwert
+  border: 1px solid #ccc;
   border-radius: 8px;
   padding: 8px 12px;
   background-color: white;
 
   &:focus-within {
-    border-color: #007bff; // Beispielwert
+    border-color: #007bff;
   }
 }
 
 .wrapperWithError {
-  border-color: #dc3545; // Beispielwert
+  border-color: #dc3545;
 }
 
 .wrapperWithIcon {
@@ -31,15 +31,13 @@
   outline: none;
 
   &::placeholder {
-    color: #6c757d; // Beispielwert
+    color: #6c757d;
   }
 }
 
 .inputWithError {
-  // Zusätzliche Styles für fehlerhafte Eingabe
 }
 
 .label {
   margin-bottom: 5px;
-  margin-top: 10px;
 }

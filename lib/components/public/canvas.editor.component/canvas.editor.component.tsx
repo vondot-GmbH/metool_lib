@@ -27,10 +27,10 @@ import {
   faCircleXmark,
   faPlayCircle,
 } from "@fortawesome/free-regular-svg-icons";
-
 import OptionSidebar, {
   SidebarProvider,
 } from "../../private/editor.components/option.sidebar.component/option.sidebar.component";
+import defaultStyles from "../../../styles/index.module.scss";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -86,7 +86,7 @@ const CanvasEditor = ({
       >
         <SizedContainer size="s">
           <Column justifyContent="flex-start">
-            <TitleText className="ml-20">Project Name</TitleText>
+            <TitleText className={defaultStyles.ml20}>Project Name</TitleText>
           </Column>
         </SizedContainer>
         <BreakpointSettings />

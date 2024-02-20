@@ -20,6 +20,7 @@ interface SpacingEditorProps {
   types?: string[];
   initialValues?: SpacingValues;
   onChange?: (mode: string, values: SpacingModeValues) => void;
+  className?: string;
 }
 
 const SpacingEditor = ({
@@ -27,6 +28,7 @@ const SpacingEditor = ({
   types = ["margin"],
   onChange,
   initialValues,
+  className,
 }: SpacingEditorProps) => {
   const [mode, setMode] = useState(types[0]);
   const [values, setValues] = useState<SpacingModeValues>(
@@ -57,7 +59,7 @@ const SpacingEditor = ({
   };
 
   return (
-    <Column>
+    <Column className={className}>
       <RunningText>{label}</RunningText>
       <div className={styles.editor}>
         {types.length > 1 && (

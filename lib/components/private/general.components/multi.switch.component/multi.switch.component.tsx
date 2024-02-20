@@ -16,6 +16,7 @@ interface MultiSwitchProps {
   options: Option[];
   initialValue?: string | undefined;
   onChange?: (value: string) => void;
+  className?: string;
 }
 
 const MultiSwitch = ({
@@ -24,6 +25,7 @@ const MultiSwitch = ({
   initialValue,
   onChange,
   key,
+  className,
 }: MultiSwitchProps) => {
   const [selectedValue, setSelectedValue] = useState(initialValue);
 
@@ -45,7 +47,7 @@ const MultiSwitch = ({
   };
 
   return (
-    <div className={styles.multiSwitchWrapper} key={key}>
+    <div className={`${styles.multiSwitchWrapper} ${className}`} key={key}>
       <RunningText>{label}</RunningText>
       <div className={styles.multiSwitch}>
         {options.map((option) => (
