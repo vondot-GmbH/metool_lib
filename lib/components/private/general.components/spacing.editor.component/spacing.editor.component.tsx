@@ -85,10 +85,10 @@ const SpacingEditor = ({
           <input
             className={styles.input}
             type="number"
-            value={values.right}
-            onChange={(e) => handleChange("right", e.target.value)}
-            onBlur={(e) => handleBlur("right", e.target.value)}
-            placeholder={`${mode} Right`}
+            value={values.left}
+            onChange={(e) => handleChange("left", e.target.value)}
+            onBlur={(e) => handleBlur("left", e.target.value)}
+            placeholder={`${mode} Left`}
           />
 
           <div className={styles.element}>px</div>
@@ -96,10 +96,10 @@ const SpacingEditor = ({
           <input
             className={styles.input}
             type="number"
-            value={values.left}
-            onChange={(e) => handleChange("left", e.target.value)}
-            onBlur={(e) => handleBlur("left", e.target.value)}
-            placeholder={`${mode} Left`}
+            value={values.right}
+            onChange={(e) => handleChange("right", e.target.value)}
+            onBlur={(e) => handleBlur("right", e.target.value)}
+            placeholder={`${mode} Right`}
           />
         </div>
 

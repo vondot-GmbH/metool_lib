@@ -134,7 +134,13 @@ function Table<T extends { [key: string]: any }>({
     recordKey: string | number,
     index: number
   ): JSX.Element => (
-    <td className={styles.selectionColumn}>
+    <td
+      className={`${styles.tableCell} ${styles.selectionColumn}`}
+      style={{
+        backgroundColor: defaultRowBackgroundColor,
+        borderBottom: "1px solid " + defaultBorderBottomColor,
+      }}
+    >
       <Checkbox
         checked={selectedRowKeys.includes(recordKey)}
         onChange={() => handleRowSelectionChange(recordKey, index)}
@@ -191,7 +197,12 @@ function Table<T extends { [key: string]: any }>({
       <tr>
         {/* if table is selectable type multiple, render a selection column */}
         {rowSelectionType === "multiple" && (
-          <th className={styles.selectionColumn}></th>
+          <th
+            className={`${styles.tableCell} ${styles.selectionColumn}`}
+            style={{
+              backgroundColor: defaultHeaderBackgroundColor,
+            }}
+          ></th>
         )}
 
         {columns.map((column, index) => (
