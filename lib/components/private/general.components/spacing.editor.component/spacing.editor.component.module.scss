@@ -1,0 +1,40 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #7b7b7b;
+  padding: 15px;
+  width: 100%;
+  border-radius: 3px;
+}
+
+.inputsTop {
+  display: flex;
+  justify-content: center;
+}
+
+.inputsMiddle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .element {
+    width: 50px;
+    height: 27px;
+    border: 1px solid #7b7b7b;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 12px;
+    border-radius: 3px;
+  }
+}
+
+.inputsBottom {
+  display: flex;
+  justify-content: center;
+}
+
+.input {
+  width: 50px;
+  height: 27px;
+}

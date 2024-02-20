@@ -76,6 +76,7 @@ const TableWidget = ({
       rowHoverColor={tableOptions?.rowHoverColor}
       rowSelectionType={tableOptions?.rowSelectionType}
       rowSelectionBackgroundColor={tableOptions?.rowSelectionBackgroundColor}
+      tableCellPadding={tableOptions?.tableCellPadding}
       onSelectionDataChange={(selectedData) => {
         handleSelectionDataChange(selectedData);
       }}

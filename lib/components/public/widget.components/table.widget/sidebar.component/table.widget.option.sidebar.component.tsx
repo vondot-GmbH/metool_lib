@@ -10,6 +10,7 @@ import { TableWidgetColumnDetailView } from "./table.widget.column.detail.view.c
 import TextInput from "../../../../private/general.components/outlined.text.input.component/outlined.text.input.component";
 import { v4 as UUID } from "uuid";
 import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
+import SpacingEditor from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -132,6 +133,27 @@ const TableWidgetOptionSidebar = ({
               selectedWidgetID ?? "",
               "borderBottomColor",
               value
+            );
+          }}
+        />
+
+        <SpacingEditor
+          label="Cell Padding"
+          types={["padding"]}
+          initialValues={{
+            padding: {
+              top: tableOptions.tableCellPadding?.top,
+              right: tableOptions.tableCellPadding?.right,
+              bottom: tableOptions.tableCellPadding?.bottom,
+              left: tableOptions.tableCellPadding?.left,
+            },
+          }}
+          onChange={(_mode, values) => {
+            console.log("values: ", values);
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "tableCellPadding",
+              values
             );
           }}
         />

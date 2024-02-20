@@ -1,3 +1,5 @@
+import { SpacingModeValues } from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
+
 export interface TableOptions {
   columns: TableColumn[];
   headerTextColor?: string; // TODO not used
@@ -9,6 +11,7 @@ export interface TableOptions {
   emptyStateText: string;
   rowSelectionBackgroundColor?: string;
   rowSelectionType: "single" | "multiple" | "none";
+  tableCellPadding: SpacingModeValues;
 }
 
 export interface TableColumn {

@@ -8,8 +8,8 @@
   text-align: left;
 
   .tableCell {
-    padding: 10px;
     position: relative;
+    padding: var(--cell-padding, 10px);
   }
 
   .selectionColumn {

@@ -4,6 +4,7 @@ import styles from "./data.table.component.module.scss";
 import Skeleton from "react-loading-skeleton";
 import React, { useState } from "react";
 import Checkbox from "../checkbox.component/checkbox.component";
+import { SpacingModeValues } from "../spacing.editor.component/spacing.editor.component";
 
 interface TableColumn {
   label: string;
@@ -30,6 +31,7 @@ interface TableProps<T> {
   rowHoverColor?: string;
   rowSelectionType?: "single" | "multiple" | "none";
   rowSelectionBackgroundColor?: string;
+  tableCellPadding?: SpacingModeValues;
   onSelectionDataChange?: (selectedData: T[]) => void;
   onSelectionIndexChange?: (selectedIndexes: number[]) => void;
 }
@@ -46,6 +48,12 @@ function Table<T extends { [key: string]: any }>({
   rowHoverColor = "transparent",
   rowSelectionType = "none",
   rowSelectionBackgroundColor = "transparent",
+  tableCellPadding = {
+    bottom: 10,
+    left: 10,
+    right: 10,
+    top: 10,
+  },
   onSelectionDataChange,
   onSelectionIndexChange,
 }: TableProps<T>): JSX.Element {
@@ -60,6 +68,7 @@ function Table<T extends { [key: string]: any }>({
   const tableRowStyle = {
     "--row-hover-color": rowHoverColor,
     "--row-selected-color": rowSelectionBackgroundColor,
+    "--cell-padding": `${tableCellPadding.top}px ${tableCellPadding.right}px ${tableCellPadding.bottom}px ${tableCellPadding.left}px`,
   } as React.CSSProperties;
 
   const handleMouseDown = (columnIndex: number, event: React.MouseEvent) => {

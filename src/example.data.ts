@@ -165,6 +165,12 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
       rowBackgroundColor: "transparent",
       rowSelectionBackgroundColor: "#f7fafa",
       rowSelectionType: "multiple",
+      tableCellPadding: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+      },
     },
   },
 
@@ -261,6 +267,12 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
       rowBackgroundColor: "transparent",
       rowSelectionBackgroundColor: "#f7fafa",
       rowSelectionType: "single",
+      tableCellPadding: {
+        top: 30,
+        right: 10,
+        bottom: 30,
+        left: 10,
+      },
     },
   },
   {
@@ -351,7 +363,7 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
         {
           columnID: "5f9e994b9c6b4c00diffb399",
           source: "email",
-          label: "email",
+          label: "email DD",
           textAlign: "left",
           resizable: false,
         },
@@ -362,6 +374,12 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
       rowBackgroundColor: "transparent",
       rowSelectionBackgroundColor: "#f7fafa",
       rowSelectionType: "single",
+      tableCellPadding: {
+        top: 10,
+        right: 10,
+        bottom: 10,
+        left: 10,
+      },
     },
   },
 ];
