@@ -13,6 +13,10 @@ export interface TableWidgetState extends BaseWidgetState {
   selectedDataIndexes?: number[] | null;
 }
 
+export interface TextWidgetState extends BaseWidgetState {
+  data: string;
+}
+
 export interface FormWidgetState extends BaseWidgetState {}
 
 // union type for all widget types

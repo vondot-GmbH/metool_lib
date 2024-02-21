@@ -4,6 +4,7 @@ export { default as CanvasEditor } from "./components/public/canvas.editor.compo
 // widgets
 export { TableWidgetConfig as TableWidget } from "./components/public/widget.components/table.widget/table.widget.config";
 export { ContainerWidgetConfig as ContainerWidget } from "./components/public/widget.components/container.widget/container.widget.config";
+export { TextWidgetConfig as TextWidget } from "./components/public/widget.components/text.widget/text.widget.config";
 
 // config
 export { default as Init } from "./config/init";

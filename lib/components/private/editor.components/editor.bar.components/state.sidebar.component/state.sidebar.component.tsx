@@ -5,6 +5,8 @@ import ComponentWrapper from "../../../general.components/component.wrapper.comp
 import SelectDropDown from "../../../general.components/select.dropdown.component/select.dropdown.component";
 import { useEffect, useMemo, useState } from "react";
 import { WidgetHierarchy } from "../../../../../schemas/widget.schemas/widget.schema";
+import JsonView from "react18-json-view";
+import "react18-json-view/src/style.css";
 
 interface StateSidebarProps {
   stateStore?: StateStore;
@@ -77,10 +79,12 @@ const StateSidebar = ({
       />
 
       {selectedWidgetState && (
-        <div>
-          <h3>State</h3>
-          <pre>{JSON.stringify(selectedWidgetState, null, 2)}</pre>
-        </div>
+        <JsonView
+          src={selectedWidgetState}
+          enableClipboard={false}
+          dark={true}
+          theme="vscode"
+        />
       )}
     </ComponentWrapper>
   );

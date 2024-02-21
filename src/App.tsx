@@ -1,5 +1,5 @@
 import "./App.css";
-import { CanvasEditor, ContainerWidget, Init } from "../lib/main";
+import { CanvasEditor, ContainerWidget, Init, TextWidget } from "../lib/main";
 import ViewStore from "../lib/stores/view.store";
 import { Provider as MobxProvider } from "mobx-react";
 import WidgetStore from "../lib/stores/widget.store";
@@ -14,7 +14,7 @@ import StateStore from "../lib/stores/state.store";
 // only for testing purposes
 
 Init({
-  widgets: [TableWidget, ContainerWidget],
+  widgets: [TableWidget, ContainerWidget, TextWidget],
   layoutConfig: {
     nested: {
       large: {

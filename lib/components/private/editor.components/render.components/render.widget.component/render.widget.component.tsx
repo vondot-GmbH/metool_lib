@@ -173,28 +173,8 @@ const RenderWidget = ({
   };
 
   // render the widget component based on the widget type and the registered widgets
-  const renderWidgetComponent = (widgetType: string): JSX.Element => {
-    // find the widget in the registered widgets
-    const widget = registeredWidgets?.find(
-      (widget) => widget.type === widgetType
-    );
-
-    if (!widget || !widget.component) {
-      return <div>Widget not found</div>;
-    }
-    // render the widget component if it exists
-    const WidgetComponent = widget.component as React.ComponentType<any>;
-
-    return React.createElement(WidgetComponent, {
-      widgetID: widgetToRender.widget.widgetID,
-      widgetStore,
-      stateStore,
-      children: renderNestedWidgets(widget),
-    });
-  };
-
-  // const renderWidgetComponent = React.useMemo(() => {
-  //   const widgetType = widgetToRender.widget.widgetType;
+  // const renderWidgetComponent = (widgetType: string): JSX.Element => {
+  //   // find the widget in the registered widgets
   //   const widget = registeredWidgets?.find(
   //     (widget) => widget.type === widgetType
   //   );
@@ -202,6 +182,7 @@ const RenderWidget = ({
   //   if (!widget || !widget.component) {
   //     return <div>Widget not found</div>;
   //   }
+  //   // render the widget component if it exists
   //   const WidgetComponent = widget.component as React.ComponentType<any>;
 
   //   return React.createElement(WidgetComponent, {
@@ -210,13 +191,32 @@ const RenderWidget = ({
   //     stateStore,
   //     children: renderNestedWidgets(widget),
   //   });
-  // }, [
-  //   widgetToRender,
-  //   registeredWidgets,
-  //   widgetStore,
-  //   stateStore,
-  //   renderNestedWidgets,
-  // ]);
+  // };
+
+  const renderWidgetComponent = React.useMemo(() => {
+    const widgetType = widgetToRender.widget.widgetType;
+    const widget = registeredWidgets?.find(
+      (widget) => widget.type === widgetType
+    );
+
+    if (!widget || !widget.component) {
+      return <div>Widget not found</div>;
+    }
+    const WidgetComponent = widget.component as React.ComponentType<any>;
+
+    return React.createElement(WidgetComponent, {
+      widgetID: widgetToRender.widget.widgetID,
+      widgetStore,
+      stateStore,
+      children: renderNestedWidgets(widget),
+    });
+  }, [
+    widgetToRender,
+    registeredWidgets,
+    widgetStore,
+    stateStore,
+    renderNestedWidgets,
+  ]);
 
   const renderWidgetTypeLabel = () => {
     return (
@@ -255,7 +255,7 @@ const RenderWidget = ({
       {renderWidgetTypeLabel()}
 
       <div className={styles.widgetContentWrapper}>
-        {renderWidgetComponent(widgetToRender.widget.widgetType)}
+        {renderWidgetComponent}
         {renderContextMenu()}
       </div>
     </div>
