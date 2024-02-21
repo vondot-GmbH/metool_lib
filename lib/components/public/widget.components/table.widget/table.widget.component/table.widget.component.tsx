@@ -23,10 +23,7 @@ const TableWidget = ({
       widgetID,
       _getInitialTableWidgetState(tableOptions?.rowSelectionType)
     );
-  }, []);
-
-  console.log("widgetID++++");
-  console.log(widgetID);
+  }, [widgetID]);
 
   const tableOptions: TableOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);
@@ -66,6 +63,7 @@ const TableWidget = ({
 
   return (
     <Table
+      key={widgetID}
       columns={(prepareColumns(tableOptions) as any[]) || []}
       data={usersData}
       rowKey="id"
@@ -81,8 +79,8 @@ const TableWidget = ({
         handleSelectionDataChange(selectedData);
       }}
       onSelectionIndexChange={(selectedIndexes) => {
-        console.log("selectedIndexes");
-        console.log(selectedIndexes);
+        // console.log("selectedIndexes");
+        // console.log(selectedIndexes);
       }}
     />
   );

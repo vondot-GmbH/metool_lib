@@ -93,7 +93,7 @@ class WidgetStore {
   }
 
   getStructuredData(): WidgetHierarchyMap {
-    return JSON.parse(JSON.stringify(this._structuredWidgetHierarchy));
+    return this._structuredWidgetHierarchy;
   }
 
   getSelectedWidget(): WidgetHierarchy | undefined {

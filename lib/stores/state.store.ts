@@ -42,7 +42,11 @@ export class StateStore {
   }
 
   // Retrieves all state values for a widget as a key-value pair
-  getAllWidgetStates(widgetID: string): Record<string, any> {
+  getAllWidgetStates(widgetID: string | undefined): Record<string, any> {
+    if (!widgetID) {
+      return {};
+    }
+
     const widgetStates: Record<string, any> = {};
 
     this.widgetStates.forEach((value, key) => {

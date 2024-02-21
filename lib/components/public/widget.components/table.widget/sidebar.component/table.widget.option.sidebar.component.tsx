@@ -155,7 +155,6 @@ const TableWidgetOptionSidebar = ({
             },
           }}
           onChange={(_mode, values) => {
-            console.log("values: ", values);
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
               "tableCellPadding",

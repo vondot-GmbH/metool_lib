@@ -57,6 +57,7 @@
     "react-grid-layout": "^1.4.4",
     "react-hook-form": "^7.50.1",
     "react-loading-skeleton": "^3.4.0",
+    "react-select": "^5.8.0",
     "uuid": "^9.0.1"
   }
 }

@@ -40,9 +40,7 @@ const RenderWidget = ({
   const allWidgets = widgetStore?.getStructuredData();
   const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
 
-  const [hoveredWidgetID, setHoveredWidgetID] = useState<string | undefined>(
-    "customerDataTableNested"
-  );
+  const [hoveredWidgetID, setHoveredWidgetID] = useState<string | undefined>();
 
   const handleHoverWidget = (event: any, widgetID: string) => {
     if (readonly) return;
@@ -117,6 +115,7 @@ const RenderWidget = ({
   );
 
   // render nested widgets if there are any nested widgets
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const renderNestedWidgets = (widget: WidgetConfig): JSX.Element | null => {
     // if the widget cannot have children, return null
     if (!widget.canHaveChildren) {
@@ -165,6 +164,7 @@ const RenderWidget = ({
               widgetToRender={childWidget}
               widgetStore={widgetStore}
               viewStore={viewStore}
+              stateStore={stateStore}
             />
           </div>
         ))}
@@ -192,6 +192,31 @@ const RenderWidget = ({
       children: renderNestedWidgets(widget),
     });
   };
+
+  // const renderWidgetComponent = React.useMemo(() => {
+  //   const widgetType = widgetToRender.widget.widgetType;
+  //   const widget = registeredWidgets?.find(
+  //     (widget) => widget.type === widgetType
+  //   );
+
+  //   if (!widget || !widget.component) {
+  //     return <div>Widget not found</div>;
+  //   }
+  //   const WidgetComponent = widget.component as React.ComponentType<any>;
+
+  //   return React.createElement(WidgetComponent, {
+  //     widgetID: widgetToRender.widget.widgetID,
+  //     widgetStore,
+  //     stateStore,
+  //     children: renderNestedWidgets(widget),
+  //   });
+  // }, [
+  //   widgetToRender,
+  //   registeredWidgets,
+  //   widgetStore,
+  //   stateStore,
+  //   renderNestedWidgets,
+  // ]);
 
   const renderWidgetTypeLabel = () => {
     return (

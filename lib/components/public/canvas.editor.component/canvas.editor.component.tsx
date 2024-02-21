@@ -31,6 +31,7 @@ import OptionSidebar, {
   SidebarProvider,
 } from "../../private/editor.components/option.sidebar.component/option.sidebar.component";
 import defaultStyles from "../../../styles/index.module.scss";
+import StateStore from "../../../stores/state.store";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -38,6 +39,7 @@ interface CanvasEditorProps {
   widgetStore?: WidgetStore;
   changeRecordStore?: ChangeRecordStore;
   editorStore?: EditorStore;
+  stateStore?: StateStore;
   onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 }
 
@@ -47,6 +49,7 @@ const CanvasEditor = ({
   widgetStore,
   onSaveChanges,
   editorStore,
+  stateStore,
 }: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
@@ -128,7 +131,9 @@ const CanvasEditor = ({
     if (selectedConfigurationBar == "Widgets") {
       sidebarToRender = <WidgetSidebar />;
     } else if (selectedConfigurationBar == "States") {
-      sidebarToRender = <StateSidebar />;
+      sidebarToRender = (
+        <StateSidebar widgetStore={widgetStore} stateStore={stateStore} />
+      );
     }
 
     return (
@@ -190,5 +195,6 @@ export default inject(
   "viewStore",
   "widgetStore",
   "changeRecordStore",
-  "editorStore"
+  "editorStore",
+  "stateStore"
 )(observer(CanvasEditor));
