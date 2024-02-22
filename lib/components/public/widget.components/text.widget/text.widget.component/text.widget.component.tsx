@@ -26,7 +26,7 @@ const TextWidget = ({
     const widgetOptions = widgetStore?.getAllOptionsForWidget(widgetID);
 
     stateStore?.initializeDynamicOptions(widgetOptions, (updatedOptions) => {
-      setDisplayText(updatedOptions.data);
+      setDisplayText(updatedOptions?.data);
     });
   }, [widgetID, stateStore]);
 
