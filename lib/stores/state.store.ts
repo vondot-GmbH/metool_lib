@@ -68,6 +68,7 @@ export class StateStore {
     callback: (value: any) => void
   ) {
     const stateKey = this.generateStateKey(widgetID, key);
+
     if (this.widgetStates.has(stateKey)) {
       this.pubSub.subscribe(`widgetStateChange:${stateKey}`, callback);
     } else {
@@ -98,6 +99,82 @@ export class StateStore {
   // Generates a composite key for storing individual widget state values
   private generateStateKey(widgetID: string, key: string): string {
     return `${widgetID}.${key}`;
+  }
+
+  initializeDynamicOptions(
+    widgetOptions: Record<string, any>,
+    updateCallback: (options: Record<string, any>) => void
+  ) {
+    const optionsCopy = JSON.parse(JSON.stringify(widgetOptions));
+
+    const iterateOptions = (options: Record<string, any>) => {
+      for (const key of Object.keys(options)) {
+        if (typeof options[key] === "string") {
+          const dynamicPatterns = this.extractDynamicPatterns(options[key]);
+
+          for (const { targetWidgetID, stateKey } of dynamicPatterns) {
+            this.subscribeToWidgetStateValue(
+              targetWidgetID,
+              stateKey,
+              (newValue) => {
+                const updatedOptions = JSON.parse(JSON.stringify(optionsCopy));
+                updatedOptions[key] = this.replaceDynamicPlaceholder(
+                  updatedOptions[key],
+                  targetWidgetID,
+                  stateKey,
+                  newValue
+                );
+                updateCallback(updatedOptions);
+              }
+            );
+          }
+        } else if (typeof options[key] === "object") {
+          iterateOptions(options[key]);
+        }
+      }
+    };
+
+    iterateOptions(optionsCopy);
+  }
+
+  extractDynamicPatterns(value: string) {
+    const pattern = /\{\{\s*(\w+)\.(\w+)\s*\}\}/g;
+    let match;
+    const dynamicPatterns = [];
+
+    while ((match = pattern.exec(value)) !== null) {
+      dynamicPatterns.push({
+        targetWidgetID: match[1],
+        stateKey: match[2],
+      });
+    }
+
+    return dynamicPatterns;
+  }
+
+  replaceDynamicPlaceholder(
+    value: string,
+    targetWidgetID: string,
+    stateKey: string,
+    newValue: any
+  ) {
+    const placeholder = `{{${targetWidgetID}.${stateKey}}}`;
+
+    if (value.includes(placeholder)) {
+      let replacementValue;
+
+      if (typeof newValue === "object" && newValue !== null) {
+        replacementValue = JSON.stringify(newValue);
+      } else {
+        replacementValue = newValue;
+      }
+
+      while (value.includes(placeholder)) {
+        value = value.replace(placeholder, replacementValue);
+      }
+    }
+
+    return value;
   }
 }
 

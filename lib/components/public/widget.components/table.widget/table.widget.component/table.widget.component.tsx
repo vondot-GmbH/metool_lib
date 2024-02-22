@@ -19,10 +19,7 @@ const TableWidget = ({
   stateStore,
 }: TableWidgetProps): JSX.Element => {
   useEffect(() => {
-    stateStore?.initializeWidgetStates(
-      widgetID,
-      _getInitialTableWidgetState(tableOptions?.rowSelectionType)
-    );
+    stateStore?.initializeWidgetStates(widgetID, _getInitialTableWidgetState());
   }, [widgetID]);
 
   const tableOptions: TableOptions =
@@ -86,22 +83,16 @@ const TableWidget = ({
   );
 };
 
-const _getInitialTableWidgetState = (
-  rowSelectionType: "single" | "multiple" | "none"
-): TableWidgetState => {
+const _getInitialTableWidgetState = (): TableWidgetState => {
   const tableState = {
     disabled: null,
     hidden: null,
     isLoading: null,
+    selectedSourceRow: null,
+    selectedDataIndex: null,
+    selectedDataIndexes: null,
+    selectedSourceRows: null,
   } as TableWidgetState;
-
-  if (rowSelectionType === "single") {
-    tableState.selectedSourceRow = null;
-    tableState.selectedDataIndex = null;
-  } else if (rowSelectionType === "multiple") {
-    tableState.selectedDataIndexes = null;
-    tableState.selectedSourceRows = null;
-  }
 
   return tableState as TableWidgetState;
 };
