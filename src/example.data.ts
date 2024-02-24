@@ -1,4 +1,24 @@
+import { Query } from "../lib/schemas/query.schemas/query.schema";
 import { Widget } from "../lib/schemas/widget.schemas/widget.schema";
+
+export const QUERY_DATA: Query[] = [
+  {
+    _id: "5f9e9b6b9c6b4c0017f3b3a0",
+    queryID: "getCustomers",
+    actionType: "GET",
+    params: "",
+    query: "...",
+    resource: "customers",
+  },
+  {
+    _id: "5f9e9b6b9c6b4893jd7f3b3a0",
+    queryID: "getUsers",
+    actionType: "GET",
+    params: "",
+    query: "...",
+    resource: "usrs",
+  },
+];
 
 export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
   // {

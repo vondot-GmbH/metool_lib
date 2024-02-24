@@ -1,0 +1,18 @@
+.codeItem {
+  padding: 8px;
+  cursor: pointer;
+  border-radius: 5px;
+  margin: 2px 0;
+
+  .codeIcon {
+    margin-right: 10px;
+  }
+
+  &:hover {
+    background-color: #e1e3e3;
+  }
+
+  &Selected:not(:hover) {
+    background-color: #e1e3e3;
+  }
+}

@@ -108,7 +108,7 @@ const OptionSidebar = ({ widgetStore, editorStore }: OptionSidebarProps) => {
   const currentTitle = titles[titles.length - 1];
 
   return (
-    <div className={styles.optionSidebar}>
+    <div className={styles.optionSidebar} key={selectedWidgetID}>
       <Row className={styles.sidebarHeader} justifyContent="space-between">
         <Column>
           <Row className={styles.widgetInfoWrapper}>

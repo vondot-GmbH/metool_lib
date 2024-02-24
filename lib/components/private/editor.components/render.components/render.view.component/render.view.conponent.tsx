@@ -11,13 +11,17 @@ import { getFilteredRootLevelWidgets } from "../../../../../globals/helpers/widg
 import ViewStore from "../../../../../stores/view.store";
 import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { Query } from "../../../../../schemas/query.schemas/query.schema";
+import QueryStore from "../../../../../stores/query.store";
 
 interface RenderScreenProps {
   readonly?: boolean;
   widgets: Widget[];
+  queries: Query[];
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
+  queryStore?: QueryStore;
   showVisualWidgetOutline?: boolean;
 }
 
@@ -26,7 +30,14 @@ const RenderView = ({
   readonly = true,
   widgetStore,
   showVisualWidgetOutline = false,
+  queries,
+  queryStore,
 }: RenderScreenProps): JSX.Element => {
+  // set initial queries to the query store
+  useEffect(() => {
+    queryStore?.setQueries(queries);
+  }, [queries]);
+
   const structuredWidgets = useMemo(() => {
     return widgetStore?.setInitialWidgetAndConvert(widgets);
   }, [widgetStore, widgets]);
@@ -62,4 +73,8 @@ const RenderView = ({
   );
 };
 
-export default inject("viewStore", "widgetStore")(observer(RenderView));
+export default inject(
+  "viewStore",
+  "widgetStore",
+  "queryStore"
+)(observer(RenderView));

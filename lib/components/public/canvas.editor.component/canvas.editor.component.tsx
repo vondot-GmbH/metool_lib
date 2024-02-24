@@ -25,6 +25,7 @@ import { EditorMode } from "../../../globals/enums/editor.enum";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleXmark,
+  faFileCode,
   faPlayCircle,
 } from "@fortawesome/free-regular-svg-icons";
 import OptionSidebar, {
@@ -32,14 +33,20 @@ import OptionSidebar, {
 } from "../../private/editor.components/option.sidebar.component/option.sidebar.component";
 import defaultStyles from "../../../styles/index.module.scss";
 import StateStore from "../../../stores/state.store";
+import CodeSidebar from "../../private/editor.components/editor.bar.components/code.sidebar.components/code.sidebar.component/code.sidebar.component";
+import QueryStore from "../../../stores/query.store";
+import { Query } from "../../../schemas/query.schemas/query.schema";
+import ConfigurationSidebar from "../../private/editor.components/editor.bar.components/configuration.sidebar.component/configuration.sidebar.component";
 
 interface CanvasEditorProps {
   widgets: Widget[];
+  queries: Query[];
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   changeRecordStore?: ChangeRecordStore;
   editorStore?: EditorStore;
   stateStore?: StateStore;
+  queryStore?: QueryStore;
   onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 }
 
@@ -50,13 +57,14 @@ const CanvasEditor = ({
   onSaveChanges,
   editorStore,
   stateStore,
+  queries,
 }: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
   const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
 
-  const [selectedConfigurationBar, setSelectedConfigurationBar] =
-    useState<string>("Widgets");
+  // const [selectedConfigurationBar, setSelectedConfigurationBar] =
+  //   useState<string>("Widgets");
 
   useEffect(() => {
     // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
@@ -121,62 +129,98 @@ const CanvasEditor = ({
     );
   };
 
-  const _buildCanvasConfigurationBar = (): JSX.Element | null => {
-    if (editorStore?.editorMode != EditorMode.EDIT) {
-      return null;
-    }
+  // const _buildCanvasConfigurationBar = (): JSX.Element | null => {
+  //   if (editorStore?.editorMode != EditorMode.EDIT) {
+  //     return null;
+  //   }
 
-    let sidebarToRender: JSX.Element | null = null;
+  //   let sidebarToRender: JSX.Element | null = null;
 
-    if (selectedConfigurationBar == "Widgets") {
-      sidebarToRender = <WidgetSidebar />;
-    } else if (selectedConfigurationBar == "States") {
-      sidebarToRender = (
-        <StateSidebar widgetStore={widgetStore} stateStore={stateStore} />
-      );
-    }
+  //   if (selectedConfigurationBar == "Widgets") {
+  //     sidebarToRender = <WidgetSidebar />;
+  //   } else if (selectedConfigurationBar == "States") {
+  //     sidebarToRender = (
+  //       <StateSidebar widgetStore={widgetStore} stateStore={stateStore} />
+  //     );
+  //   } else if (selectedConfigurationBar == "Code") {
+  //     sidebarToRender = <CodeSidebar />;
+  //   }
 
-    return (
-      <ResizableSidebar initialWidth={230} minWidth={150} maxWidth={330}>
-        {sidebarToRender}
-      </ResizableSidebar>
-    );
-  };
+  //   return (
+  //     <ResizableSidebar initialWidth={230} minWidth={150} maxWidth={330}>
+  //       {sidebarToRender}
+  //     </ResizableSidebar>
+  //   );
+  // };
 
-  const _buildTabBar = (): JSX.Element | null => {
-    if (editorStore?.editorMode != EditorMode.EDIT) {
-      return null;
-    }
+  // const _buildCanvasConfiguration = (): JSX.Element | null => {
+  //   if (editorStore?.editorMode != EditorMode.EDIT) {
+  //     return null;
+  //   }
 
-    return (
-      <IconTabBar
-        style={{ borderRight: "1px solid #e0e0e0" }} // TODO
-        tabs={[
-          {
-            icon: faSquarePlus,
-            name: "Widgets",
-          },
-          {
-            icon: faXmarkCircle,
-            name: "States",
-          },
-        ]}
-        onSelect={(name: string) => {
-          setSelectedConfigurationBar(name);
-        }}
-        selected={selectedConfigurationBar}
-      />
-    );
-  };
+  //   let sidebarToRender: JSX.Element | null = null;
+
+  //   if (selectedConfigurationBar == "Widgets") {
+  //     sidebarToRender = <WidgetSidebar />;
+  //   } else if (selectedConfigurationBar == "States") {
+  //     sidebarToRender = (
+  //       <StateSidebar widgetStore={widgetStore} stateStore={stateStore} />
+  //     );
+  //   }
+
+  //   return (
+  //     <ResizableSidebar initialWidth={230} minWidth={150} maxWidth={330}>
+  //       {sidebarToRender}
+  //     </ResizableSidebar>
+  //   );
+  // };
+
+  // const _buildTabBar = (): JSX.Element | null => {
+  //   if (editorStore?.editorMode != EditorMode.EDIT) {
+  //     return null;
+  //   }
+
+  //   return (
+  //     <IconTabBar
+  //       style={{ borderRight: "1px solid #e0e0e0" }} // TODO
+  //       tabs={[
+  //         {
+  //           icon: faSquarePlus,
+  //           name: "Widgets",
+  //         },
+  //         {
+  //           icon: faXmarkCircle,
+  //           name: "States",
+  //         },
+  //         {
+  //           icon: faFileCode,
+  //           name: "Code",
+  //         },
+  //       ]}
+  //       onSelect={(name: string) => {
+  //         setSelectedConfigurationBar(name);
+  //       }}
+  //       selected={selectedConfigurationBar}
+  //     />
+  //   );
+  // };
 
   return (
     <MainLayout topBars={[_buildTopToolBar()]}>
-      <MainLayout sideBars={[_buildTabBar(), _buildCanvasConfigurationBar()]}>
+      <MainLayout
+        sideBars={[
+          // _buildTabBar(),
+          // _buildCanvasConfigurationBar(),
+          // _buildCanvasConfigurationBar2(),
+          <ConfigurationSidebar />,
+        ]}
+      >
         <SidebarProvider>
           <div className={styles.canvasWrapper}>
             <div className={styles.editorCanvasWrapper}>
               <ResizableScreenWrapper>
                 <RenderView
+                  queries={queries}
                   widgets={widgets}
                   readonly={readonly}
                   showVisualWidgetOutline={showVisualWidgetOutline}
@@ -196,5 +240,6 @@ export default inject(
   "widgetStore",
   "changeRecordStore",
   "editorStore",
-  "stateStore"
+  "stateStore",
+  "queryStore"
 )(observer(CanvasEditor));
