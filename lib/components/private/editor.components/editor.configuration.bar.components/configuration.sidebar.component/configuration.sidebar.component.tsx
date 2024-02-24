@@ -17,19 +17,17 @@ import ResizableSidebar from "../../../general.components/resizable.sidbear.comp
 import StateStore from "../../../../../stores/state.store";
 import styles from "./configuration.sidebar.component.module.scss";
 import Row from "../../../general.components/row.component/row.component";
-import ComponentWrapper from "../../../general.components/component.wrapper.component/component.wrapper.component";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CodeSidebarDetail from "../code.sidebar.components/code.sidebar.detail.component/code.sidebar.detail.component";
 
 interface ConfigurationSidebarProps {
   widgetStore?: WidgetStore;
-  queryStore?: QueryStore;
+  queryStore?: QueryStore; // TODO do we need this here?
   editorStore?: EditorStore;
   stateStore?: StateStore;
 }
 
 const ConfigurationSidebar = ({
   widgetStore,
-  queryStore,
   editorStore,
   stateStore,
 }: ConfigurationSidebarProps): JSX.Element => {
@@ -106,20 +104,11 @@ const ConfigurationSidebar = ({
     }
 
     return (
-      <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={500}>
-        <ComponentWrapper
-          title={selectedCodeItem}
-          action={
-            <FontAwesomeIcon
-              icon={faXmarkCircle}
-              style={{ cursor: "pointer" }}
-              onClick={() => setSelectedCodeItem(undefined)}
-            />
-          }
-        >
-          ....
-        </ComponentWrapper>
-      </ResizableSidebar>
+      <CodeSidebarDetail
+        key={selectedCodeItem}
+        selectedItem={selectedCodeItem}
+        onClose={() => setSelectedCodeItem(undefined)}
+      />
     );
   };
 
