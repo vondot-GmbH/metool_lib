@@ -18,12 +18,16 @@ import StateStore from "../../../../../stores/state.store";
 import styles from "./configuration.sidebar.component.module.scss";
 import Row from "../../../general.components/row.component/row.component";
 import CodeSidebarDetail from "../code.sidebar.components/code.sidebar.detail.component/code.sidebar.detail.component";
+import ResourceStore from "../../../../../stores/resource.store";
+import ResourceSidebar from "../code.sidebar.components/resource.sidebar.component/resource.sidebar.component";
+import { faBarChart } from "@fortawesome/free-regular-svg-icons/faBarChart";
 
 interface ConfigurationSidebarProps {
   widgetStore?: WidgetStore;
   queryStore?: QueryStore; // TODO do we need this here?
   editorStore?: EditorStore;
   stateStore?: StateStore;
+  resourceStore?: ResourceStore;
 }
 
 const ConfigurationSidebar = ({
@@ -59,6 +63,10 @@ const ConfigurationSidebar = ({
             icon: faFileCode,
             name: "Code",
           },
+          {
+            icon: faBarChart,
+            name: "Resources",
+          },
         ]}
         onSelect={(name: string) => {
           setSelectedConfigurationBar(name);
@@ -69,26 +77,42 @@ const ConfigurationSidebar = ({
   };
 
   const _buildCanvasConfigurationBar = (): JSX.Element | null => {
-    if (editorStore?.editorMode != EditorMode.EDIT) {
+    if (editorStore?.editorMode !== EditorMode.EDIT) {
       return null;
     }
 
     let sidebarToRender: JSX.Element | null = null;
 
-    if (selectedConfigurationBar == "Widgets") {
-      sidebarToRender = <WidgetSidebar />;
-    } else if (selectedConfigurationBar == "States") {
-      sidebarToRender = (
-        <StateSidebar widgetStore={widgetStore} stateStore={stateStore} />
-      );
-    } else if (selectedConfigurationBar == "Code") {
-      sidebarToRender = (
-        <CodeSidebar
-          onItemSelect={(item: string) => {
-            setSelectedCodeItem(item);
-          }}
-        />
-      );
+    switch (selectedConfigurationBar) {
+      case "Widgets":
+        sidebarToRender = <WidgetSidebar />;
+        break;
+      case "States":
+        sidebarToRender = (
+          <StateSidebar widgetStore={widgetStore} stateStore={stateStore} />
+        );
+        break;
+      case "Code":
+        sidebarToRender = (
+          <CodeSidebar
+            onItemSelect={(item: string) => {
+              setSelectedCodeItem(item);
+            }}
+          />
+        );
+        break;
+      case "Resources":
+        sidebarToRender = (
+          <ResourceSidebar
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            onItemSelect={(item: string) => {
+              // TODO implement detail view for resources
+            }}
+          />
+        );
+        break;
+      default:
+        sidebarToRender = null;
     }
 
     return (
@@ -125,5 +149,6 @@ export default inject(
   "widgetStore",
   "queryStore",
   "editorStore",
-  "stateStore"
+  "stateStore",
+  "resourceStore"
 )(observer(ConfigurationSidebar));

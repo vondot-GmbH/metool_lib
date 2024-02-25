@@ -11,6 +11,7 @@ import EditorStore from "../lib/stores/editor.store";
 import { faHardDrive } from "@fortawesome/free-regular-svg-icons";
 import StateStore from "../lib/stores/state.store";
 import QueryStore from "../lib/stores/query.store";
+import ResourceStore from "../lib/stores/resource.store";
 
 // only for testing purposes
 
@@ -74,6 +75,7 @@ const widgetStore = new WidgetStore(changeRecordStore);
 const editorStore = new EditorStore();
 const stateStore = new StateStore();
 const queryStore = new QueryStore();
+const resourceStore = new ResourceStore();
 
 const stores = {
   viewStore,
@@ -82,6 +84,7 @@ const stores = {
   editorStore,
   stateStore,
   queryStore,
+  resourceStore,
 };
 
 function App() {

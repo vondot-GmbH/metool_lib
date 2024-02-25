@@ -19,6 +19,7 @@ import QueryStore from "../../../stores/query.store";
 import { Query } from "../../../schemas/query.schemas/query.schema";
 import ConfigurationSidebar from "../../private/editor.components/editor.configuration.bar.components/configuration.sidebar.component/configuration.sidebar.component";
 import TopBarComponent from "../../private/editor.components/top.bar.component/top.bar.component";
+import ResourceStore from "../../../stores/resource.store";
 
 interface CanvasEditorProps {
   widgets: Widget[];
@@ -29,6 +30,8 @@ interface CanvasEditorProps {
   editorStore?: EditorStore;
   stateStore?: StateStore;
   queryStore?: QueryStore;
+  resourceStore?: ResourceStore;
+
   onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 }
 
@@ -76,5 +79,6 @@ export default inject(
   "changeRecordStore",
   "editorStore",
   "stateStore",
-  "queryStore"
+  "queryStore",
+  "resourceStore"
 )(observer(CanvasEditor));
