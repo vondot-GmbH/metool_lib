@@ -12,16 +12,18 @@ import ViewStore from "../../../../../stores/view.store";
 import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
 import { useEffect, useMemo } from "react";
-import { Query } from "../../../../../schemas/query.schemas/query.schema";
 import QueryStore from "../../../../../stores/query.store";
+import { Resource } from "../../../../../schemas/resource.schemas/resource.schema";
+import ResourceStore from "../../../../../stores/resource.store";
 
 interface RenderScreenProps {
   readonly?: boolean;
   widgets: Widget[];
-  queries: Query[];
+  resources?: Resource[];
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   queryStore?: QueryStore;
+  resourceStore?: ResourceStore;
   showVisualWidgetOutline?: boolean;
 }
 
@@ -30,13 +32,13 @@ const RenderView = ({
   readonly = true,
   widgetStore,
   showVisualWidgetOutline = false,
-  queries,
-  queryStore,
+  resources,
+  resourceStore,
 }: RenderScreenProps): JSX.Element => {
-  // set initial queries to the query store
+  // set initial resources to the resource store
   useEffect(() => {
-    queryStore?.setQueries(queries);
-  }, [queries]);
+    if (resources) resourceStore?.intializeResources(resources);
+  }, [resources]);
 
   const structuredWidgets = useMemo(() => {
     return widgetStore?.setInitialWidgetAndConvert(widgets);
@@ -76,5 +78,6 @@ const RenderView = ({
 export default inject(
   "viewStore",
   "widgetStore",
-  "queryStore"
+  "queryStore",
+  "resourceStore"
 )(observer(RenderView));

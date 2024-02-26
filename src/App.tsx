@@ -1,9 +1,15 @@
 import "./App.css";
-import { CanvasEditor, ContainerWidget, Init, TextWidget } from "../lib/main";
+import {
+  CanvasEditor,
+  ContainerWidget,
+  DataSourceType,
+  Init,
+  TextWidget,
+} from "../lib/main";
 import ViewStore from "../lib/stores/view.store";
 import { Provider as MobxProvider } from "mobx-react";
 import WidgetStore from "../lib/stores/widget.store";
-import { EXAMPLE_WIDGETS_DATA_RENAMED, QUERY_DATA } from "./example.data";
+import { EXAMPLE_WIDGETS_DATA_RENAMED } from "./example.data";
 import ChangeRecordStore from "../lib/stores/change.record.store";
 import { TableWidget } from "../lib/main";
 import Gleap from "Gleap";
@@ -16,6 +22,20 @@ import ResourceStore from "../lib/stores/resource.store";
 // only for testing purposes
 
 Init({
+  coreResources: [
+    {
+      title: "base Resource",
+      type: DataSourceType.REST_API,
+      baseUrl: "https://jsonplaceholder.typicode.com/users",
+      coreResource: true,
+      key: "baseResource",
+      defaultHeaders: [
+        { key: "Content-Type", value: "application/json" },
+        { key: "Accept", value: "application/json" },
+      ],
+      description: "This is the base resource",
+    },
+  ],
   widgets: [TableWidget, ContainerWidget, TextWidget],
   layoutConfig: {
     nested: {
@@ -72,10 +92,10 @@ Gleap.initialize("YZ6N1CITLut6MeqEhbITgwBid7oB7nc6");
 const viewStore = new ViewStore();
 const changeRecordStore = new ChangeRecordStore();
 const widgetStore = new WidgetStore(changeRecordStore);
+const resourceStore = new ResourceStore(changeRecordStore);
 const editorStore = new EditorStore();
 const stateStore = new StateStore();
 const queryStore = new QueryStore();
-const resourceStore = new ResourceStore();
 
 const stores = {
   viewStore,
@@ -92,7 +112,20 @@ function App() {
     <MobxProvider {...stores}>
       <div className="main-container">
         <CanvasEditor
-          queries={QUERY_DATA}
+          // queries={QUERY_DATA} // TODO
+          resources={[
+            {
+              baseUrl: "https://jsonplaceholder.typicode.com/users",
+              title: "jsonplaceholder",
+              type: DataSourceType.REST_API,
+              _id: "1",
+              defaultHeaders: [
+                { key: "Content-Type", value: "application/json" },
+                { key: "Accept", value: "application/json" },
+              ],
+              description: "jsonplaceholder",
+            },
+          ]}
           widgets={EXAMPLE_WIDGETS_DATA_RENAMED}
           onSaveChanges={(changes) => {
             console.log("changes: ", JSON.stringify(changes, null, 2));

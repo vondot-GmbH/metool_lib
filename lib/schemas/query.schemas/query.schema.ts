@@ -2,7 +2,8 @@ import { DataSourceType } from "../resource.schemas/resource.schema";
 
 export interface BaseQuery {
   _id?: string;
-  queryID: string;
+  title: string;
+  resourceID: string; // object id of the resource
   description?: string;
   type: DataSourceType;
   query: string;

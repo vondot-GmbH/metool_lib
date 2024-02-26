@@ -4,15 +4,30 @@ import {
   LayoutConfig,
   WidgetConfig,
 } from "../globals/interfaces/config.interface";
+import {
+  CoreResource,
+  CoreResourceMap,
+} from "../schemas/resource.schemas/resource.schema";
 
 class ConfigProvider {
   private static _instance: ConfigProvider;
   private _registeredWidgets: Map<string, WidgetConfig> = new Map();
   private _layoutConfig: LayoutConfig = { root: {}, nested: {} };
+  private _coreResources: CoreResourceMap = new Map();
 
   private constructor() {}
 
   //! setter
+
+  public registerCoreResources(resources: CoreResource[] | undefined) {
+    if (resources == null) {
+      return;
+    }
+
+    resources.forEach((resource) => {
+      this._coreResources.set(resource.key, resource);
+    });
+  }
 
   public registerWidgets(widgets: WidgetConfig[]) {
     widgets.forEach((widget) => {
@@ -30,6 +45,14 @@ class ConfigProvider {
   }
 
   //! getter
+
+  public getCoreResource(resourceKey: string): CoreResource | undefined {
+    return this._coreResources.get(resourceKey);
+  }
+
+  public getCoreResources(): CoreResource[] {
+    return Array.from(this._coreResources.values());
+  }
 
   public static getInstance(): ConfigProvider {
     if (!ConfigProvider._instance) {

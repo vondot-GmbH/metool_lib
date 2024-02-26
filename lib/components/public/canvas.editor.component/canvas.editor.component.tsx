@@ -1,6 +1,6 @@
 import { inject, observer } from "mobx-react";
 import MainLayout from "../../../layouts/main.layout/main.layout";
-import { RenderView } from "../../../main";
+import { RenderView, Resource } from "../../../main";
 import { Widget } from "../../../schemas/widget.schemas/widget.schema";
 import ViewStore from "../../../stores/view.store";
 import styles from "./canvas.editor.component.module.scss";
@@ -16,14 +16,15 @@ import OptionSidebar, {
 } from "../../private/editor.components/option.sidebar.component/option.sidebar.component";
 import StateStore from "../../../stores/state.store";
 import QueryStore from "../../../stores/query.store";
-import { Query } from "../../../schemas/query.schemas/query.schema";
 import ConfigurationSidebar from "../../private/editor.components/editor.configuration.bar.components/configuration.sidebar.component/configuration.sidebar.component";
 import TopBarComponent from "../../private/editor.components/top.bar.component/top.bar.component";
 import ResourceStore from "../../../stores/resource.store";
 
 interface CanvasEditorProps {
   widgets: Widget[];
-  queries: Query[];
+  resources?: Resource[];
+  onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
+
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   changeRecordStore?: ChangeRecordStore;
@@ -31,15 +32,13 @@ interface CanvasEditorProps {
   stateStore?: StateStore;
   queryStore?: QueryStore;
   resourceStore?: ResourceStore;
-
-  onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 }
 
 const CanvasEditor = ({
   widgets,
   onSaveChanges,
   editorStore,
-  queries,
+  resources,
 }: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
@@ -58,7 +57,7 @@ const CanvasEditor = ({
             <div className={styles.editorCanvasWrapper}>
               <ResizableScreenWrapper>
                 <RenderView
-                  queries={queries}
+                  resources={resources}
                   widgets={widgets}
                   readonly={readonly}
                   showVisualWidgetOutline={showVisualWidgetOutline}

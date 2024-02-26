@@ -7,6 +7,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import ResourceStore from "../../../../../../stores/resource.store";
+import {
+  CoreResource,
+  Resource,
+} from "../../../../../../schemas/resource.schemas/resource.schema";
 
 interface ResourceSidebarProps {
   resourceStore?: ResourceStore;
@@ -17,9 +21,22 @@ const ResourceSidebar = ({
   resourceStore,
   onItemSelect,
 }: ResourceSidebarProps): JSX.Element => {
-  const resources = resourceStore?.resources;
+  const resources = resourceStore?.resources ?? [];
 
-  const itemClassName = (queryID: string) => {
+  const [selectedItem, setSelectedItem] = useState<string | undefined>(
+    undefined
+  );
+
+  // TODO set react memo
+  const coreResources: CoreResource[] = resources?.filter(
+    (resource: any) => resource?.coreResource
+  );
+
+  const dynamicResources: Resource[] = resources?.filter(
+    (resource: any) => !resource?.coreResource
+  );
+
+  const itemClassName = (queryID: string | undefined) => {
     return (
       styles.resourceItem +
       " " +
@@ -27,36 +44,60 @@ const ResourceSidebar = ({
     );
   };
 
-  const [selectedItem, setSelectedItem] = useState<string | undefined>(
-    undefined
-  );
+  const handleSelectItem = (queryID: string | undefined) => {
+    if (queryID == null) {
+      return;
+    }
 
-  const handleSelectItem = (queryID: string) => {
     setSelectedItem(queryID);
     onItemSelect?.(queryID);
   };
 
   return (
-    <ComponentWrapper title={"Resources"}>
-      {resources?.map((resource) => {
-        return (
-          <Row
-            className={itemClassName(resource.resourceID)}
-            key={resource.resourceID}
-            onClick={() => {
-              handleSelectItem(resource.resourceID);
-            }}
-          >
-            <FontAwesomeIcon
-              icon={faBookmark}
-              className={styles.resourceIcon}
-            />
-            <RunningText>{resource.resourceID}</RunningText>
-          </Row>
-        );
-      })}
-    </ComponentWrapper>
+    <div>
+      {coreResources?.length != 0 && (
+        <ComponentWrapper title={"Core Resources"}>
+          {coreResources?.map((resource) => {
+            return (
+              <Row
+                className={itemClassName(resource?.key)}
+                key={resource?.key}
+                onClick={() => {
+                  handleSelectItem(resource?.key);
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faBookmark}
+                  className={styles.resourceIcon}
+                />
+                <RunningText>{resource.title}</RunningText>
+              </Row>
+            );
+          })}
+        </ComponentWrapper>
+      )}
+
+      <ComponentWrapper title={"Resources"}>
+        {dynamicResources?.map((resource) => {
+          return (
+            <Row
+              className={itemClassName(resource?._id)}
+              key={resource?._id}
+              onClick={() => {
+                handleSelectItem(resource?._id);
+              }}
+            >
+              <FontAwesomeIcon
+                icon={faBookmark}
+                className={styles.resourceIcon}
+              />
+              <RunningText>{resource?.title}</RunningText>
+            </Row>
+          );
+        })}
+      </ComponentWrapper>
+    </div>
   );
 };
 
-export default inject("queryStore")(observer(ResourceSidebar));
+export default inject("resourceStore")(observer(ResourceSidebar));

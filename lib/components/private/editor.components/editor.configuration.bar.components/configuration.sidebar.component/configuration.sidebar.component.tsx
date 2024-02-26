@@ -21,6 +21,7 @@ import CodeSidebarDetail from "../code.sidebar.components/code.sidebar.detail.co
 import ResourceStore from "../../../../../stores/resource.store";
 import ResourceSidebar from "../code.sidebar.components/resource.sidebar.component/resource.sidebar.component";
 import { faBarChart } from "@fortawesome/free-regular-svg-icons/faBarChart";
+import ResourceSidebarDetail from "../code.sidebar.components/resource.sidebar.detail.component/resource.sidebar.detail.component";
 
 interface ConfigurationSidebarProps {
   widgetStore?: WidgetStore;
@@ -41,6 +42,10 @@ const ConfigurationSidebar = ({
   const [selectedCodeItem, setSelectedCodeItem] = useState<string | undefined>(
     undefined
   );
+
+  const [selectedResourceItem, setSelectedResourceItem] = useState<
+    string | undefined
+  >(undefined);
 
   const _buildTabBar = (): JSX.Element | null => {
     if (editorStore?.editorMode != EditorMode.EDIT) {
@@ -104,9 +109,8 @@ const ConfigurationSidebar = ({
       case "Resources":
         sidebarToRender = (
           <ResourceSidebar
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onItemSelect={(item: string) => {
-              // TODO implement detail view for resources
+              setSelectedResourceItem(item);
             }}
           />
         );
@@ -122,25 +126,37 @@ const ConfigurationSidebar = ({
     );
   };
 
-  const _buildCodeDetalConfigurationBar = (): JSX.Element | null => {
-    if (editorStore?.editorMode != EditorMode.EDIT || !selectedCodeItem) {
+  const _buildDetalConfigurationBar = (): JSX.Element | null => {
+    if (editorStore?.editorMode != EditorMode.EDIT) {
       return null;
     }
 
-    return (
-      <CodeSidebarDetail
-        key={selectedCodeItem}
-        selectedItem={selectedCodeItem}
-        onClose={() => setSelectedCodeItem(undefined)}
-      />
-    );
+    if (selectedResourceItem) {
+      return (
+        <ResourceSidebarDetail
+          key={selectedResourceItem}
+          selectedItem={selectedResourceItem}
+          onClose={() => setSelectedResourceItem(undefined)}
+        />
+      );
+    } else if (selectedCodeItem) {
+      return (
+        <CodeSidebarDetail
+          key={selectedCodeItem}
+          selectedItem={selectedCodeItem}
+          onClose={() => setSelectedCodeItem(undefined)}
+        />
+      );
+    }
+
+    return null;
   };
 
   return (
     <Row className={styles.configurationSidebar}>
       {_buildTabBar()}
       {_buildCanvasConfigurationBar()}
-      {_buildCodeDetalConfigurationBar()}
+      {_buildDetalConfigurationBar()}
     </Row>
   );
 };

@@ -14,3 +14,8 @@ export type {
   WidgetConfig,
   LayoutConfig,
 } from "./globals/interfaces/config.interface";
+
+export type { Resource } from "./schemas/resource.schemas/resource.schema";
+export type { Query } from "./schemas/query.schemas/query.schema";
+
+export { DataSourceType } from "./schemas/resource.schemas/resource.schema";
