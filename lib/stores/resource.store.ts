@@ -7,6 +7,7 @@ import {
 } from "../schemas/resource.schemas/resource.schema";
 import { makeAutoObservable } from "mobx";
 import ChangeRecordStore from "./change.record.store";
+import { ChangeRecord } from "../globals/interfaces/change.record.interface";
 
 class ResourceStore {
   private _resources: MixedResourceMap = new Map();
@@ -53,7 +54,7 @@ class ResourceStore {
 
   //! Methods
 
-  addResource(resource: Resource): void {
+  saveResourceChangesAndProcess(resource: Resource): ChangeRecord[] {
     if (resource?._id == null || resource?._id === "newResource") {
       this._changeRecordStore.setResourceRecord(
         "newResource",
@@ -67,6 +68,8 @@ class ResourceStore {
         resource
       );
     }
+
+    return this._changeRecordStore.processReleaseChanges();
   }
 
   addInitialResource(): void {

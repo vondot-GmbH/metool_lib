@@ -14,7 +14,7 @@ import {
 
 interface ResourceSidebarProps {
   resourceStore?: ResourceStore;
-  onItemSelect?: (queryID: string) => void;
+  onItemSelect?: (resourceID: string) => void;
 }
 
 const ResourceSidebar = ({
@@ -32,29 +32,31 @@ const ResourceSidebar = ({
     (resource: any) => resource?.coreResource
   );
 
-  let dynamicResources: Resource[] = resources?.filter(
+  const dynamicResources: Resource[] = resources?.filter(
     (resource: any) => !resource?.coreResource
   );
 
-  const itemClassName = (queryID: string | undefined) => {
+  const itemClassName = (resourceID: string | undefined) => {
     return (
       styles.resourceItem +
       " " +
-      (selectedItem === queryID ? styles.resourceItemSelected : "")
+      (selectedItem === resourceID ? styles.resourceItemSelected : "")
     );
   };
 
-  const handleSelectItem = (queryID: string | undefined) => {
-    if (queryID == null) {
+  const handleSelectItem = (resourceID: string | undefined) => {
+    if (resourceID == null) {
       return;
     }
 
-    setSelectedItem(queryID);
-    onItemSelect?.(queryID);
+    setSelectedItem(resourceID);
+    onItemSelect?.(resourceID);
   };
 
   const handleAddResource = () => {
     resourceStore?.addInitialResource();
+    setSelectedItem("newResource");
+    onItemSelect?.("newResource");
   };
 
   return (

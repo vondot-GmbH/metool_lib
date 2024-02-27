@@ -22,8 +22,10 @@ import ResourceStore from "../../../../../stores/resource.store";
 import ResourceSidebar from "../code.sidebar.components/resource.sidebar.component/resource.sidebar.component";
 import { faBarChart } from "@fortawesome/free-regular-svg-icons/faBarChart";
 import ResourceSidebarDetail from "../code.sidebar.components/resource.sidebar.detail.component/resource.sidebar.detail.component";
+import { ChangeRecord } from "../../../../../globals/interfaces/change.record.interface";
 
 interface ConfigurationSidebarProps {
+  onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
   widgetStore?: WidgetStore;
   queryStore?: QueryStore; // TODO do we need this here?
   editorStore?: EditorStore;
@@ -35,6 +37,7 @@ const ConfigurationSidebar = ({
   widgetStore,
   editorStore,
   stateStore,
+  onSaveChanges,
 }: ConfigurationSidebarProps): JSX.Element => {
   const [selectedConfigurationBar, setSelectedConfigurationBar] =
     useState<string>("Widgets");
@@ -136,6 +139,7 @@ const ConfigurationSidebar = ({
     if (selectedResourceItem) {
       return (
         <ResourceSidebarDetail
+          onSaveChanges={onSaveChanges}
           key={selectedResourceItem}
           selectedItem={selectedResourceItem}
           onClose={() => setSelectedResourceItem(undefined)}

@@ -51,7 +51,9 @@ const CanvasEditor = ({
 
   return (
     <MainLayout topBars={[<TopBarComponent onSaveChanges={onSaveChanges} />]}>
-      <MainLayout sideBars={[<ConfigurationSidebar />]}>
+      <MainLayout
+        sideBars={[<ConfigurationSidebar onSaveChanges={onSaveChanges} />]}
+      >
         <SidebarProvider>
           <div className={styles.canvasWrapper}>
             <div className={styles.editorCanvasWrapper}>

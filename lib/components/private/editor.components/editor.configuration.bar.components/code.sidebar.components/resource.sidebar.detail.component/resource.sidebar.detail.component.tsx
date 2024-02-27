@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { inject, observer } from "mobx-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
@@ -12,11 +11,13 @@ import SelectDropDown from "../../../../general.components/select.dropdown.compo
 import { DataSourceType } from "../../../../../../main";
 import { useState } from "react";
 import { RestResource } from "../../../../../../schemas/resource.schemas/resource.schema";
+import { ChangeRecord } from "../../../../../../globals/interfaces/change.record.interface";
 
 interface ResourceSidebarDetailProps {
   resourceStore?: ResourceStore;
   selectedItem?: string;
   onClose: () => void;
+  onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 }
 
 const ResourceSidebarDetail = ({
@@ -24,11 +25,7 @@ const ResourceSidebarDetail = ({
   resourceStore,
   onClose,
 }: ResourceSidebarDetailProps): JSX.Element | null => {
-  if (!selectedItem) {
-    return null;
-  }
-
-  const selectedResource = resourceStore?.getResource(selectedItem);
+  const selectedResource = resourceStore?.getResource(selectedItem ?? "");
 
   const [selectedType, setSelectedType] = useState<DataSourceType | null>(
     selectedResource?.type ?? null
@@ -46,6 +43,10 @@ const ResourceSidebarDetail = ({
       label: key,
     };
   });
+
+  const handleSaveChanges = (data: RestResource) => {
+    resourceStore?.saveResourceChangesAndProcess(data);
+  };
 
   return (
     <ResizableSidebar initialWidth={380} minWidth={300} maxWidth={500}>
@@ -74,9 +75,8 @@ const ResourceSidebarDetail = ({
 
         {selectedType === DataSourceType.REST_API && (
           <ResourceRestForm
-            onFormSubmit={(data: any) => {
-              console.log("onFormSubmit-----");
-              console.log(data);
+            onFormSubmit={(data: RestResource) => {
+              handleSaveChanges(data);
             }}
             iniitialResource={
               { type: selectedType, ...selectedResource } as RestResource
