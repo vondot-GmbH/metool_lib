@@ -26,13 +26,32 @@ const RestQueryForm = ({
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = useForm({
     resolver: yupResolver(restQuerySchema),
     mode: "onTouched",
     reValidateMode: "onChange",
     defaultValues: (iniitialQuery as any) ?? {},
   });
+
+  const methodItems = [
+    {
+      label: "GET",
+      value: "GET",
+    },
+    {
+      label: "POST",
+      value: "POST",
+    },
+    {
+      label: "PUT",
+      value: "PUT",
+    },
+    {
+      label: "DELETE",
+      value: "DELETE",
+    },
+  ];
 
   const {
     fields: defaultHeadersFields,
@@ -91,24 +110,7 @@ const RestQueryForm = ({
       <SelectDropDown
         label="Method"
         selectedItem={iniitialQuery?.method}
-        items={[
-          {
-            label: "GET",
-            value: "GET",
-          },
-          {
-            label: "POST",
-            value: "POST",
-          },
-          {
-            label: "PUT",
-            value: "PUT",
-          },
-          {
-            label: "DELETE",
-            value: "DELETE",
-          },
-        ]}
+        items={methodItems}
       />
 
       <KeyValueInput

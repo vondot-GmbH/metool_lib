@@ -16,7 +16,6 @@ interface CodeSidebarProps {
 }
 
 const CodeSidebar = ({
-  widgetStore,
   queryStore,
   onItemSelect,
 }: CodeSidebarProps): JSX.Element => {
