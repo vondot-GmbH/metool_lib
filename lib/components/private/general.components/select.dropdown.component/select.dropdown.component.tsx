@@ -42,6 +42,7 @@ const SelectDropDown = ({
   validationMessage,
   inputRef,
 }: SelectDropDownProps): JSX.Element => {
+  console.log("selectedItem", selectedItem);
   const resolve = (path: string, obj: any): any => {
     return path.split(".").reduce(function (prev, curr) {
       return prev ? prev[curr] : null;

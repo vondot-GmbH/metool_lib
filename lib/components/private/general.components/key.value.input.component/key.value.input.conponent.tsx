@@ -13,9 +13,12 @@ interface KeyValueInputProps {
   keyLabel?: string;
   valueLabel?: string;
   arrayFieldName: string;
+  disabled?: boolean;
+  className?: string;
 }
 
 const KeyValueInput = ({
+  disabled = false,
   label,
   fields,
   append,
@@ -24,13 +27,18 @@ const KeyValueInput = ({
   keyLabel = "key",
   valueLabel = "value",
   arrayFieldName,
+  className,
 }: KeyValueInputProps) => {
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={className ? `${styles.wrapper} ${className}` : styles.wrapper}
+    >
+      {/* {label && <RunningText>{label}</RunningText>} */}
       <RunningText>{label}</RunningText>
       {fields.map((field, index) => (
         <Row key={field.key + index} className={styles.row} alignItems="center">
           <input
+            disabled={disabled}
             {...register(`${arrayFieldName}.${index}.key`)}
             className={styles.input}
             defaultValue={field.key}
@@ -38,25 +46,37 @@ const KeyValueInput = ({
           />
 
           <input
+            disabled={disabled}
             {...register(`${arrayFieldName}.${index}.value`)}
             className={styles.input}
             defaultValue={field.value}
             placeholder={valueLabel}
           />
-
-          <FontAwesomeIcon
-            className={styles.removeButton}
-            icon={faXmarkCircle}
-            onClick={() => remove(index)}
-          />
+          {!disabled && (
+            <FontAwesomeIcon
+              className={styles.removeButton}
+              icon={faXmarkCircle}
+              onClick={() => {
+                if (!disabled) {
+                  remove(index);
+                }
+              }}
+            />
+          )}
         </Row>
       ))}
-      <button
-        className={styles.addButton}
-        onClick={() => append({ key: "", value: "" })}
-      >
-        Add Entry
-      </button>
+      {!disabled && (
+        <button
+          className={styles.addButton}
+          onClick={() => {
+            if (!disabled) {
+              append({ key: "", value: "" });
+            }
+          }}
+        >
+          Add Entry
+        </button>
+      )}
     </div>
   );
 };

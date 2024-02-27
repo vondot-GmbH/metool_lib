@@ -11,7 +11,7 @@ class QueryStore {
   //! Setter
   setQueries(queries: Query[]): void {
     queries.forEach((query) => {
-      this._queries.set(query?.queryID, query);
+      if (query?._id) this._queries.set(query?._id, query);
     });
   }
 
@@ -28,11 +28,11 @@ class QueryStore {
   //! Methods
 
   addQuery(query: Query): void {
-    this._queries.set(query.queryID, query);
+    if (query?._id) this._queries.set(query?._id, query);
   }
 
   updateQuery(query: Query): void {
-    this._queries.set(query.queryID, query);
+    if (query?._id) this._queries.set(query?._id, query);
   }
 }
 

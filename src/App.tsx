@@ -9,7 +9,7 @@ import {
 import ViewStore from "../lib/stores/view.store";
 import { Provider as MobxProvider } from "mobx-react";
 import WidgetStore from "../lib/stores/widget.store";
-import { EXAMPLE_WIDGETS_DATA_RENAMED } from "./example.data";
+import { EXAMPLE_WIDGETS_DATA_RENAMED, QUERY_DATA } from "./example.data";
 import ChangeRecordStore from "../lib/stores/change.record.store";
 import { TableWidget } from "../lib/main";
 import Gleap from "Gleap";
@@ -24,11 +24,11 @@ import ResourceStore from "../lib/stores/resource.store";
 Init({
   coreResources: [
     {
+      key: "baseResource",
       title: "base Resource",
       type: DataSourceType.REST_API,
       baseUrl: "https://jsonplaceholder.typicode.com/users",
       coreResource: true,
-      key: "baseResource",
       defaultHeaders: [
         { key: "Content-Type", value: "application/json" },
         { key: "Accept", value: "application/json" },
@@ -112,13 +112,13 @@ function App() {
     <MobxProvider {...stores}>
       <div className="main-container">
         <CanvasEditor
-          // queries={QUERY_DATA} // TODO
+          queries={QUERY_DATA} // TODO
           resources={[
             {
+              _id: "1838383838383",
               baseUrl: "https://jsonplaceholder.typicode.com/users/111",
               title: "jsonplaceholder",
               type: DataSourceType.REST_API,
-              _id: "1",
               defaultHeaders: [
                 { key: "Content-Type", value: "application/json" },
                 { key: "Accept", value: "application/json" },

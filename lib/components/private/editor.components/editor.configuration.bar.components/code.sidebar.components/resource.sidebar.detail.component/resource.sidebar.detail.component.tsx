@@ -32,8 +32,6 @@ const ResourceSidebarDetail = ({
   );
 
   const handleTypeChange = (item: any) => {
-    console.log("handleTypeChange");
-    console.log(item);
     setSelectedType(item?.value);
   };
 

@@ -33,6 +33,7 @@ export interface CoreRestResource extends BaseCoreResource {
 
 export enum DataSourceType {
   REST_API = "REST_API",
+  MONGODB = "MONGODB",
 }
 
 export type Resource = RestResource; // ... | MOGGODB | POSTMARK ;

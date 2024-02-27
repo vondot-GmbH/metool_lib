@@ -22,7 +22,7 @@ const CodeSidebar = ({
 }: CodeSidebarProps): JSX.Element => {
   const queries = queryStore?.queries;
 
-  const itemClassName = (queryID: string) => {
+  const itemClassName = (queryID: string | null) => {
     return (
       styles.codeItem +
       " " +
@@ -34,7 +34,11 @@ const CodeSidebar = ({
     undefined
   );
 
-  const handleSelectItem = (queryID: string) => {
+  const handleSelectItem = (queryID: string | null) => {
+    if (queryID == null) {
+      return;
+    }
+
     setSelectedItem(queryID);
     onItemSelect?.(queryID);
   };
@@ -44,14 +48,14 @@ const CodeSidebar = ({
       {queries?.map((query) => {
         return (
           <Row
-            className={itemClassName(query.queryID)}
-            key={query.queryID}
+            className={itemClassName(query?._id)}
+            key={query._id}
             onClick={() => {
-              handleSelectItem(query.queryID);
+              handleSelectItem(query?._id);
             }}
           >
             <FontAwesomeIcon icon={faBookmark} className={styles.codeIcon} />
-            <RunningText>{query.queryID}</RunningText>
+            <RunningText>{query.title}</RunningText>
           </Row>
         );
       })}

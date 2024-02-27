@@ -1,6 +1,5 @@
 import { inject, observer } from "mobx-react";
 import MainLayout from "../../../layouts/main.layout/main.layout";
-import { RenderView, Resource } from "../../../main";
 import { Widget } from "../../../schemas/widget.schemas/widget.schema";
 import ViewStore from "../../../stores/view.store";
 import styles from "./canvas.editor.component.module.scss";
@@ -19,9 +18,13 @@ import QueryStore from "../../../stores/query.store";
 import ConfigurationSidebar from "../../private/editor.components/editor.configuration.bar.components/configuration.sidebar.component/configuration.sidebar.component";
 import TopBarComponent from "../../private/editor.components/top.bar.component/top.bar.component";
 import ResourceStore from "../../../stores/resource.store";
+import { Query } from "../../../schemas/query.schemas/query.schema";
+import { Resource } from "../../../schemas/resource.schemas/resource.schema";
+import RenderView from "../../private/editor.components/render.components/render.view.component/render.view.conponent";
 
 interface CanvasEditorProps {
   widgets: Widget[];
+  queries: Query[];
   resources?: Resource[];
   onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 
@@ -39,6 +42,8 @@ const CanvasEditor = ({
   onSaveChanges,
   editorStore,
   resources,
+  queryStore,
+  queries,
 }: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
@@ -47,6 +52,9 @@ const CanvasEditor = ({
   useEffect(() => {
     // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
     editorStore?.initializeEditorBreakpointConfig();
+
+    // initialize the provided queries
+    queryStore?.setQueries(queries);
   }, []);
 
   return (

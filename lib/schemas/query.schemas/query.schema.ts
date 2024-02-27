@@ -1,15 +1,19 @@
-import { DataSourceType } from "../resource.schemas/resource.schema";
+import {
+  DataSourceType,
+  Resource,
+  resourceRestSchema,
+} from "../resource.schemas/resource.schema";
+import * as yup from "yup";
 
 export interface BaseQuery {
-  _id?: string;
+  _id: string | null; // TODO make this global
   title: string;
-  resourceID: string; // object id of the resource
+  resource: Resource; // object id of the resource
   description?: string;
   type: DataSourceType;
-  query: string;
-  transformer?: string;
-  queryTimeout?: number;
-  events?: Event[];
+  // transformer?: string;
+  // queryTimeout?: number;
+  // events?: Event[];
 }
 
 export interface RestQuery extends BaseQuery {
@@ -24,3 +28,20 @@ export interface RestQuery extends BaseQuery {
 export type Query = RestQuery; // ... | MOGGODB | POSTMARK ;
 
 export type QueryMap = Map<string, Query>;
+
+export const restQuerySchema = yup.object().shape({
+  title: yup.string().required(),
+  resource: resourceRestSchema.required(),
+  description: yup.string(),
+  type: yup.string().required(),
+  method: yup.string().required(),
+  url: yup.string().required(),
+  headers: yup.array().of(
+    yup.object().shape({
+      key: yup.string().required(),
+      value: yup.string().required(),
+    })
+  ),
+  params: yup.string().notRequired(),
+  body: yup.object().notRequired(),
+});
