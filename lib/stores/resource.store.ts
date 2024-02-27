@@ -53,13 +53,28 @@ class ResourceStore {
 
   //! Methods
 
-  // addResource(resource: Resource): void {
-  //   this._resources.set(resource.resourceID, resource);
-  // }
+  addResource(resource: Resource): void {
+    if (resource?._id == null || resource?._id === "newResource") {
+      this._changeRecordStore.setResourceRecord(
+        "newResource",
+        "CREATE",
+        resource
+      );
+    } else if (resource?._id != null) {
+      this._changeRecordStore.setResourceRecord(
+        resource._id,
+        "UPDATE",
+        resource
+      );
+    }
+  }
 
-  // updateResource(resource: Resource): void {
-  //   this._resources.set(resource.resourceID, resource);
-  // }
+  addInitialResource(): void {
+    this._resources.set("newResource", {
+      _id: "newResource",
+      title: "New Resource",
+    } as any);
+  }
 }
 
 export default ResourceStore;

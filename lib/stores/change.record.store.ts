@@ -77,6 +77,23 @@ class ChangeRecordStore {
 
     this.addChangeRecord(widgetID, changeRecord);
   }
+
+  setResourceRecord(
+    resourceID: string,
+    action: "CREATE" | "UPDATE" | "DELETE",
+    data: any
+  ): void {
+    const documentID = resourceID === "newResource" ? null : resourceID;
+
+    const changeRecord: ChangeRecord = {
+      type: "RESOURCE",
+      action: action,
+      documentID,
+      data: data,
+    };
+
+    this.addChangeRecord(resourceID, changeRecord);
+  }
 }
 
 export default ChangeRecordStore;

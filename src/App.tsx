@@ -115,13 +115,15 @@ function App() {
           // queries={QUERY_DATA} // TODO
           resources={[
             {
-              baseUrl: "https://jsonplaceholder.typicode.com/users",
+              baseUrl: "https://jsonplaceholder.typicode.com/users/111",
               title: "jsonplaceholder",
               type: DataSourceType.REST_API,
               _id: "1",
               defaultHeaders: [
                 { key: "Content-Type", value: "application/json" },
                 { key: "Accept", value: "application/json" },
+                { key: "Accept1", value: "application/json" },
+                { key: "Accept2", value: "application/json" },
               ],
               description: "jsonplaceholder",
             },

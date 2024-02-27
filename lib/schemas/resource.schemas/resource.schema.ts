@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 export interface BaseResource {
   _id?: string;
   title: string;
@@ -40,3 +42,18 @@ export type MixedResource = Resource | CoreResource;
 export type ResourceMap = Map<string, Resource>;
 export type CoreResourceMap = Map<string, CoreResource>;
 export type MixedResourceMap = Map<string, MixedResource>;
+
+//! yup schema for validation
+
+export const resourceRestSchema = yup.object().shape({
+  title: yup.string().required(),
+  description: yup.string(),
+  type: yup.string().required(),
+  baseUrl: yup.string().required(),
+  defaultHeaders: yup.array().of(
+    yup.object().shape({
+      key: yup.string().required(),
+      value: yup.string().required(),
+    })
+  ),
+});

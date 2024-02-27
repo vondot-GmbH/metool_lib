@@ -1,0 +1,33 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  gap: 10px;
+}
+
+.input {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.addButton {
+  cursor: pointer;
+  padding: 5px;
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+
+  &:hover {
+    background-color: #d4d6d6;
+  }
+}
+
+.removeButton {
+  cursor: pointer;
+  padding: 5px;
+}

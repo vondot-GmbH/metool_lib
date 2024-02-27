@@ -42,7 +42,18 @@ const SelectDropDown = ({
   validationMessage,
   inputRef,
 }: SelectDropDownProps): JSX.Element => {
-  const [selectedValue, setSelectedValue] = useState(selectedItem);
+  const resolve = (path: string, obj: any): any => {
+    return path.split(".").reduce(function (prev, curr) {
+      return prev ? prev[curr] : null;
+    }, obj || self);
+  };
+
+  // const [selectedValue, setSelectedValue] = useState(selectedItem);
+  const [selectedValue, setSelectedValue] = useState(() => {
+    return items.find(
+      (item) => resolve(valuePropertyName, item) === selectedItem
+    );
+  });
 
   let selectClass = classNames(styles.selectContainer, className);
 
@@ -89,12 +100,6 @@ const SelectDropDown = ({
         <span>{resolve(labelPropertyName, option)}</span>
       </Row>
     );
-  };
-
-  const resolve = (path: string, obj: any): any => {
-    return path.split(".").reduce(function (prev, curr) {
-      return prev ? prev[curr] : null;
-    }, obj || self);
   };
 
   const buildSelect = (): JSX.Element => {

@@ -4,7 +4,7 @@ import Row from "../../../../general.components/row.component/row.component";
 import styles from "./resource.sidebar.component.module.scss";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark } from "@fortawesome/free-regular-svg-icons";
+import { faBookmark, faSquarePlus } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import ResourceStore from "../../../../../../stores/resource.store";
 import {
@@ -32,7 +32,7 @@ const ResourceSidebar = ({
     (resource: any) => resource?.coreResource
   );
 
-  const dynamicResources: Resource[] = resources?.filter(
+  let dynamicResources: Resource[] = resources?.filter(
     (resource: any) => !resource?.coreResource
   );
 
@@ -51,6 +51,10 @@ const ResourceSidebar = ({
 
     setSelectedItem(queryID);
     onItemSelect?.(queryID);
+  };
+
+  const handleAddResource = () => {
+    resourceStore?.addInitialResource();
   };
 
   return (
@@ -77,7 +81,18 @@ const ResourceSidebar = ({
         </ComponentWrapper>
       )}
 
-      <ComponentWrapper title={"Resources"}>
+      <ComponentWrapper
+        title={"Resources"}
+        action={
+          <FontAwesomeIcon
+            icon={faSquarePlus}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              handleAddResource();
+            }}
+          />
+        }
+      >
         {dynamicResources?.map((resource) => {
           return (
             <Row

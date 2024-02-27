@@ -110,6 +110,8 @@ const ConfigurationSidebar = ({
         sidebarToRender = (
           <ResourceSidebar
             onItemSelect={(item: string) => {
+              console.log("onItemSelect");
+              console.log(item);
               setSelectedResourceItem(item);
             }}
           />

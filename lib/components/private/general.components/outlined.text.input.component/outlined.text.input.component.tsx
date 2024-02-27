@@ -14,6 +14,7 @@ import RunningText from "../text.components/running.text.component/running.text.
 interface TextInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "className"> {
   label?: string;
+  inputRef?: any;
   icon?: IconProp;
   onValueChange?: (value: string | number) => void;
   hasError?: boolean;
@@ -29,25 +30,43 @@ const TextInput = forwardRef(
       onValueChange,
       type = "text",
       className,
+      inputRef,
       ...props
     }: TextInputProps,
     ref: ForwardedRef<HTMLInputElement>
   ): JSX.Element => {
     const [inputValue, setInputValue] = useState(props.value);
 
+    // const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
+    //   if (type === "number" && onValueChange) {
+    //     const value = parseFloat(event.target.value);
+    //     if (!isNaN(value)) {
+    //       onValueChange(value);
+    //     }
+    //   } else {
+    //     onValueChange?.(event.target.value);
+    //   }
+    // };
+
+    // const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    //   setInputValue(event.target.value);
+    // };
+
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
-      if (type === "number" && onValueChange) {
+      if (type === "number") {
         const value = parseFloat(event.target.value);
         if (!isNaN(value)) {
-          onValueChange(value);
+          onValueChange?.(value);
         }
       } else {
         onValueChange?.(event.target.value);
       }
+      props.onBlur?.(event);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
       setInputValue(event.target.value);
+      props.onChange?.(event);
     };
 
     const inputWrapperClasses = classNames(styles.wrapper, {
@@ -66,6 +85,7 @@ const TextInput = forwardRef(
           {icon && <FontAwesomeIcon className={styles.icon} icon={icon} />}
           <input
             {...props}
+            {...inputRef}
             type={type}
             value={inputValue}
             ref={ref}
