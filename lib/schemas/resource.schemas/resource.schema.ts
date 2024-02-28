@@ -1,3 +1,4 @@
+import { AxiosRequestConfig, AxiosResponse } from "axios";
 import * as yup from "yup";
 
 export interface BaseResource {
@@ -7,15 +8,25 @@ export interface BaseResource {
   type: DataSourceType;
 }
 
-export interface BaseCoreResource {
-  title: string;
-  description?: string;
-  type: DataSourceType;
+export interface BaseCoreResource extends BaseResource {
   coreResource: true; // defines resources that are set in code and cannot be edited
-  key: string; // unique key for the resource instead of _id
 }
 
 //! REST API
+
+interface RequestInterceptor {
+  fulfilled: (
+    config: AxiosRequestConfig
+  ) => AxiosRequestConfig | Promise<AxiosRequestConfig>;
+  rejected?: (error: any) => any;
+}
+
+interface ResponseInterceptor {
+  fulfilled: (
+    response: AxiosResponse
+  ) => AxiosResponse | Promise<AxiosResponse>;
+  rejected?: (error: any) => any;
+}
 
 export interface RestResource extends BaseResource {
   baseUrl: string;
@@ -25,8 +36,10 @@ export interface RestResource extends BaseResource {
 
 export interface CoreRestResource extends BaseCoreResource {
   baseUrl: string;
-  defaultHeaders?: { key: string; value: string }[];
   type: DataSourceType.REST_API;
+  defaultHeaders?: { key: string; value: string }[];
+  requestInterceptors?: RequestInterceptor[];
+  responseInterceptors?: ResponseInterceptor[];
 }
 
 //! types

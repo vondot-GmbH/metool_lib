@@ -11,7 +11,7 @@ export const QUERY_DATA: Query[] = [
     method: "GET",
     headers: [{ key: "queryHeader", value: "application/json" }],
     body: [],
-    url: "users",
+    url: "/users",
     resource: {
       _id: "1838383838383",
       baseUrl: "https://jsonplaceholder.typicode.com/api",

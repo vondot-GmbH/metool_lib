@@ -32,8 +32,8 @@ class ResourceStore {
 
   private setResources(resources: Resource[] | CoreResource[]): void {
     resources.forEach((resource: any) => {
-      if (resource?.coreResource || resource?.key != null) {
-        this._resources.set(resource.key, resource);
+      if (resource?.coreResource || resource?._id != null) {
+        this._resources.set(resource._id, resource);
       }
 
       if (resource?._id != null && !resource?.coreResource) {

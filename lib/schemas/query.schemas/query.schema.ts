@@ -1,6 +1,6 @@
 import {
   DataSourceType,
-  Resource,
+  MixedResource,
   resourceRestSchema,
 } from "../resource.schemas/resource.schema";
 import * as yup from "yup";
@@ -8,12 +8,9 @@ import * as yup from "yup";
 export interface BaseQuery {
   _id: string | null; // TODO make this global
   title: string;
-  resource: Resource; // object id of the resource
+  resource: MixedResource; // object id of the resource
   description?: string;
   type: DataSourceType;
-  // transformer?: string;
-  // queryTimeout?: number;
-  // events?: Event[];
 }
 
 export interface RestQuery extends BaseQuery {

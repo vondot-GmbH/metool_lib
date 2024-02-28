@@ -25,7 +25,10 @@ class ConfigProvider {
     }
 
     resources.forEach((resource) => {
-      this._coreResources.set(resource.key, resource);
+      if (resource?._id == null) {
+        return;
+      }
+      this._coreResources.set(resource?._id, resource);
     });
   }
 

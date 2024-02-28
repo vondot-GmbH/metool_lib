@@ -24,7 +24,7 @@ import ResourceStore from "../lib/stores/resource.store";
 Init({
   coreResources: [
     {
-      key: "baseResource",
+      _id: "baseResource",
       title: "base Resource",
       type: DataSourceType.REST_API,
       baseUrl: "https://jsonplaceholder.typicode.com/users",

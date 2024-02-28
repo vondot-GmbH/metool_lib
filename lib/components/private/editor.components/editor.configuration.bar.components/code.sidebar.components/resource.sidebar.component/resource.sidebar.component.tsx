@@ -66,10 +66,10 @@ const ResourceSidebar = ({
           {coreResources?.map((resource) => {
             return (
               <Row
-                className={itemClassName(resource?.key)}
-                key={resource?.key}
+                className={itemClassName(resource?._id)}
+                key={resource?._id}
                 onClick={() => {
-                  handleSelectItem(resource?.key);
+                  handleSelectItem(resource?._id);
                 }}
               >
                 <FontAwesomeIcon
