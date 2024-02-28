@@ -2,10 +2,11 @@ import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
 import StateStore from "../../../../../stores/state.store";
 import { TableWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import Table from "../../../../private/general.components/table.component/data.table.component";
 import { TableOptions, TableColumn } from "../schemas/table.widget.schema";
+import { queryExecutor } from "../../../../../provider/http/http.rest.query.client";
 
 interface TableWidgetProps {
   widgetID: string;
@@ -18,19 +19,26 @@ const TableWidget = ({
   widgetStore,
   stateStore,
 }: TableWidgetProps): JSX.Element => {
+  const [usersData, setUsersData] = useState<any[]>([]);
+
   useEffect(() => {
     stateStore?.initializeWidgetStates(widgetID, _getInitialTableWidgetState());
+    getDataFromQuery();
   }, [widgetID]);
 
   const tableOptions: TableOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);
 
-  // TODO - remove this hardcoded data
-  const usersData = [
-    { id: "1", name: "Alice", age: 30, email: "alice@example.com" },
-    { id: "2", name: "Bob", age: 24, email: "bob@example.com" },
-    { id: "3", name: "Charlie", age: 28, email: "charlie@example.com" },
-  ];
+  const getDataFromQuery = async () => {
+    const query = tableOptions?.dataQuery;
+
+    if (query) {
+      const data = await queryExecutor.executeRestQuery(query);
+      if (data) {
+        setUsersData(data);
+      }
+    }
+  };
 
   const prepareColumns = (tableOptions: TableOptions): TableColumn[] => {
     return tableOptions?.columns?.map((column) => ({

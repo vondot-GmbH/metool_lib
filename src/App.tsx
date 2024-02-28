@@ -27,7 +27,7 @@ Init({
       _id: "baseResource",
       title: "base Resource",
       type: DataSourceType.REST_API,
-      baseUrl: "https://jsonplaceholder.typicode.com/users",
+      baseUrl: "https://jsonplaceholder.typicode.com",
       coreResource: true,
       defaultHeaders: [
         { key: "Content-Type", value: "application/json" },
@@ -113,21 +113,7 @@ function App() {
       <div className="main-container">
         <CanvasEditor
           queries={QUERY_DATA} // TODO
-          resources={[
-            {
-              _id: "1838383838383",
-              baseUrl: "https://jsonplaceholder.typicode.com/users/111",
-              title: "jsonplaceholder",
-              type: DataSourceType.REST_API,
-              defaultHeaders: [
-                { key: "Content-Type", value: "application/json" },
-                { key: "Accept", value: "application/json" },
-                { key: "Accept1", value: "application/json" },
-                { key: "Accept2", value: "application/json" },
-              ],
-              description: "jsonplaceholder",
-            },
-          ]}
+          resources={[]}
           widgets={EXAMPLE_WIDGETS_DATA_RENAMED}
           onSaveChanges={(changes) => {
             console.log("changes: ", JSON.stringify(changes, null, 2));

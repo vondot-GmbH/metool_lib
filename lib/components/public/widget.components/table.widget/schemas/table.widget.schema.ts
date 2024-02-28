@@ -1,6 +1,8 @@
+import { Query } from "../../../../../main";
 import { SpacingModeValues } from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
 
 export interface TableOptions {
+  dataQuery: Query;
   columns: TableColumn[];
   headerTextColor?: string; // TODO not used
   rowTextColor?: string; // TODO not used
