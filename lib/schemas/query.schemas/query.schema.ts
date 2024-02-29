@@ -8,8 +8,8 @@ import * as yup from "yup";
 export interface BaseQuery {
   _id: string | null; // TODO make this global
   title: string;
-  resource: MixedResource; // object id of the resource
   description?: string;
+  resource: MixedResource; // object id of the resource
   type: DataSourceType;
 }
 

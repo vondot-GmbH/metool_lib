@@ -2,7 +2,6 @@
   border-left: 0.5px solid rgb(112, 106, 106);
   width: 320px;
   overflow: hidden;
-  height: 100%;
 
   .sidebarHeader {
     padding: 10px;
@@ -24,5 +23,6 @@
   .sidebarContent {
     background-color: #f2f4f4;
     height: 100%;
+    overflow-y: auto;
   }
 }
