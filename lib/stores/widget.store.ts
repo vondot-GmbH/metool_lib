@@ -11,9 +11,11 @@ import ChangeRecordStore from "./change.record.store";
 import { Layout } from "react-grid-layout";
 import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
+import { extractDependencies } from "../globals/helpers/state.helper";
 
 class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
+  private _widgetDependencies: Map<string, Set<string>> = new Map();
 
   // TODO maby move this to editor store
   private _selectedWidget: WidgetHierarchy | undefined;
@@ -34,9 +36,23 @@ class WidgetStore {
 
   //! setter
 
+  // generate a map of widgets with their children and level
+  // search for dependencies in the options of each widget and store them in a map
   setInitialWidgetAndConvert(widgets: Widget[]): WidgetHierarchyMap {
     const structuredWidgets = structureWidgetsHierarchy(widgets);
     this._structuredWidgetHierarchy = structuredWidgets;
+
+    structuredWidgets.forEach((widgetHierarchy, widgetID) => {
+      const dependencies = extractDependencies(widgetHierarchy.widget.options);
+
+      if (dependencies.size > 0) {
+        const currentDependencies =
+          this._widgetDependencies.get(widgetID) || new Set();
+        dependencies.forEach((depKey) => currentDependencies.add(depKey));
+        this._widgetDependencies.set(widgetID, currentDependencies);
+      }
+    });
+
     return this._structuredWidgetHierarchy;
   }
 
@@ -81,6 +97,10 @@ class WidgetStore {
   }
 
   //! getter
+
+  getWidgetDependencies(widgetID: string): Set<string> | undefined {
+    return this._widgetDependencies.get(widgetID) ?? undefined;
+  }
 
   getStructuredWidgetHierarchyByWidgetID(
     widgetID: string
