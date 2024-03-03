@@ -1,6 +1,6 @@
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
-import StateStore from "../../../../../stores/state.store";
+import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import { TableWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
 import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
@@ -21,7 +21,13 @@ const TableWidget = ({
   const [usersData, setUsersData] = useState<any[]>([]);
 
   useEffect(() => {
-    stateStore?.initializeWidgetStates(widgetID, _getInitialTableWidgetState());
+    stateStore?.initializeStates([
+      {
+        selector: StateSelector.WIDGETS,
+        widgetID,
+        initialStates: _getInitialTableWidgetState(),
+      },
+    ]);
     getDataFromQuery();
   }, [widgetID]);
 
@@ -59,13 +65,15 @@ const TableWidget = ({
 
   const handleSelectionDataChange = (selectedData: any) => {
     if (tableOptions?.rowSelectionType === "single") {
-      stateStore?.setWidgetStateValue(
+      stateStore?.setStateValue(
+        StateSelector.WIDGETS,
         widgetID,
         "selectedSourceRow",
         selectedData
       );
     } else if (tableOptions?.rowSelectionType === "multiple") {
-      stateStore?.setWidgetStateValue(
+      stateStore?.setStateValue(
+        StateSelector.WIDGETS,
         widgetID,
         "selectedSourceRows",
         selectedData

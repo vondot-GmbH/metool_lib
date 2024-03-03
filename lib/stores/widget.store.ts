@@ -11,11 +11,18 @@ import ChangeRecordStore from "./change.record.store";
 import { Layout } from "react-grid-layout";
 import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
-import { extractDependencies } from "../globals/helpers/state.helper";
+import { extractDependenciesAndNonDependencies } from "../globals/helpers/state.helper";
+import { runInAction } from "mobx";
+
+interface AnalyzedWidgetOptions {
+  options: any;
+  dependencies: string[];
+}
 
 class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
-  private _widgetDependencies: Map<string, Set<string>> = new Map();
+  private _analyzedWidgetOptions: Map<string, AnalyzedWidgetOptions> =
+    new Map();
 
   // TODO maby move this to editor store
   private _selectedWidget: WidgetHierarchy | undefined;
@@ -36,22 +43,33 @@ class WidgetStore {
 
   //! setter
 
-  // generate a map of widgets with their children and level
-  // search for dependencies in the options of each widget and store them in a map
   setInitialWidgetAndConvert(widgets: Widget[]): WidgetHierarchyMap {
     const structuredWidgets = structureWidgetsHierarchy(widgets);
-    this._structuredWidgetHierarchy = structuredWidgets;
 
-    structuredWidgets.forEach((widgetHierarchy, widgetID) => {
-      const dependencies = extractDependencies(widgetHierarchy.widget.options);
-
-      if (dependencies.size > 0) {
-        const currentDependencies =
-          this._widgetDependencies.get(widgetID) || new Set();
-        dependencies.forEach((depKey) => currentDependencies.add(depKey));
-        this._widgetDependencies.set(widgetID, currentDependencies);
-      }
+    runInAction(() => {
+      this._structuredWidgetHierarchy = structuredWidgets;
     });
+
+    const widgetIDs = Array.from(this._structuredWidgetHierarchy.keys());
+
+    for (let i = 0; i < widgetIDs.length; i++) {
+      const widgetID = widgetIDs[i];
+      const widgetHierarchy = this._structuredWidgetHierarchy.get(widgetID);
+
+      if (widgetHierarchy) {
+        const { dependencies, nonDependencies } =
+          extractDependenciesAndNonDependencies(widgetHierarchy.widget.options);
+
+        // TODO execute the requested dependencies
+
+        runInAction(() => {
+          this._analyzedWidgetOptions.set(widgetID, {
+            options: nonDependencies,
+            dependencies: dependencies,
+          });
+        });
+      }
+    }
 
     return this._structuredWidgetHierarchy;
   }
@@ -98,8 +116,10 @@ class WidgetStore {
 
   //! getter
 
-  getWidgetDependencies(widgetID: string): Set<string> | undefined {
-    return this._widgetDependencies.get(widgetID) ?? undefined;
+  getAnalyzedWidgetOptions(
+    widgetID: string
+  ): AnalyzedWidgetOptions | undefined {
+    return this._analyzedWidgetOptions.get(widgetID) ?? undefined;
   }
 
   getStructuredWidgetHierarchyByWidgetID(

@@ -19,7 +19,7 @@ const TextWidget = ({
   const [displayText, setDisplayText] = useState("");
 
   useEffect(() => {
-    stateStore?.initializeWidgetStates(widgetID, _getInitialTextWidgetState());
+    // stateStore?.initializeStates(widgetID, _getInitialTextWidgetState());
   }, [widgetID]);
 
   useEffect(() => {

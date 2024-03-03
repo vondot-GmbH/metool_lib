@@ -1,59 +1,84 @@
 import { makeAutoObservable } from "mobx";
 import { PubSubProvider } from "../provider/pub.sub.provider";
 
+export enum StateSelector {
+  WIDGETS = "widgets",
+  QUERIES = "queries",
+}
+
 interface WidgetState {
   [key: string]: any;
 }
 
 interface PendingSubscription {
-  stateKey: string;
-  callback: (value: any) => void; // Callback function to execute when state changes
+  selector: StateSelector;
+  widgetID: string;
+  stateKeys: string[];
+  callback: (value: any) => void;
 }
 
 export class StateStore {
-  private widgetStates: Map<string, WidgetState> = new Map();
+  private globalStates: Map<string, WidgetState> = new Map();
   private pubSub: PubSubProvider = PubSubProvider.getInstance();
-  private pendingSubscriptions: PendingSubscription[] = []; // List of subscriptions waiting for widget initialization
+  private pendingSubscriptions: PendingSubscription[] = [];
 
   constructor() {
     makeAutoObservable(this);
   }
 
-  // Initialize states for a widget with given ID and a set of initial state values
-  initializeWidgetStates(widgetID: string, initialStates: Record<string, any>) {
-    for (const [key, value] of Object.entries(initialStates)) {
-      this.setWidgetStateValue(widgetID, key, value);
-    }
-    // Process any subscriptions that were pending this widget's initialization
-    this.processPendingSubscriptions(widgetID);
+  private generateStateKey(
+    selector: StateSelector,
+    widgetID: string,
+    ...keys: string[]
+  ): string {
+    return `${selector}.${widgetID}.${keys.join(".")}`;
   }
 
-  // Sets a specific state value for a widget and publishes the change to subscribers
-  setWidgetStateValue(widgetID: string, key: string, value: any) {
-    const stateKey = this.generateStateKey(widgetID, key);
-    this.widgetStates.set(stateKey, value);
-    this.pubSub.publish(`widgetStateChange:${stateKey}`, value);
+  initializeStates(
+    initialStateConfigs: {
+      selector: StateSelector;
+      widgetID: string;
+      initialStates: Record<string, any>;
+    }[]
+  ) {
+    initialStateConfigs.forEach(({ selector, widgetID, initialStates }) => {
+      Object.entries(initialStates).forEach(([key, value]) => {
+        this.setStateValue(selector, widgetID, key, value);
+      });
+      this.processPendingSubscriptions(selector, widgetID);
+    });
   }
 
-  // Retrieves a specific state value for a widget
-  getWidgetStateValue(widgetID: string, key: string): any {
-    const stateKey = this.generateStateKey(widgetID, key);
-    return this.widgetStates.get(stateKey);
+  setStateValue(
+    selector: StateSelector,
+    widgetID: string,
+    key: string,
+    value: any
+  ) {
+    const stateKey = this.generateStateKey(selector, widgetID, key);
+    this.globalStates.set(stateKey, value);
+    this.pubSub.publish(`stateChange:${stateKey}`, value);
   }
 
-  // Retrieves all state values for a widget as a key-value pair
-  getAllWidgetStates(widgetID: string | undefined): Record<string, any> {
-    if (!widgetID) {
-      return {};
-    }
+  getWidgetStateValue(
+    selector: StateSelector,
+    widgetID: string,
+    key: string
+  ): any {
+    const stateKey = this.generateStateKey(selector, widgetID, key);
+    return this.globalStates.get(stateKey);
+  }
 
+  getAllWidgetStates(
+    selector: StateSelector,
+    widgetID: string
+  ): Record<string, any> {
     const widgetStates: Record<string, any> = {};
+    const prefix = `${selector}.${widgetID}.`;
 
-    this.widgetStates.forEach((value, key) => {
-      // check if the state key is for the given widget
-      if (key.startsWith(`${widgetID}.`)) {
-        // ectract the state key from the composite key
-        const stateKey = key.split(".")[1];
+    this.globalStates.forEach((value, key) => {
+      if (key.startsWith(prefix)) {
+        const stateKey = key.substring(prefix.length);
         widgetStates[stateKey] = value;
       }
     });
@@ -61,44 +86,92 @@ export class StateStore {
     return widgetStates;
   }
 
-  // Subscribes a callback to changes in a specific widget state value
-  subscribeToWidgetStateValue(
+  subscribeToStateValue(
+    selector: StateSelector,
     widgetID: string,
-    key: string,
+    keys: string[],
     callback: (value: any) => void
   ) {
-    const stateKey = this.generateStateKey(widgetID, key);
+    const stateKey = this.generateStateKey(selector, widgetID, ...keys);
 
-    if (this.widgetStates.has(stateKey)) {
-      this.pubSub.subscribe(`widgetStateChange:${stateKey}`, callback);
+    if (this.globalStates.has(stateKey)) {
+      this.pubSub.subscribe(`stateChange:${stateKey}`, callback);
     } else {
-      // If the state is not yet initialized, add the subscription to pending subscriptions
-      this.pendingSubscriptions.push({ stateKey, callback });
+      this.pendingSubscriptions.push({
+        selector,
+        widgetID,
+        stateKeys: keys,
+        callback,
+      });
     }
   }
 
-  // Processes pending subscriptions for a specific widget after its initialization
-  processPendingSubscriptions(widgetID: string) {
+  processPendingSubscriptions(selector: StateSelector, widgetID: string) {
+    const prefix = `${selector}.${widgetID}.`;
     const subscriptionsToProcess = this.pendingSubscriptions.filter(
-      (subscription) => subscription.stateKey.startsWith(widgetID + ".")
+      (subscription) =>
+        this.generateStateKey(
+          subscription.selector,
+          subscription.widgetID,
+          ...subscription.stateKeys
+        ).startsWith(prefix)
     );
 
-    for (const subscription of subscriptionsToProcess) {
-      this.pubSub.subscribe(
-        `widgetStateChange:${subscription.stateKey}`,
-        subscription.callback
+    subscriptionsToProcess.forEach((subscription) => {
+      const stateKey = this.generateStateKey(
+        subscription.selector,
+        subscription.widgetID,
+        ...subscription.stateKeys
       );
-    }
+      this.pubSub.subscribe(`stateChange:${stateKey}`, subscription.callback);
+    });
 
-    // Remove processed subscriptions from the list of pending subscriptions
     this.pendingSubscriptions = this.pendingSubscriptions.filter(
       (subscription) => !subscriptionsToProcess.includes(subscription)
     );
   }
 
-  // Generates a composite key for storing individual widget state values
-  private generateStateKey(widgetID: string, key: string): string {
-    return `${widgetID}.${key}`;
+  extractDynamicPatterns(value: string) {
+    const pattern = /\{\{\s*(\w+)\.(\w+)\.([\w\.]+)\s*\}\}/g;
+    let match;
+    const dynamicPatterns = [];
+
+    while ((match = pattern.exec(value)) !== null) {
+      dynamicPatterns.push({
+        selector: match[1],
+        widgetID: match[2],
+        stateKeys: match[3].split("."),
+      });
+    }
+
+    return dynamicPatterns;
+  }
+
+  replaceDynamicPlaceholder(
+    value: string,
+    placeholderDetails: {
+      selector: string;
+      widgetID: string;
+      stateKeys: string[];
+    },
+    newValue: any
+  ) {
+    const placeholder = `{{${placeholderDetails.selector}.${
+      placeholderDetails.widgetID
+    }.${placeholderDetails.stateKeys.join(".")}}}`;
+
+    if (value.includes(placeholder)) {
+      const replacementValue =
+        typeof newValue === "object" && newValue !== null
+          ? JSON.stringify(newValue)
+          : newValue;
+
+      while (value.includes(placeholder)) {
+        value = value.replace(placeholder, replacementValue);
+      }
+    }
+
+    return value;
   }
 
   initializeDynamicOptions(
@@ -112,22 +185,22 @@ export class StateStore {
         if (typeof options[key] === "string") {
           const dynamicPatterns = this.extractDynamicPatterns(options[key]);
 
-          for (const { targetWidgetID, stateKey } of dynamicPatterns) {
-            this.subscribeToWidgetStateValue(
-              targetWidgetID,
-              stateKey,
+          dynamicPatterns.forEach(({ selector, widgetID, stateKeys }) => {
+            this.subscribeToStateValue(
+              selector as StateSelector,
+              widgetID,
+              stateKeys,
               (newValue) => {
                 const updatedOptions = JSON.parse(JSON.stringify(optionsCopy));
                 updatedOptions[key] = this.replaceDynamicPlaceholder(
                   updatedOptions[key],
-                  targetWidgetID,
-                  stateKey,
+                  { selector, widgetID, stateKeys },
                   newValue
                 );
                 updateCallback(updatedOptions);
               }
             );
-          }
+          });
         } else if (typeof options[key] === "object") {
           iterateOptions(options[key]);
         }
@@ -135,46 +208,6 @@ export class StateStore {
     };
 
     iterateOptions(optionsCopy);
-  }
-
-  extractDynamicPatterns(value: string) {
-    const pattern = /\{\{\s*(\w+)\.(\w+)\s*\}\}/g;
-    let match;
-    const dynamicPatterns = [];
-
-    while ((match = pattern.exec(value)) !== null) {
-      dynamicPatterns.push({
-        targetWidgetID: match[1],
-        stateKey: match[2],
-      });
-    }
-
-    return dynamicPatterns;
-  }
-
-  replaceDynamicPlaceholder(
-    value: string,
-    targetWidgetID: string,
-    stateKey: string,
-    newValue: any
-  ) {
-    const placeholder = `{{${targetWidgetID}.${stateKey}}}`;
-
-    if (value.includes(placeholder)) {
-      let replacementValue;
-
-      if (typeof newValue === "object" && newValue !== null) {
-        replacementValue = JSON.stringify(newValue);
-      } else {
-        replacementValue = newValue;
-      }
-
-      while (value.includes(placeholder)) {
-        value = value.replace(placeholder, replacementValue);
-      }
-    }
-
-    return value;
   }
 }
 
