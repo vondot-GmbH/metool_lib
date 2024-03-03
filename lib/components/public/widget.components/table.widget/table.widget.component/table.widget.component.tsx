@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import Table from "../../../../private/general.components/table.component/data.table.component";
 import { TableOptions, TableColumn } from "../schemas/table.widget.schema";
-import { queryExecutor } from "../../../../../provider/http/http.rest.query.client";
 
 interface TableWidgetProps {
   widgetID: string;
@@ -30,14 +29,22 @@ const TableWidget = ({
     widgetStore?.getAllOptionsForWidget(widgetID);
 
   const getDataFromQuery = async () => {
-    const query = tableOptions?.dataQuery;
+    const data = [
+      {
+        id: 1,
+        name: "John Doe",
+        age: 32,
+        website: "www.johndoe.com",
+      },
+      {
+        id: 2,
+        name: "peter Doe",
+        age: 41,
+        website: "www.peter.com",
+      },
+    ];
 
-    if (query) {
-      const data = await queryExecutor.executeRestQuery(query);
-      if (data) {
-        setUsersData(data);
-      }
-    }
+    setUsersData(data);
   };
 
   const prepareColumns = (tableOptions: TableOptions): TableColumn[] => {
