@@ -482,6 +482,8 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
       },
     },
     options: {
+      textAlignment: "center",
+      testOption: "test",
       data: "{{widgets.customerDataTableRoot.selectedSourceRow}}",
     },
   },

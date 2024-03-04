@@ -1,5 +1,5 @@
 import { inject, observer } from "mobx-react";
-import StateStore from "../../../../../stores/state.store";
+import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import WidgetStore from "../../../../../stores/widget.store";
 import ComponentWrapper from "../../../general.components/component.wrapper.component/component.wrapper.component";
 import SelectDropDown from "../../../general.components/select.dropdown.component/select.dropdown.component";
@@ -33,7 +33,10 @@ const StateSidebar = ({
 
   // TODO -- fix the problem that the states will be rerendered when the widget is
   const widgetStates = useMemo(() => {
-    const widgetStates = stateStore?.getAllWidgetStates(selectedWidgetID);
+    const widgetStates = stateStore?.getAllWidgetStates(
+      StateSelector.WIDGETS,
+      selectedWidgetID ?? ""
+    );
     return widgetStates;
   }, [selectedWidgetID, stateStore]);
 

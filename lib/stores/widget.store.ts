@@ -13,10 +13,11 @@ import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
 import { extractDependenciesAndNonDependencies } from "../globals/helpers/state.helper";
 import { runInAction } from "mobx";
+import { Dependency } from "./state.store";
 
 interface AnalyzedWidgetOptions {
   options: any;
-  dependencies: string[];
+  dependencies: Dependency[];
 }
 
 class WidgetStore {

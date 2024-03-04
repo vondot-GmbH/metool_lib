@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { PubSubProvider } from "../provider/pub.sub.provider";
+import { updateOptionAtPath } from "../globals/helpers/state.helper";
 
 export enum StateSelector {
   WIDGETS = "widgets",
@@ -15,6 +16,13 @@ interface PendingSubscription {
   widgetID: string;
   stateKeys: string[];
   callback: (value: any) => void;
+}
+
+export interface Dependency {
+  field: string;
+  selector: string;
+  widgetID: string;
+  stateKeys: string[];
 }
 
 export class StateStore {
@@ -127,87 +135,87 @@ export class StateStore {
     });
 
     this.pendingSubscriptions = this.pendingSubscriptions.filter(
-      (subscription) => !subscriptionsToProcess.includes(subscription)
+      (subscription) => !subscriptionsToProcess?.includes(subscription)
     );
   }
 
-  extractDynamicPatterns(value: string) {
-    const pattern = /\{\{\s*(\w+)\.(\w+)\.([\w\.]+)\s*\}\}/g;
-    let match;
-    const dynamicPatterns = [];
+  initializeDynamicOptions(
+    widgetID: string,
+    analyzedOptions: { options: any; dependencies: Dependency[] },
+    updateCallback: (options: Record<string, any>) => void,
+    additionalStates?: Record<string, any>
+  ) {
+    const { options, dependencies } = analyzedOptions;
 
-    while ((match = pattern.exec(value)) !== null) {
-      dynamicPatterns.push({
-        selector: match[1],
-        widgetID: match[2],
-        stateKeys: match[3].split("."),
+    // Durchlaufe jede Abhängigkeit
+    for (const dependency of dependencies) {
+      const { field, selector, widgetID: depWidgetID, stateKeys } = dependency;
+
+      // Abonnement für die Zustandsänderung erstellen
+      this.subscribeToStateValue(
+        selector as StateSelector,
+        depWidgetID,
+        stateKeys,
+        (newValue) => {
+          // Aktualisiere die Option basierend auf dem Feldpfad
+          const updatedOptions = updateOptionAtPath(
+            JSON.parse(JSON.stringify(options)), // Tiefenkopie, um Referenzen zu vermeiden
+            field,
+            newValue
+          );
+
+          // Rufe das Update-Callback mit den aktualisierten Optionen auf
+          updateCallback(updatedOptions);
+        }
+      );
+    }
+
+    // Initialisiere statische und aufgelöste dynamische Optionen als State
+    this.initializeOptionsAsState(widgetID, options, dependencies);
+
+    // Initialisiere zusätzliche States, falls vorhanden
+    if (additionalStates) {
+      Object.keys(additionalStates).forEach((key) => {
+        this.setStateValue(
+          StateSelector.WIDGETS,
+          widgetID,
+          key,
+          additionalStates[key]
+        );
       });
     }
-
-    return dynamicPatterns;
   }
 
-  replaceDynamicPlaceholder(
-    value: string,
-    placeholderDetails: {
-      selector: string;
-      widgetID: string;
-      stateKeys: string[];
-    },
-    newValue: any
+  private initializeOptionsAsState(
+    widgetID: string,
+    options: any,
+    dependencies: Dependency[]
   ) {
-    const placeholder = `{{${placeholderDetails.selector}.${
-      placeholderDetails.widgetID
-    }.${placeholderDetails.stateKeys.join(".")}}}`;
+    const dependencyFields = dependencies.map((dep) => dep.field);
 
-    if (value.includes(placeholder)) {
-      const replacementValue =
-        typeof newValue === "object" && newValue !== null
-          ? JSON.stringify(newValue)
-          : newValue;
-
-      while (value.includes(placeholder)) {
-        value = value.replace(placeholder, replacementValue);
+    Object.entries(options).forEach(([key, value]) => {
+      if (!dependencyFields.includes(key)) {
+        this.setStateValue(StateSelector.WIDGETS, widgetID, key, value);
       }
-    }
+    });
 
-    return value;
-  }
-
-  initializeDynamicOptions(
-    widgetOptions: Record<string, any>,
-    updateCallback: (options: Record<string, any>) => void
-  ) {
-    const optionsCopy = JSON.parse(JSON.stringify(widgetOptions));
-
-    const iterateOptions = (options: Record<string, any>) => {
-      for (const key of Object.keys(options)) {
-        if (typeof options[key] === "string") {
-          const dynamicPatterns = this.extractDynamicPatterns(options[key]);
-
-          dynamicPatterns.forEach(({ selector, widgetID, stateKeys }) => {
-            this.subscribeToStateValue(
-              selector as StateSelector,
+    dependencies.forEach(
+      ({ field, selector, widgetID: depWidgetID, stateKeys }) => {
+        this.subscribeToStateValue(
+          selector as StateSelector,
+          depWidgetID,
+          stateKeys,
+          (newValue) => {
+            this.setStateValue(
+              StateSelector.WIDGETS,
               widgetID,
-              stateKeys,
-              (newValue) => {
-                const updatedOptions = JSON.parse(JSON.stringify(optionsCopy));
-                updatedOptions[key] = this.replaceDynamicPlaceholder(
-                  updatedOptions[key],
-                  { selector, widgetID, stateKeys },
-                  newValue
-                );
-                updateCallback(updatedOptions);
-              }
+              field,
+              newValue
             );
-          });
-        } else if (typeof options[key] === "object") {
-          iterateOptions(options[key]);
-        }
+          }
+        );
       }
-    };
-
-    iterateOptions(optionsCopy);
+    );
   }
 }
 

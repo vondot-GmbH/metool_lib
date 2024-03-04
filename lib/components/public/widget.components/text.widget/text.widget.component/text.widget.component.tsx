@@ -1,8 +1,8 @@
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
-import StateStore from "../../../../../stores/state.store";
+import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import { TextWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 
 interface TextWidgetProps {
@@ -16,29 +16,34 @@ const TextWidget = ({
   widgetStore,
   stateStore,
 }: TextWidgetProps): JSX.Element => {
-  const [displayText, setDisplayText] = useState("");
-
   useEffect(() => {
-    // stateStore?.initializeStates(widgetID, _getInitialTextWidgetState());
-  }, [widgetID]);
+    const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
+    if (!analized) return;
 
-  useEffect(() => {
-    const widgetOptions = widgetStore?.getAllOptionsForWidget(widgetID);
+    stateStore?.initializeDynamicOptions(
+      widgetID,
+      analized,
+      () => {},
+      _getInitialTextWidgetState()
+    );
+  }, []);
 
-    stateStore?.initializeDynamicOptions(widgetOptions, (updatedOptions) => {
-      setDisplayText(updatedOptions?.data);
-    });
-  }, [widgetID, stateStore]);
+  const data = stateStore?.getWidgetStateValue(
+    StateSelector.WIDGETS,
+    widgetID,
+    "data"
+  );
 
-  return <RunningText>{displayText?.toString()}</RunningText>;
+  return (
+    <div>
+      <RunningText>{JSON.stringify(data ?? "")}</RunningText>
+    </div>
+  );
 };
 
 const _getInitialTextWidgetState = (): TextWidgetState => {
   const textState = {
-    disabled: null,
-    hidden: null,
     isLoading: null,
-    data: "initialData",
   } as TextWidgetState;
 
   return textState as TextWidgetState;

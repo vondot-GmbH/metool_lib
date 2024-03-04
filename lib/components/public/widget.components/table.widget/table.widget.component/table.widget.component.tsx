@@ -21,15 +21,22 @@ const TableWidget = ({
   const [usersData, setUsersData] = useState<any[]>([]);
 
   useEffect(() => {
-    stateStore?.initializeStates([
-      {
-        selector: StateSelector.WIDGETS,
-        widgetID,
-        initialStates: _getInitialTableWidgetState(),
-      },
-    ]);
-    getDataFromQuery();
-  }, [widgetID]);
+    const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
+    if (!analized) return;
+
+    stateStore?.initializeDynamicOptions(
+      widgetID,
+      analized,
+      () => {},
+      _getInitialTableWidgetState()
+    );
+  }, []);
+
+  const data = stateStore?.getWidgetStateValue(
+    StateSelector.WIDGETS,
+    widgetID,
+    "data"
+  );
 
   const tableOptions: TableOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);
@@ -108,8 +115,6 @@ const TableWidget = ({
 
 const _getInitialTableWidgetState = (): TableWidgetState => {
   const tableState = {
-    disabled: null,
-    hidden: null,
     isLoading: null,
     selectedSourceRow: null,
     selectedDataIndex: null,
