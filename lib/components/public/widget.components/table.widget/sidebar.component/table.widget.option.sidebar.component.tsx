@@ -62,6 +62,19 @@ const TableWidgetOptionSidebar = ({
   return (
     <div>
       <CollapsibleSection title="Content">
+        <TextInput
+          label="Data"
+          value={tableOptions.data}
+          className={defaultStyles.mb10}
+          onValueChange={(value) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "data",
+              value
+            );
+          }}
+        />
+
         <MultiFieldDropdownEditor
           label="Columns"
           items={columnOptions}

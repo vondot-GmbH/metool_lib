@@ -22,8 +22,6 @@ class QueryStore {
   async intializeCoreQueriesAndExecuteDependencies(
     analyzedWidgetOptions: Map<string, AnalyzedWidgetOptions>
   ): Promise<void> {
-    console.log("intializeCoreQueriesAndExecuteDependencies");
-    console.log("analyzedWidgetOptions", JSON.stringify(analyzedWidgetOptions));
     const configProvider = ConfigProvider.getInstance();
     const coreQueries = configProvider.getCoreQueries();
 
@@ -37,11 +35,7 @@ class QueryStore {
       (dependency) => dependency.selector === "queries"
     );
 
-    console.log("coreQueries", JSON.stringify(coreQueries));
-    console.log("queryDependencies: ", JSON.stringify(queryDependencies));
-
     if (coreQueries == null || queryDependencies == null) {
-      console.log("coreQueries or dependencies are null");
       return;
     }
 

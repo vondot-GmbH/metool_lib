@@ -224,9 +224,6 @@ export class StateStore {
         );
       });
     }
-
-    console.log("all states logged::::");
-    console.log(JSON.stringify(this.globalStates));
   }
 
   private initializeOptionsAsState(
@@ -266,13 +263,7 @@ export class StateStore {
     for (const query of queries) {
       if (query?._id == null) continue;
 
-      console.log("executeAndProcessRestQueries: ", JSON.stringify(query));
-
       const response = await queryExecutor.executeRestQuery(query, {});
-
-      console.log("response-------", response);
-
-      console.log("query._id", query._id);
 
       if (response) {
         this.setStateValue(StateSelector.QUERIES, query._id, "data", response);

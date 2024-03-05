@@ -123,7 +123,7 @@ const ConfigurationSidebar = ({
     }
 
     return (
-      <ResizableSidebar initialWidth={220} minWidth={150} maxWidth={330}>
+      <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
         {sidebarToRender}
       </ResizableSidebar>
     );

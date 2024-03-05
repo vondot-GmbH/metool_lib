@@ -24,9 +24,6 @@ class QueryExecutor<Q extends Query> {
     const resourceID = query?.resource?._id;
     const isCoreResource = (query?.resource as any)?.core ?? false;
 
-    console.log("resourceID", resourceID);
-    console.log("isCoreResource", isCoreResource);
-
     // if resource is a core resource, get it from the config provider
     if (isCoreResource) {
       resource = ConfigProvider.getInstance().getCoreResource(
