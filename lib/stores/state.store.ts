@@ -1,4 +1,4 @@
-import { makeAutoObservable, values } from "mobx";
+import { makeAutoObservable } from "mobx";
 import { PubSubProvider } from "../provider/pub.sub.provider";
 import { updateOptionAtPath } from "../globals/helpers/state.helper";
 import { RestQuery } from "../schemas/query.schemas/query.schema";
@@ -187,33 +187,32 @@ export class StateStore {
   ) {
     const { options, dependencies } = analyzedOptions;
 
-    // Durchlaufe jede Abhängigkeit
+    // loop through the dependencies and subscribe to their state changes
     for (const dependency of dependencies) {
       const { field, selector, widgetID: depWidgetID, stateKeys } = dependency;
 
-      // Abonnement für die Zustandsänderung erstellen
+      // create a subscription to the state change
       this.subscribeToStateValue(
         selector as StateSelector,
         depWidgetID,
         stateKeys,
         (newValue) => {
-          // Aktualisiere die Option basierend auf dem Feldpfad
           const updatedOptions = updateOptionAtPath(
-            JSON.parse(JSON.stringify(options)), // Tiefenkopie, um Referenzen zu vermeiden
+            JSON.parse(JSON.stringify(options)),
             field,
             newValue
           );
 
-          // Rufe das Update-Callback mit den aktualisierten Optionen auf
+          // call the callback with the updated options
           updateCallback(updatedOptions);
         }
       );
     }
 
-    // Initialisiere statische und aufgelöste dynamische Optionen als State
+    // Init additional states if available
     this.initializeOptionsAsState(widgetID, options, dependencies);
 
-    // Initialisiere zusätzliche States, falls vorhanden
+    // Init additional states if available
     if (additionalStates) {
       Object.keys(additionalStates).forEach((key) => {
         this.setStateValue(
@@ -269,6 +268,9 @@ export class StateStore {
         this.setStateValue(StateSelector.QUERIES, query._id, "data", response);
         this.setStateValue(StateSelector.QUERIES, query._id, "status", 200);
       }
+
+      // process pending subscriptions
+      this.processPendingSubscriptions(StateSelector.QUERIES, query._id);
     }
   }
 }

@@ -31,8 +31,7 @@ const TableWidget = ({
       widgetID,
       analized,
       (data) => {
-        console.log("data:::: init");
-        console.log(JSON.stringify(data));
+        setUsersData(data.data);
       },
       _getInitialTableWidgetState()
     );
@@ -73,7 +72,7 @@ const TableWidget = ({
     <Table
       key={widgetID}
       columns={(prepareColumns(tableOptions) as any[]) || []}
-      data={usersData}
+      data={usersData || []}
       rowKey="id"
       noDataText="No data available"
       defaultBorderBottomColor={tableOptions?.borderBottomColor}
