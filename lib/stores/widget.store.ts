@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import {
+  AnalyzedWidgetOptions,
   Widget,
   WidgetHierarchy,
   WidgetHierarchyMap,
@@ -13,12 +14,7 @@ import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
 import { extractDependenciesAndNonDependencies } from "../globals/helpers/state.helper";
 import { runInAction } from "mobx";
-import { Dependency } from "./state.store";
-
-interface AnalyzedWidgetOptions {
-  options: any;
-  dependencies: Dependency[];
-}
+import QueryStore from "./query.store";
 
 class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
@@ -36,9 +32,11 @@ class WidgetStore {
   };
 
   private changeRecordStore: ChangeRecordStore;
+  private queryStore: QueryStore;
 
-  constructor(changeRecordStore: ChangeRecordStore) {
+  constructor(changeRecordStore: ChangeRecordStore, queryStore: QueryStore) {
     this.changeRecordStore = changeRecordStore;
+    this.queryStore = queryStore;
     makeAutoObservable(this);
   }
 
@@ -61,8 +59,6 @@ class WidgetStore {
         const { dependencies, nonDependencies } =
           extractDependenciesAndNonDependencies(widgetHierarchy.widget.options);
 
-        // TODO execute the requested dependencies
-
         runInAction(() => {
           this._analyzedWidgetOptions.set(widgetID, {
             options: nonDependencies,
@@ -71,6 +67,11 @@ class WidgetStore {
         });
       }
     }
+
+    // TODO execute the requested dependencies
+    this.queryStore.intializeCoreQueriesAndExecuteDependencies(
+      this._analyzedWidgetOptions
+    );
 
     return this._structuredWidgetHierarchy;
   }

@@ -56,7 +56,7 @@ export const extractDependenciesAndNonDependencies = (
   const nonDependencies: WidgetOptions = Array.isArray(options) ? [] : {};
 
   Object.entries(options).forEach(([key, value]) => {
-    const currentPath = [...path, key]; // Aktuellen Pfad aktualisieren
+    const currentPath = [...path, key];
     if (isDependency(value)) {
       addDependency(dependencies, value as any, currentPath);
     } else if (typeof value === "object" && value !== null) {

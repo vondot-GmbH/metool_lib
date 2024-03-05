@@ -1,32 +1,32 @@
-import { DataSourceType } from "../lib/main";
-import { Query } from "../lib/schemas/query.schemas/query.schema";
+// import { DataSourceType } from "../lib/main";
+// import { Query } from "../lib/schemas/query.schemas/query.schema";
 import { Widget } from "../lib/schemas/widget.schemas/widget.schema";
 
-export const QUERY_DATA: Query[] = [
-  {
-    _id: "5f9e9b6b9c6b4c0017f3b3a0",
-    title: "customerQuery",
-    description: "Query to fetch user data",
-    type: DataSourceType.REST_API,
-    method: "GET",
-    // headers: [{ key: "queryHeader", value: "application/json" }],
-    body: [],
-    url: "/users",
-    resource: {
-      _id: "baseResource",
-      title: "base Resource",
-      type: DataSourceType.REST_API,
-      baseUrl: "https://jsonplaceholder.typicode.com",
-      coreResource: true,
-      defaultHeaders: [
-        { key: "Content-Type", value: "application/json" },
-        { key: "Accept", value: "application/json" },
-      ],
-      description: "This is the base resource",
-    },
-    params: "",
-  },
-];
+// export const QUERY_DATA: Query[] = [
+//   {
+//     _id: "5f9e9b6b9c6b4c0017f3b3a0",
+//     title: "customerQuery",
+//     description: "Query to fetch user data",
+//     type: DataSourceType.REST_API,
+//     method: "GET",
+//     // headers: [{ key: "queryHeader", value: "application/json" }],
+//     body: [],
+//     url: "/users",
+//     resource: {
+//       _id: "baseResource",
+//       title: "base Resource",
+//       type: DataSourceType.REST_API,
+//       baseUrl: "https://jsonplaceholder.typicode.com",
+//       coreResource: true,
+//       defaultHeaders: [
+//         { key: "Content-Type", value: "application/json" },
+//         { key: "Accept", value: "application/json" },
+//       ],
+//       description: "This is the base resource",
+//     },
+//     params: "",
+//   },
+// ];
 
 export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
   // {

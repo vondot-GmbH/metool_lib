@@ -9,7 +9,7 @@ export interface BaseResource {
 }
 
 export interface BaseCoreResource extends BaseResource {
-  coreResource: true; // defines resources that are set in code and cannot be edited
+  core: true; // defines resources that are set in code and cannot be edited
 }
 
 //! REST API

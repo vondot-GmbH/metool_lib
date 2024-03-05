@@ -22,43 +22,24 @@ const TableWidget = ({
 
   useEffect(() => {
     const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
+
+    console.log("analized TableWidget");
+    console.log(JSON.stringify(analized));
     if (!analized) return;
 
     stateStore?.initializeDynamicOptions(
       widgetID,
       analized,
-      () => {},
+      (data) => {
+        console.log("data:::: init");
+        console.log(JSON.stringify(data));
+      },
       _getInitialTableWidgetState()
     );
   }, []);
 
-  const data = stateStore?.getWidgetStateValue(
-    StateSelector.WIDGETS,
-    widgetID,
-    "data"
-  );
-
   const tableOptions: TableOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);
-
-  const getDataFromQuery = async () => {
-    const data = [
-      {
-        id: 1,
-        name: "John Doe",
-        age: 32,
-        website: "www.johndoe.com",
-      },
-      {
-        id: 2,
-        name: "peter Doe",
-        age: 41,
-        website: "www.peter.com",
-      },
-    ];
-
-    setUsersData(data);
-  };
 
   const prepareColumns = (tableOptions: TableOptions): TableColumn[] => {
     return tableOptions?.columns?.map((column) => ({

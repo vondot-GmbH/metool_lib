@@ -18,13 +18,13 @@ import QueryStore from "../../../stores/query.store";
 import ConfigurationSidebar from "../../private/editor.components/editor.configuration.bar.components/configuration.sidebar.component/configuration.sidebar.component";
 import TopBarComponent from "../../private/editor.components/top.bar.component/top.bar.component";
 import ResourceStore from "../../../stores/resource.store";
-import { Query } from "../../../schemas/query.schemas/query.schema";
+// import { Query } from "../../../schemas/query.schemas/query.schema";
 import { Resource } from "../../../schemas/resource.schemas/resource.schema";
 import RenderView from "../../private/editor.components/render.components/render.view.component/render.view.conponent";
 
 interface CanvasEditorProps {
   widgets: Widget[];
-  queries: Query[];
+  // queries: Query[]; // TODO remove
   resources?: Resource[];
   onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 
@@ -43,8 +43,8 @@ const CanvasEditor = ({
   editorStore,
   resources,
   queryStore,
-  queries,
-}: CanvasEditorProps): JSX.Element => {
+}: // queries,
+CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
   const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
@@ -54,7 +54,7 @@ const CanvasEditor = ({
     editorStore?.initializeEditorBreakpointConfig();
 
     // initialize the provided queries
-    queryStore?.setQueries(queries);
+    // queryStore?.setQueries(queries); // TODO Remove
   }, []);
 
   return (

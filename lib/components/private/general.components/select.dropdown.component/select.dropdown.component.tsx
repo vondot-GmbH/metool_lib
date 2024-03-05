@@ -5,6 +5,8 @@ import styles from "./select.dropdown.component.module.scss";
 import Row from "../row.component/row.component";
 import Image from "../image.component/image.component";
 import SmallText from "../text.components/small.text.component/small.text.component";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import RunningText from "../text.components/running.text.component/running.text.component";
 
 interface SelectDropDownProps {
   items: any[];
@@ -17,6 +19,7 @@ interface SelectDropDownProps {
   labelPropertyName?: string;
   valuePropertyName?: string;
   imagePropertyName?: string;
+  iconPropertyName?: string;
   className?: any;
   isLoading?: boolean;
   showBorder?: boolean;
@@ -36,13 +39,13 @@ const SelectDropDown = ({
   labelPropertyName = "label",
   valuePropertyName = "value",
   imagePropertyName = "image",
+  iconPropertyName = "icon",
   className,
   isLoading = false,
   menuIsOpen,
   validationMessage,
   inputRef,
 }: SelectDropDownProps): JSX.Element => {
-  console.log("selectedItem", selectedItem);
   const resolve = (path: string, obj: any): any => {
     return path.split(".").reduce(function (prev, curr) {
       return prev ? prev[curr] : null;
@@ -95,10 +98,13 @@ const SelectDropDown = ({
 
   const getOptionLabel = (option: any): any => {
     const image = option[imagePropertyName];
+    const icon = option[iconPropertyName];
+
     return (
       <Row alignItems="center">
-        {image && <Image imageUrl={image} className="mr-15 mt-5 mb-5" />}
-        <span>{resolve(labelPropertyName, option)}</span>
+        {image && <Image imageUrl={image} className={styles.icon} />}
+        {icon && <FontAwesomeIcon icon={icon} className={styles.icon} />}
+        <RunningText>{resolve(labelPropertyName, option)}</RunningText>
       </Row>
     );
   };

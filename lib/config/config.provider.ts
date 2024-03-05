@@ -5,6 +5,11 @@ import {
   WidgetConfig,
 } from "../globals/interfaces/config.interface";
 import {
+  CoreQuery,
+  CoreQueryMap,
+  CoreRestQuerConfig,
+} from "../schemas/query.schemas/query.schema";
+import {
   CoreResource,
   CoreResourceMap,
 } from "../schemas/resource.schemas/resource.schema";
@@ -14,6 +19,7 @@ class ConfigProvider {
   private _registeredWidgets: Map<string, WidgetConfig> = new Map();
   private _layoutConfig: LayoutConfig = { root: {}, nested: {} };
   private _coreResources: CoreResourceMap = new Map();
+  private _coreQueries: CoreQueryMap = new Map();
 
   private constructor() {}
 
@@ -29,6 +35,15 @@ class ConfigProvider {
         return;
       }
       this._coreResources.set(resource?._id, resource);
+    });
+  }
+
+  public registerCoreQueries(coreQueryConfig: CoreRestQuerConfig) {
+    Object.keys(coreQueryConfig).forEach((key) => {
+      const query = coreQueryConfig[key as keyof CoreRestQuerConfig];
+      if (query) {
+        this._coreQueries.set(key, query);
+      }
     });
   }
 
@@ -55,6 +70,14 @@ class ConfigProvider {
 
   public getCoreResources(): CoreResource[] {
     return Array.from(this._coreResources.values());
+  }
+
+  public getCoreQuery(queryKey: string): CoreQuery | undefined {
+    return this._coreQueries.get(queryKey);
+  }
+
+  public getCoreQueries(): CoreQuery[] | undefined {
+    return Array.from(this._coreQueries.values());
   }
 
   public static getInstance(): ConfigProvider {

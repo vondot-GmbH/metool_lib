@@ -3,27 +3,19 @@ import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import WidgetStore from "../../../../../stores/widget.store";
 import ComponentWrapper from "../../../general.components/component.wrapper.component/component.wrapper.component";
 import SelectDropDown from "../../../general.components/select.dropdown.component/select.dropdown.component";
-import { useEffect, useMemo, useState } from "react";
-import { WidgetHierarchy } from "../../../../../schemas/widget.schemas/widget.schema";
+import { useEffect, useState } from "react";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
+import { faAddressBook, faChartBar } from "@fortawesome/free-regular-svg-icons";
+import { faCalendar } from "@fortawesome/free-regular-svg-icons/faCalendar";
 
 interface StateSidebarProps {
   stateStore?: StateStore;
-  widgetStore?: WidgetStore;
+  widgetStore?: WidgetStore; // TODO check if needed
 }
 
-const StateSidebar = ({
-  stateStore,
-  widgetStore,
-}: StateSidebarProps): JSX.Element => {
-  const widgets = widgetStore?.getStructuredData();
-
+const StateSidebar = ({ stateStore }: StateSidebarProps): JSX.Element => {
   const [preparedWidgets, setPreparedWidgets] = useState<any[] | undefined>(
-    undefined
-  );
-
-  const [selectedWidgetID, setSelectedWidgetID] = useState<string | undefined>(
     undefined
   );
 
@@ -31,35 +23,39 @@ const StateSidebar = ({
     Record<string, any> | undefined
   >(undefined);
 
-  // TODO -- fix the problem that the states will be rerendered when the widget is
-  const widgetStates = useMemo(() => {
-    const widgetStates = stateStore?.getAllWidgetStates(
-      StateSelector.WIDGETS,
-      selectedWidgetID ?? ""
-    );
-    return widgetStates;
-  }, [selectedWidgetID, stateStore]);
-
-  useEffect(() => {
-    if (!selectedWidgetID) return;
-
-    setSelectedWidgetState(widgetStates);
-  }, [selectedWidgetID]);
-
   useEffect(() => {
     initialize();
   }, []);
 
+  const getStateIcon = (selector: StateSelector) => {
+    switch (selector) {
+      case StateSelector.WIDGETS:
+        return faCalendar;
+      case StateSelector.QUERIES:
+        return faChartBar;
+      default:
+        return faAddressBook;
+    }
+  };
+
   const initialize = async () => {
-    if (!widgets) return;
+    const stateSummary = stateStore?.getStateSummary();
+    const preparedItems = stateSummary?.flatMap((category) =>
+      category?.entities?.map((entity) => ({
+        label: `${entity.label}`,
+        value: `${category.category}.${entity.id}`,
+        icon: getStateIcon(category.category as StateSelector),
+      }))
+    );
 
-    const widgetsArray = Array.from(widgets.values());
-    const prepared = widgetsArray.map((widgetHierarchy: WidgetHierarchy) => ({
-      label: widgetHierarchy.widget.widgetType,
-      value: widgetHierarchy.widget.widgetID,
-    }));
+    setPreparedWidgets(preparedItems);
+  };
 
-    setPreparedWidgets(prepared);
+  // handle selection change and get the state for the selected entity
+  const handleSelectionChange = (selectedItem: any) => {
+    const [selector, entityId] = selectedItem.value.split(".");
+    const selectedStates = stateStore?.getStatesForEntity(selector, entityId);
+    setSelectedWidgetState(selectedStates);
   };
 
   if (!preparedWidgets) {
@@ -76,9 +72,9 @@ const StateSidebar = ({
         items={preparedWidgets}
         onChange={(item) => {
           if (!item?.value) return;
-          setSelectedWidgetID(item.value);
+          handleSelectionChange(item);
         }}
-        placeholder={"Select Widget"}
+        placeholder={"Select Entity"}
       />
 
       {selectedWidgetState && (

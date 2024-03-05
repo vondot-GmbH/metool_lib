@@ -1,6 +1,8 @@
-import { makeAutoObservable } from "mobx";
+import { makeAutoObservable, values } from "mobx";
 import { PubSubProvider } from "../provider/pub.sub.provider";
 import { updateOptionAtPath } from "../globals/helpers/state.helper";
+import { RestQuery } from "../schemas/query.schemas/query.schema";
+import { queryExecutor } from "../provider/http/http.rest.query.client";
 
 export enum StateSelector {
   WIDGETS = "widgets",
@@ -77,21 +79,59 @@ export class StateStore {
     return this.globalStates.get(stateKey);
   }
 
-  getAllWidgetStates(
+  getStatesForEntity(
     selector: StateSelector,
-    widgetID: string
+    entityID: string
   ): Record<string, any> {
-    const widgetStates: Record<string, any> = {};
-    const prefix = `${selector}.${widgetID}.`;
+    const states: Record<string, any> = {};
+    const prefix = `${selector}.${entityID}.`;
 
     this.globalStates.forEach((value, key) => {
       if (key.startsWith(prefix)) {
         const stateKey = key.substring(prefix.length);
-        widgetStates[stateKey] = value;
+        states[stateKey] = value;
       }
     });
 
-    return widgetStates;
+    return states;
+  }
+
+  getStateSummary(): Array<{
+    category: string;
+    entities: Array<{ id: string; label?: string }>;
+  }> {
+    const summary: Array<{
+      category: string;
+      entities: Array<{ id: string; label?: string }>;
+    }> = [];
+
+    // Durchlaufen aller Schlüsselwerte von StateSelector
+    Object.keys(StateSelector).forEach((selectorKey) => {
+      const selector = StateSelector[selectorKey as keyof typeof StateSelector];
+
+      if (typeof selector === "string") {
+        const category = selector;
+        const entitiesMap: { [key: string]: { id: string; label?: string } } =
+          {};
+
+        // Durchlaufen aller globalen States und Hinzufügen, falls sie zur aktuellen Kategorie gehören
+        this.globalStates.forEach((_, key) => {
+          const [stateSelector, entityID] = key.split(".");
+          if (stateSelector === category) {
+            // Vermeiden von Duplikaten durch Verwendung einer Map
+            entitiesMap[entityID] = { id: entityID, label: entityID };
+          }
+        });
+
+        // Konvertieren der Map-Werte zurück in ein Array und Hinzufügen zur Zusammenfassung
+        const entities = Object.values(entitiesMap);
+        if (entities.length > 0) {
+          summary.push({ category, entities });
+        }
+      }
+    });
+
+    return summary;
   }
 
   subscribeToStateValue(
@@ -184,6 +224,9 @@ export class StateStore {
         );
       });
     }
+
+    console.log("all states logged::::");
+    console.log(JSON.stringify(this.globalStates));
   }
 
   private initializeOptionsAsState(
@@ -216,6 +259,26 @@ export class StateStore {
         );
       }
     );
+  }
+
+  // TODO
+  async executeAndProcessRestQueries(queries: RestQuery[]): Promise<void> {
+    for (const query of queries) {
+      if (query?._id == null) continue;
+
+      console.log("executeAndProcessRestQueries: ", JSON.stringify(query));
+
+      const response = await queryExecutor.executeRestQuery(query, {});
+
+      console.log("response-------", response);
+
+      console.log("query._id", query._id);
+
+      if (response) {
+        this.setStateValue(StateSelector.QUERIES, query._id, "data", response);
+        this.setStateValue(StateSelector.QUERIES, query._id, "status", 200);
+      }
+    }
   }
 }
 
