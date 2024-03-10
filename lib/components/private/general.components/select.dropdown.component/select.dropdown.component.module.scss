@@ -19,17 +19,16 @@
   }
 
   .selectLabelError {
-    color: #fd5d5d; // color-error
+    color: #dc3545;
   }
 
   .select {
     width: 100%;
   }
+}
 
-  .validationMessage {
-    height: 10px;
-    color: #fd5d5d; // color-error
-  }
+.validationMessage {
+  color: #dc3545;
 }
 
 .icon {

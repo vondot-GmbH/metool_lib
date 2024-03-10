@@ -147,7 +147,7 @@ const ConfigurationSidebar = ({
       return (
         <CodeSidebarDetail
           key={selectedCodeItem}
-          selectedItem={selectedCodeItem}
+          selectedItemID={selectedCodeItem}
           onClose={() => setSelectedCodeItem(undefined)}
         />
       );

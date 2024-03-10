@@ -11,8 +11,8 @@ import { queryExecutor } from "../provider/http/http.rest.query.client";
 
 class QueryStore {
   private _queries: QueryMap = new Map();
-
   private _stateStore: StateStore;
+  private _currentSelectedQuery: Query | null = null;
 
   constructor(stateStore: StateStore) {
     this._stateStore = stateStore;
@@ -52,6 +52,10 @@ class QueryStore {
     });
   }
 
+  setCurrentSelectedQuery(query: Query): void {
+    this._currentSelectedQuery = query;
+  }
+
   //! Getter
 
   get queries(): Query[] {
@@ -62,14 +66,21 @@ class QueryStore {
     return this._queries.get(queryID);
   }
 
-  //! Methods
-
-  addQuery(query: Query): void {
-    if (query?._id) this._queries.set(query?._id, query);
+  get currentSelectedQuery(): Query | null {
+    return this._currentSelectedQuery;
   }
 
-  updateQuery(query: Query): void {
-    if (query?._id) this._queries.set(query?._id, query);
+  //! Methods
+
+  createInitialQuery(): Query {
+    const query = {
+      _id: "new",
+      title: "New Query",
+    } as Query;
+
+    this.setCurrentSelectedQuery(query);
+
+    return query;
   }
 
   async fetchAndSetQueries(dpendencies: Dependency[]): Promise<void> {
@@ -86,9 +97,6 @@ class QueryStore {
 
       const query = this.getQuery(CoreRestQueryType.GET_QUERIES_BY_ID);
 
-      console.log("queryID", queryID);
-      console.log("query", query);
-
       if (queryID == null || query == null) continue;
 
       const response = await queryExecutor.executeRestQuery(query, {
@@ -102,6 +110,24 @@ class QueryStore {
     }
 
     // this.setQueries(response);
+  }
+
+  async createAndSaveQuery(query: Query): Promise<void> {
+    const createQuery = this.getQuery(CoreRestQueryType.CREATE_QUERY);
+
+    const preparedQuery = {
+      ...createQuery,
+      body: query,
+    } as any;
+
+    if (query == null) return;
+
+    const response = await queryExecutor.executeRestQuery(preparedQuery, {});
+
+    if (response == null) return;
+
+    this.setCurrentSelectedQuery(response);
+    this._queries.set(response._id, response);
   }
 }
 

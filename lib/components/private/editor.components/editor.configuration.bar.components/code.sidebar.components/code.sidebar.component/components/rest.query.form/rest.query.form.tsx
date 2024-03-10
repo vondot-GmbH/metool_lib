@@ -25,8 +25,9 @@ const RestQueryForm = ({
   const {
     register,
     control,
+    setValue,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(restQuerySchema),
     mode: "onTouched",
@@ -59,7 +60,7 @@ const RestQueryForm = ({
     remove: removeDefaultHeader,
   } = useFieldArray({
     control,
-    name: "resource.defaultHeaders", // Eindeutiger Name für das erste Feldarray
+    name: "resource.defaultHeaders",
   });
 
   const {
@@ -68,10 +69,8 @@ const RestQueryForm = ({
     remove: removeHeader,
   } = useFieldArray({
     control,
-    name: "headers", // Eindeutiger Name für das zweite Feldarray
+    name: "headers",
   });
-
-  // TODO show error message
 
   return (
     <form
@@ -85,11 +84,13 @@ const RestQueryForm = ({
         {...register("title")}
         label="Name"
         className={defaultStyles.mb20}
+        validationMessage={errors.title?.message?.toString()}
       />
       <TextInput
         {...register("description")}
         label="Description"
         className={defaultStyles.mb20}
+        validationMessage={errors.description?.message?.toString()}
       />
 
       <Row alignItems="center">
@@ -104,13 +105,21 @@ const RestQueryForm = ({
           {...register("url")}
           label="URL"
           className={defaultStyles.mb20}
+          validationMessage={errors.url?.message?.toString()}
         />
       </Row>
 
       <SelectDropDown
+        className={defaultStyles.mb20}
         label="Method"
         selectedItem={iniitialQuery?.method}
         items={methodItems}
+        validationMessage={errors.method?.message?.toString()}
+        onChange={(item) => {
+          if (item?.value != null) {
+            setValue("method", item?.value);
+          }
+        }}
       />
 
       <KeyValueInput
@@ -132,9 +141,11 @@ const RestQueryForm = ({
         remove={removeHeader}
         register={register}
         arrayFieldName={"headers"}
+        validationErrors={errors}
       />
 
       <TextInput
+        validationMessage={errors.body?.message?.toString()}
         {...register("body")}
         label="body"
         className={defaultStyles.mb20}

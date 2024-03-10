@@ -6,8 +6,12 @@ import Row from "../../../../general.components/row.component/row.component";
 import styles from "./code.sidebar.component.module.scss";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark } from "@fortawesome/free-regular-svg-icons";
+import { faBookmark, faSquarePlus } from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
+import {
+  CoreQuery,
+  Query,
+} from "../../../../../../schemas/query.schemas/query.schema";
 
 interface CodeSidebarProps {
   widgetStore?: WidgetStore;
@@ -19,7 +23,15 @@ const CodeSidebar = ({
   queryStore,
   onItemSelect,
 }: CodeSidebarProps): JSX.Element => {
-  const queries = queryStore?.queries;
+  const queries: any[] = queryStore?.queries ?? [];
+  const currentSelectedQuery = queryStore?.currentSelectedQuery;
+
+  const coreQueries: CoreQuery[] = queries?.filter((query: any) => query?.core);
+  const dynamicQueries: Query[] = queries?.filter((query: any) => !query?.core);
+
+  if (currentSelectedQuery != null && currentSelectedQuery?._id == "new") {
+    dynamicQueries.push(currentSelectedQuery);
+  }
 
   const itemClassName = (queryID: string | null) => {
     return (
@@ -42,23 +54,67 @@ const CodeSidebar = ({
     onItemSelect?.(queryID);
   };
 
+  const handleAddQuery = () => {
+    const initialQuery = queryStore?.createInitialQuery();
+    if (initialQuery?._id == null) {
+      return;
+    }
+    setSelectedItem(initialQuery?._id);
+    onItemSelect?.(initialQuery?._id);
+  };
+
   return (
-    <ComponentWrapper title={"Code"}>
-      {queries?.map((query) => {
-        return (
-          <Row
-            className={itemClassName(query?._id)}
-            key={query._id}
+    <div>
+      {coreQueries?.length != 0 && (
+        <ComponentWrapper title={"Core Queries"}>
+          {coreQueries?.map((query: CoreQuery) => {
+            return (
+              <Row
+                className={itemClassName(query?._id)}
+                key={query?._id}
+                onClick={() => {
+                  handleSelectItem(query?._id);
+                }}
+              >
+                <FontAwesomeIcon
+                  icon={faBookmark}
+                  className={styles.codeIcon}
+                />
+                <RunningText>{query.title}</RunningText>
+              </Row>
+            );
+          })}
+        </ComponentWrapper>
+      )}
+
+      <ComponentWrapper
+        title={"Code"}
+        action={
+          <FontAwesomeIcon
+            icon={faSquarePlus}
+            style={{ cursor: "pointer" }}
             onClick={() => {
-              handleSelectItem(query?._id);
+              handleAddQuery();
             }}
-          >
-            <FontAwesomeIcon icon={faBookmark} className={styles.codeIcon} />
-            <RunningText>{query.title}</RunningText>
-          </Row>
-        );
-      })}
-    </ComponentWrapper>
+          />
+        }
+      >
+        {dynamicQueries?.map((query: Query) => {
+          return (
+            <Row
+              className={itemClassName(query?._id)}
+              key={query._id}
+              onClick={() => {
+                handleSelectItem(query?._id);
+              }}
+            >
+              <FontAwesomeIcon icon={faBookmark} className={styles.codeIcon} />
+              <RunningText>{query.title}</RunningText>
+            </Row>
+          );
+        })}
+      </ComponentWrapper>
+    </div>
   );
 };
 

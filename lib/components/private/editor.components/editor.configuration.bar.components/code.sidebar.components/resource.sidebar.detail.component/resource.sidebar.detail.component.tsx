@@ -52,9 +52,11 @@ const ResourceSidebarDetail = ({
         title={selectedItem}
         action={
           <SizedContainer size="s">
-            <button type="submit" form="rest-resource-form">
-              Save
-            </button>
+            {!(selectedResource as any)?.core && (
+              <button type="submit" form="rest-resource-form">
+                Save
+              </button>
+            )}
             <FontAwesomeIcon
               className={defaultStyles.ml10}
               icon={faXmarkCircle}

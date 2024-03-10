@@ -10,6 +10,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import styles from "./outlined.text.input.component.module.scss";
 import Column from "../column.component/column.component";
 import RunningText from "../text.components/running.text.component/running.text.component";
+import SmallText from "../text.components/small.text.component/small.text.component";
 
 interface TextInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "className"> {
@@ -17,7 +18,7 @@ interface TextInputProps
   inputRef?: any;
   icon?: IconProp;
   onValueChange?: (value: string | number) => void;
-  hasError?: boolean;
+  validationMessage?: string | null;
   className?: string;
 }
 
@@ -26,7 +27,7 @@ const TextInput = forwardRef(
     {
       label,
       icon,
-      hasError,
+      validationMessage,
       onValueChange,
       type = "text",
       className,
@@ -70,13 +71,11 @@ const TextInput = forwardRef(
     };
 
     const inputWrapperClasses = classNames(styles.wrapper, {
-      [styles.wrapperWithError]: hasError,
+      [styles.wrapperWithError]: validationMessage,
       [styles.wrapperWithIcon]: !!icon,
     });
 
-    const inputClasses = classNames(styles.input, {
-      [styles.inputWithError]: hasError,
-    });
+    const inputClasses = classNames(styles.input, {});
 
     return (
       <Column className={className}>
@@ -94,6 +93,13 @@ const TextInput = forwardRef(
             onBlur={handleBlur}
           />
         </div>
+        {validationMessage ? (
+          <SmallText className={styles.errorText}>
+            {validationMessage}
+          </SmallText>
+        ) : (
+          <SmallText className={styles.errorText}>&nbsp;</SmallText>
+        )}
       </Column>
     );
   }

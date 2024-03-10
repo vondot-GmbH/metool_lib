@@ -32,11 +32,11 @@ class ResourceStore {
 
   private setResources(resources: Resource[] | CoreResource[]): void {
     resources.forEach((resource: any) => {
-      if (resource?.coreResource || resource?._id != null) {
+      if (resource?.core || resource?._id != null) {
         this._resources.set(resource._id, resource);
       }
 
-      if (resource?._id != null && !resource?.coreResource) {
+      if (resource?._id != null && !resource?.core) {
         this._resources.set(resource._id, resource);
       }
     });

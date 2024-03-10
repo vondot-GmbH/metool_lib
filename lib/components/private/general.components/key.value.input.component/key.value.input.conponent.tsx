@@ -3,6 +3,7 @@ import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
 import Row from "../row.component/row.component";
 import styles from "./key.value.input.conponent.module.scss";
 import RunningText from "../text.components/running.text.component/running.text.component";
+import TextInput from "../outlined.text.input.component/outlined.text.input.component";
 
 interface KeyValueInputProps {
   label?: string;
@@ -15,6 +16,7 @@ interface KeyValueInputProps {
   arrayFieldName: string;
   disabled?: boolean;
   className?: string;
+  validationErrors?: any;
 }
 
 const KeyValueInput = ({
@@ -28,43 +30,51 @@ const KeyValueInput = ({
   valueLabel = "value",
   arrayFieldName,
   className,
+  validationErrors,
 }: KeyValueInputProps) => {
   return (
     <div
       className={className ? `${styles.wrapper} ${className}` : styles.wrapper}
     >
-      {/* {label && <RunningText>{label}</RunningText>} */}
       <RunningText>{label}</RunningText>
-      {fields.map((field, index) => (
-        <Row key={field.key + index} className={styles.row} alignItems="center">
-          <input
-            disabled={disabled}
-            {...register(`${arrayFieldName}.${index}.key`)}
-            className={styles.input}
-            defaultValue={field.key}
-            placeholder={keyLabel}
-          />
+      {fields.map((field, index) => {
+        const fieldErrors = validationErrors?.[arrayFieldName]?.[index];
+        const keyError = fieldErrors?.key?.message;
+        const valueError = fieldErrors?.value?.message;
 
-          <input
-            disabled={disabled}
-            {...register(`${arrayFieldName}.${index}.value`)}
-            className={styles.input}
-            defaultValue={field.value}
-            placeholder={valueLabel}
-          />
-          {!disabled && (
-            <FontAwesomeIcon
-              className={styles.removeButton}
-              icon={faXmarkCircle}
-              onClick={() => {
-                if (!disabled) {
-                  remove(index);
-                }
-              }}
+        return (
+          <Row key={field.key + index} className={styles.row}>
+            <TextInput
+              disabled={disabled}
+              {...register(`${arrayFieldName}.${index}.key`)}
+              validationMessage={keyError}
+              defaultValue={field.key}
+              placeholder={keyLabel}
             />
-          )}
-        </Row>
-      ))}
+
+            <TextInput
+              disabled={disabled}
+              {...register(`${arrayFieldName}.${index}.value`)}
+              validationMessage={valueError}
+              defaultValue={field.value}
+              placeholder={valueLabel}
+            />
+
+            {!disabled && (
+              <FontAwesomeIcon
+                className={styles.removeButton}
+                icon={faXmarkCircle}
+                onClick={() => {
+                  if (!disabled) {
+                    remove(index);
+                  }
+                }}
+              />
+            )}
+          </Row>
+        );
+      })}
+
       {!disabled && (
         <button
           className={styles.addButton}

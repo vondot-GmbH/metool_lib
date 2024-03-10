@@ -8,45 +8,63 @@ import RestQueryForm from "../code.sidebar.component/components/rest.query.form/
 import SizedContainer from "../../../../general.components/sized.container.component/sized.container.component";
 import { RestQuery } from "../../../../../../schemas/query.schemas/query.schema";
 import defaultStyles from "../../../../../../styles/index.module.scss";
-import { DataSourceType, Resource } from "../../../../../../main";
-import { useState } from "react";
+import { DataSourceType } from "../../../../../../main";
+import { useEffect, useState } from "react";
 import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
 import ResourceStore from "../../../../../../stores/resource.store";
 
 interface CodeSidebarDetailProps {
   queryStore?: QueryStore;
   resourceStore?: ResourceStore;
-  selectedItem?: string;
+  selectedItemID?: string;
   onClose: () => void;
 }
 
 const CodeSidebarDetail = ({
-  selectedItem,
+  selectedItemID,
   onClose,
   queryStore,
   resourceStore,
 }: CodeSidebarDetailProps): JSX.Element | null => {
-  const selectedQuery = queryStore?.getQuery(selectedItem ?? "");
+  const isNewItem = selectedItemID === "new";
 
-  const [selectedResource, setSelectedResource] = useState<Resource | null>(
-    selectedQuery?.resource ?? null
+  const [selectedItem, setSelectedItem] = useState<any | undefined>(
+    queryStore?.getQuery(selectedItemID ?? "")
   );
 
-  const handleTypeChange = (item: any) => {
-    setSelectedResource(item);
-  };
+  const [selectedResourceId, setSelectedResourceId] = useState<
+    string | undefined
+  >(isNewItem ? undefined : selectedItem?.resource?._id);
 
-  const resources = resourceStore?.resources;
+  useEffect(() => {
+    if (isNewItem && selectedResourceId === undefined) {
+      // Hier könnten Sie Logik einfügen, um eine Standard-Ressourcen-ID festzulegen, falls das Element neu ist
+    } else {
+      const resource = resourceStore?.getResource(selectedResourceId ?? "");
+      setSelectedItem((currentItem: any) => ({
+        ...currentItem,
+        resource,
+        type: resource?.type,
+      }));
+    }
+  }, [selectedResourceId, isNewItem, resourceStore]);
+
+  const handleResourceChange = (resourceId: string) => {
+    setSelectedResourceId(resourceId);
+  };
 
   return (
     <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={500}>
       <ComponentWrapper
-        title={selectedItem}
+        title={selectedItemID}
         action={
           <SizedContainer size="s">
-            <button type="submit" form="rest-query-form">
-              Save
-            </button>
+            {!(selectedItem as any)?.core && (
+              <button type="submit" form="rest-query-form">
+                Save
+              </button>
+            )}
+
             <FontAwesomeIcon
               className={defaultStyles.ml10}
               icon={faXmarkCircle}
@@ -60,17 +78,17 @@ const CodeSidebarDetail = ({
           label="Resource"
           labelPropertyName="title"
           valuePropertyName="_id"
-          selectedItem={selectedResource}
-          items={resources ?? []}
-          onChange={(item) => handleTypeChange(item)}
+          selectedItem={selectedResourceId}
+          items={resourceStore?.resources ?? []}
+          onChange={(item) => handleResourceChange(item?._id)}
         />
 
-        {selectedResource?.type === DataSourceType.REST_API && (
+        {selectedItem?.resource?.type === DataSourceType.REST_API && (
           <RestQueryForm
-            iniitialQuery={selectedQuery}
+            iniitialQuery={selectedItem}
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onFormSubmit={(data: RestQuery) => {
-              // TODO save
+              queryStore?.createAndSaveQuery(data);
             }}
           />
         )}

@@ -21,7 +21,7 @@ export interface RestQuery extends BaseQuery {
   url: string;
   headers?: { key: string; value: string }[];
   params: string;
-  body?: any;
+  body?: string;
 }
 
 export interface CoreRestQuery extends RestQuery {
@@ -86,11 +86,14 @@ export const restQuerySchema = yup.object().shape({
   method: yup.string().required(),
   url: yup.string().required(),
   headers: yup.array().of(
-    yup.object().shape({
-      key: yup.string().required(),
-      value: yup.string().required(),
-    })
+    yup
+      .object()
+      .shape({
+        key: yup.string().required(),
+        value: yup.string().required(),
+      })
+      .notRequired()
   ),
   params: yup.string().notRequired(),
-  body: yup.object().notRequired(),
+  body: yup.string().notRequired(),
 });

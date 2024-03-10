@@ -21,7 +21,7 @@ const ResourceSidebar = ({
   resourceStore,
   onItemSelect,
 }: ResourceSidebarProps): JSX.Element => {
-  const resources = resourceStore?.resources ?? [];
+  const resources: any[] = resourceStore?.resources ?? [];
 
   const [selectedItem, setSelectedItem] = useState<string | undefined>(
     undefined
@@ -29,11 +29,11 @@ const ResourceSidebar = ({
 
   // TODO set react memo
   const coreResources: CoreResource[] = resources?.filter(
-    (resource: any) => resource?.coreResource
+    (resource: any) => resource?.core
   );
 
   const dynamicResources: Resource[] = resources?.filter(
-    (resource: any) => !resource?.coreResource
+    (resource: any) => !resource?.core
   );
 
   const itemClassName = (resourceID: string | undefined) => {
@@ -55,8 +55,8 @@ const ResourceSidebar = ({
 
   const handleAddResource = () => {
     resourceStore?.addInitialResource();
-    setSelectedItem("newResource");
-    onItemSelect?.("newResource");
+    setSelectedItem("new");
+    onItemSelect?.("new");
   };
 
   return (

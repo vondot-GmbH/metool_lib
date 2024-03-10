@@ -15,6 +15,11 @@
   border-radius: 4px;
 }
 
+.error {
+  border: 1px solid #dc3545;
+  font-size: 12px;
+}
+
 .addButton {
   cursor: pointer;
   padding: 5px;
@@ -30,4 +35,5 @@
 .removeButton {
   cursor: pointer;
   padding: 5px;
+  margin-top: 3px;
 }
