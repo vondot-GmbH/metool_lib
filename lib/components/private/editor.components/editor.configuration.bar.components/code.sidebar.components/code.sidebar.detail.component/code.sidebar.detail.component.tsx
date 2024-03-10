@@ -37,21 +37,15 @@ const CodeSidebarDetail = ({
   >(isNewItem ? undefined : selectedItem?.resource?._id);
 
   useEffect(() => {
-    if (isNewItem && selectedResourceId === undefined) {
-      console.log("useEffect __ new item");
-      // Hier könnten Sie Logik einfügen, um eine Standard-Ressourcen-ID festzulegen, falls das Element neu ist
-    } else {
-      // const resource = resourceStore?.getResource(selectedResourceId ?? "");
+    // if (isNewItem && selectedResourceId != null) {
+    const resource = resourceStore?.getResource(selectedResourceId ?? "");
 
-      setSelectedItem((currentItem: any) => ({
-        ...currentItem,
-        // resource,
-        // type: resource?.type,
-      }));
-
-      console.log("setSelectedItem __ else  item");
-      console.log("selectedItem", JSON.stringify(selectedItem));
-    }
+    setSelectedItem((currentItem: any) => ({
+      ...currentItem,
+      resource,
+      type: resource?.type,
+    }));
+    // }
   }, [selectedResourceId, isNewItem, resourceStore]);
 
   const handleResourceChange = (resourceId: string) => {
