@@ -49,16 +49,11 @@ CanvasEditorProps): JSX.Element => {
   useEffect(() => {
     // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
     editorStore?.initializeEditorBreakpointConfig();
-
-    // initialize the provided queries
-    // queryStore?.setQueries(queries); // TODO Remove
   }, []);
 
   return (
     <MainLayout topBars={[<TopBarComponent onSaveChanges={onSaveChanges} />]}>
-      <MainLayout
-        sideBars={[<ConfigurationSidebar onSaveChanges={onSaveChanges} />]}
-      >
+      <MainLayout sideBars={[<ConfigurationSidebar />]}>
         <SidebarProvider>
           <div className={styles.canvasWrapper}>
             <div className={styles.editorCanvasWrapper}>

@@ -11,15 +11,15 @@ import {
   CoreResource,
   Resource,
 } from "../../../../../../schemas/resource.schemas/resource.schema";
+import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
+import ResourceSidebarDetail from "../resource.sidebar.detail.component/resource.sidebar.detail.component";
 
 interface ResourceSidebarProps {
   resourceStore?: ResourceStore;
-  onItemSelect?: (resourceID: string) => void;
 }
 
 const ResourceSidebar = ({
   resourceStore,
-  onItemSelect,
 }: ResourceSidebarProps): JSX.Element => {
   const resources: any[] = resourceStore?.resources ?? [];
 
@@ -50,20 +50,57 @@ const ResourceSidebar = ({
     }
 
     setSelectedItem(resourceID);
-    onItemSelect?.(resourceID);
   };
 
   const handleAddResource = () => {
     resourceStore?.addInitialResource();
     setSelectedItem("new");
-    onItemSelect?.("new");
   };
 
-  return (
-    <div>
-      {coreResources?.length != 0 && (
-        <ComponentWrapper title={"Core Resources"}>
-          {coreResources?.map((resource) => {
+  const buildCoreResources = (): JSX.Element => {
+    return (
+      <>
+        {coreResources?.length != 0 && (
+          <ComponentWrapper title={"Core Resources"}>
+            {coreResources?.map((resource) => {
+              return (
+                <Row
+                  className={itemClassName(resource?.resourceID)}
+                  key={resource?.resourceID}
+                  onClick={() => {
+                    handleSelectItem(resource?.resourceID);
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faBookmark}
+                    className={styles.resourceIcon}
+                  />
+                  <RunningText>{resource.title}</RunningText>
+                </Row>
+              );
+            })}
+          </ComponentWrapper>
+        )}
+      </>
+    );
+  };
+
+  const buildDynamicResources = (): JSX.Element => {
+    return (
+      <>
+        <ComponentWrapper
+          title={"Resources"}
+          action={
+            <FontAwesomeIcon
+              icon={faSquarePlus}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                handleAddResource();
+              }}
+            />
+          }
+        >
+          {dynamicResources?.map((resource) => {
             return (
               <Row
                 className={itemClassName(resource?.resourceID)}
@@ -76,44 +113,30 @@ const ResourceSidebar = ({
                   icon={faBookmark}
                   className={styles.resourceIcon}
                 />
-                <RunningText>{resource.title}</RunningText>
+                <RunningText>{resource?.title ?? "--"}</RunningText>
               </Row>
             );
           })}
         </ComponentWrapper>
-      )}
+      </>
+    );
+  };
 
-      <ComponentWrapper
-        title={"Resources"}
-        action={
-          <FontAwesomeIcon
-            icon={faSquarePlus}
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              handleAddResource();
-            }}
-          />
-        }
-      >
-        {dynamicResources?.map((resource) => {
-          return (
-            <Row
-              className={itemClassName(resource?.resourceID)}
-              key={resource?.resourceID}
-              onClick={() => {
-                handleSelectItem(resource?.resourceID);
-              }}
-            >
-              <FontAwesomeIcon
-                icon={faBookmark}
-                className={styles.resourceIcon}
-              />
-              <RunningText>{resource?.title ?? "--"}</RunningText>
-            </Row>
-          );
-        })}
-      </ComponentWrapper>
-    </div>
+  return (
+    <Row className={styles.configurationSidebar}>
+      <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
+        {buildCoreResources()}
+        {buildDynamicResources()}
+      </ResizableSidebar>
+
+      {selectedItem != null && (
+        <ResourceSidebarDetail
+          key={selectedItem}
+          selectedItemID={selectedItem}
+          onClose={() => setSelectedItem(undefined)}
+        />
+      )}
+    </Row>
   );
 };
 

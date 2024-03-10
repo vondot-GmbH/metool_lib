@@ -8,6 +8,7 @@ import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 import { faAddressBook, faChartBar } from "@fortawesome/free-regular-svg-icons";
 import { faCalendar } from "@fortawesome/free-regular-svg-icons/faCalendar";
+import ResizableSidebar from "../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 
 interface StateSidebarProps {
   stateStore?: StateStore;
@@ -67,25 +68,27 @@ const StateSidebar = ({ stateStore }: StateSidebarProps): JSX.Element => {
   }
 
   return (
-    <ComponentWrapper title={"State"}>
-      <SelectDropDown
-        items={preparedWidgets}
-        onChange={(item) => {
-          if (!item?.value) return;
-          handleSelectionChange(item);
-        }}
-        placeholder={"Select Entity"}
-      />
-
-      {selectedWidgetState && (
-        <JsonView
-          src={selectedWidgetState}
-          enableClipboard={false}
-          dark={true}
-          theme="vscode"
+    <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
+      <ComponentWrapper title={"State"}>
+        <SelectDropDown
+          items={preparedWidgets}
+          onChange={(item) => {
+            if (!item?.value) return;
+            handleSelectionChange(item);
+          }}
+          placeholder={"Select Entity"}
         />
-      )}
-    </ComponentWrapper>
+
+        {selectedWidgetState && (
+          <JsonView
+            src={selectedWidgetState}
+            enableClipboard={false}
+            dark={true}
+            theme="vscode"
+          />
+        )}
+      </ComponentWrapper>
+    </ResizableSidebar>
   );
 };
 

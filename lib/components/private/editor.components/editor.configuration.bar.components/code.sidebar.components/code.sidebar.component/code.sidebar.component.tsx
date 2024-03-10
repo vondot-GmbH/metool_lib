@@ -12,22 +12,24 @@ import {
   CoreQuery,
   Query,
 } from "../../../../../../schemas/query.schemas/query.schema";
+import CodeSidebarDetail from "../code.sidebar.detail.component/code.sidebar.detail.component";
+import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 
 interface CodeSidebarProps {
   widgetStore?: WidgetStore;
   queryStore?: QueryStore;
-  onItemSelect?: (queryID: string) => void;
 }
 
-const CodeSidebar = ({
-  queryStore,
-  onItemSelect,
-}: CodeSidebarProps): JSX.Element => {
+const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
   const queries: any[] = queryStore?.queries ?? [];
   const currentSelectedQuery = queryStore?.currentSelectedQuery;
 
   const coreQueries: CoreQuery[] = queries?.filter((query: any) => query?.core);
   const dynamicQueries: Query[] = queries?.filter((query: any) => !query?.core);
+
+  const [selectedItem, setSelectedItem] = useState<string | undefined>(
+    undefined
+  );
 
   if (currentSelectedQuery != null && currentSelectedQuery?._id == null) {
     dynamicQueries.push(currentSelectedQuery);
@@ -47,17 +49,12 @@ const CodeSidebar = ({
     );
   };
 
-  const [selectedItem, setSelectedItem] = useState<string | undefined>(
-    undefined
-  );
-
   const handleSelectItem = (queryID: string | null) => {
     if (queryID == null) {
       return;
     }
 
     setSelectedItem(queryID);
-    onItemSelect?.(queryID);
   };
 
   const handleAddQuery = () => {
@@ -66,18 +63,56 @@ const CodeSidebar = ({
       return;
     }
     setSelectedItem(initialQuery?.queryID);
-    onItemSelect?.(initialQuery?.queryID);
   };
 
-  return (
-    <div>
-      {coreQueries?.length != 0 && (
-        <ComponentWrapper title={"Core Queries"}>
-          {coreQueries?.map((query: CoreQuery) => {
+  const buiilCoreQueries = (): JSX.Element => {
+    return (
+      <>
+        {coreQueries?.length != 0 && (
+          <ComponentWrapper title={"Core Queries"}>
+            {coreQueries?.map((query: CoreQuery) => {
+              return (
+                <Row
+                  className={itemClassName(query?.queryID)}
+                  key={query?.queryID}
+                  onClick={() => {
+                    handleSelectItem(query?.queryID);
+                  }}
+                >
+                  <FontAwesomeIcon
+                    icon={faBookmark}
+                    className={styles.codeIcon}
+                  />
+                  <RunningText>{query.title}</RunningText>
+                </Row>
+              );
+            })}
+          </ComponentWrapper>
+        )}
+      </>
+    );
+  };
+
+  const buildDynamicQueries = (): JSX.Element => {
+    return (
+      <>
+        <ComponentWrapper
+          title={"Code"}
+          action={
+            <FontAwesomeIcon
+              icon={faSquarePlus}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                handleAddQuery();
+              }}
+            />
+          }
+        >
+          {dynamicQueries?.map((query: Query) => {
             return (
               <Row
                 className={itemClassName(query?.queryID)}
-                key={query?.queryID}
+                key={query.queryID}
                 onClick={() => {
                   handleSelectItem(query?.queryID);
                 }}
@@ -91,36 +126,25 @@ const CodeSidebar = ({
             );
           })}
         </ComponentWrapper>
-      )}
+      </>
+    );
+  };
 
-      <ComponentWrapper
-        title={"Code"}
-        action={
-          <FontAwesomeIcon
-            icon={faSquarePlus}
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              handleAddQuery();
-            }}
-          />
-        }
-      >
-        {dynamicQueries?.map((query: Query) => {
-          return (
-            <Row
-              className={itemClassName(query?.queryID)}
-              key={query.queryID}
-              onClick={() => {
-                handleSelectItem(query?.queryID);
-              }}
-            >
-              <FontAwesomeIcon icon={faBookmark} className={styles.codeIcon} />
-              <RunningText>{query.title}</RunningText>
-            </Row>
-          );
-        })}
-      </ComponentWrapper>
-    </div>
+  return (
+    <Row className={styles.configurationSidebar}>
+      <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
+        {buiilCoreQueries()}
+        {buildDynamicQueries()}
+      </ResizableSidebar>
+
+      {selectedItem != null && (
+        <CodeSidebarDetail
+          key={selectedItem}
+          selectedItemID={selectedItem}
+          onClose={() => setSelectedItem(undefined)}
+        />
+      )}
+    </Row>
   );
 };
 

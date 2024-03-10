@@ -15,17 +15,17 @@ import { ChangeRecord } from "../../../../../../globals/interfaces/change.record
 
 interface ResourceSidebarDetailProps {
   resourceStore?: ResourceStore;
-  selectedItem?: string;
+  selectedItemID?: string;
   onClose: () => void;
   onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 }
 
 const ResourceSidebarDetail = ({
-  selectedItem,
+  selectedItemID,
   resourceStore,
   onClose,
 }: ResourceSidebarDetailProps): JSX.Element | null => {
-  const selectedResource = resourceStore?.getResource(selectedItem ?? "");
+  const selectedResource = resourceStore?.getResource(selectedItemID ?? "");
 
   const [selectedType, setSelectedType] = useState<DataSourceType | null>(
     selectedResource?.type ?? null
@@ -49,7 +49,7 @@ const ResourceSidebarDetail = ({
   return (
     <ResizableSidebar initialWidth={380} minWidth={300} maxWidth={500}>
       <ComponentWrapper
-        title={selectedItem}
+        title={selectedItemID}
         action={
           <SizedContainer size="s">
             {!(selectedResource as any)?.core && (
