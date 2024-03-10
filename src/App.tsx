@@ -8,18 +8,12 @@ import {
   Init,
   TextWidget,
 } from "../lib/main";
-import ViewStore from "../lib/stores/view.store";
 import { Provider as MobxProvider } from "mobx-react";
-import WidgetStore from "../lib/stores/widget.store";
 import { EXAMPLE_WIDGETS_DATA_RENAMED } from "./example.data";
-import ChangeRecordStore from "../lib/stores/change.record.store";
 import { TableWidget } from "../lib/main";
 import Gleap from "Gleap";
-import EditorStore from "../lib/stores/editor.store";
 import { faHardDrive } from "@fortawesome/free-regular-svg-icons";
-import StateStore from "../lib/stores/state.store";
-import QueryStore from "../lib/stores/query.store";
-import ResourceStore from "../lib/stores/resource.store";
+import RootStore from "../lib/stores/root.store";
 
 // only for testing purposes
 
@@ -45,7 +39,6 @@ const coreQueryConfig = {
     method: "POST",
     url: "/queries",
     params: "",
-    body: {},
     core: true,
   },
   deleteQuery: {
@@ -76,7 +69,6 @@ const coreQueryConfig = {
     method: "GET",
     url: "/queries/:queryID",
     params: "",
-    body: {},
     core: true,
   },
   updateQuery: {
@@ -87,7 +79,50 @@ const coreQueryConfig = {
     method: "PUT",
     url: "/queries",
     params: "",
-    body: {},
+    core: true,
+  },
+
+  getResources: {
+    _id: "getResources",
+    title: "Get Resources",
+    resource: coreResources,
+    type: DataSourceType.REST_API,
+    method: "GET",
+    url: "/resources",
+    params: "",
+    core: true,
+  },
+
+  getResourcesById: {
+    _id: "getResourcesById",
+    title: "Get Resource by ID",
+    resource: coreResources,
+    type: DataSourceType.REST_API,
+    method: "GET",
+    url: "/resources/:resourceID",
+    params: "",
+    core: true,
+  },
+
+  updateResource: {
+    _id: "updateResource",
+    title: "Update Resource",
+    resource: coreResources,
+    type: DataSourceType.REST_API,
+    method: "PUT",
+    url: "/resources",
+    params: "",
+    core: true,
+  },
+
+  deleteResource: {
+    _id: "deleteResource",
+    title: "Delete Resource",
+    resource: coreResources,
+    type: DataSourceType.REST_API,
+    method: "DELETE",
+    url: "/resources",
+    params: "",
     core: true,
   },
 } as CoreRestQuerConfig;
@@ -148,28 +183,11 @@ Init({
 
 Gleap.initialize("YZ6N1CITLut6MeqEhbITgwBid7oB7nc6");
 
-const viewStore = new ViewStore();
-const changeRecordStore = new ChangeRecordStore();
-
-const resourceStore = new ResourceStore(changeRecordStore);
-const editorStore = new EditorStore();
-const stateStore = new StateStore();
-const queryStore = new QueryStore(stateStore);
-const widgetStore = new WidgetStore(changeRecordStore, queryStore);
-
-const stores = {
-  viewStore,
-  widgetStore,
-  changeRecordStore,
-  editorStore,
-  stateStore,
-  queryStore,
-  resourceStore,
-};
+const rootStore = new RootStore();
 
 function App() {
   return (
-    <MobxProvider {...stores}>
+    <MobxProvider {...rootStore}>
       <div className="main-container">
         <CanvasEditor
           // queries={QUERY_DATA} // TODO

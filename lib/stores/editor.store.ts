@@ -1,6 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import ConfigProvider from "../config/config.provider";
 import { EditorMode } from "../globals/enums/editor.enum";
+import RootStore from "./root.store";
 
 class EditorStore {
   private _currentBreakpoint: string = "";
@@ -16,7 +17,10 @@ class EditorStore {
 
   private _visualWidgetOutlineGuide: boolean = false;
 
-  constructor() {
+  private stores: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.stores = rootStore;
     makeAutoObservable(this);
   }
 

@@ -7,7 +7,7 @@ import styles from "./code.sidebar.component.module.scss";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark, faSquarePlus } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CoreQuery,
   Query,
@@ -32,6 +32,12 @@ const CodeSidebar = ({
   if (currentSelectedQuery != null && currentSelectedQuery?._id == "new") {
     dynamicQueries.push(currentSelectedQuery);
   }
+
+  useEffect(() => {
+    if (currentSelectedQuery?._id != null) {
+      handleSelectItem(currentSelectedQuery?._id);
+    }
+  }, [currentSelectedQuery]);
 
   const itemClassName = (queryID: string | null) => {
     return (

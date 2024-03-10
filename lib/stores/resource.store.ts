@@ -6,17 +6,20 @@ import {
   MixedResource,
 } from "../schemas/resource.schemas/resource.schema";
 import { makeAutoObservable } from "mobx";
-import ChangeRecordStore from "./change.record.store";
 import { ChangeRecord } from "../globals/interfaces/change.record.interface";
+import { CoreRestQueryType } from "../schemas/query.schemas/query.schema";
+import { queryExecutor } from "../provider/http/http.rest.query.client";
+import RootStore from "./root.store";
 
 class ResourceStore {
   private _resources: MixedResourceMap = new Map();
-  private _changeRecordStore: ChangeRecordStore;
+  private stores: RootStore;
 
-  constructor(changeRecordStore: ChangeRecordStore) {
-    this._changeRecordStore = changeRecordStore;
+  constructor(rootStore: RootStore) {
+    this.stores = rootStore;
     makeAutoObservable(this);
   }
+
   //! Setter
 
   intializeResources(resources: Resource[]): void {
@@ -56,20 +59,20 @@ class ResourceStore {
 
   saveResourceChangesAndProcess(resource: Resource): ChangeRecord[] {
     if (resource?._id == null || resource?._id === "newResource") {
-      this._changeRecordStore.setResourceRecord(
+      this.stores.changeRecordStore.setResourceRecord(
         "newResource",
         "CREATE",
         resource
       );
     } else if (resource?._id != null) {
-      this._changeRecordStore.setResourceRecord(
+      this.stores.changeRecordStore.setResourceRecord(
         resource._id,
         "UPDATE",
         resource
       );
     }
 
-    return this._changeRecordStore.processReleaseChanges();
+    return this.stores.changeRecordStore.processReleaseChanges();
   }
 
   addInitialResource(): void {
@@ -77,6 +80,38 @@ class ResourceStore {
       _id: "newResource",
       title: "New Resource",
     } as any);
+  }
+
+  async fetchAndSaveResourcesForQueries(): Promise<void> {
+    console.log("fetchAndSaveResourcesForQueries");
+
+    const getResourceByIdQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.GET_RESOURCES_BY_ID
+    );
+
+    const queries = this.stores.queryStore.queries;
+
+    if (queries == null || getResourceByIdQuery == null) {
+      return;
+    }
+
+    for (const query of queries) {
+      const isCoreResource = (query?.resource as any)?.core ?? false;
+      const resourceID = query?.resource?._id;
+
+      if (resourceID != null && !isCoreResource) {
+        const response = await queryExecutor.executeRestQuery(
+          getResourceByIdQuery,
+          {
+            resourceID: resourceID,
+          }
+        );
+
+        if (response == null) continue;
+
+        this._resources.set(resourceID, response);
+      }
+    }
   }
 }
 

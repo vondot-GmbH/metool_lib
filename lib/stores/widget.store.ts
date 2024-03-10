@@ -8,13 +8,12 @@ import {
   WidgetPositioning,
 } from "../schemas/widget.schemas/widget.schema";
 import { WidgetContextMenu } from "../globals/interfaces/widget.state.interface";
-import ChangeRecordStore from "./change.record.store";
 import { Layout } from "react-grid-layout";
 import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
 import { extractDependenciesAndNonDependencies } from "../globals/helpers/state.helper";
 import { runInAction } from "mobx";
-import QueryStore from "./query.store";
+import RootStore from "./root.store";
 
 class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
@@ -31,12 +30,10 @@ class WidgetStore {
     selectedWidgetID: null,
   };
 
-  private changeRecordStore: ChangeRecordStore;
-  private queryStore: QueryStore;
+  private stores: RootStore;
 
-  constructor(changeRecordStore: ChangeRecordStore, queryStore: QueryStore) {
-    this.changeRecordStore = changeRecordStore;
-    this.queryStore = queryStore;
+  constructor(rootStore: RootStore) {
+    this.stores = rootStore;
     makeAutoObservable(this);
   }
 
@@ -69,7 +66,7 @@ class WidgetStore {
     }
 
     // TODO execute the requested dependencies
-    this.queryStore.intializeCoreQueriesAndExecuteDependencies(
+    this.stores.queryStore.intializeCoreQueriesAndExecuteDependencies(
       this._analyzedWidgetOptions
     );
 
@@ -169,7 +166,7 @@ class WidgetStore {
 
       this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
 
-      this.changeRecordStore.setChangeWidgetRecord(
+      this.stores.changeRecordStore.setChangeWidgetRecord(
         widgetID,
         "UPDATE",
         updatedWidgetHierarchy.widget
@@ -212,7 +209,7 @@ class WidgetStore {
 
       this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
 
-      this.changeRecordStore.setChangeWidgetRecord(
+      this.stores.changeRecordStore.setChangeWidgetRecord(
         widgetID,
         "UPDATE",
         updatedWidgetHierarchy.widget
@@ -270,7 +267,7 @@ class WidgetStore {
         this.setStructuredWidgetHierarchy(widgetID, widgetHierarchy);
 
         // update the change record store
-        this.changeRecordStore.setChangeWidgetRecord(
+        this.stores.changeRecordStore.setChangeWidgetRecord(
           widgetID,
           "UPDATE",
           widgetHierarchy.widget
@@ -306,7 +303,7 @@ class WidgetStore {
           );
 
           // update the change record store
-          this.changeRecordStore.setChangeWidgetRecord(
+          this.stores.changeRecordStore.setChangeWidgetRecord(
             widgetID,
             "UPDATE",
             this.getStructuredWidgetHierarchyByWidgetID(widgetID)?.widget
@@ -352,7 +349,7 @@ class WidgetStore {
     this._structuredWidgetHierarchy.delete(widgetID);
 
     // set the change record for the widget to delete
-    this.changeRecordStore.setChangeWidgetRecord(
+    this.stores.changeRecordStore.setChangeWidgetRecord(
       widgetID,
       "DELETE",
       widgetToDelete.widget
@@ -408,7 +405,7 @@ class WidgetStore {
     }
 
     // set the change record for the new widget
-    this.changeRecordStore.setChangeWidgetRecord(
+    this.stores.changeRecordStore.setChangeWidgetRecord(
       widgetID,
       "CREATE",
       newWidget.widget

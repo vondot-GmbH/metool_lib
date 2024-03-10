@@ -23,8 +23,6 @@ const TableWidget = ({
   useEffect(() => {
     const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
 
-    console.log("analized TableWidget");
-    console.log(JSON.stringify(analized));
     if (!analized) return;
 
     stateStore?.initializeDynamicOptions(
@@ -86,6 +84,7 @@ const TableWidget = ({
         handleSelectionDataChange(selectedData);
       }}
       onSelectionIndexChange={(selectedIndexes) => {
+        // TODO: Implement this
         // console.log("selectedIndexes");
         // console.log(selectedIndexes);
       }}

@@ -34,6 +34,11 @@ export enum CoreRestQueryType {
   UPDATE_QUERY = "updateQuery",
   DELETE_QUERY = "deleteQuery",
   CREATE_QUERY = "createQuery",
+
+  GET_RESOURCES = "getResources",
+  GET_RESOURCES_BY_ID = "getResourcesById",
+  UPDATE_RESOURCE = "updateResource",
+  DELETE_RESOURCE = "deleteResource",
 }
 
 export interface CoreRestQuerConfig {
@@ -48,10 +53,10 @@ export interface CoreRestQuerConfig {
   [CoreRestQueryType.UPDATE_QUERY]: CoreRestQuery;
   [CoreRestQueryType.CREATE_QUERY]: CoreRestQuery;
 
-  // getResources: CoreRestQuery;
-  // updateResource: CoreRestQuery;
-  // deleteResource: CoreRestQuery;
-  // createResource: CoreRestQuery;
+  [CoreRestQueryType.GET_RESOURCES]: CoreRestQuery;
+  [CoreRestQueryType.GET_RESOURCES_BY_ID]: CoreRestQuery;
+  [CoreRestQueryType.UPDATE_RESOURCE]: CoreRestQuery;
+  [CoreRestQueryType.DELETE_RESOURCE]: CoreRestQuery;
 }
 
 //! QUERY RESPONSE

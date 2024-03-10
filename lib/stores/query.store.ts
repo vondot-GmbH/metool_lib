@@ -5,17 +5,19 @@ import {
   QueryMap,
 } from "../schemas/query.schemas/query.schema";
 import ConfigProvider from "../config/config.provider";
-import StateStore, { Dependency, StateSelector } from "./state.store";
+import { Dependency, StateSelector } from "./state.store";
 import { AnalyzedWidgetOptions } from "../schemas/widget.schemas/widget.schema";
 import { queryExecutor } from "../provider/http/http.rest.query.client";
+import RootStore from "./root.store";
 
 class QueryStore {
   private _queries: QueryMap = new Map();
-  private _stateStore: StateStore;
   private _currentSelectedQuery: Query | null = null;
 
-  constructor(stateStore: StateStore) {
-    this._stateStore = stateStore;
+  private stores: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.stores = rootStore;
     makeAutoObservable(this);
   }
 
@@ -43,6 +45,8 @@ class QueryStore {
     this.setQueries(coreQueries);
 
     await this.fetchAndSetQueries(queryDependencies);
+
+    await this.stores.resourceStore?.fetchAndSaveResourcesForQueries();
   }
 
   //! Setter
@@ -83,8 +87,8 @@ class QueryStore {
     return query;
   }
 
-  async fetchAndSetQueries(dpendencies: Dependency[]): Promise<void> {
-    const filteredDependencies = dpendencies?.filter(
+  async fetchAndSetQueries(dependencies: Dependency[]): Promise<void> {
+    const filteredDependencies = dependencies?.filter(
       (dep) => dep.selector === StateSelector.QUERIES
     );
 
@@ -106,7 +110,7 @@ class QueryStore {
       this.setQueries([response]);
 
       // TODO Move method
-      await this._stateStore?.executeAndProcessRestQueries([response]);
+      await this.stores.stateStore?.executeAndProcessRestQueries([response]);
     }
 
     // this.setQueries(response);
@@ -117,6 +121,24 @@ class QueryStore {
 
     const preparedQuery = {
       ...createQuery,
+      body: query,
+    } as any;
+
+    if (query == null) return;
+
+    const response = await queryExecutor.executeRestQuery(preparedQuery, {});
+
+    if (response == null) return;
+
+    this.setCurrentSelectedQuery(response);
+    this._queries.set(response._id, response);
+  }
+
+  async updateAndSaveQuery(query: Query): Promise<void> {
+    const updateQuery = this.getQuery(CoreRestQueryType.UPDATE_QUERY);
+
+    const preparedQuery = {
+      ...updateQuery,
       body: query,
     } as any;
 

@@ -1,10 +1,13 @@
 import { makeAutoObservable } from "mobx";
 import { ChangeRecord } from "../globals/interfaces/change.record.interface";
+import RootStore from "./root.store";
 
 class ChangeRecordStore {
   private _changeRecords = new Map<string, ChangeRecord>();
+  private stores: RootStore;
 
-  constructor() {
+  constructor(rootStore: RootStore) {
+    this.stores = rootStore;
     makeAutoObservable(this);
   }
 
