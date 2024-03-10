@@ -50,13 +50,13 @@ const WidgetSidebar = ({}: WidgetSidebarProps): JSX.Element => {
         >
           {registeredWidgets.map((widget) => {
             return (
-              <>
+              <div key={widget.type}>
                 {_buildWidgetItem({
                   icon: widget.icon || fallbackImage,
                   name: widget.name,
                   type: widget.type,
                 })}
-              </>
+              </div>
             );
           })}
         </Wrap>
