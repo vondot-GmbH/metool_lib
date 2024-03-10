@@ -9,6 +9,7 @@ import { Dependency, StateSelector } from "./state.store";
 import { AnalyzedWidgetOptions } from "../schemas/widget.schemas/widget.schema";
 import { queryExecutor } from "../provider/http/http.rest.query.client";
 import RootStore from "./root.store";
+import { getUniqueID } from "../globals/helpers/global.helper";
 
 class QueryStore {
   private _queries: QueryMap = new Map();
@@ -44,15 +45,15 @@ class QueryStore {
     // set all provided core queries
     this.setQueries(coreQueries);
 
-    await this.fetchAndSetQueries(queryDependencies);
+    await this.stores.resourceStore?.fetchAllResourcesAndSave();
 
-    await this.stores.resourceStore?.fetchAndSaveResourcesForQueries();
+    await this.fetchAndSetQueries(queryDependencies);
   }
 
   //! Setter
   setQueries(queries: Query[]): void {
     queries.forEach((query) => {
-      if (query?._id) this._queries.set(query?._id, query);
+      if (query?.queryID) this._queries.set(query?.queryID, query);
     });
   }
 
@@ -78,7 +79,8 @@ class QueryStore {
 
   createInitialQuery(): Query {
     const query = {
-      _id: "new",
+      _id: null,
+      queryID: getUniqueID(),
       title: "New Query",
     } as Query;
 
@@ -101,11 +103,17 @@ class QueryStore {
 
       const query = this.getQuery(CoreRestQueryType.GET_QUERIES_BY_ID);
 
+      console.log("getQuery dep: ", query);
+
       if (queryID == null || query == null) continue;
 
-      const response = await queryExecutor.executeRestQuery(query, {
-        queryID: queryID,
-      });
+      const response = await queryExecutor.executeRestQuery(
+        query,
+        {
+          queryID: queryID,
+        },
+        this.stores.resourceStore
+      );
 
       this.setQueries([response]);
 
@@ -126,12 +134,16 @@ class QueryStore {
 
     if (query == null) return;
 
-    const response = await queryExecutor.executeRestQuery(preparedQuery, {});
+    const response = await queryExecutor.executeRestQuery(
+      preparedQuery,
+      {},
+      this.stores.resourceStore
+    );
 
     if (response == null) return;
 
     this.setCurrentSelectedQuery(response);
-    this._queries.set(response._id, response);
+    this._queries.set(query.queryID, response);
   }
 
   async updateAndSaveQuery(query: Query): Promise<void> {
@@ -144,12 +156,16 @@ class QueryStore {
 
     if (query == null) return;
 
-    const response = await queryExecutor.executeRestQuery(preparedQuery, {});
+    const response = await queryExecutor.executeRestQuery(
+      preparedQuery,
+      { queryID: query.queryID },
+      this.stores.resourceStore
+    );
 
     if (response == null) return;
 
     this.setCurrentSelectedQuery(response);
-    this._queries.set(response._id, response);
+    this._queries.set(query.queryID, response);
   }
 }
 

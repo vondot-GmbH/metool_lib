@@ -3,6 +3,7 @@ import * as yup from "yup";
 
 export interface BaseResource {
   _id?: string;
+  resourceID: string;
   title: string;
   description?: string;
   type: DataSourceType;

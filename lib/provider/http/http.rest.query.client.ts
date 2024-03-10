@@ -1,35 +1,29 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import ConfigProvider from "../../config/config.provider";
 import {
   CoreRestResource,
   DataSourceType,
   Resource,
 } from "../../schemas/resource.schemas/resource.schema";
 import { Query } from "../../main";
+import ResourceStore from "../../stores/resource.store";
 
 class QueryExecutor<Q extends Query> {
   // process and execute the querys for REST_API type and returns the response
   async executeRestQuery(
     query: Q,
-    variables: Record<string, string>
+    variables: Record<string, string>,
+    resourcesStore: ResourceStore
   ): Promise<any> {
-    let resource: Resource | undefined = query?.resource;
-
     // check if query is of type REST_API
     if (query.type != DataSourceType.REST_API) {
       console.error("Query type is not REST_API");
       return null;
     }
 
-    const resourceID = query?.resource?._id;
+    const resourceID = query?.resourceID;
     const isCoreResource = (query?.resource as any)?.core ?? false;
 
-    // if resource is a core resource, get it from the config provider
-    if (isCoreResource) {
-      resource = ConfigProvider.getInstance().getCoreResource(
-        resourceID as string
-      );
-    }
+    const resource = resourcesStore?.getResource(resourceID);
 
     if (resource == null) {
       console.error("Resource not found");

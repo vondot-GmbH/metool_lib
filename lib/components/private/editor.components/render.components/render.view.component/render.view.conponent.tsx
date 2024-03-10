@@ -13,13 +13,11 @@ import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
 import { useEffect, useMemo } from "react";
 import QueryStore from "../../../../../stores/query.store";
-import { Resource } from "../../../../../schemas/resource.schemas/resource.schema";
 import ResourceStore from "../../../../../stores/resource.store";
 
 interface RenderScreenProps {
   readonly?: boolean;
   widgets: Widget[];
-  resources?: Resource[];
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   queryStore?: QueryStore;
@@ -32,13 +30,13 @@ const RenderView = ({
   readonly = true,
   widgetStore,
   showVisualWidgetOutline = false,
-  resources,
   resourceStore,
 }: RenderScreenProps): JSX.Element => {
   // set initial resources to the resource store
   useEffect(() => {
-    if (resources) resourceStore?.intializeResources(resources);
-  }, [resources]);
+    // TODO
+    // resourceStore?.intializeResources();
+  }, []);
 
   const structuredWidgets = useMemo(() => {
     return widgetStore?.setInitialWidgetAndConvert(widgets);

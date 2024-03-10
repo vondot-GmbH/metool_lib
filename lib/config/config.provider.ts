@@ -30,11 +30,13 @@ class ConfigProvider {
       return;
     }
 
+    // TODO
     resources.forEach((resource) => {
-      if (resource?._id == null) {
+      if (resource?.resourceID == null) {
         return;
       }
-      this._coreResources.set(resource?._id, resource);
+
+      this._coreResources.set(resource?.resourceID, resource);
     });
   }
 

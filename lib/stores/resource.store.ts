@@ -22,26 +22,22 @@ class ResourceStore {
 
   //! Setter
 
-  intializeResources(resources: Resource[]): void {
+  async intializeResources(resources?: Resource[]): Promise<Resource[]> {
     const configProvider = ConfigProvider.getInstance();
     const coreResources = configProvider.getCoreResources();
 
     // set all provided resources
-    this.setResources(resources);
+    if (resources != null) this.setResources(resources);
 
     // set all core resources from the config provider
     this.setResources(coreResources);
+
+    return this.resources;
   }
 
   private setResources(resources: Resource[] | CoreResource[]): void {
     resources.forEach((resource: any) => {
-      if (resource?.core || resource?._id != null) {
-        this._resources.set(resource._id, resource);
-      }
-
-      if (resource?._id != null && !resource?.core) {
-        this._resources.set(resource._id, resource);
-      }
+      this._resources.set(resource?.resourceID, resource);
     });
   }
 
@@ -82,36 +78,22 @@ class ResourceStore {
     } as any);
   }
 
-  async fetchAndSaveResourcesForQueries(): Promise<void> {
-    console.log("fetchAndSaveResourcesForQueries");
-
-    const getResourceByIdQuery = this.stores.queryStore.getQuery(
-      CoreRestQueryType.GET_RESOURCES_BY_ID
+  async fetchAllResourcesAndSave(): Promise<void> {
+    const query = this.stores.queryStore.getQuery(
+      CoreRestQueryType.GET_RESOURCES
     );
 
-    const queries = this.stores.queryStore.queries;
+    if (query == null) return;
 
-    if (queries == null || getResourceByIdQuery == null) {
-      return;
-    }
+    const response = await queryExecutor.executeRestQuery(
+      query,
+      {},
+      this.stores.resourceStore
+    );
 
-    for (const query of queries) {
-      const isCoreResource = (query?.resource as any)?.core ?? false;
-      const resourceID = query?.resource?._id;
+    if (response == null) return;
 
-      if (resourceID != null && !isCoreResource) {
-        const response = await queryExecutor.executeRestQuery(
-          getResourceByIdQuery,
-          {
-            resourceID: resourceID,
-          }
-        );
-
-        if (response == null) continue;
-
-        this._resources.set(resourceID, response);
-      }
-    }
+    this.setResources(response);
   }
 }
 

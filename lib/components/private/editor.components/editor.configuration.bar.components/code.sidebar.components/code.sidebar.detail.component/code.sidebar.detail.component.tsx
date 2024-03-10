@@ -26,18 +26,15 @@ const CodeSidebarDetail = ({
   queryStore,
   resourceStore,
 }: CodeSidebarDetailProps): JSX.Element | null => {
-  const isNewItem = selectedItemID === "new";
-
   const [selectedItem, setSelectedItem] = useState<any | undefined>(
     queryStore?.getQuery(selectedItemID ?? "")
   );
 
   const [selectedResourceId, setSelectedResourceId] = useState<
     string | undefined
-  >(isNewItem ? undefined : selectedItem?.resource?._id);
+  >(selectedItem?.resourceID);
 
   useEffect(() => {
-    // if (isNewItem && selectedResourceId != null) {
     const resource = resourceStore?.getResource(selectedResourceId ?? "");
 
     setSelectedItem((currentItem: any) => ({
@@ -45,11 +42,19 @@ const CodeSidebarDetail = ({
       resource,
       type: resource?.type,
     }));
-    // }
-  }, [selectedResourceId, isNewItem, resourceStore]);
+  }, [selectedResourceId, resourceStore]);
 
   const handleResourceChange = (resourceId: string) => {
     setSelectedResourceId(resourceId);
+  };
+
+  const handleSumit = (data: RestQuery) => {
+    console.log("data: ", data);
+    if (data?._id == null) {
+      queryStore?.updateAndSaveQuery(data);
+    } else {
+      queryStore?.createAndSaveQuery(data);
+    }
   };
 
   return (
@@ -76,10 +81,10 @@ const CodeSidebarDetail = ({
         <SelectDropDown
           label="Resource"
           labelPropertyName="title"
-          valuePropertyName="_id"
+          valuePropertyName="resourceID"
           selectedItem={selectedResourceId}
           items={resourceStore?.resources ?? []}
-          onChange={(item) => handleResourceChange(item?._id)}
+          onChange={(item) => handleResourceChange(item?.resourceID)}
         />
 
         {selectedItem?.resource?.type === DataSourceType.REST_API && (
@@ -87,7 +92,7 @@ const CodeSidebarDetail = ({
             iniitialQuery={selectedItem}
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
             onFormSubmit={(data: RestQuery) => {
-              queryStore?.createAndSaveQuery(data);
+              handleSumit(data);
             }}
           />
         )}

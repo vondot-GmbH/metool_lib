@@ -19,6 +19,7 @@ import RootStore from "../lib/stores/root.store";
 
 const coreResources: CoreResource = {
   _id: "baseResource",
+  resourceID: "baseResource",
   title: "base Resource",
   type: DataSourceType.REST_API,
   baseUrl: "http://localhost:3001/api/admin",
@@ -28,13 +29,29 @@ const coreResources: CoreResource = {
     { key: "Accept", value: "application/json" },
   ],
   description: "This is the base resource",
+  requestInterceptors: [
+    {
+      fulfilled: (config) => {
+        console.log("requestInterceptors::::: : ", config);
+
+        config.headers = {
+          ...config.headers,
+          Authorization: `Bearer lalalalallalalalall`,
+        };
+
+        return config;
+      },
+    },
+  ],
 };
 
 const coreQueryConfig = {
   createQuery: {
     _id: "createQuery",
+    queryID: "createQuery",
     title: "Create Query",
     resource: coreResources,
+    resourceID: "baseResource",
     type: DataSourceType.REST_API,
     method: "POST",
     url: "/queries",
@@ -43,6 +60,8 @@ const coreQueryConfig = {
   },
   deleteQuery: {
     _id: "deleteQuery",
+    queryID: "deleteQuery",
+    resourceID: "baseResource",
     title: "Delete Query",
     resource: coreResources,
     type: DataSourceType.REST_API,
@@ -53,7 +72,9 @@ const coreQueryConfig = {
   },
   getQueries: {
     _id: "getQueries",
+    queryID: "getQueries",
     title: "Get Queries",
+    resourceID: "baseResource",
     resource: coreResources,
     type: DataSourceType.REST_API,
     method: "GET",
@@ -63,6 +84,8 @@ const coreQueryConfig = {
   },
   getQueriesById: {
     _id: "getQueriesById",
+    queryID: "getQueriesById",
+    resourceID: "baseResource",
     title: "Get Query by ID",
     resource: coreResources,
     type: DataSourceType.REST_API,
@@ -73,17 +96,21 @@ const coreQueryConfig = {
   },
   updateQuery: {
     _id: "updateQuery",
+    queryID: "updateQuery",
+    resourceID: "baseResource",
     title: "Update Query",
     resource: coreResources,
     type: DataSourceType.REST_API,
     method: "PUT",
-    url: "/queries",
+    url: "/queries/:queryID",
     params: "",
     core: true,
   },
 
   getResources: {
     _id: "getResources",
+    queryID: "getResources",
+    resourceID: "baseResource",
     title: "Get Resources",
     resource: coreResources,
     type: DataSourceType.REST_API,
@@ -95,6 +122,8 @@ const coreQueryConfig = {
 
   getResourcesById: {
     _id: "getResourcesById",
+    queryID: "getResourcesById",
+    resourceID: "baseResource",
     title: "Get Resource by ID",
     resource: coreResources,
     type: DataSourceType.REST_API,
@@ -106,6 +135,8 @@ const coreQueryConfig = {
 
   updateResource: {
     _id: "updateResource",
+    queryID: "updateResource",
+    resourceID: "baseResource",
     title: "Update Resource",
     resource: coreResources,
     type: DataSourceType.REST_API,
@@ -117,8 +148,10 @@ const coreQueryConfig = {
 
   deleteResource: {
     _id: "deleteResource",
+    queryID: "deleteResource",
     title: "Delete Resource",
     resource: coreResources,
+    resourceID: "baseResource",
     type: DataSourceType.REST_API,
     method: "DELETE",
     url: "/resources",
@@ -191,7 +224,6 @@ function App() {
       <div className="main-container">
         <CanvasEditor
           // queries={QUERY_DATA} // TODO
-          resources={[]}
           widgets={EXAMPLE_WIDGETS_DATA_RENAMED}
           onSaveChanges={(changes) => {
             console.log("changes: ", JSON.stringify(changes, null, 2));

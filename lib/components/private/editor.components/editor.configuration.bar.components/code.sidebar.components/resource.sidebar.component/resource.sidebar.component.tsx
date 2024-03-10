@@ -66,10 +66,10 @@ const ResourceSidebar = ({
           {coreResources?.map((resource) => {
             return (
               <Row
-                className={itemClassName(resource?._id)}
-                key={resource?._id}
+                className={itemClassName(resource?.resourceID)}
+                key={resource?.resourceID}
                 onClick={() => {
-                  handleSelectItem(resource?._id);
+                  handleSelectItem(resource?.resourceID);
                 }}
               >
                 <FontAwesomeIcon
@@ -98,17 +98,17 @@ const ResourceSidebar = ({
         {dynamicResources?.map((resource) => {
           return (
             <Row
-              className={itemClassName(resource?._id)}
-              key={resource?._id}
+              className={itemClassName(resource?.resourceID)}
+              key={resource?.resourceID}
               onClick={() => {
-                handleSelectItem(resource?._id);
+                handleSelectItem(resource?.resourceID);
               }}
             >
               <FontAwesomeIcon
                 icon={faBookmark}
                 className={styles.resourceIcon}
               />
-              <RunningText>{resource?.title}</RunningText>
+              <RunningText>{resource?.title ?? "--"}</RunningText>
             </Row>
           );
         })}

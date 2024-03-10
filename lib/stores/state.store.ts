@@ -264,17 +264,26 @@ export class StateStore {
   // TODO
   async executeAndProcessRestQueries(queries: RestQuery[]): Promise<void> {
     for (const query of queries) {
-      if (query?._id == null) continue;
+      if (query?.queryID == null) continue;
 
-      const response = await queryExecutor.executeRestQuery(query, {});
+      const response = await queryExecutor.executeRestQuery(
+        query,
+        {},
+        this.stores.resourceStore
+      );
 
       if (response) {
-        this.setStateValue(StateSelector.QUERIES, query._id, "data", response);
-        this.setStateValue(StateSelector.QUERIES, query._id, "status", 200);
+        this.setStateValue(
+          StateSelector.QUERIES,
+          query.queryID,
+          "data",
+          response
+        );
+        this.setStateValue(StateSelector.QUERIES, query.queryID, "status", 200);
       }
 
       // process pending subscriptions
-      this.processPendingSubscriptions(StateSelector.QUERIES, query._id);
+      this.processPendingSubscriptions(StateSelector.QUERIES, query.queryID);
     }
   }
 }

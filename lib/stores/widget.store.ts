@@ -40,6 +40,7 @@ class WidgetStore {
   //! setter
 
   setInitialWidgetAndConvert(widgets: Widget[]): WidgetHierarchyMap {
+    this.stores.resourceStore?.intializeResources();
     const structuredWidgets = structureWidgetsHierarchy(widgets);
 
     runInAction(() => {

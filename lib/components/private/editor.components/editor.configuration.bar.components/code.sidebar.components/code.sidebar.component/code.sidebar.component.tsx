@@ -29,13 +29,13 @@ const CodeSidebar = ({
   const coreQueries: CoreQuery[] = queries?.filter((query: any) => query?.core);
   const dynamicQueries: Query[] = queries?.filter((query: any) => !query?.core);
 
-  if (currentSelectedQuery != null && currentSelectedQuery?._id == "new") {
+  if (currentSelectedQuery != null && currentSelectedQuery?._id == null) {
     dynamicQueries.push(currentSelectedQuery);
   }
 
   useEffect(() => {
-    if (currentSelectedQuery?._id != null) {
-      handleSelectItem(currentSelectedQuery?._id);
+    if (currentSelectedQuery?.queryID != null) {
+      handleSelectItem(currentSelectedQuery?.queryID);
     }
   }, [currentSelectedQuery]);
 
@@ -62,11 +62,11 @@ const CodeSidebar = ({
 
   const handleAddQuery = () => {
     const initialQuery = queryStore?.createInitialQuery();
-    if (initialQuery?._id == null) {
+    if (initialQuery?.queryID == null) {
       return;
     }
-    setSelectedItem(initialQuery?._id);
-    onItemSelect?.(initialQuery?._id);
+    setSelectedItem(initialQuery?.queryID);
+    onItemSelect?.(initialQuery?.queryID);
   };
 
   return (
@@ -76,10 +76,10 @@ const CodeSidebar = ({
           {coreQueries?.map((query: CoreQuery) => {
             return (
               <Row
-                className={itemClassName(query?._id)}
-                key={query?._id}
+                className={itemClassName(query?.queryID)}
+                key={query?.queryID}
                 onClick={() => {
-                  handleSelectItem(query?._id);
+                  handleSelectItem(query?.queryID);
                 }}
               >
                 <FontAwesomeIcon
@@ -108,10 +108,10 @@ const CodeSidebar = ({
         {dynamicQueries?.map((query: Query) => {
           return (
             <Row
-              className={itemClassName(query?._id)}
-              key={query._id}
+              className={itemClassName(query?.queryID)}
+              key={query.queryID}
               onClick={() => {
-                handleSelectItem(query?._id);
+                handleSelectItem(query?.queryID);
               }}
             >
               <FontAwesomeIcon icon={faBookmark} className={styles.codeIcon} />

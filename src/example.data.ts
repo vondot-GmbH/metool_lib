@@ -366,7 +366,7 @@ export const EXAMPLE_WIDGETS_DATA_RENAMED: Widget[] = [
       },
     },
     options: {
-      data: "{{queries.5f9e9b6b9c6b4c0017f3b3a0.data}}",
+      data: "{{queries.getUsers.data}}",
       columns: [
         {
           columnID: "5f9e9b6b9c6b4c0017f3b399",
