@@ -1,8 +1,4 @@
-import {
-  DataSourceType,
-  MixedResource,
-  resourceRestSchema,
-} from "../resource.schemas/resource.schema";
+import { DataSourceType } from "../resource.schemas/resource.schema";
 import * as yup from "yup";
 
 export interface BaseQuery {
@@ -10,7 +6,7 @@ export interface BaseQuery {
   queryID: string;
   title: string;
   description?: string;
-  resource: MixedResource; // object id of the resource
+  // resource: MixedResource; // object id of the resource
   resourceID: string;
   type: DataSourceType;
 }
@@ -87,9 +83,7 @@ export type MixedQueryMap = Map<string, MixedQuery>;
 
 export const restQuerySchema = yup.object().shape({
   title: yup.string().required(),
-  resource: resourceRestSchema.required(),
   description: yup.string(),
-  type: yup.string().required(),
   method: yup.string().required(),
   url: yup.string().required(),
   headers: yup.array().of(

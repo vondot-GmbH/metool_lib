@@ -79,8 +79,7 @@ class QueryStore {
 
   createInitialQuery(): Query {
     const query = {
-      _id: null,
-      queryID: getUniqueID(),
+      queryID: "new",
       title: "New Query",
     } as Query;
 
@@ -102,8 +101,6 @@ class QueryStore {
       const queryID = dependency.widgetID ?? null; // TODO check and rename widgetID to targetID
 
       const query = this.getQuery(CoreRestQueryType.GET_QUERIES_BY_ID);
-
-      console.log("getQuery dep: ", query);
 
       if (queryID == null || query == null) continue;
 
@@ -129,7 +126,10 @@ class QueryStore {
 
     const preparedQuery = {
       ...createQuery,
-      body: query,
+      body: {
+        ...query,
+        queryID: getUniqueID(),
+      },
     } as any;
 
     if (query == null) return;
@@ -143,7 +143,7 @@ class QueryStore {
     if (response == null) return;
 
     this.setCurrentSelectedQuery(response);
-    this._queries.set(query.queryID, response);
+    this._queries.set(response?.queryID, response);
   }
 
   async updateAndSaveQuery(query: Query): Promise<void> {
@@ -162,10 +162,10 @@ class QueryStore {
       this.stores.resourceStore
     );
 
-    if (response == null) return;
+    if (response == null || response?.queryID == null) return;
 
     this.setCurrentSelectedQuery(response);
-    this._queries.set(query.queryID, response);
+    this._queries.set(response?.queryID, response);
   }
 }
 

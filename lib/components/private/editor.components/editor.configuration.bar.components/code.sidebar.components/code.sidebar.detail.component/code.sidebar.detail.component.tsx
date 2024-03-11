@@ -1,3 +1,4 @@
+import React, { useState, useCallback } from "react";
 import { inject, observer } from "mobx-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
@@ -6,73 +7,75 @@ import ComponentWrapper from "../../../../general.components/component.wrapper.c
 import QueryStore from "../../../../../../stores/query.store";
 import RestQueryForm from "../code.sidebar.component/components/rest.query.form/rest.query.form";
 import SizedContainer from "../../../../general.components/sized.container.component/sized.container.component";
-import { RestQuery } from "../../../../../../schemas/query.schemas/query.schema";
-import defaultStyles from "../../../../../../styles/index.module.scss";
-import { DataSourceType } from "../../../../../../main";
-import { useEffect, useState } from "react";
 import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
 import ResourceStore from "../../../../../../stores/resource.store";
+import { DataSourceType, Resource } from "../../../../../../main";
+import { RestQuery } from "../../../../../../schemas/query.schemas/query.schema";
+import defaultStyles from "../../../../../../styles/index.module.scss";
 
 interface CodeSidebarDetailProps {
   queryStore?: QueryStore;
   resourceStore?: ResourceStore;
-  selectedItemID?: string;
+  selectedItem: RestQuery;
   onClose: () => void;
+  isEditing: boolean;
 }
 
-const CodeSidebarDetail = ({
-  selectedItemID,
+const CodeSidebarDetail: React.FC<CodeSidebarDetailProps> = ({
+  selectedItem,
   onClose,
   queryStore,
   resourceStore,
-}: CodeSidebarDetailProps): JSX.Element | null => {
-  const [selectedItem, setSelectedItem] = useState<any | undefined>(
-    queryStore?.getQuery(selectedItemID ?? "")
+  isEditing,
+}) => {
+  const [selectedResource, setSelectedResource] = useState<
+    Resource | undefined
+  >(resourceStore?.getResource(selectedItem?.resourceID ?? ""));
+
+  const handleResourceChange = useCallback(
+    (resourceId: string) => {
+      const resource = resourceStore?.getResource(resourceId);
+      setSelectedResource(resource);
+    },
+    [resourceStore]
   );
 
-  const [selectedResourceId, setSelectedResourceId] = useState<
-    string | undefined
-  >(selectedItem?.resourceID);
+  const handleSubmit = useCallback(
+    (data: RestQuery) => {
+      if (!data || !selectedResource) {
+        return;
+      }
 
-  useEffect(() => {
-    const resource = resourceStore?.getResource(selectedResourceId ?? "");
+      const query = {
+        ...data,
+        resourceID: selectedResource.resourceID,
+        type: selectedResource.type,
+      };
 
-    setSelectedItem((currentItem: any) => ({
-      ...currentItem,
-      resource,
-      type: resource?.type,
-    }));
-  }, [selectedResourceId, resourceStore]);
-
-  const handleResourceChange = (resourceId: string) => {
-    setSelectedResourceId(resourceId);
-  };
-
-  const handleSumit = (data: RestQuery) => {
-    console.log("data: ", data);
-    if (data?._id == null) {
-      queryStore?.updateAndSaveQuery(data);
-    } else {
-      queryStore?.createAndSaveQuery(data);
-    }
-  };
+      if (isEditing) {
+        queryStore?.updateAndSaveQuery(query);
+      } else {
+        queryStore?.createAndSaveQuery(query);
+      }
+    },
+    [isEditing, queryStore, selectedResource]
+  );
 
   return (
     <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={500}>
       <ComponentWrapper
-        title={selectedItemID}
+        title={selectedItem.title}
         action={
           <SizedContainer size="s">
             {!(selectedItem as any)?.core && (
               <button type="submit" form="rest-query-form">
-                Save
+                {isEditing ? "Speichern" : "Hinzufügen"}
               </button>
             )}
 
             <FontAwesomeIcon
-              className={defaultStyles.ml10}
+              className={`${defaultStyles.ml10} pointerCursor`}
               icon={faXmarkCircle}
-              style={{ cursor: "pointer" }}
               onClick={onClose}
             />
           </SizedContainer>
@@ -82,18 +85,16 @@ const CodeSidebarDetail = ({
           label="Resource"
           labelPropertyName="title"
           valuePropertyName="resourceID"
-          selectedItem={selectedResourceId}
+          selectedItem={selectedResource?.resourceID}
           items={resourceStore?.resources ?? []}
           onChange={(item) => handleResourceChange(item?.resourceID)}
         />
 
-        {selectedItem?.resource?.type === DataSourceType.REST_API && (
+        {selectedResource?.type === DataSourceType.REST_API && (
           <RestQueryForm
-            iniitialQuery={selectedItem}
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onFormSubmit={(data: RestQuery) => {
-              handleSumit(data);
-            }}
+            initialQuery={selectedItem}
+            resource={selectedResource}
+            onFormSubmit={handleSubmit}
           />
         )}
       </ComponentWrapper>

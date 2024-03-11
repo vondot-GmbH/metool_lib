@@ -7,7 +7,7 @@ import styles from "./code.sidebar.component.module.scss";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark, faSquarePlus } from "@fortawesome/free-regular-svg-icons";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   CoreQuery,
   Query,
@@ -21,48 +21,48 @@ interface CodeSidebarProps {
 }
 
 const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
-  const queries: any[] = queryStore?.queries ?? [];
-  const currentSelectedQuery = queryStore?.currentSelectedQuery;
+  const coreQueries: CoreQuery[] = useMemo(() => {
+    return (queryStore?.queries as any)?.filter((query: any) => query?.core);
+  }, [queryStore?.queries]);
 
-  const coreQueries: CoreQuery[] = queries?.filter((query: any) => query?.core);
-  const dynamicQueries: Query[] = queries?.filter((query: any) => !query?.core);
+  const dynamicQueries: Query[] = useMemo(() => {
+    return (queryStore?.queries as any)?.filter((query: any) => !query?.core);
+  }, [queryStore?.queries]);
 
-  const [selectedItem, setSelectedItem] = useState<string | undefined>(
+  const [selectedItem, setSelectedItem] = useState<Query | undefined>(
     undefined
   );
 
-  if (currentSelectedQuery != null && currentSelectedQuery?._id == null) {
-    dynamicQueries.push(currentSelectedQuery);
-  }
+  const [isEditing, setIsEditing] = useState<boolean>(
+    selectedItem?.queryID != "new"
+  );
 
   useEffect(() => {
-    if (currentSelectedQuery?.queryID != null) {
-      handleSelectItem(currentSelectedQuery?.queryID);
+    if (selectedItem?.queryID === "new") {
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
     }
-  }, [currentSelectedQuery]);
+  }, [selectedItem]);
 
   const itemClassName = (queryID: string | null) => {
     return (
       styles.codeItem +
       " " +
-      (selectedItem === queryID ? styles.codeItemSelected : "")
+      (selectedItem?.queryID === queryID ? styles.codeItemSelected : "")
     );
   };
 
   const handleSelectItem = (queryID: string | null) => {
-    if (queryID == null) {
-      return;
-    }
+    if (queryID == null) return;
 
-    setSelectedItem(queryID);
+    const query = queryStore?.getQuery(queryID);
+    setSelectedItem(query);
   };
 
   const handleAddQuery = () => {
     const initialQuery = queryStore?.createInitialQuery();
-    if (initialQuery?.queryID == null) {
-      return;
-    }
-    setSelectedItem(initialQuery?.queryID);
+    setSelectedItem(initialQuery);
   };
 
   const buiilCoreQueries = (): JSX.Element => {
@@ -139,9 +139,10 @@ const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
 
       {selectedItem != null && (
         <CodeSidebarDetail
-          key={selectedItem}
-          selectedItemID={selectedItem}
+          key={selectedItem.queryID}
+          selectedItem={selectedItem}
           onClose={() => setSelectedItem(undefined)}
+          isEditing={isEditing}
         />
       )}
     </Row>

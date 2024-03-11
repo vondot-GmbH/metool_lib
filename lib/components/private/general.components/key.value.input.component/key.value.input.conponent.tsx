@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
 import Row from "../row.component/row.component";
@@ -5,23 +6,29 @@ import styles from "./key.value.input.conponent.module.scss";
 import RunningText from "../text.components/running.text.component/running.text.component";
 import TextInput from "../outlined.text.input.component/outlined.text.input.component";
 
+interface KeyValue {
+  key: string;
+  value: string;
+}
+
 interface KeyValueInputProps {
   label?: string;
-  fields: any[];
-  append: (obj: any) => void;
-  remove: (index: number) => void;
-  register: any;
+  defaultEntries?: KeyValue[];
+  fields?: any[];
+  append?: (obj: any) => void;
+  remove?: (index: number) => void;
+  register?: any;
   keyLabel?: string;
   valueLabel?: string;
-  arrayFieldName: string;
+  arrayFieldName?: string;
   disabled?: boolean;
   className?: string;
   validationErrors?: any;
 }
 
 const KeyValueInput = ({
-  disabled = false,
   label,
+  defaultEntries = [],
   fields,
   append,
   remove,
@@ -29,46 +36,90 @@ const KeyValueInput = ({
   keyLabel = "key",
   valueLabel = "value",
   arrayFieldName,
+  disabled = false,
   className,
   validationErrors,
 }: KeyValueInputProps) => {
+  const [internalEntries, setInternalEntries] =
+    useState<KeyValue[]>(defaultEntries);
+
+  useEffect(() => {
+    if (!fields) {
+      setInternalEntries(defaultEntries);
+    }
+  }, [defaultEntries, fields]);
+
+  const handleAddEntry = () => {
+    if (append) {
+      append({ key: "", value: "" });
+    } else {
+      setInternalEntries([...internalEntries, { key: "", value: "" }]);
+    }
+  };
+
+  const handleRemoveEntry = (index: number) => {
+    if (remove) {
+      remove(index);
+    } else {
+      const updatedEntries = internalEntries.filter((_, i) => i !== index);
+      setInternalEntries(updatedEntries);
+    }
+  };
+
+  const entries = fields || internalEntries;
+
   return (
     <div
       className={className ? `${styles.wrapper} ${className}` : styles.wrapper}
     >
-      <RunningText>{label}</RunningText>
-      {fields.map((field, index) => {
-        const fieldErrors = validationErrors?.[arrayFieldName]?.[index];
-        const keyError = fieldErrors?.key?.message;
-        const valueError = fieldErrors?.value?.message;
+      {label && <RunningText>{label}</RunningText>}
+      {entries.map((field, index) => {
+        const keyError =
+          validationErrors?.[arrayFieldName as any]?.[index]?.key?.message;
+        const valueError =
+          validationErrors?.[arrayFieldName as any]?.[index]?.value?.message;
 
         return (
           <Row key={field.key + index} className={styles.row}>
             <TextInput
               disabled={disabled}
-              {...register(`${arrayFieldName}.${index}.key`)}
+              {...(register ? register(`${arrayFieldName}.${index}.key`) : {})}
               validationMessage={keyError}
               defaultValue={field.key}
               placeholder={keyLabel}
+              onChange={(e) =>
+                !register &&
+                setInternalEntries((entries) =>
+                  entries.map((entry, i) =>
+                    i === index ? { ...entry, key: e.target.value } : entry
+                  )
+                )
+              }
             />
 
             <TextInput
               disabled={disabled}
-              {...register(`${arrayFieldName}.${index}.value`)}
+              {...(register
+                ? register(`${arrayFieldName}.${index}.value`)
+                : {})}
               validationMessage={valueError}
               defaultValue={field.value}
               placeholder={valueLabel}
+              onChange={(e) =>
+                !register &&
+                setInternalEntries((entries) =>
+                  entries.map((entry, i) =>
+                    i === index ? { ...entry, value: e.target.value } : entry
+                  )
+                )
+              }
             />
 
             {!disabled && (
               <FontAwesomeIcon
                 className={styles.removeButton}
                 icon={faXmarkCircle}
-                onClick={() => {
-                  if (!disabled) {
-                    remove(index);
-                  }
-                }}
+                onClick={() => handleRemoveEntry(index)}
               />
             )}
           </Row>
@@ -77,12 +128,9 @@ const KeyValueInput = ({
 
       {!disabled && (
         <button
+          type="button"
           className={styles.addButton}
-          onClick={() => {
-            if (!disabled) {
-              append({ key: "", value: "" });
-            }
-          }}
+          onClick={handleAddEntry}
         >
           Add Entry
         </button>
@@ -92,86 +140,3 @@ const KeyValueInput = ({
 };
 
 export default KeyValueInput;
-
-//! outcommented code (same component as above but wihtout react-hook-form)
-// TODO combine both components into one and use react-hook-form as an optional dependency
-
-// import { useState } from "react";
-// import styles from "./key.value.input.conponent.module.scss";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
-// import Row from "../row.component/row.component";
-
-// interface KeyValue {
-//   key: string;
-//   value: string;
-// }
-
-// interface KeyValueInputProps {
-//   defaultEntries?: KeyValue[];
-//   keyLabel?: string;
-//   valueLabel?: string;
-//   onEntriesChange?: (entries: KeyValue[]) => void;
-// }
-
-// const KeyValueInput = ({
-//   defaultEntries = [],
-//   keyLabel = "key",
-//   valueLabel = "value",
-//   onEntriesChange,
-// }: KeyValueInputProps) => {
-//   const [entries, setEntries] = useState<KeyValue[]>(defaultEntries);
-
-//   const handleAddEntry = () => {
-//     setEntries([...entries, { key: "", value: "" }]);
-//   };
-
-//   const handleRemoveEntry = (index: number) => {
-//     const updatedEntries = entries.filter((_, i) => i !== index);
-//     setEntries(updatedEntries);
-//     onEntriesChange?.(updatedEntries);
-//   };
-
-//   const handleChange = (index: number, key: "key" | "value", value: string) => {
-//     const updatedEntries = entries.map((entry, i) =>
-//       i === index ? { ...entry, [key]: value } : entry
-//     );
-//     setEntries(updatedEntries);
-//     onEntriesChange?.(updatedEntries);
-//   };
-
-//   return (
-//     <div className={styles.wrapper}>
-//       {entries.map((entry, index) => (
-//         <Row key={index} className={styles.row} alignItems="center">
-//           <input
-//             type="text"
-//             className={styles.input}
-//             placeholder={keyLabel}
-//             value={entry.key}
-//             onChange={(e) => handleChange(index, "key", e.target.value)}
-//           />
-
-//           <input
-//             type="text"
-//             className={styles.input}
-//             placeholder={valueLabel}
-//             value={entry.value}
-//             onChange={(e) => handleChange(index, "value", e.target.value)}
-//           />
-
-//           <FontAwesomeIcon
-//             className={styles.removeButton}
-//             icon={faXmarkCircle}
-//             onClick={() => handleRemoveEntry(index)}
-//           />
-//         </Row>
-//       ))}
-//       <button className={styles.addButton} onClick={handleAddEntry}>
-//         Add Entry
-//       </button>
-//     </div>
-//   );
-// };
-
-// export default KeyValueInput;

@@ -11,16 +11,19 @@ import {
 import QueryStore from "../../../../../../../../stores/query.store";
 import Row from "../../../../../../general.components/row.component/row.component";
 import SelectDropDown from "../../../../../../general.components/select.dropdown.component/select.dropdown.component";
+import { Resource } from "../../../../../../../../main";
 
 interface RestQueryFormprops {
-  iniitialQuery?: RestQuery;
+  initialQuery?: RestQuery;
   onFormSubmit: (query: RestQuery) => void;
   queryStore?: QueryStore;
+  resource: Resource;
 }
 
 const RestQueryForm = ({
   onFormSubmit,
-  iniitialQuery,
+  initialQuery,
+  resource,
 }: RestQueryFormprops): JSX.Element | null => {
   const {
     register,
@@ -32,7 +35,7 @@ const RestQueryForm = ({
     resolver: yupResolver(restQuerySchema),
     mode: "onTouched",
     reValidateMode: "onChange",
-    defaultValues: (iniitialQuery as any) ?? {},
+    defaultValues: (initialQuery as any) ?? {},
   });
 
   const methodItems = [
@@ -53,15 +56,6 @@ const RestQueryForm = ({
       value: "DELETE",
     },
   ];
-
-  const {
-    fields: defaultHeadersFields,
-    append: appendDefaultHeader,
-    remove: removeDefaultHeader,
-  } = useFieldArray({
-    control,
-    name: "resource.defaultHeaders",
-  });
 
   const {
     fields: headersFields,
@@ -96,7 +90,7 @@ const RestQueryForm = ({
       <Row alignItems="center">
         <TextInput
           disabled={true}
-          {...register("resource.baseUrl")}
+          value={resource?.baseUrl}
           label="Base URL"
           className={defaultStyles.mb20}
         />
@@ -112,7 +106,7 @@ const RestQueryForm = ({
       <SelectDropDown
         className={defaultStyles.mb20}
         label="Method"
-        selectedItem={iniitialQuery?.method}
+        selectedItem={initialQuery?.method}
         items={methodItems}
         validationMessage={errors.method?.message?.toString()}
         onChange={(item) => {
@@ -126,11 +120,7 @@ const RestQueryForm = ({
         className={defaultStyles.mb20}
         disabled={true}
         label="Default Headers"
-        fields={defaultHeadersFields}
-        append={appendDefaultHeader}
-        remove={removeDefaultHeader}
-        register={register}
-        arrayFieldName={"resource.defaultHeaders"}
+        fields={resource?.defaultHeaders}
       />
 
       <KeyValueInput
