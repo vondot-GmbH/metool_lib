@@ -14,6 +14,8 @@ import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layo
 import { extractDependenciesAndNonDependencies } from "../globals/helpers/state.helper";
 import { runInAction } from "mobx";
 import RootStore from "./root.store";
+import { CoreRestQueryType } from "../schemas/query.schemas/query.schema";
+import { queryExecutor } from "../provider/http/http.rest.query.client";
 
 class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
@@ -372,7 +374,7 @@ class WidgetStore {
       widget: {
         widgetID,
         widgetType,
-        view: "",
+        viewID: "", // TODO
         positioning: {
           i: widgetID,
 
@@ -411,6 +413,85 @@ class WidgetStore {
       "CREATE",
       newWidget.widget
     );
+  }
+
+  //! QUERY METHODS
+
+  async createWidget(widget: Widget): Promise<Widget | undefined> {
+    const createQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.CREATE_WIDGET
+    );
+
+    const preparedQuery = {
+      ...createQuery,
+      body: widget,
+    } as any;
+
+    const response = await queryExecutor.executeRestQuery(
+      preparedQuery,
+      {},
+      this.stores.resourceStore
+    );
+
+    return response;
+  }
+
+  async updateWidget(widget: Widget): Promise<Widget | undefined> {
+    const updateQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.UPDATE_WIDGET
+    );
+
+    const preparedQuery = {
+      ...updateQuery,
+      body: widget,
+    } as any;
+
+    const response = await queryExecutor.executeRestQuery(
+      preparedQuery,
+      { widgetID: widget.widgetID },
+      this.stores.resourceStore
+    );
+
+    return response;
+  }
+
+  async deleteWidgetByID(widgetID: string): Promise<void> {
+    const deleteQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.DELETE_WIDGET
+    );
+
+    const preparedQuery = {
+      ...deleteQuery,
+    } as any;
+
+    await queryExecutor.executeRestQuery(
+      preparedQuery,
+      { widgetID },
+      this.stores.resourceStore
+    );
+  }
+
+  async fetchWidgetsForView(viewID: string): Promise<void> {
+    const getWidgetsQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.GET_WIDGETS
+    );
+
+    if (getWidgetsQuery == null) return;
+
+    const response = await queryExecutor.executeRestQuery(
+      getWidgetsQuery,
+      { viewID: viewID },
+      this.stores.resourceStore
+    );
+
+    if (response == null) return;
+
+    console.log("fetchWidgetsForView response ---- ");
+    console.log(JSON.stringify(response, null, 2));
+
+    // TODO
+
+    // this.setInitialWidgetAndConvert(response);
   }
 }
 

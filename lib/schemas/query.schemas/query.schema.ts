@@ -17,7 +17,7 @@ export interface RestQuery extends BaseQuery {
   method: "GET" | "POST" | "PUT" | "DELETE";
   url: string;
   headers?: { key: string; value: string }[];
-  params: string;
+  params?: { key: string; value: string }[];
   body?: string;
 }
 
@@ -25,6 +25,7 @@ export interface CoreRestQuery extends RestQuery {
   type: DataSourceType.REST_API;
   core: true;
 }
+
 export enum CoreRestQueryType {
   GET_QUERIES = "getQueries",
   GET_QUERIES_BY_ID = "getQueriesById",
@@ -37,14 +38,15 @@ export enum CoreRestQueryType {
   UPDATE_RESOURCE = "updateResource",
   DELETE_RESOURCE = "deleteResource",
   CREATE_RESOURCE = "createResource",
+
+  GET_WIDGETS = "getWidgets",
+  GET_WIDGETS_BY_ID = "getWidgetsById",
+  UPDATE_WIDGET = "updateWidget",
+  DELETE_WIDGET = "deleteWidget",
+  CREATE_WIDGET = "createWidget",
 }
 
 export interface CoreRestQuerConfig {
-  // getWidgets: CoreRestQuery;
-  // updateWidget: CoreRestQuery;
-  // deleteWidget: CoreRestQuery;
-  // createWidget: CoreRestQuery;
-
   [CoreRestQueryType.GET_QUERIES]: CoreRestQuery;
   [CoreRestQueryType.GET_QUERIES_BY_ID]: CoreRestQuery;
   [CoreRestQueryType.UPDATE_QUERY]: CoreRestQuery;
@@ -56,6 +58,12 @@ export interface CoreRestQuerConfig {
   [CoreRestQueryType.UPDATE_RESOURCE]: CoreRestQuery;
   [CoreRestQueryType.DELETE_RESOURCE]: CoreRestQuery;
   [CoreRestQueryType.CREATE_RESOURCE]: CoreRestQuery;
+
+  [CoreRestQueryType.GET_WIDGETS]: CoreRestQuery;
+  [CoreRestQueryType.GET_WIDGETS_BY_ID]: CoreRestQuery;
+  [CoreRestQueryType.UPDATE_WIDGET]: CoreRestQuery;
+  [CoreRestQueryType.DELETE_WIDGET]: CoreRestQuery;
+  [CoreRestQueryType.CREATE_WIDGET]: CoreRestQuery;
 }
 
 //! QUERY RESPONSE
@@ -96,6 +104,14 @@ export const restQuerySchema = yup.object().shape({
       })
       .notRequired()
   ),
-  params: yup.string().notRequired(),
+  params: yup.array().of(
+    yup
+      .object()
+      .shape({
+        key: yup.string().required(),
+        value: yup.string().required(),
+      })
+      .notRequired()
+  ),
   body: yup.string().notRequired(),
 });

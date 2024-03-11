@@ -21,9 +21,8 @@ class QueryExecutor<Q extends Query> {
     }
 
     const resourceID = query?.resourceID;
-    const isCoreResource = (query?.resource as any)?.core ?? false;
-
     const resource = resourcesStore?.getResource(resourceID);
+    const isCoreResource = (resource as any)?.core ?? false;
 
     if (resource == null) {
       console.error("Resource not found");
@@ -52,25 +51,27 @@ class QueryExecutor<Q extends Query> {
     resource: Resource,
     variables: Record<string, string>
   ): AxiosRequestConfig {
-    const headers = this.processHeaders(query);
+    const headers = this.processHeaders(query, resource);
 
     const url = this.resolveUrl(query.url, variables); // TODO resovle params too
+    const params = this.processParams(query.params, variables);
 
     const config: AxiosRequestConfig = {
-      baseURL: resource.baseUrl, // TODO resolve base url
+      baseURL: resource.baseUrl,
       headers: headers,
       url,
       method: query.method,
       data: query.body,
+      params,
     };
 
     return config;
   }
 
-  private processHeaders(query: Q): Record<string, string> {
+  private processHeaders(query: Q, resource: Resource): Record<string, string> {
     const headers: Record<string, string> = {};
 
-    const defaultHeaders = query?.resource?.defaultHeaders;
+    const defaultHeaders = resource?.defaultHeaders;
     const queryHeaders = query?.headers;
 
     if (defaultHeaders) {
@@ -183,6 +184,22 @@ class QueryExecutor<Q extends Query> {
       }
       return encodeURIComponent(value);
     });
+  }
+
+  private processParams(
+    params?: { key: string; value: string }[],
+    variables?: Record<string, string>
+  ): Record<string, string> {
+    if (!params || params.length === 0) return {};
+
+    const safeVariables = variables || {};
+
+    const processedParams = params.reduce((acc, { key, value }) => {
+      const resolvedValue = this.replacePlaceholders(value, safeVariables);
+      return { ...acc, [key]: resolvedValue };
+    }, {});
+
+    return processedParams;
   }
 }
 

@@ -63,6 +63,15 @@ const RestQueryForm = ({
     name: "headers",
   });
 
+  const {
+    fields: paramsFields,
+    append: appendParams,
+    remove: removeParams,
+  } = useFieldArray({
+    control,
+    name: "params",
+  });
+
   return (
     <form
       id="rest-query-form"
@@ -128,6 +137,17 @@ const RestQueryForm = ({
         remove={removeHeader}
         register={register}
         arrayFieldName={"headers"}
+        validationErrors={errors}
+      />
+
+      <KeyValueInput
+        className={defaultStyles.mb20}
+        label="Params"
+        fields={paramsFields}
+        append={appendParams}
+        remove={removeParams}
+        register={register}
+        arrayFieldName={"params"}
         validationErrors={errors}
       />
 

@@ -36,7 +36,6 @@ const coreResources: CoreResource = {
           ...config.headers,
           Authorization: `Bearer lalalalallalalalall`,
         };
-
         return config;
       },
     },
@@ -52,7 +51,6 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "POST",
     url: "/queries",
-    params: "",
     core: true,
   },
   deleteQuery: {
@@ -63,7 +61,6 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "DELETE",
     url: "/queries",
-    params: "",
     core: true,
   },
   getQueries: {
@@ -74,7 +71,6 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "GET",
     url: "/queries",
-    params: "",
     core: true,
   },
   getQueriesById: {
@@ -85,7 +81,6 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "GET",
     url: "/queries/:queryID",
-    params: "",
     core: true,
   },
   updateQuery: {
@@ -96,7 +91,6 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "PUT",
     url: "/queries/:queryID",
-    params: "",
     core: true,
   },
 
@@ -108,7 +102,6 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "GET",
     url: "/resources",
-    params: "",
     core: true,
   },
 
@@ -120,7 +113,6 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "GET",
     url: "/resources/:resourceID",
-    params: "",
     core: true,
   },
 
@@ -132,7 +124,6 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "PUT",
     url: "/resources/:resourceID",
-    params: "",
     core: true,
   },
 
@@ -144,7 +135,6 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "DELETE",
     url: "/resources",
-    params: "",
     core: true,
   },
 
@@ -156,7 +146,67 @@ const coreQueryConfig = {
     type: DataSourceType.REST_API,
     method: "POST",
     url: "/resources",
-    params: "",
+    core: true,
+  },
+
+  getWidgets: {
+    _id: "getWidgets",
+    queryID: "getWidgets",
+    title: "Get Widgets",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "GET",
+    url: "/widgets",
+    core: true,
+    params: [
+      {
+        key: "viewID",
+        value: "{{viewID}}",
+      },
+    ],
+  },
+
+  createWidget: {
+    _id: "createWidget",
+    queryID: "createWidget",
+    title: "Create Widget",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "POST",
+    url: "/widgets",
+    core: true,
+  },
+
+  deleteWidget: {
+    _id: "deleteWidget",
+    queryID: "deleteWidget",
+    title: "Delete Widget",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "DELETE",
+    url: "/widgets/:widgetID",
+    core: true,
+  },
+
+  getWidgetsById: {
+    _id: "getWidgetsById",
+    queryID: "getWidgetsById",
+    title: "Get Widget by ID",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "GET",
+    url: "/widgets/:widgetID",
+    core: true,
+  },
+
+  updateWidget: {
+    _id: "updateWidget",
+    queryID: "updateWidget",
+    title: "Update Widget",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "PUT",
+    url: "/widgets/:widgetID",
     core: true,
   },
 } as CoreRestQuerConfig;
@@ -224,6 +274,7 @@ function App() {
     <MobxProvider {...rootStore}>
       <div className="main-container">
         <CanvasEditor
+          viewToRender="test"
           widgets={EXAMPLE_WIDGETS_DATA_RENAMED}
           onSaveChanges={(changes) => {
             console.log("changes: ", JSON.stringify(changes, null, 2));

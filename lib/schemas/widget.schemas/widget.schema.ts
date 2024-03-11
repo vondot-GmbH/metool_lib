@@ -6,7 +6,7 @@ export interface Widget {
   widgetID: string;
   positioning: WidgetLayouts;
   parentID?: string;
-  view: string;
+  viewID: string;
   options?: Record<string, any>;
 }
 
