@@ -6,7 +6,6 @@ export interface BaseQuery {
   queryID: string;
   title: string;
   description?: string;
-  // resource: MixedResource; // object id of the resource
   resourceID: string;
   type: DataSourceType;
 }
@@ -37,6 +36,7 @@ export enum CoreRestQueryType {
   GET_RESOURCES_BY_ID = "getResourcesById",
   UPDATE_RESOURCE = "updateResource",
   DELETE_RESOURCE = "deleteResource",
+  CREATE_RESOURCE = "createResource",
 }
 
 export interface CoreRestQuerConfig {
@@ -55,6 +55,7 @@ export interface CoreRestQuerConfig {
   [CoreRestQueryType.GET_RESOURCES_BY_ID]: CoreRestQuery;
   [CoreRestQueryType.UPDATE_RESOURCE]: CoreRestQuery;
   [CoreRestQueryType.DELETE_RESOURCE]: CoreRestQuery;
+  [CoreRestQueryType.CREATE_RESOURCE]: CoreRestQuery;
 }
 
 //! QUERY RESPONSE

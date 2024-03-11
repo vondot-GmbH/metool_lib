@@ -9,26 +9,27 @@ import SizedContainer from "../../../../general.components/sized.container.compo
 import defaultStyles from "../../../../../../styles/index.module.scss";
 import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
 import { DataSourceType } from "../../../../../../main";
-import { useState } from "react";
-import { RestResource } from "../../../../../../schemas/resource.schemas/resource.schema";
-import { ChangeRecord } from "../../../../../../globals/interfaces/change.record.interface";
+import { useCallback, useState } from "react";
+import {
+  Resource,
+  RestResource,
+} from "../../../../../../schemas/resource.schemas/resource.schema";
 
 interface ResourceSidebarDetailProps {
   resourceStore?: ResourceStore;
-  selectedItemID?: string;
+  selectedItem?: Resource;
   onClose: () => void;
-  onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
+  isEditing: boolean;
 }
 
 const ResourceSidebarDetail = ({
-  selectedItemID,
+  selectedItem,
   resourceStore,
+  isEditing,
   onClose,
 }: ResourceSidebarDetailProps): JSX.Element | null => {
-  const selectedResource = resourceStore?.getResource(selectedItemID ?? "");
-
   const [selectedType, setSelectedType] = useState<DataSourceType | null>(
-    selectedResource?.type ?? null
+    selectedItem?.type ?? null
   );
 
   const handleTypeChange = (item: any) => {
@@ -42,17 +43,30 @@ const ResourceSidebarDetail = ({
     };
   });
 
-  const handleSaveChanges = (data: RestResource) => {
-    resourceStore?.saveResourceChangesAndProcess(data);
+  const handleSubmit = (data: Resource) => {
+    if (!data) {
+      return;
+    }
+
+    const resource = {
+      ...data,
+      // type: selectedType,
+    };
+
+    if (isEditing) {
+      resourceStore?.updateAndSaveResource(resource);
+    } else {
+      resourceStore?.createAndSaveResource(resource);
+    }
   };
 
   return (
     <ResizableSidebar initialWidth={380} minWidth={300} maxWidth={500}>
       <ComponentWrapper
-        title={selectedItemID}
+        title={selectedItem?.title}
         action={
           <SizedContainer size="s">
-            {!(selectedResource as any)?.core && (
+            {!(selectedItem as any)?.core && (
               <button type="submit" form="rest-resource-form">
                 Save
               </button>
@@ -76,10 +90,10 @@ const ResourceSidebarDetail = ({
         {selectedType === DataSourceType.REST_API && (
           <ResourceRestForm
             onFormSubmit={(data: RestResource) => {
-              handleSaveChanges(data);
+              handleSubmit(data);
             }}
             iniitialResource={
-              { type: selectedType, ...selectedResource } as RestResource
+              { type: selectedType, ...selectedItem } as RestResource
             }
           />
         )}

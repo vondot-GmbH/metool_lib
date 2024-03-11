@@ -5,10 +5,10 @@ import styles from "./resource.sidebar.component.module.scss";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBookmark, faSquarePlus } from "@fortawesome/free-regular-svg-icons";
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ResourceStore from "../../../../../../stores/resource.store";
 import {
-  CoreResource,
+  CoreRestResource,
   Resource,
 } from "../../../../../../schemas/resource.schemas/resource.schema";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
@@ -21,40 +21,54 @@ interface ResourceSidebarProps {
 const ResourceSidebar = ({
   resourceStore,
 }: ResourceSidebarProps): JSX.Element => {
-  const resources: any[] = resourceStore?.resources ?? [];
+  const coreResources: CoreRestResource[] = useMemo(() => {
+    return (resourceStore?.resources as any).filter(
+      (resource: any) => resource?.core
+    );
+  }, [resourceStore?.resources]);
 
-  const [selectedItem, setSelectedItem] = useState<string | undefined>(
+  const dynamicResources: Resource[] = useMemo(() => {
+    return (resourceStore?.resources as any)?.filter(
+      (resource: any) => !resource?.core
+    );
+  }, [resourceStore?.resources]);
+
+  const [selectedItem, setSelectedItem] = useState<Resource | undefined>(
     undefined
   );
 
-  // TODO set react memo
-  const coreResources: CoreResource[] = resources?.filter(
-    (resource: any) => resource?.core
+  const [isEditing, setIsEditing] = useState<boolean>(
+    selectedItem?.resourceID != "new"
   );
 
-  const dynamicResources: Resource[] = resources?.filter(
-    (resource: any) => !resource?.core
-  );
+  useEffect(() => {
+    if (selectedItem?.resourceID === "new") {
+      setIsEditing(false);
+    } else {
+      setIsEditing(true);
+    }
+  }, [selectedItem]);
 
   const itemClassName = (resourceID: string | undefined) => {
     return (
       styles.resourceItem +
       " " +
-      (selectedItem === resourceID ? styles.resourceItemSelected : "")
+      (selectedItem?.resourceID === resourceID
+        ? styles.resourceItemSelected
+        : "")
     );
   };
 
   const handleSelectItem = (resourceID: string | undefined) => {
-    if (resourceID == null) {
-      return;
-    }
+    if (resourceID == null) return;
 
-    setSelectedItem(resourceID);
+    const resource = resourceStore?.getResource(resourceID);
+    setSelectedItem(resource);
   };
 
   const handleAddResource = () => {
-    resourceStore?.addInitialResource();
-    setSelectedItem("new");
+    const initialResource = resourceStore?.createInitialResource();
+    setSelectedItem(initialResource);
   };
 
   const buildCoreResources = (): JSX.Element => {
@@ -131,9 +145,10 @@ const ResourceSidebar = ({
 
       {selectedItem != null && (
         <ResourceSidebarDetail
-          key={selectedItem}
-          selectedItemID={selectedItem}
+          key={selectedItem.resourceID}
+          selectedItem={selectedItem}
           onClose={() => setSelectedItem(undefined)}
+          isEditing={isEditing}
         />
       )}
     </Row>

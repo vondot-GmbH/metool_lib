@@ -40,26 +40,23 @@ const CodeSidebarDetail: React.FC<CodeSidebarDetailProps> = ({
     [resourceStore]
   );
 
-  const handleSubmit = useCallback(
-    (data: RestQuery) => {
-      if (!data || !selectedResource) {
-        return;
-      }
+  const handleSubmit = (data: RestQuery) => {
+    if (!data || !selectedResource) {
+      return;
+    }
 
-      const query = {
-        ...data,
-        resourceID: selectedResource.resourceID,
-        type: selectedResource.type,
-      };
+    const query = {
+      ...data,
+      resourceID: selectedResource.resourceID,
+      type: selectedResource.type,
+    };
 
-      if (isEditing) {
-        queryStore?.updateAndSaveQuery(query);
-      } else {
-        queryStore?.createAndSaveQuery(query);
-      }
-    },
-    [isEditing, queryStore, selectedResource]
-  );
+    if (isEditing) {
+      queryStore?.updateAndSaveQuery(query);
+    } else {
+      queryStore?.createAndSaveQuery(query);
+    }
+  };
 
   return (
     <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={500}>

@@ -1,4 +1,3 @@
-import { inject, observer } from "mobx-react";
 import {
   RestResource,
   resourceRestSchema,
@@ -35,9 +34,6 @@ const ResourceRestForm = ({
     name: "defaultHeaders",
   });
 
-  // TODO show error message
-  console.log("errors", errors);
-
   return (
     <form
       id="rest-resource-form"
@@ -50,17 +46,21 @@ const ResourceRestForm = ({
         {...register("title")}
         label="Name"
         className={defaultStyles.mb20}
+        validationMessage={errors.title?.message?.toString()}
       />
+
       <TextInput
         {...register("description")}
         label="Description"
         className={defaultStyles.mb20}
+        validationMessage={errors.description?.message?.toString()}
       />
 
       <TextInput
         {...register("baseUrl")}
         label="Base URL"
         className={defaultStyles.mb20}
+        validationMessage={errors.baseUrl?.message?.toString()}
       />
 
       <KeyValueInput
@@ -70,9 +70,10 @@ const ResourceRestForm = ({
         remove={remove}
         register={register}
         arrayFieldName={"defaultHeaders"}
+        validationErrors={errors}
       />
     </form>
   );
 };
 
-export default inject("resourceStore")(observer(ResourceRestForm));
+export default ResourceRestForm;

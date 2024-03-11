@@ -132,8 +132,6 @@ class QueryStore {
       },
     } as any;
 
-    if (query == null) return;
-
     const response = await queryExecutor.executeRestQuery(
       preparedQuery,
       {},

@@ -1,4 +1,3 @@
-import { inject, observer } from "mobx-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import TextInput from "../../../../../../general.components/outlined.text.input.component/outlined.text.input.component";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,7 +7,6 @@ import {
   RestQuery,
   restQuerySchema,
 } from "../../../../../../../../schemas/query.schemas/query.schema";
-import QueryStore from "../../../../../../../../stores/query.store";
 import Row from "../../../../../../general.components/row.component/row.component";
 import SelectDropDown from "../../../../../../general.components/select.dropdown.component/select.dropdown.component";
 import { Resource } from "../../../../../../../../main";
@@ -16,7 +14,6 @@ import { Resource } from "../../../../../../../../main";
 interface RestQueryFormprops {
   initialQuery?: RestQuery;
   onFormSubmit: (query: RestQuery) => void;
-  queryStore?: QueryStore;
   resource: Resource;
 }
 
@@ -144,4 +141,4 @@ const RestQueryForm = ({
   );
 };
 
-export default inject("queryStore")(observer(RestQueryForm));
+export default RestQueryForm;
