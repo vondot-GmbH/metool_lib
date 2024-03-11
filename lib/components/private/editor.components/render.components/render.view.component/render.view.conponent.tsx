@@ -11,9 +11,9 @@ import { getFilteredRootLevelWidgets } from "../../../../../globals/helpers/widg
 import ViewStore from "../../../../../stores/view.store";
 import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
-import { useEffect, useMemo } from "react";
 import QueryStore from "../../../../../stores/query.store";
 import ResourceStore from "../../../../../stores/resource.store";
+import { useMemo } from "react";
 
 interface RenderScreenProps {
   readonly?: boolean;
@@ -30,14 +30,7 @@ const RenderView = ({
   readonly = true,
   widgetStore,
   showVisualWidgetOutline = false,
-  resourceStore,
 }: RenderScreenProps): JSX.Element => {
-  // set initial resources to the resource store
-  useEffect(() => {
-    // TODO
-    // resourceStore?.intializeResources();
-  }, []);
-
   const structuredWidgets = useMemo(() => {
     return widgetStore?.setInitialWidgetAndConvert(widgets);
   }, [widgetStore, widgets]);

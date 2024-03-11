@@ -224,7 +224,6 @@ function App() {
     <MobxProvider {...rootStore}>
       <div className="main-container">
         <CanvasEditor
-          // queries={QUERY_DATA} // TODO
           widgets={EXAMPLE_WIDGETS_DATA_RENAMED}
           onSaveChanges={(changes) => {
             console.log("changes: ", JSON.stringify(changes, null, 2));

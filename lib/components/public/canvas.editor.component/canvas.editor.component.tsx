@@ -23,9 +23,7 @@ import RenderView from "../../private/editor.components/render.components/render
 
 interface CanvasEditorProps {
   widgets: Widget[];
-  // queries: Query[]; // TODO remove
   onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
-
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   changeRecordStore?: ChangeRecordStore;
