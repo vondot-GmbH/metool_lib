@@ -41,7 +41,6 @@ const ConfigurationSidebar = ({
 
     return (
       <IconTabBar
-        style={{ borderRight: "1px solid #e0e0e0" }} // TODO
         tabs={[
           {
             icon: faSquarePlus,
