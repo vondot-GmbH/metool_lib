@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { inject, observer } from "mobx-react";
-import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
+import { faDatabase, faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
 import QueryStore from "../../../../../../stores/query.store";
@@ -83,8 +83,14 @@ const CodeSidebarDetail: React.FC<CodeSidebarDetailProps> = ({
           label="Resource"
           labelPropertyName="title"
           valuePropertyName="resourceID"
+          iconPropertyName="icon"
           selectedItem={selectedResource?.resourceID}
-          items={resourceStore?.resources ?? []}
+          items={
+            resourceStore?.resources?.map((resource) => ({
+              ...resource,
+              icon: faDatabase,
+            })) ?? []
+          }
           onChange={(item) => handleResourceChange(item?.resourceID)}
           disabled={(selectedItem as any)?.core}
         />
