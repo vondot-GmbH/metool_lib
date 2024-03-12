@@ -35,10 +35,15 @@ const RenderWidget = ({
   stateStore,
   showVisualWidgetOutline,
 }: RenderWidgetProps): JSX.Element => {
+  console.log("RenderWidgetComponent() ::: ", widgetToRender);
+
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
   const contextMenu = widgetStore?.getContextMenuState();
   const allWidgets = widgetStore?.getStructuredData();
   const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
+
+  console.log("RenderWidgetComponent() ------ second");
+  console.log("RenderWidgetComponent() ::: allWidgets ", allWidgets);
 
   const [hoveredWidgetID, setHoveredWidgetID] = useState<string | undefined>();
 

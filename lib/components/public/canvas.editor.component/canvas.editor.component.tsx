@@ -1,6 +1,5 @@
 import { inject, observer } from "mobx-react";
 import MainLayout from "../../../layouts/main.layout/main.layout";
-import { Widget } from "../../../schemas/widget.schemas/widget.schema";
 import ViewStore from "../../../stores/view.store";
 import styles from "./canvas.editor.component.module.scss";
 import WidgetStore from "../../../stores/widget.store";
@@ -18,11 +17,10 @@ import QueryStore from "../../../stores/query.store";
 import ConfigurationSidebar from "../../private/editor.components/editor.configuration.bar.components/configuration.sidebar.component/configuration.sidebar.component";
 import TopBarComponent from "../../private/editor.components/top.bar.component/top.bar.component";
 import ResourceStore from "../../../stores/resource.store";
-// import { Query } from "../../../schemas/query.schemas/query.schema";
 import RenderView from "../../private/editor.components/render.components/render.view.component/render.view.conponent";
 
 interface CanvasEditorProps {
-  widgets: Widget[];
+  viewToRender: string;
   onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
@@ -34,12 +32,11 @@ interface CanvasEditorProps {
 }
 
 const CanvasEditor = ({
-  widgets,
   onSaveChanges,
   editorStore,
   queryStore,
-}: // queries,
-CanvasEditorProps): JSX.Element => {
+  viewToRender,
+}: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
   const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
@@ -57,7 +54,7 @@ CanvasEditorProps): JSX.Element => {
             <div className={styles.editorCanvasWrapper}>
               <ResizableScreenWrapper>
                 <RenderView
-                  widgets={widgets}
+                  viewToRender={viewToRender}
                   readonly={readonly}
                   showVisualWidgetOutline={showVisualWidgetOutline}
                 />

@@ -22,11 +22,11 @@ class QueryStore {
     makeAutoObservable(this);
   }
 
-  async intializeCoreQueriesAndExecuteDependencies(
+  async executeAndSaveDependencies(
     analyzedWidgetOptions: Map<string, AnalyzedWidgetOptions>
   ): Promise<void> {
-    const configProvider = ConfigProvider.getInstance();
-    const coreQueries = configProvider.getCoreQueries();
+    // const configProvider = ConfigProvider.getInstance();
+    // const coreQueries = configProvider.getCoreQueries();
 
     // Verwende map und flat, um eine flache Liste aller Abhängigkeiten zu erstellen
     const allDependencies = Array.from(analyzedWidgetOptions.values())
@@ -38,12 +38,12 @@ class QueryStore {
       (dependency) => dependency.selector === "queries"
     );
 
-    if (coreQueries == null || queryDependencies == null) {
+    if (queryDependencies == null) {
       return;
     }
 
-    // set all provided core queries
-    this.setQueries(coreQueries);
+    // // set all provided core queries
+    // this.setQueries(coreQueries);
 
     await this.stores.resourceStore?.fetchAllResourcesAndSave();
 
@@ -76,6 +76,19 @@ class QueryStore {
   }
 
   //! Methods
+
+  async intializeQueries(queries?: Query[]): Promise<Query[]> {
+    const configProvider = ConfigProvider.getInstance();
+    const coreQueries = configProvider.getCoreQueries();
+
+    // set all provided queries
+    if (queries != null) this.setQueries(queries);
+
+    // set all core queries from the config provider
+    if (coreQueries != null) this.setQueries(coreQueries);
+
+    return this.queries;
+  }
 
   createInitialQuery(): Query {
     const query = {

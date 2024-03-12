@@ -9,7 +9,6 @@ import {
   TextWidget,
 } from "../lib/main";
 import { Provider as MobxProvider } from "mobx-react";
-import { EXAMPLE_WIDGETS_DATA_RENAMED } from "./example.data";
 import { TableWidget } from "../lib/main";
 import Gleap from "Gleap";
 import { faHardDrive } from "@fortawesome/free-regular-svg-icons";
@@ -274,8 +273,8 @@ function App() {
     <MobxProvider {...rootStore}>
       <div className="main-container">
         <CanvasEditor
-          viewToRender="test"
-          widgets={EXAMPLE_WIDGETS_DATA_RENAMED}
+          viewToRender="5f9e9b6b9I6b4c3017f3b3a0"
+          // widgets={EXAMPLE_WIDGETS_DATA_RENAMED}
           onSaveChanges={(changes) => {
             console.log("changes: ", JSON.stringify(changes, null, 2));
           }}

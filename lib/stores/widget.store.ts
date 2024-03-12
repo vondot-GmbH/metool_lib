@@ -16,6 +16,7 @@ import { runInAction } from "mobx";
 import RootStore from "./root.store";
 import { CoreRestQueryType } from "../schemas/query.schemas/query.schema";
 import { queryExecutor } from "../provider/http/http.rest.query.client";
+import { ChangeRecord } from "../globals/interfaces/change.record.interface";
 
 class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
@@ -42,7 +43,7 @@ class WidgetStore {
   //! setter
 
   setInitialWidgetAndConvert(widgets: Widget[]): WidgetHierarchyMap {
-    this.stores.resourceStore?.intializeResources();
+    console.log("setInitialWidgetAndConvert widgets ---- ", widgets.length);
     const structuredWidgets = structureWidgetsHierarchy(widgets);
 
     runInAction(() => {
@@ -69,11 +70,28 @@ class WidgetStore {
     }
 
     // TODO execute the requested dependencies
-    this.stores.queryStore.intializeCoreQueriesAndExecuteDependencies(
+    this.stores.queryStore.executeAndSaveDependencies(
       this._analyzedWidgetOptions
     );
 
     return this._structuredWidgetHierarchy;
+  }
+
+  // TODO
+  async initWidgetsAndProcess(viewID: string): Promise<void> {
+    console.log("initWidgetsAndProcess() ::  viewID ---- ", viewID);
+    this.stores.resourceStore?.intializeResources();
+    this.stores.queryStore?.intializeQueries();
+
+    const widgets = await this.fetchWidgetsForView(viewID);
+
+    if (widgets == null) {
+      return;
+    }
+
+    runInAction(() => {
+      this.setInitialWidgetAndConvert(widgets);
+    });
   }
 
   setStructuredWidgetHierarchy(
@@ -417,6 +435,24 @@ class WidgetStore {
 
   //! QUERY METHODS
 
+  async processWidgetChange(record: ChangeRecord): Promise<void> {
+    switch (record.action) {
+      case "CREATE":
+        await this.createWidget(record.data);
+        break;
+      case "UPDATE":
+        await this.updateWidget(record.data);
+
+        break;
+      case "DELETE":
+        await this.deleteWidgetByID(record.data);
+        break;
+
+      default:
+        return;
+    }
+  }
+
   async createWidget(widget: Widget): Promise<Widget | undefined> {
     const createQuery = this.stores.queryStore.getQuery(
       CoreRestQueryType.CREATE_WIDGET
@@ -470,7 +506,7 @@ class WidgetStore {
       this.stores.resourceStore
     );
   }
-
+  // TODO
   async fetchWidgetsForView(viewID: string): Promise<void> {
     const getWidgetsQuery = this.stores.queryStore.getQuery(
       CoreRestQueryType.GET_WIDGETS
@@ -484,14 +520,7 @@ class WidgetStore {
       this.stores.resourceStore
     );
 
-    if (response == null) return;
-
-    console.log("fetchWidgetsForView response ---- ");
-    console.log(JSON.stringify(response, null, 2));
-
-    // TODO
-
-    // this.setInitialWidgetAndConvert(response);
+    return response;
   }
 }
 
