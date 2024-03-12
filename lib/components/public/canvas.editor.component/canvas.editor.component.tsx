@@ -3,7 +3,6 @@ import MainLayout from "../../../layouts/main.layout/main.layout";
 import ViewStore from "../../../stores/view.store";
 import styles from "./canvas.editor.component.module.scss";
 import WidgetStore from "../../../stores/widget.store";
-import { ChangeRecord } from "../../../globals/interfaces/change.record.interface";
 import ChangeRecordStore from "../../../stores/change.record.store";
 import { useEffect } from "react";
 import EditorStore from "../../../stores/editor.store";
@@ -21,7 +20,6 @@ import RenderView from "../../private/editor.components/render.components/render
 
 interface CanvasEditorProps {
   viewToRender: string;
-  onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   changeRecordStore?: ChangeRecordStore;
@@ -32,7 +30,6 @@ interface CanvasEditorProps {
 }
 
 const CanvasEditor = ({
-  onSaveChanges,
   editorStore,
   queryStore,
   viewToRender,
@@ -47,7 +44,7 @@ const CanvasEditor = ({
   }, []);
 
   return (
-    <MainLayout topBars={[<TopBarComponent onSaveChanges={onSaveChanges} />]}>
+    <MainLayout topBars={[<TopBarComponent />]}>
       <MainLayout sideBars={[<ConfigurationSidebar />]}>
         <SidebarProvider>
           <div className={styles.canvasWrapper}>

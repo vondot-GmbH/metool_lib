@@ -43,7 +43,6 @@ class WidgetStore {
   //! setter
 
   setInitialWidgetAndConvert(widgets: Widget[]): WidgetHierarchyMap {
-    console.log("setInitialWidgetAndConvert widgets ---- ", widgets.length);
     const structuredWidgets = structureWidgetsHierarchy(widgets);
 
     runInAction(() => {
@@ -79,7 +78,6 @@ class WidgetStore {
 
   // TODO
   async initWidgetsAndProcess(viewID: string): Promise<void> {
-    console.log("initWidgetsAndProcess() ::  viewID ---- ", viewID);
     this.stores.resourceStore?.intializeResources();
     this.stores.queryStore?.intializeQueries();
 

@@ -9,8 +9,6 @@ import {
   faPlayCircle,
   faCircleXmark,
 } from "@fortawesome/free-regular-svg-icons";
-import { ChangeRecord } from "../../../../globals/interfaces/change.record.interface";
-import ChangeRecordStore from "../../../../stores/change.record.store";
 import EditorStore from "../../../../stores/editor.store";
 import WidgetStore from "../../../../stores/widget.store";
 import defaultStyles from "../../../../styles/index.module.scss";
@@ -20,26 +18,10 @@ import { inject, observer } from "mobx-react";
 interface TopBarProps {
   editorStore?: EditorStore;
   widgetStore?: WidgetStore;
-  changeRecordStore?: ChangeRecordStore;
-  onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
 }
 
-const TopBar = ({
-  editorStore,
-  widgetStore,
-  changeRecordStore,
-  onSaveChanges,
-}: TopBarProps): JSX.Element => {
+const TopBar = ({ editorStore, widgetStore }: TopBarProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
-
-  // TODO
-  const handleOnSaveChanges = () => {
-    if (changeRecordStore && onSaveChanges) {
-      // const changes = changeRecordStore?.processReleaseChanges();
-      const widgetss = widgetStore?.exportWidgetsTEST();
-      console.log(widgetss);
-    }
-  };
 
   return (
     <Row
@@ -72,7 +54,6 @@ const TopBar = ({
                     : EditorMode.EDIT;
                 editorStore?.changeEditorMode(mode);
                 widgetStore?.setSelectWidget(undefined);
-                handleOnSaveChanges();
               }}
             />
           </Column>
@@ -82,8 +63,4 @@ const TopBar = ({
   );
 };
 
-export default inject(
-  "changeRecordStore",
-  "editorStore",
-  "widgetStore"
-)(observer(TopBar));
+export default inject("editorStore", "widgetStore")(observer(TopBar));

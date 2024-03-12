@@ -10,7 +10,7 @@ import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
 import QueryStore from "../../../../../stores/query.store";
 import ResourceStore from "../../../../../stores/resource.store";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 interface RenderScreenProps {
   readonly?: boolean;
@@ -28,25 +28,27 @@ const RenderView = ({
   showVisualWidgetOutline = false,
   viewToRender,
 }: RenderScreenProps): JSX.Element => {
-  console.log("RenderViewComponent ::: ", viewToRender);
+  const [isLoading, setIsLoading] = useState(true);
+  const [structuredWidgets, setStructuredWidgets] = useState<
+    WidgetHierarchyMap | undefined
+  >(undefined);
+
   useEffect(() => {
-    if (viewToRender) {
-      widgetStore?.initWidgetsAndProcess(viewToRender);
-    }
+    const loadWidgets = async () => {
+      if (viewToRender) {
+        await widgetStore?.initWidgetsAndProcess(viewToRender);
+        const structuredData = widgetStore?.getStructuredData();
+        setStructuredWidgets(structuredData);
+        setIsLoading(false);
+      }
+    };
+
+    loadWidgets();
   }, [viewToRender, widgetStore]);
 
-  // const structuredWidgets = useMemo(() => {
-  //   return widgetStore?.setInitialWidgetAndConvert(widgets);
-  // }, [widgetStore, widgets]);
-
-  const structuredWidgets = useMemo(
-    () => widgetStore?.getStructuredData(),
-    [widgetStore, viewToRender]
-  );
-
-  // const rootLevelWidgets = useMemo(() => {
-  //   return getFilteredRootLevelWidgets(structuredWidgets as WidgetHierarchyMap);
-  // }, [structuredWidgets]);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const rootLevelWidgets = getFilteredRootLevelWidgets(
     structuredWidgets as WidgetHierarchyMap
@@ -54,8 +56,6 @@ const RenderView = ({
 
   const preparedRootLevelWidgets = Array.from(rootLevelWidgets.values());
   const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
-
-  console.log("preparedRootLevelWidgets ", preparedRootLevelWidgets);
 
   return (
     <GridLayout

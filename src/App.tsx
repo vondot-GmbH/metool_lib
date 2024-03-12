@@ -272,13 +272,7 @@ function App() {
   return (
     <MobxProvider {...rootStore}>
       <div className="main-container">
-        <CanvasEditor
-          viewToRender="5f9e9b6b9I6b4c3017f3b3a0"
-          // widgets={EXAMPLE_WIDGETS_DATA_RENAMED}
-          onSaveChanges={(changes) => {
-            console.log("changes: ", JSON.stringify(changes, null, 2));
-          }}
-        />
+        <CanvasEditor viewToRender="5f9e9b6b9I6b4c3017f3b3a0" />
       </div>
     </MobxProvider>
   );
