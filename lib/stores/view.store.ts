@@ -1,14 +1,12 @@
 import { makeAutoObservable } from "mobx";
-import { DataItem } from "../globals/interfaces/pagination.interface";
-import { View } from "../schemas/view.schemas/view.schema";
+
 import RootStore from "./root.store";
 
-class ViewStore {
-  private _currentView: DataItem<View> = {
-    data: undefined,
-    isLoading: false,
-  };
+// TODO change to a view (not only the viewID)
+// if the current view id is provided load view data and set
 
+class ViewStore {
+  private _currentViewID: string | undefined;
   private stores: RootStore;
 
   constructor(rootStore: RootStore) {
@@ -17,17 +15,13 @@ class ViewStore {
   }
 
   //! Setter
-  setCurrentView = (view: View): void => {
-    this._currentView.data = view;
+  setCurrentView = (viewID: string): void => {
+    this._currentViewID = viewID;
   };
 
   //! Getter
-  get currentView(): DataItem<View> | undefined {
-    if (this._currentView == null) {
-      return;
-    }
-
-    return JSON.parse(JSON.stringify(this._currentView));
+  get currentView(): string | undefined {
+    return this._currentViewID;
   }
 }
 

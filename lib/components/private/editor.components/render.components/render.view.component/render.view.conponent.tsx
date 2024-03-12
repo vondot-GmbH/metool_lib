@@ -10,7 +10,7 @@ import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
 import QueryStore from "../../../../../stores/query.store";
 import ResourceStore from "../../../../../stores/resource.store";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 interface RenderScreenProps {
   readonly?: boolean;
@@ -27,6 +27,7 @@ const RenderView = ({
   widgetStore,
   showVisualWidgetOutline = false,
   viewToRender,
+  viewStore,
 }: RenderScreenProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const [structuredWidgets, setStructuredWidgets] = useState<
@@ -34,6 +35,9 @@ const RenderView = ({
   >(undefined);
 
   useEffect(() => {
+    // set the viewID in the viewStore
+    viewStore?.setCurrentView(viewToRender);
+
     const loadWidgets = async () => {
       if (viewToRender) {
         await widgetStore?.initWidgetsAndProcess(viewToRender);
@@ -64,13 +68,7 @@ const RenderView = ({
       content={rootLevelWidgets}
       onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
     >
-      {preparedRootLevelWidgets?.length === 0 && <p>empty </p>}
-
       {preparedRootLevelWidgets.map((rootLevelWidgets) => {
-        console.log(
-          "mappp RenderViewComponent() ::: rootLevelWidgets ",
-          rootLevelWidgets
-        );
         return (
           <div
             key={rootLevelWidgets.widget.positioning.i}

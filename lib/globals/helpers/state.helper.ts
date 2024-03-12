@@ -52,6 +52,10 @@ export const extractDependenciesAndNonDependencies = (
   options: any,
   path: string[] = []
 ): DependenciesResult => {
+  if (options == null) {
+    return { dependencies: [], nonDependencies: {} };
+  }
+
   const dependencies: Dependency[] = [];
   const nonDependencies: WidgetOptions = Array.isArray(options) ? [] : {};
 

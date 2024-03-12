@@ -384,21 +384,38 @@ class WidgetStore {
     const { widgetType, layout, parentID, currentBreakpoint } = args;
 
     const widgetID = layout.i;
+    const viewID = this.stores.viewStore.currentView;
+
+    if (viewID == null) {
+      return;
+    }
 
     // create the new widget object
     const newWidget: WidgetHierarchy = {
       widget: {
         widgetID,
         widgetType,
-        viewID: "", // TODO
+        viewID: viewID,
         positioning: {
           i: widgetID,
 
           [currentBreakpoint]: {
-            x: layout.x,
-            y: layout.y,
-            w: layout.w,
-            h: layout.h,
+            x: {
+              value: layout.x,
+              isInfinity: false,
+            },
+            y: {
+              value: layout.y,
+              isInfinity: false,
+            },
+            w: {
+              value: layout.w,
+              isInfinity: false,
+            },
+            h: {
+              value: layout.h,
+              isInfinity: false,
+            },
           },
         } as any,
       },

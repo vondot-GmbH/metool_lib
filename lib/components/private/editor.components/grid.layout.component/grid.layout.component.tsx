@@ -7,12 +7,12 @@ import {
 import { WidgetHierarchyMap } from "../../../../schemas/widget.schemas/widget.schema";
 import { useEffect, useMemo, useState } from "react";
 import styles from "./grid.layout.component.module.scss";
-import { v4 as UUID } from "uuid";
 import ViewStore from "../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../stores/widget.store";
 import ConfigProvider from "../../../../config/config.provider";
 import EditorStore from "../../../../stores/editor.store";
+import { getUniqueID } from "../../../../globals/helpers/global.helper";
 
 interface GridLayoutProps {
   key: string;
@@ -76,13 +76,7 @@ const GridLayout = ({
   const [savedLayouts, setSavedLayouts] = useState(layouts);
 
   const dynamicLayouts = useMemo(() => {
-    const dynamic = convertDynamicLayouts(
-      selectedWidgetID,
-      savedLayouts,
-      readonly
-    );
-
-    return dynamic;
+    return convertDynamicLayouts(selectedWidgetID, savedLayouts, readonly);
   }, [selectedWidgetID, savedLayouts, readonly]);
 
   const gridBackgroundStyle = {
@@ -108,7 +102,7 @@ const GridLayout = ({
       return;
     }
 
-    const widgetID = UUID();
+    const widgetID = getUniqueID();
 
     const layoutNEW: Layout = {
       i: widgetID,
