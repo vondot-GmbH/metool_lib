@@ -11,8 +11,16 @@ import {
 import { Provider as MobxProvider } from "mobx-react";
 import { TableWidget } from "../lib/main";
 import Gleap from "Gleap";
-import { faHardDrive } from "@fortawesome/free-regular-svg-icons";
+import {
+  faHandPointer,
+  faHardDrive,
+} from "@fortawesome/free-regular-svg-icons";
 import RootStore from "../lib/stores/root.store";
+import {
+  faDisplay,
+  faMobileNotch,
+  faTabletScreenButton,
+} from "@fortawesome/pro-regular-svg-icons";
 
 // only for testing purposes
 
@@ -219,7 +227,7 @@ Init({
       large: {
         cols: 48,
         rowHeight: 30,
-        icon: faHardDrive,
+        icon: faHandPointer,
         title: "Large",
         breakpoint: 1200,
       },
@@ -242,21 +250,21 @@ Init({
       large: {
         cols: 24,
         rowHeight: 30,
-        icon: faHardDrive,
+        icon: faDisplay,
         title: "Large",
         breakpoint: 1200,
       },
       medium: {
         cols: 12,
         rowHeight: 30,
-        icon: faHardDrive,
+        icon: faTabletScreenButton,
         title: "Medium",
         breakpoint: 900,
       },
       small: {
         cols: 8,
         rowHeight: 30,
-        icon: faHardDrive,
+        icon: faMobileNotch,
         title: "Small",
         breakpoint: 440,
       },

@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
 import Row from "../row.component/row.component";
 import styles from "./key.value.input.conponent.module.scss";
 import RunningText from "../text.components/running.text.component/running.text.component";
 import TextInput from "../outlined.text.input.component/outlined.text.input.component";
+import IconButton from "../icon.button.component/icon.button.component";
+import { faAdd, faX } from "@fortawesome/pro-regular-svg-icons";
 
 interface KeyValue {
   key: string;
@@ -28,7 +28,7 @@ interface KeyValueInputProps {
 }
 
 const KeyValueInput = ({
-  addLabel = "+ Add Entry",
+  addLabel = "Add Entry",
   label,
   defaultEntries = [],
   fields,
@@ -118,9 +118,9 @@ const KeyValueInput = ({
             />
 
             {!disabled && (
-              <FontAwesomeIcon
+              <IconButton
                 className={styles.removeButton}
-                icon={faXmarkCircle}
+                icon={faX}
                 onClick={() => handleRemoveEntry(index)}
               />
             )}
@@ -129,13 +129,14 @@ const KeyValueInput = ({
       })}
 
       {!disabled && (
-        <button
-          type="button"
-          className={styles.addButton}
-          onClick={handleAddEntry}
-        >
-          {addLabel}
-        </button>
+        <Row justifyContent="center">
+          <IconButton
+            icon={faAdd}
+            onClick={handleAddEntry}
+            label={addLabel}
+            showBorder
+          />
+        </Row>
       )}
     </div>
   );

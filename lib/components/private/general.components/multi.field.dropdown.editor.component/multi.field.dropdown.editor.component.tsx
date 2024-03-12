@@ -3,6 +3,8 @@ import styles from "./multi.field.dropdown.editor.component.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
 import RunningText from "../text.components/running.text.component/running.text.component";
+import IconButton from "../icon.button.component/icon.button.component";
+import { faAdd } from "@fortawesome/pro-regular-svg-icons";
 
 interface MultiFieldDropdownEditorProps {
   label: string;
@@ -41,13 +43,7 @@ const MultiFieldDropdownEditor = ({
     <div className={styles.multiFieldDropdownWrapper}>
       <div className={styles.multiFieldDropdownHeader}>
         <RunningText>{label}</RunningText>
-        {onAdd && (
-          <FontAwesomeIcon
-            icon={faPlusSquare}
-            style={{ cursor: "pointer" }}
-            onClick={onAdd}
-          />
-        )}
+        {onAdd && <IconButton icon={faAdd} onClick={onAdd} showBorder />}
       </div>
       {savedItems &&
         savedItems.map((item, index) => (

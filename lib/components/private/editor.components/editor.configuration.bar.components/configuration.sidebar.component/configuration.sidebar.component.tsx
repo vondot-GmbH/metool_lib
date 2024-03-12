@@ -4,11 +4,6 @@ import WidgetStore from "../../../../../stores/widget.store";
 import IconTabBar from "../../../general.components/icon.tab.bar.component/icon.tab.bar.component";
 import EditorStore from "../../../../../stores/editor.store";
 import { EditorMode } from "../../../../../globals/enums/editor.enum";
-import {
-  faSquarePlus,
-  faXmarkCircle,
-  faFileCode,
-} from "@fortawesome/free-regular-svg-icons";
 import { useState } from "react";
 import StateSidebar from "../state.sidebar.component/state.sidebar.component";
 import WidgetSidebar from "../widget.sidebar.component/widget.sidebar.component";
@@ -18,7 +13,12 @@ import styles from "./configuration.sidebar.component.module.scss";
 import Row from "../../../general.components/row.component/row.component";
 import ResourceStore from "../../../../../stores/resource.store";
 import ResourceSidebar from "../code.sidebar.components/resource.sidebar.component/resource.sidebar.component";
-import { faBarChart } from "@fortawesome/free-regular-svg-icons/faBarChart";
+import {
+  faCode,
+  faDatabase,
+  faSquarePollHorizontal,
+  faTable,
+} from "@fortawesome/pro-light-svg-icons";
 
 interface ConfigurationSidebarProps {
   widgetStore?: WidgetStore;
@@ -43,19 +43,19 @@ const ConfigurationSidebar = ({
       <IconTabBar
         tabs={[
           {
-            icon: faSquarePlus,
+            icon: faTable,
             name: "Widgets",
           },
           {
-            icon: faXmarkCircle,
+            icon: faSquarePollHorizontal,
             name: "States",
           },
           {
-            icon: faFileCode,
+            icon: faCode,
             name: "Code",
           },
           {
-            icon: faBarChart,
+            icon: faDatabase,
             name: "Resources",
           },
         ]}

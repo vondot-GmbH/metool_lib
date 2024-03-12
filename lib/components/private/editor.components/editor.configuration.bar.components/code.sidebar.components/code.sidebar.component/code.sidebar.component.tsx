@@ -6,7 +6,6 @@ import Row from "../../../../general.components/row.component/row.component";
 import styles from "./code.sidebar.component.module.scss";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faSquarePlus } from "@fortawesome/free-regular-svg-icons";
 import { useEffect, useMemo, useState } from "react";
 import {
   CoreQuery,
@@ -14,6 +13,8 @@ import {
 } from "../../../../../../schemas/query.schemas/query.schema";
 import CodeSidebarDetail from "../code.sidebar.detail.component/code.sidebar.detail.component";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
+import { faAdd, faCode } from "@fortawesome/pro-regular-svg-icons";
+import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
 
 interface CodeSidebarProps {
   widgetStore?: WidgetStore;
@@ -62,6 +63,7 @@ const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
 
   const handleAddQuery = () => {
     const initialQuery = queryStore?.createInitialQuery();
+
     setSelectedItem(initialQuery);
   };
 
@@ -76,13 +78,11 @@ const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
                   className={itemClassName(query?.queryID)}
                   key={query?.queryID}
                   onClick={() => {
+                    console.log("onClick: ", query);
                     handleSelectItem(query?.queryID);
                   }}
                 >
-                  <FontAwesomeIcon
-                    icon={faBookmark}
-                    className={styles.codeIcon}
-                  />
+                  <FontAwesomeIcon icon={faCode} className={styles.codeIcon} />
                   <RunningText>{query.title}</RunningText>
                 </Row>
               );
@@ -99,9 +99,9 @@ const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
         <ComponentWrapper
           title={"Code"}
           action={
-            <FontAwesomeIcon
-              icon={faSquarePlus}
-              style={{ cursor: "pointer" }}
+            <IconButton
+              icon={faAdd}
+              showBorder
               onClick={() => {
                 handleAddQuery();
               }}
@@ -117,10 +117,7 @@ const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
                   handleSelectItem(query?.queryID);
                 }}
               >
-                <FontAwesomeIcon
-                  icon={faBookmark}
-                  className={styles.codeIcon}
-                />
+                <FontAwesomeIcon icon={faCode} className={styles.codeIcon} />
                 <RunningText>{query.title}</RunningText>
               </Row>
             );

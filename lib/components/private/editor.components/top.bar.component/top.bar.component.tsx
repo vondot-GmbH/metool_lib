@@ -5,15 +5,16 @@ import SizedContainer from "../../general.components/sized.container.component/s
 import TitleText from "../../general.components/text.components/title.text.component/title.text.component";
 import BreakpointSettings from "../breakpoint.settings.component/breakpoint.settings.component";
 import { EditorMode } from "../../../../globals/enums/editor.enum";
-import {
-  faPlayCircle,
-  faCircleXmark,
-} from "@fortawesome/free-regular-svg-icons";
+
 import EditorStore from "../../../../stores/editor.store";
 import WidgetStore from "../../../../stores/widget.store";
 import defaultStyles from "../../../../styles/index.module.scss";
 import styles from "./top.bar.component.module.scss";
 import { inject, observer } from "mobx-react";
+import {
+  faCircleXmark,
+  faCirclePlay,
+} from "@fortawesome/pro-regular-svg-icons";
 
 interface TopBarProps {
   editorStore?: EditorStore;
@@ -22,6 +23,27 @@ interface TopBarProps {
 
 const TopBar = ({ editorStore, widgetStore }: TopBarProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
+
+  const renderPreviewModeButton = (): JSX.Element => {
+    let mode = EditorMode.EDIT;
+
+    if (editorMode == EditorMode.EDIT) {
+      mode = EditorMode.PREVIEW;
+    }
+
+    return (
+      <div className={styles.previewModeButton}>
+        <FontAwesomeIcon
+          icon={editorMode == EditorMode.EDIT ? faCirclePlay : faCircleXmark}
+          size="lg"
+          onClick={() => {
+            editorStore?.changeEditorMode(mode);
+            widgetStore?.setSelectWidget(undefined);
+          }}
+        />
+      </div>
+    );
+  };
 
   return (
     <Row
@@ -39,24 +61,7 @@ const TopBar = ({ editorStore, widgetStore }: TopBarProps): JSX.Element => {
 
       <SizedContainer size="s">
         <Column alignItems="flex-end">
-          <Column alignItems="center">
-            <FontAwesomeIcon
-              icon={
-                editorMode == EditorMode.EDIT ? faPlayCircle : faCircleXmark
-              }
-              size="lg"
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                // TODO make this more pretty
-                const mode =
-                  editorMode == EditorMode.EDIT
-                    ? EditorMode.PREVIEW
-                    : EditorMode.EDIT;
-                editorStore?.changeEditorMode(mode);
-                widgetStore?.setSelectWidget(undefined);
-              }}
-            />
-          </Column>
+          <Column alignItems="center">{renderPreviewModeButton()}</Column>
         </Column>
       </SizedContainer>
     </Row>

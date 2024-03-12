@@ -1,16 +1,17 @@
 import React, { useState, useCallback } from "react";
 import { inject, observer } from "mobx-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
+import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
 import QueryStore from "../../../../../../stores/query.store";
 import RestQueryForm from "../code.sidebar.component/components/rest.query.form/rest.query.form";
-import SizedContainer from "../../../../general.components/sized.container.component/sized.container.component";
 import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
 import ResourceStore from "../../../../../../stores/resource.store";
 import { DataSourceType, Resource } from "../../../../../../main";
 import { RestQuery } from "../../../../../../schemas/query.schemas/query.schema";
+import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
+import Row from "../../../../general.components/row.component/row.component";
+import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons";
 import defaultStyles from "../../../../../../styles/index.module.scss";
 
 interface CodeSidebarDetailProps {
@@ -63,19 +64,19 @@ const CodeSidebarDetail: React.FC<CodeSidebarDetailProps> = ({
       <ComponentWrapper
         title={selectedItem.title}
         action={
-          <SizedContainer size="s">
+          <Row>
             {!(selectedItem as any)?.core && (
-              <button type="submit" form="rest-query-form">
-                {isEditing ? "Speichern" : "Hinzufügen"}
-              </button>
+              <IconButton
+                className={defaultStyles.mr10}
+                type="submit"
+                form="rest-query-form"
+                icon={isEditing ? faFloppyDisk : faPlus}
+                label={isEditing ? "Speichern" : "Hinzufügen"}
+                showBorder
+              />
             )}
-
-            <FontAwesomeIcon
-              className={`${defaultStyles.ml10} pointerCursor`}
-              icon={faXmarkCircle}
-              onClick={onClose}
-            />
-          </SizedContainer>
+            <IconButton icon={faX} onClick={onClose} showBorder />
+          </Row>
         }
       >
         <SelectDropDown

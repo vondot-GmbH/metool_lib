@@ -1,11 +1,9 @@
 import { inject, observer } from "mobx-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
+import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
 import ResourceStore from "../../../../../../stores/resource.store";
 import ResourceRestForm from "../resource.sidebar.component/components/resource.rest.form/resource.rest.form";
-import SizedContainer from "../../../../general.components/sized.container.component/sized.container.component";
 import defaultStyles from "../../../../../../styles/index.module.scss";
 import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
 import { DataSourceType } from "../../../../../../main";
@@ -14,6 +12,9 @@ import {
   Resource,
   RestResource,
 } from "../../../../../../schemas/resource.schemas/resource.schema";
+import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
+import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
+import Row from "../../../../general.components/row.component/row.component";
 
 interface ResourceSidebarDetailProps {
   resourceStore?: ResourceStore;
@@ -32,10 +33,6 @@ const ResourceSidebarDetail = ({
     selectedItem?.type ?? null
   );
 
-  const handleTypeChange = (item: any) => {
-    setSelectedType(item?.value);
-  };
-
   const typeItems = Object.values(DataSourceType).map((key) => {
     return {
       value: key,
@@ -43,10 +40,12 @@ const ResourceSidebarDetail = ({
     };
   });
 
+  const handleTypeChange = (item: any) => {
+    setSelectedType(item?.value);
+  };
+
   const handleSubmit = (data: Resource) => {
-    if (!data) {
-      return;
-    }
+    if (!data) return;
 
     const resource = {
       ...data,
@@ -65,19 +64,19 @@ const ResourceSidebarDetail = ({
       <ComponentWrapper
         title={selectedItem?.title}
         action={
-          <SizedContainer size="s">
+          <Row>
             {!(selectedItem as any)?.core && (
-              <button type="submit" form="rest-resource-form">
-                Save
-              </button>
+              <IconButton
+                className={defaultStyles.mr10}
+                type="submit"
+                form="rest-resource-form"
+                icon={isEditing ? faFloppyDisk : faPlus}
+                label={isEditing ? "Speichern" : "Hinzufügen"}
+                showBorder
+              />
             )}
-            <FontAwesomeIcon
-              className={defaultStyles.ml10}
-              icon={faXmarkCircle}
-              style={{ cursor: "pointer" }}
-              onClick={onClose}
-            />
-          </SizedContainer>
+            <IconButton icon={faX} onClick={onClose} showBorder />
+          </Row>
         }
       >
         <SelectDropDown

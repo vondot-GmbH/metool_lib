@@ -4,7 +4,6 @@ import Row from "../../../../general.components/row.component/row.component";
 import styles from "./resource.sidebar.component.module.scss";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookmark, faSquarePlus } from "@fortawesome/free-regular-svg-icons";
 import { useEffect, useMemo, useState } from "react";
 import ResourceStore from "../../../../../../stores/resource.store";
 import {
@@ -13,6 +12,8 @@ import {
 } from "../../../../../../schemas/resource.schemas/resource.schema";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import ResourceSidebarDetail from "../resource.sidebar.detail.component/resource.sidebar.detail.component";
+import { faAdd, faDatabase } from "@fortawesome/pro-regular-svg-icons";
+import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
 
 interface ResourceSidebarProps {
   resourceStore?: ResourceStore;
@@ -86,7 +87,7 @@ const ResourceSidebar = ({
                   }}
                 >
                   <FontAwesomeIcon
-                    icon={faBookmark}
+                    icon={faDatabase}
                     className={styles.resourceIcon}
                   />
                   <RunningText>{resource.title}</RunningText>
@@ -105,9 +106,9 @@ const ResourceSidebar = ({
         <ComponentWrapper
           title={"Resources"}
           action={
-            <FontAwesomeIcon
-              icon={faSquarePlus}
-              style={{ cursor: "pointer" }}
+            <IconButton
+              icon={faAdd}
+              showBorder
               onClick={() => {
                 handleAddResource();
               }}
@@ -124,7 +125,7 @@ const ResourceSidebar = ({
                 }}
               >
                 <FontAwesomeIcon
-                  icon={faBookmark}
+                  icon={faDatabase}
                   className={styles.resourceIcon}
                 />
                 <RunningText>{resource?.title ?? "--"}</RunningText>

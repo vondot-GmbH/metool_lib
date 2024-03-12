@@ -17,6 +17,8 @@ import Column from "../../general.components/column.component/column.component";
 import Image from "../../general.components/image.component/image.component";
 import TitleText from "../../general.components/text.components/title.text.component/title.text.component";
 import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
+import IconButton from "../../general.components/icon.button.component/icon.button.component";
+import { faClose, faX } from "@fortawesome/pro-regular-svg-icons";
 
 const SidebarContext = createContext({
   views: [] as ReactNode[],
@@ -122,9 +124,13 @@ const OptionSidebar = ({ widgetStore, editorStore }: OptionSidebarProps) => {
         </Column>
         <div>
           {views.length > 1 && (
-            <button onClick={popView} className={styles.backButton}>
-              Zurück
-            </button>
+            <IconButton
+              icon={faX}
+              onClick={popView}
+              className={styles.backButton}
+              label="Zurück"
+              showBorder
+            />
           )}
         </div>
       </Row>

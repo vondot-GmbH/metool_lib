@@ -6,9 +6,8 @@ import SelectDropDown from "../../../general.components/select.dropdown.componen
 import { useEffect, useState } from "react";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
-import { faAddressBook, faChartBar } from "@fortawesome/free-regular-svg-icons";
-import { faCalendar } from "@fortawesome/free-regular-svg-icons/faCalendar";
 import ResizableSidebar from "../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
+import { faCode, faTable } from "@fortawesome/pro-light-svg-icons";
 
 interface StateSidebarProps {
   stateStore?: StateStore;
@@ -31,11 +30,11 @@ const StateSidebar = ({ stateStore }: StateSidebarProps): JSX.Element => {
   const getStateIcon = (selector: StateSelector) => {
     switch (selector) {
       case StateSelector.WIDGETS:
-        return faCalendar;
+        return faTable;
       case StateSelector.QUERIES:
-        return faChartBar;
+        return faCode;
       default:
-        return faAddressBook;
+        return faCode;
     }
   };
 
