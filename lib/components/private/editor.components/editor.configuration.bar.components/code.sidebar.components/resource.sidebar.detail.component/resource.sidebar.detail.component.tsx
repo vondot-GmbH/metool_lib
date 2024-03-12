@@ -9,7 +9,7 @@ import SizedContainer from "../../../../general.components/sized.container.compo
 import defaultStyles from "../../../../../../styles/index.module.scss";
 import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
 import { DataSourceType } from "../../../../../../main";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import {
   Resource,
   RestResource,
@@ -85,10 +85,13 @@ const ResourceSidebarDetail = ({
           selectedItem={selectedType}
           items={typeItems}
           onChange={(item) => handleTypeChange(item)}
+          disabled={(selectedItem as any)?.core}
+          className={defaultStyles.mb20}
         />
 
         {selectedType === DataSourceType.REST_API && (
           <ResourceRestForm
+            disabled={(selectedItem as any)?.core}
             onFormSubmit={(data: RestResource) => {
               handleSubmit(data);
             }}

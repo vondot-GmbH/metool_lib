@@ -10,17 +10,20 @@ import {
 import Row from "../../../../../../general.components/row.component/row.component";
 import SelectDropDown from "../../../../../../general.components/select.dropdown.component/select.dropdown.component";
 import { Resource } from "../../../../../../../../main";
+import SizedContainer from "../../../../../../general.components/sized.container.component/sized.container.component";
 
 interface RestQueryFormprops {
   initialQuery?: RestQuery;
   onFormSubmit: (query: RestQuery) => void;
   resource: Resource;
+  disabled?: boolean;
 }
 
 const RestQueryForm = ({
   onFormSubmit,
   initialQuery,
   resource,
+  disabled = false,
 }: RestQueryFormprops): JSX.Element | null => {
   const {
     register,
@@ -83,14 +86,16 @@ const RestQueryForm = ({
       <TextInput
         {...register("title")}
         label="Name"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mt10}
         validationMessage={errors.title?.message?.toString()}
+        disabled={disabled}
       />
       <TextInput
         {...register("description")}
         label="Description"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mb10}
         validationMessage={errors.description?.message?.toString()}
+        disabled={disabled}
       />
 
       <Row alignItems="center">
@@ -98,23 +103,29 @@ const RestQueryForm = ({
           disabled={true}
           value={resource?.baseUrl}
           label="Base URL"
-          className={defaultStyles.mb20}
+          className={defaultStyles.mb10}
+          style={{ fontSize: "12px" }}
         />
 
-        <TextInput
-          {...register("url")}
-          label="URL"
-          className={defaultStyles.mb20}
-          validationMessage={errors.url?.message?.toString()}
-        />
+        <SizedContainer customSize={300} size="CUSTOM">
+          <TextInput
+            style={{ width: "150px" }}
+            {...register("url")}
+            label="URL"
+            className={defaultStyles.mb10}
+            validationMessage={errors.url?.message?.toString()}
+            disabled={disabled}
+          />
+        </SizedContainer>
       </Row>
 
       <SelectDropDown
-        className={defaultStyles.mb20}
+        className={defaultStyles.mb30}
         label="Method"
         selectedItem={initialQuery?.method}
         items={methodItems}
         validationMessage={errors.method?.message?.toString()}
+        disabled={disabled}
         onChange={(item) => {
           if (item?.value != null) {
             setValue("method", item?.value);
@@ -131,6 +142,7 @@ const RestQueryForm = ({
 
       <KeyValueInput
         className={defaultStyles.mb20}
+        disabled={disabled}
         label="Headers"
         fields={headersFields}
         append={appendHeader}
@@ -138,10 +150,12 @@ const RestQueryForm = ({
         register={register}
         arrayFieldName={"headers"}
         validationErrors={errors}
+        addLabel="+ Add Header"
       />
 
       <KeyValueInput
         className={defaultStyles.mb20}
+        disabled={disabled}
         label="Params"
         fields={paramsFields}
         append={appendParams}
@@ -149,13 +163,15 @@ const RestQueryForm = ({
         register={register}
         arrayFieldName={"params"}
         validationErrors={errors}
+        addLabel="+ Add Param"
       />
 
       <TextInput
         validationMessage={errors.body?.message?.toString()}
         {...register("body")}
         label="body"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mb10}
+        disabled={disabled}
       />
     </form>
   );

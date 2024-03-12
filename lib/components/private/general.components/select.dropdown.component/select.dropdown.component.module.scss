@@ -13,9 +13,6 @@
   .selectLabel {
     margin-bottom: 5px;
     margin-left: 5px;
-    font-weight: 300; // $font-weight-regular
-    font-size: 12px; // $font-size-small-text
-    color: #919191;
   }
 
   .selectLabelError {
@@ -37,16 +34,11 @@
 
 .dropdownSelectionControl {
   border-radius: 8px !important;
-  font-size: 13px !important; // $font-size-running-text
-  font-weight: 400 !important; // $font-weight-medium
+  font-size: 13px !important;
+  font-weight: 400 !important;
   box-shadow: none !important;
-  color: #313634 !important; // color-text
-  background-color: rgba(
-    248,
-    250,
-    250,
-    0.33
-  ) !important; // color-surface with opacity
+  color: #313634 !important;
+  background-color: rgba(248, 250, 250, 0.33) !important;
   border: 1.5px solid #dddddd !important; // color-border
 }
 
@@ -75,12 +67,4 @@
   color: #313634 !important; // color-text
   font-weight: 400 !important; // $font-weight-medium
   font-size: 13px !important; // $font-size-running-text
-}
-
-.dropdownSelectionOptionSelected {
-  background-color: rgb(48, 213, 152) !important; // color-primary
-}
-
-.dropdownSelectionOptionHover {
-  background-color: hsla(158, 66%, 51%, 0.1) !important; // color-hover
 }

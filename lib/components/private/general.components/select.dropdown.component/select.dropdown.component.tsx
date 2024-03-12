@@ -113,7 +113,9 @@ const SelectDropDown = ({
     return (
       <div className={selectClass}>
         <input {...inputRef} type="hidden" />
-        {label != null && <div className={inputLabelClass}>{label}</div>}
+        {label != null && (
+          <SmallText className={inputLabelClass}>{label}</SmallText>
+        )}
         <Select
           menuPortalTarget={document.body}
           styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}

@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 8px 12px;
   background-color: white;
 
@@ -20,6 +20,10 @@
   padding-left: 34px;
 }
 
+.disabled {
+  background-color: #f2f2f2;
+}
+
 .icon {
   position: absolute;
   left: 12px;
@@ -33,6 +37,10 @@
   &::placeholder {
     color: #6c757d;
   }
+
+  &disabled {
+    background-color: #f2f2f2;
+  }
 }
 
 .errorText {
@@ -41,4 +49,5 @@
 
 .label {
   margin-bottom: 5px;
+  margin-left: 5px;
 }

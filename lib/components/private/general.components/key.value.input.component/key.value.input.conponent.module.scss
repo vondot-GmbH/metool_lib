@@ -1,11 +1,18 @@
 .wrapper {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
+  background-color: #f2f4f4;
+  border-radius: 6px;
+  padding: 5px;
+
+  .label {
+    margin-left: 5px;
+  }
 }
 
 .row {
-  gap: 10px;
+  gap: 4px;
 }
 
 .input {
@@ -28,7 +35,7 @@
   border-radius: 4px;
 
   &:hover {
-    background-color: #d4d6d6;
+    background-color: #e0e0e0;
   }
 }
 

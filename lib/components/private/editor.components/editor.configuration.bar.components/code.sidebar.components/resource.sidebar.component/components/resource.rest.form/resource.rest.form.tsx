@@ -11,11 +11,13 @@ import KeyValueInput from "../../../../../../general.components/key.value.input.
 interface ResourceRestFormProps {
   iniitialResource?: RestResource;
   onFormSubmit: (resource: RestResource) => void;
+  disabled?: boolean;
 }
 
 const ResourceRestForm = ({
   onFormSubmit,
   iniitialResource,
+  disabled = false,
 }: ResourceRestFormProps): JSX.Element | null => {
   const {
     register,
@@ -45,14 +47,16 @@ const ResourceRestForm = ({
       <TextInput
         {...register("title")}
         label="Name"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mb10}
         validationMessage={errors.title?.message?.toString()}
+        disabled={disabled}
       />
 
       <TextInput
         {...register("description")}
         label="Description"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mb10}
+        disabled={disabled}
         validationMessage={errors.description?.message?.toString()}
       />
 
@@ -60,6 +64,7 @@ const ResourceRestForm = ({
         {...register("baseUrl")}
         label="Base URL"
         className={defaultStyles.mb20}
+        disabled={disabled}
         validationMessage={errors.baseUrl?.message?.toString()}
       />
 
@@ -71,6 +76,7 @@ const ResourceRestForm = ({
         register={register}
         arrayFieldName={"defaultHeaders"}
         validationErrors={errors}
+        disabled={disabled}
       />
     </form>
   );

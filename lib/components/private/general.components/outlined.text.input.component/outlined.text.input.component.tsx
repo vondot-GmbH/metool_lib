@@ -20,6 +20,7 @@ interface TextInputProps
   onValueChange?: (value: string | number) => void;
   validationMessage?: string | null;
   className?: string;
+  disabled?: boolean;
 }
 
 const TextInput = forwardRef(
@@ -32,12 +33,14 @@ const TextInput = forwardRef(
       type = "text",
       className,
       inputRef,
+      disabled = false,
       ...props
     }: TextInputProps,
     ref: ForwardedRef<HTMLInputElement>
   ): JSX.Element => {
     const [inputValue, setInputValue] = useState(props.value);
 
+    // TODO
     // const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
     //   if (type === "number" && onValueChange) {
     //     const value = parseFloat(event.target.value);
@@ -73,9 +76,12 @@ const TextInput = forwardRef(
     const inputWrapperClasses = classNames(styles.wrapper, {
       [styles.wrapperWithError]: validationMessage,
       [styles.wrapperWithIcon]: !!icon,
+      [styles.disabled]: disabled,
     });
 
-    const inputClasses = classNames(styles.input, {});
+    const inputClasses = classNames(styles.input, {
+      [styles.disabled]: disabled,
+    });
 
     return (
       <Column className={className}>
@@ -83,6 +89,7 @@ const TextInput = forwardRef(
         <div className={inputWrapperClasses}>
           {icon && <FontAwesomeIcon className={styles.icon} icon={icon} />}
           <input
+            disabled={disabled}
             {...props}
             {...inputRef}
             type={type}

@@ -12,6 +12,7 @@ interface KeyValue {
 }
 
 interface KeyValueInputProps {
+  addLabel?: string;
   label?: string;
   defaultEntries?: KeyValue[];
   fields?: any[];
@@ -27,6 +28,7 @@ interface KeyValueInputProps {
 }
 
 const KeyValueInput = ({
+  addLabel = "+ Add Entry",
   label,
   defaultEntries = [],
   fields,
@@ -72,7 +74,7 @@ const KeyValueInput = ({
     <div
       className={className ? `${styles.wrapper} ${className}` : styles.wrapper}
     >
-      {label && <RunningText>{label}</RunningText>}
+      {label && <RunningText className={styles.label}>{label}</RunningText>}
       {entries.map((field, index) => {
         const keyError =
           validationErrors?.[arrayFieldName as any]?.[index]?.key?.message;
@@ -82,11 +84,11 @@ const KeyValueInput = ({
         return (
           <Row key={field.key + index} className={styles.row}>
             <TextInput
-              disabled={disabled}
               {...(register ? register(`${arrayFieldName}.${index}.key`) : {})}
               validationMessage={keyError}
               defaultValue={field.key}
               placeholder={keyLabel}
+              disabled={disabled}
               onChange={(e) =>
                 !register &&
                 setInternalEntries((entries) =>
@@ -132,7 +134,7 @@ const KeyValueInput = ({
           className={styles.addButton}
           onClick={handleAddEntry}
         >
-          Add Entry
+          {addLabel}
         </button>
       )}
     </div>

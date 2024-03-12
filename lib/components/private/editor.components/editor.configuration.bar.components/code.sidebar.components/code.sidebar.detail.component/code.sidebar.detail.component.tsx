@@ -59,7 +59,7 @@ const CodeSidebarDetail: React.FC<CodeSidebarDetailProps> = ({
   };
 
   return (
-    <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={500}>
+    <ResizableSidebar initialWidth={410} minWidth={300} maxWidth={700}>
       <ComponentWrapper
         title={selectedItem.title}
         action={
@@ -85,6 +85,7 @@ const CodeSidebarDetail: React.FC<CodeSidebarDetailProps> = ({
           selectedItem={selectedResource?.resourceID}
           items={resourceStore?.resources ?? []}
           onChange={(item) => handleResourceChange(item?.resourceID)}
+          disabled={(selectedItem as any)?.core}
         />
 
         {selectedResource?.type === DataSourceType.REST_API && (
@@ -92,6 +93,7 @@ const CodeSidebarDetail: React.FC<CodeSidebarDetailProps> = ({
             initialQuery={selectedItem}
             resource={selectedResource}
             onFormSubmit={handleSubmit}
+            disabled={(selectedItem as any)?.core}
           />
         )}
       </ComponentWrapper>
