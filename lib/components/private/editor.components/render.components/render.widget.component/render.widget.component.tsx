@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.widget.comonent.module.scss";
@@ -13,7 +14,7 @@ import WidgetContextMenu from "../../widget.context.menu.component/widget.contex
 import WidgetStore from "../../../../../stores/widget.store";
 import classNames from "classnames";
 import ConfigProvider from "../../../../../config/config.provider";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import SmallText from "../../../general.components/text.components/small.text.component/small.text.component";
 import { WidgetConfig } from "../../../../../main";
 import StateStore from "../../../../../stores/state.store";
@@ -40,24 +41,24 @@ const RenderWidget = ({
   const allWidgets = widgetStore?.getStructuredData();
   const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
   const widgetRef = useRef(null);
-
+  // @ts-ignore
   const [hoveredWidgetID, setHoveredWidgetID] = useState<string | undefined>();
 
   // TODO prevent rerendering of the widget on hover
-  const handleHoverWidget = useCallback(
-    (event: any, widgetID: string) => {
-      if (readonly) return;
+  // const handleHoverWidget = useCallback(
+  //   (event: any, widgetID: string) => {
+  //     if (readonly) return;
 
-      event.stopPropagation();
-      setHoveredWidgetID(widgetID);
-    },
-    [readonly]
-  );
+  //     event.stopPropagation();
+  //     setHoveredWidgetID(widgetID);
+  //   },
+  //   [readonly]
+  // );
 
-  const handleLeaveWidget = useCallback(() => {
-    if (readonly) return;
-    setHoveredWidgetID(undefined);
-  }, [readonly]);
+  // const handleLeaveWidget = useCallback(() => {
+  //   if (readonly) return;
+  //   setHoveredWidgetID(undefined);
+  // }, [readonly]);
 
   const widgetContainerClassName = classNames(styles.widgetContainer, {
     [styles.hovered]: hoveredWidgetID === widgetToRender.widget.widgetID,

@@ -1,50 +1,52 @@
+import {
+  faDisplay,
+  faMobileNotch,
+  faTabletScreenButton,
+} from "@fortawesome/pro-regular-svg-icons";
 import { LayoutConfig } from "../interfaces/config.interface";
 
 export const DEFAULT_LAYOUT_CONFIG: LayoutConfig = {
   nested: {
-    xl: {
+    large: {
       cols: 48,
       rowHeight: 30,
-      icon: "icon", // TODO
       title: "Large",
       breakpoint: 1200,
     },
-    md: {
+    medium: {
       cols: 24,
       rowHeight: 30,
-      icon: "icon",
       title: "Medium",
-      breakpoint: 768,
+      breakpoint: 900,
     },
-    xs: {
+    small: {
       cols: 16,
       rowHeight: 30,
-      icon: "icon",
       title: "Small",
-      breakpoint: 480,
+      breakpoint: 440,
     },
   },
   root: {
-    xl: {
+    large: {
       cols: 24,
       rowHeight: 30,
-      icon: "icon",
+      icon: faDisplay,
       title: "Large",
       breakpoint: 1200,
     },
-    md: {
+    medium: {
       cols: 12,
       rowHeight: 30,
-      icon: "icon",
+      icon: faTabletScreenButton,
       title: "Medium",
-      breakpoint: 996,
+      breakpoint: 900,
     },
-    xs: {
+    small: {
       cols: 8,
       rowHeight: 30,
-      icon: "icon",
+      icon: faMobileNotch,
       title: "Small",
-      breakpoint: 480,
+      breakpoint: 440,
     },
   },
 };

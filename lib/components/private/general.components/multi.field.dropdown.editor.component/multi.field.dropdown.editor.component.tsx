@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
 import styles from "./multi.field.dropdown.editor.component.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusSquare } from "@fortawesome/free-regular-svg-icons";
 import RunningText from "../text.components/running.text.component/running.text.component";
 import IconButton from "../icon.button.component/icon.button.component";
 import { faAdd } from "@fortawesome/pro-regular-svg-icons";

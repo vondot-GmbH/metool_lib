@@ -17,6 +17,7 @@ class EditorStore {
 
   private _visualWidgetOutlineGuide: boolean = false;
 
+  // @ts-ignore
   private stores: RootStore;
 
   constructor(rootStore: RootStore) {

@@ -18,12 +18,12 @@ import Image from "../../general.components/image.component/image.component";
 import TitleText from "../../general.components/text.components/title.text.component/title.text.component";
 import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
 import IconButton from "../../general.components/icon.button.component/icon.button.component";
-import { faClose, faX } from "@fortawesome/pro-regular-svg-icons";
+import { faX } from "@fortawesome/pro-regular-svg-icons";
 
 const SidebarContext = createContext({
   views: [] as ReactNode[],
   titles: [] as string[],
-  pushView: (view: ReactNode, title: string, initialView?: boolean) => {},
+  pushView: (_view: ReactNode, _title: string, _initialView?: boolean) => {},
   popView: () => {},
 });
 

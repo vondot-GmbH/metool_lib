@@ -25,3 +25,5 @@ export type {
 } from "./schemas/query.schemas/query.schema";
 
 export { DataSourceType } from "./schemas/resource.schemas/resource.schema";
+
+export { default as RootStore } from "./stores/root.store";

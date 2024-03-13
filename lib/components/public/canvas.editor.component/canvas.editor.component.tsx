@@ -31,7 +31,6 @@ interface CanvasEditorProps {
 
 const CanvasEditor = ({
   editorStore,
-  queryStore,
   viewToRender,
 }: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;

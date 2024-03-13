@@ -119,19 +119,6 @@ class WidgetStore {
     this._contextMenu = contextMenu;
   }
 
-  // TODO
-  exportWidgetsTEST() {
-    const widgets = [] as any[];
-    const widget = this.getStructuredData();
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [key, value] of Object.entries(widget)) {
-      widgets.push(value.widget);
-    }
-
-    return JSON.stringify(widgets, null, 2);
-  }
-
   //! getter
 
   getAnalyzedWidgetOptions(

@@ -8,7 +8,6 @@ interface ContainerWidgetProps {
 }
 
 const ContainerWidget: React.FC<ContainerWidgetProps> = ({
-  widgetID,
   children,
 }): JSX.Element => {
   return <div className={styles.containerWidget}>{children}</div>;

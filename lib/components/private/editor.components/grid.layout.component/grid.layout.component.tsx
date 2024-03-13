@@ -97,7 +97,7 @@ const GridLayout = ({
   };
 
   // TODO
-  const handleDrop = (layout: any, layoutItem: any, event: any): void => {
+  const handleDrop = (_layout: any, layoutItem: any, event: any): void => {
     if (currentBreakpoint == null) {
       return;
     }

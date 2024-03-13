@@ -83,7 +83,7 @@ const TableWidget = ({
       onSelectionDataChange={(selectedData) => {
         handleSelectionDataChange(selectedData);
       }}
-      onSelectionIndexChange={(selectedIndexes) => {
+      onSelectionIndexChange={() => {
         // TODO: Implement this
         // console.log("selectedIndexes");
         // console.log(selectedIndexes);

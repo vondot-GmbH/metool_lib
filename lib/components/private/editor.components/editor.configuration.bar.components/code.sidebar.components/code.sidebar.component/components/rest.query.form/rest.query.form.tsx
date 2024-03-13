@@ -150,7 +150,7 @@ const RestQueryForm = ({
         register={register}
         arrayFieldName={"headers"}
         validationErrors={errors}
-        addLabel="+ Add Header"
+        addLabel="Add Header"
       />
 
       <KeyValueInput
@@ -163,7 +163,7 @@ const RestQueryForm = ({
         register={register}
         arrayFieldName={"params"}
         validationErrors={errors}
-        addLabel="+ Add Param"
+        addLabel="Add Param"
       />
 
       <TextInput

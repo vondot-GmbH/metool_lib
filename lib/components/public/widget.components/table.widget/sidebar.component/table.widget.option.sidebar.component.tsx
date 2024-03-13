@@ -32,7 +32,7 @@ const TableWidgetOptionSidebar = ({
     selectedWidgetID ?? ""
   );
 
-  const { pushView, popView } = useSidebar();
+  const { pushView } = useSidebar();
 
   const handleAddColumn = (): void => {
     const newColumn = {

@@ -7,6 +7,8 @@ import RootStore from "./root.store";
 
 class ViewStore {
   private _currentViewID: string | undefined;
+
+  // @ts-ignore
   private stores: RootStore;
 
   constructor(rootStore: RootStore) {
