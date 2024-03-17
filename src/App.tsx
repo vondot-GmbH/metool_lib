@@ -1,21 +1,19 @@
 import "./App.css";
 import {
-  CanvasEditor,
+  CanvasEditorPublic,
   ContainerWidget,
   CoreResource,
   CoreRestQuerConfig,
   DataSourceType,
-  Init,
+  InitializeMetool,
   TextWidget,
 } from "../lib/main";
-import { Provider as MobxProvider } from "mobx-react";
 import { TableWidget } from "../lib/main";
 import Gleap from "Gleap";
 import {
   faHandPointer,
   faHardDrive,
 } from "@fortawesome/free-regular-svg-icons";
-import RootStore from "../lib/stores/root.store";
 import {
   faDisplay,
   faMobileNotch,
@@ -41,7 +39,8 @@ const coreResources: CoreResource = {
       fulfilled: (config) => {
         config.headers = {
           ...config.headers,
-          Authorization: `Bearer lalalalallalalalall`,
+          gymo_resource: "65f186afe2bc6bf2f9f5cb9b",
+          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NWYxODZhMWUyYmM2YmYyZjlmNWNiN2UiLCJlbWFpbCI6InBldGVyQHZvbmRvdC5hdCIsImlhdCI6MTcxMDY4MzkxOCwiZXhwIjoxNzEwNzcwMzE4fQ.yKezyCTy-lLQI5_ViqZLJFRvqYQMHf3AfmVl1og0EyQ`,
         };
         return config;
       },
@@ -218,7 +217,7 @@ const coreQueryConfig = {
   },
 } as CoreRestQuerConfig;
 
-Init({
+InitializeMetool({
   coreQueryConfig: coreQueryConfig,
   coreResources: [coreResources],
   widgets: [TableWidget, ContainerWidget, TextWidget],
@@ -274,15 +273,11 @@ Init({
 
 Gleap.initialize("YZ6N1CITLut6MeqEhbITgwBid7oB7nc6");
 
-const rootStore = new RootStore();
-
 function App() {
   return (
-    <MobxProvider {...rootStore}>
-      <div className="main-container">
-        <CanvasEditor viewToRender="5f9e9b6b9I6b4c3017f3b3a0" />
-      </div>
-    </MobxProvider>
+    <div className="main-container">
+      <CanvasEditorPublic viewToRender="5f9e9b6b9I6b4c3017f3b3a0" />
+    </div>
   );
 }
 

@@ -493,7 +493,7 @@ class WidgetStore {
     return response;
   }
 
-  async deleteWidgetByID(widgetID: string): Promise<void> {
+  async deleteWidgetByID(widget: Widget): Promise<void> {
     const deleteQuery = this.stores.queryStore.getQuery(
       CoreRestQueryType.DELETE_WIDGET
     );
@@ -504,7 +504,7 @@ class WidgetStore {
 
     await queryExecutor.executeRestQuery(
       preparedQuery,
-      { widgetID },
+      { widgetID: widget.widgetID },
       this.stores.resourceStore
     );
   }

@@ -49,10 +49,9 @@ const WidgetContextMenu = ({
           handleDeleteWidget();
         }}
       >
-        delete selected widget
+        Delete Widget
       </MenuItem>
 
-      <MenuItem>item 2</MenuItem>
       <MenuItem>item 3</MenuItem>
       <MenuItem>item 4</MenuItem>
     </ControlledMenu>
