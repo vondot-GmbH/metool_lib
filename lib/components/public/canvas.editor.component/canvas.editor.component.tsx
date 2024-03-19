@@ -8,7 +8,7 @@ interface CanvasEditorProps {
 const CanvasEditor = ({ viewToRender }: CanvasEditorProps): JSX.Element => {
   return (
     <StoreProvider>
-      <CanvasEditorComponent viewToRender={viewToRender} />;
+      <CanvasEditorComponent viewToRender={viewToRender} />
     </StoreProvider>
   );
 };

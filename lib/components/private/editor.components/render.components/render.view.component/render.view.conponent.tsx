@@ -11,12 +11,14 @@ import { inject, observer } from "mobx-react";
 import QueryStore from "../../../../../stores/query.store";
 import ResourceStore from "../../../../../stores/resource.store";
 import { useEffect, useState } from "react";
+import EditorStore from "../../../../../stores/editor.store";
 
 interface RenderScreenProps {
   readonly?: boolean;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   queryStore?: QueryStore;
+  editorStore?: EditorStore;
   resourceStore?: ResourceStore;
   showVisualWidgetOutline?: boolean;
   viewToRender: string;
@@ -48,7 +50,7 @@ const RenderView = ({
     };
 
     loadWidgets();
-  }, [viewToRender, widgetStore]);
+  }, [viewStore, viewToRender, widgetStore]); // TODO INFO reredner added widgetStore
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -67,6 +69,7 @@ const RenderView = ({
       key={"top-level-grid"}
       content={rootLevelWidgets}
       onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
+      readonly={readonly}
     >
       {preparedRootLevelWidgets.map((rootLevelWidgets) => {
         return (
@@ -91,5 +94,6 @@ export default inject(
   "viewStore",
   "widgetStore",
   "queryStore",
-  "resourceStore"
+  "resourceStore",
+  "editorStore"
 )(observer(RenderView));

@@ -13,7 +13,7 @@ interface InitOptions {
   coreQueryConfig: CoreRestQuerConfig;
 }
 
-const init = ({
+const initialize = ({
   widgets,
   layoutConfig,
   coreResources,
@@ -26,4 +26,4 @@ const init = ({
   configProvider.registerCoreQueries(coreQueryConfig);
 };
 
-export default init;
+export default initialize;

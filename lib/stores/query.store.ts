@@ -25,9 +25,6 @@ class QueryStore {
   async executeAndSaveDependencies(
     analyzedWidgetOptions: Map<string, AnalyzedWidgetOptions>
   ): Promise<void> {
-    // const configProvider = ConfigProvider.getInstance();
-    // const coreQueries = configProvider.getCoreQueries();
-
     // Verwende map und flat, um eine flache Liste aller Abhängigkeiten zu erstellen
     const allDependencies = Array.from(analyzedWidgetOptions.values())
       .map((analyzedWidgetOption) => analyzedWidgetOption.dependencies)
@@ -41,9 +38,6 @@ class QueryStore {
     if (queryDependencies == null) {
       return;
     }
-
-    // // set all provided core queries
-    // this.setQueries(coreQueries);
 
     await this.stores.resourceStore?.fetchAllResourcesAndSave();
 

@@ -48,7 +48,8 @@ const GridLayout = ({
   readonly = false,
   selectedWidgetID,
 }: GridLayoutProps): JSX.Element => {
-  const [localCurrentBreakpoint, setLocalCurrentBreakpoint] = useState("");
+  const [localCurrentBreakpoint, setLocalCurrentBreakpoint] =
+    useState<string>("");
 
   const currentBreakpoint = isNested
     ? localCurrentBreakpoint ?? ""
@@ -89,7 +90,7 @@ const GridLayout = ({
   }
 
   const onBreakpointChange = (newBreakpoint: string) => {
-    if (isNested) {
+    if (isNested || readonly) {
       setLocalCurrentBreakpoint(newBreakpoint);
     } else {
       editorStore?.setCurrentBreakpoint(newBreakpoint);
@@ -230,7 +231,9 @@ const GridLayout = ({
       margin={[0, 0]}
       layouts={dynamicLayouts}
       breakpoints={breakpoints}
-      breakpoint={isNested ? undefined : editorStore?.currentBreakpoint}
+      breakpoint={
+        isNested || readonly ? undefined : editorStore?.currentBreakpoint
+      }
       cols={cols}
       rowHeight={rowHeight}
       style={gridBackgroundStyle}
