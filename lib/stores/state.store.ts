@@ -100,6 +100,10 @@ export class StateStore {
     return states;
   }
 
+  getAllStates(): Map<string, WidgetState> {
+    return this.globalStates;
+  }
+
   getStateSummary(): Array<{
     category: string;
     entities: Array<{ id: string; label?: string }>;
@@ -285,6 +289,23 @@ export class StateStore {
       // process pending subscriptions
       this.processPendingSubscriptions(StateSelector.QUERIES, query.queryID);
     }
+  }
+
+  getGlobalStatesSuggestions(value: string) {
+    const suggestions: string[] = [];
+    const inputLowerCase = value.toLowerCase();
+
+    // Durchlaufen aller States im globalStates Map
+    this.globalStates.forEach((value, key) => {
+      // Hier kannst du anpassen, wie du nach Übereinstimmungen suchst.
+      // In diesem Beispiel wird überprüft, ob der Schlüssel den eingegebenen Text enthält.
+      if (key.toLowerCase().includes(inputLowerCase)) {
+        suggestions.push(key); // Füge den Schlüssel zur Vorschlagsliste hinzu
+      }
+    });
+
+    // Optional: Beschränke die Anzahl der Vorschläge
+    return suggestions.slice(0, 10); // Begrenze auf die ersten 10 Vorschläge
   }
 }
 

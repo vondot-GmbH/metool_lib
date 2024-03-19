@@ -1,0 +1,62 @@
+.editorWrapper {
+  position: relative;
+  .label {
+    margin-bottom: 5px;
+  }
+
+  .inputContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 12px;
+    background-color: white;
+
+    &:focus-within {
+      border-color: #007bff;
+    }
+
+    .input {
+      width: 100%;
+      border: none;
+      outline: none;
+
+      &::placeholder {
+        color: #6c757d;
+      }
+
+      &:disabled {
+        background-color: #f2f2f2;
+      }
+    }
+
+    .codeIcon {
+      position: absolute;
+      right: 12px;
+    }
+  }
+
+  .suggestionsList {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    border: 1px solid #ddd;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: #f8f8f8;
+      }
+    }
+  }
+}

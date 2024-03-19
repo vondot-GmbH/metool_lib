@@ -12,6 +12,7 @@ import { v4 as UUID } from "uuid";
 import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
 import SpacingEditor from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
 import defaultStyles from "../../../../../styles/index.module.scss";
+import StateInputEditor from "../../../../private/general.components/state.input.text.component/state.input.text.component";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -62,6 +63,23 @@ const TableWidgetOptionSidebar = ({
   return (
     <div>
       <CollapsibleSection title="Content">
+        <StateInputEditor
+          label="Data"
+          value="{{test.test.test}}"
+          onSubscribeState={(value) => {
+            console.log("Subscribed");
+            console.log(value);
+          }}
+          onUnsubscribeState={(value) => {
+            console.log("Unsubscribed");
+            console.log(value);
+          }}
+          onChange={(value: string) => {
+            console.log("onChange -----");
+            console.log(value);
+          }}
+        />
+
         <TextInput
           label="Data"
           value={tableOptions.data}
