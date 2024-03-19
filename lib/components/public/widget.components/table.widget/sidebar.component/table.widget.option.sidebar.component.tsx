@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
 import MultiFieldDropdownEditor from "../../../../private/general.components/multi.field.dropdown.editor.component/multi.field.dropdown.editor.component";
@@ -65,18 +64,9 @@ const TableWidgetOptionSidebar = ({
       <CollapsibleSection title="Content">
         <StateInputEditor
           label="Data"
-          value="{{test.test.test}}"
-          onChange={(value: string) => {
-            console.log("onChange -----");
-            console.log(value);
-          }}
-        />
-
-        <TextInput
-          label="Data"
           value={tableOptions.data}
-          className={defaultStyles.mb10}
-          onValueChange={(value) => {
+          className={defaultStyles.mb20}
+          onChange={(value: string) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
               "data",
