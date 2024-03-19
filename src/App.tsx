@@ -6,6 +6,7 @@ import {
   CoreRestQuerConfig,
   DataSourceType,
   InitializeMetool,
+  RenderView,
   TextWidget,
 } from "../lib/main";
 import { TableWidget } from "../lib/main";
@@ -277,6 +278,8 @@ function App() {
   return (
     <div className="main-container">
       <CanvasEditorPublic viewToRender="5f9e9b6b9I6b4c3017f3b3a0" />
+
+      {/* <RenderView viewToRender="5f9e9b6b9I6b4c3017f3b3a0" /> */}
     </div>
   );
 }

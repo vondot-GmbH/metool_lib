@@ -3,6 +3,7 @@ import {
   CoreRestQueryType,
   Query,
   QueryMap,
+  RestQuery,
 } from "../schemas/query.schemas/query.schema";
 import ConfigProvider from "../config/config.provider";
 import { Dependency, StateSelector } from "./state.store";
@@ -10,6 +11,7 @@ import { AnalyzedWidgetOptions } from "../schemas/widget.schemas/widget.schema";
 import { queryExecutor } from "../provider/http/http.rest.query.client";
 import RootStore from "./root.store";
 import { getUniqueID } from "../globals/helpers/global.helper";
+import { EditorMode } from "../globals/enums/editor.enum";
 
 class QueryStore {
   private _queries: QueryMap = new Map();
@@ -25,6 +27,10 @@ class QueryStore {
   async executeAndSaveDependencies(
     analyzedWidgetOptions: Map<string, AnalyzedWidgetOptions>
   ): Promise<void> {
+    // fetch all queries if the editor mode is set otherwise only fetch the dependencies for the current view
+    const fetchAllQueries =
+      this.stores.editorStore?.editorMode == EditorMode.EDIT ?? false;
+
     // Verwende map und flat, um eine flache Liste aller Abhängigkeiten zu erstellen
     const allDependencies = Array.from(analyzedWidgetOptions.values())
       .map((analyzedWidgetOption) => analyzedWidgetOption.dependencies)
@@ -41,7 +47,10 @@ class QueryStore {
 
     await this.stores.resourceStore?.fetchAllResourcesAndSave();
 
-    await this.fetchAndSetQueries(queryDependencies);
+    await this.fetchAndExecuteQueryDependencies(
+      queryDependencies,
+      fetchAllQueries
+    );
   }
 
   //! Setter
@@ -95,37 +104,78 @@ class QueryStore {
     return query;
   }
 
-  async fetchAndSetQueries(dependencies: Dependency[]): Promise<void> {
+  async fetchAndExecuteQueryDependencies(
+    dependencies: Dependency[],
+    fetchAllQueries?: boolean
+  ): Promise<RestQuery[] | undefined> {
+    const queries: RestQuery[] = [];
+
     const filteredDependencies = dependencies?.filter(
       (dep) => dep.selector === StateSelector.QUERIES
     );
 
-    if (filteredDependencies == null) {
-      return;
+    if (fetchAllQueries) {
+      const fetchedQueries = await this.fetchAndSaveRestQueries();
+      if (fetchedQueries) queries.push(...fetchedQueries);
     }
 
     for (const dependency of filteredDependencies) {
+      let requestedQuery = this.getQuery(dependency.widgetID);
+
       const queryID = dependency.widgetID ?? null; // TODO check and rename widgetID to targetID
 
-      const query = this.getQuery(CoreRestQueryType.GET_QUERIES_BY_ID);
+      if (!fetchAllQueries || requestedQuery == null) {
+        requestedQuery = await this.fetchAndSaveRestQueryById(queryID);
 
-      if (queryID == null || query == null) continue;
+        if (requestedQuery == null) continue;
 
-      const response = await queryExecutor.executeRestQuery(
-        query,
-        {
-          queryID: queryID,
-        },
-        this.stores.resourceStore
-      );
-
-      this.setQueries([response]);
-
-      // TODO Move method
-      await this.stores.stateStore?.executeAndProcessRestQueries([response]);
+        queries.push(requestedQuery);
+      }
     }
 
-    // this.setQueries(response);
+    await this.stores.stateStore?.executeAndProcessRestQueries(queries);
+
+    return queries;
+  }
+
+  async fetchAndSaveRestQueryById(
+    queryID: string
+  ): Promise<RestQuery | undefined> {
+    const query = this.getQuery(CoreRestQueryType.GET_QUERIES_BY_ID);
+
+    if (queryID == null || query == null) return;
+
+    const response = await queryExecutor.executeRestQuery(
+      query,
+      {
+        queryID: queryID,
+      },
+      this.stores.resourceStore
+    );
+
+    if (response == null) return;
+
+    this._queries.set(response?.queryID, response);
+
+    return response;
+  }
+
+  async fetchAndSaveRestQueries(): Promise<RestQuery[]> {
+    const query = this.getQuery(CoreRestQueryType.GET_QUERIES);
+
+    if (query == null) return [];
+
+    const response = await queryExecutor.executeRestQuery(
+      query,
+      {},
+      this.stores.resourceStore
+    );
+
+    if (response == null) return [];
+
+    this.setQueries(response);
+
+    return response;
   }
 
   async createAndSaveQuery(query: Query): Promise<void> {

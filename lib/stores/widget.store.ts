@@ -68,7 +68,6 @@ class WidgetStore {
       }
     }
 
-    // TODO execute the requested dependencies
     this.stores.queryStore.executeAndSaveDependencies(
       this._analyzedWidgetOptions
     );
