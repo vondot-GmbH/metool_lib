@@ -6,19 +6,13 @@ import { faCode } from "@fortawesome/pro-regular-svg-icons";
 import styles from "./state.input.text.component.module.scss";
 import { inject, observer } from "mobx-react";
 import StateStore from "../../../../stores/state.store";
+import fuzzysort from "fuzzysort";
 
 interface StateInputEditorProps {
   label?: string;
   value: string;
   onChange: (newValue: string, oldValue: string) => void;
-  onSubscribeState: (stateName: string) => void; // Platzhalter für die Abonnement-Logik
-  onUnsubscribeState: (stateName: string) => void; // Platzhalter für die Deabonnement-Logik
   stateStore?: StateStore;
-}
-
-interface Suggestion {
-  id: string;
-  displayName: string;
 }
 
 interface ValidationMatch {
@@ -30,26 +24,36 @@ const StateInputEditor: React.FC<StateInputEditorProps> = ({
   label,
   value,
   onChange,
-  onSubscribeState,
-  onUnsubscribeState,
   stateStore,
 }) => {
-  const allStates = stateStore?.getAllStates();
-
   const [internalValue, setInternalValue] = useState<string>(value);
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [availableStates, setAvailableStates] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState<boolean>(false);
   const [previousValue, setPreviousValue] = useState<string>("");
 
-  const handleSuggestionClick = (suggestion: Suggestion) => {
-    const newValue = `{{${suggestion.displayName}}}`;
+  useEffect(() => {
+    const globalStates = stateStore?.getAllStates();
+    const stateSuggestions: string[] = globalStates
+      ? Array.from(globalStates.keys())
+      : [];
+
+    console.log("stateSuggestions");
+    console.log(stateSuggestions);
+    setAvailableStates(stateSuggestions);
+  }, [stateStore]);
+
+  const handleSuggestionClick = (suggestion: string) => {
+    const newValue = `{{${suggestion}}}`;
     setInternalValue(newValue);
     onChange(newValue, previousValue);
     setShowSuggestions(false);
 
-    onSubscribeState(suggestion.displayName);
+    console.log("subscription");
+    console.log(suggestion);
     if (previousValue) {
-      onUnsubscribeState(previousValue);
+      console.log("onUnsubscribeState");
+      console.log(previousValue);
     }
 
     setPreviousValue(newValue);
@@ -71,46 +75,58 @@ const StateInputEditor: React.FC<StateInputEditorProps> = ({
     return results.length > 0 ? results : null;
   };
 
-  // Auto-Vorschläge basierend auf dem aktuellen Eingabetext
   const updateSuggestions = (inputCode: string): void => {
-    const matches = validateSyntax(inputCode);
-    if (matches) {
-      const availableStates: Suggestion[] = [
-        { id: "state1", displayName: "State 1" },
-        { id: "state2", displayName: "State 2" },
-        { id: "state3", displayName: "State 3" },
-      ];
+    const syntaxMatch = validateSyntax(inputCode);
 
-      const filteredSuggestions = availableStates.filter((state) =>
-        matches.some((match) => state.displayName?.includes(match.innerText))
-      );
-
-      setSuggestions(filteredSuggestions);
-      setShowSuggestions(true);
-    } else {
+    // Setze Vorschläge zurück und zeige sie nicht an, wenn die Syntax nicht gültig ist
+    if (!syntaxMatch) {
+      setSuggestions([]);
       setShowSuggestions(false);
+      return;
     }
+
+    // Extrahiere den Suchbegriff aus dem ersten gültigen Syntax-Match
+    const searchTerm = syntaxMatch[0].innerText.trim();
+
+    // Führe die Fuzzy-Suche nur mit dem gültigen Suchbegriff durch
+    const results = fuzzysort.go(searchTerm, availableStates, {
+      threshold: -1000, // Du kannst diesen Wert anpassen, um die Empfindlichkeit der Suche zu steuern
+      limit: 6, // Begrenze die Anzahl der Ergebnisse
+    });
+
+    // Extrahiere die Originalstrings aus den Suchergebnissen
+    const filteredSuggestions = results.map((result) => result.target);
+
+    setSuggestions(filteredSuggestions);
+    setShowSuggestions(filteredSuggestions.length > 0);
   };
 
   const handleBlur = () => {
     const matches = validateSyntax(internalValue);
 
     if (matches) {
-      // Wenn die Syntax gültig ist, abonniere den neuen State
-      onSubscribeState(matches[0].innerText); // Abonnieren des neuen State
+      //   onSubscribeState(matches[0].innerText);
+
+      console.log("subscription");
+      console.log(matches[0].innerText);
+
       if (previousValue && previousValue !== matches[0].innerText) {
-        onUnsubscribeState(previousValue); // Deabonnieren des alten State, wenn sich der Wert geändert hat
+        // onUnsubscribeState(previousValue);
+        console.log("onUnsubscribeState");
+        console.log(previousValue);
       }
-      setPreviousValue(matches[0].innerText); // Speichern des aktuellen Wertes als "vorherigen" Wert für den nächsten Durchlauf
+      setPreviousValue(matches[0].innerText);
     } else {
-      // Wenn die Syntax ungültig ist oder ein fester Wert eingegeben wurde
+      // check if the previous value was a valid state
       if (previousValue) {
-        onUnsubscribeState(previousValue); // Deabonnieren des alten State, da kein gültiger State-Referenzwert mehr vorliegt
+        // onUnsubscribeState(previousValue);
+        console.log("onUnsubscribeState");
+        console.log(previousValue);
       }
-      setPreviousValue(""); // Zurücksetzen des vorherigen Wertes, da keine gültige State-Referenz mehr vorhanden ist
+      setPreviousValue("");
     }
 
-    onChange(internalValue, previousValue); // Update des Wertes unabhängig von der Validität der Syntax
+    onChange(internalValue, previousValue);
   };
 
   useEffect(() => {
@@ -140,10 +156,10 @@ const StateInputEditor: React.FC<StateInputEditorProps> = ({
         <ul className={styles.suggestionsList}>
           {suggestions.map((suggestion) => (
             <li
-              key={suggestion.id}
+              key={suggestion}
               onClick={() => handleSuggestionClick(suggestion)}
             >
-              <SmallText>{suggestion.displayName}</SmallText>
+              <SmallText>{suggestion}</SmallText>
             </li>
           ))}
         </ul>

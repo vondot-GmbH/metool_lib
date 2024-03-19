@@ -26,9 +26,9 @@
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@fortawesome/free-regular-svg-icons": "^6.5.1",
     "@fortawesome/pro-light-svg-icons": "^6.2.0",
     "@fortawesome/pro-regular-svg-icons": "^6.2.0",
-    "@fortawesome/free-regular-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.8.10",
@@ -58,6 +58,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
     "axios": "^1.6.7",
+    "fuzzysort": "^2.0.4",
     "lodash": "^4.17.21",
     "react-grid-layout": "^1.4.4",
     "react-hook-form": "^7.50.1",

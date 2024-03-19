@@ -66,14 +66,6 @@ const TableWidgetOptionSidebar = ({
         <StateInputEditor
           label="Data"
           value="{{test.test.test}}"
-          onSubscribeState={(value) => {
-            console.log("Subscribed");
-            console.log(value);
-          }}
-          onUnsubscribeState={(value) => {
-            console.log("Unsubscribed");
-            console.log(value);
-          }}
           onChange={(value: string) => {
             console.log("onChange -----");
             console.log(value);
