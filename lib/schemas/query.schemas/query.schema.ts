@@ -49,6 +49,7 @@ export enum CoreRestQueryType {
   GET_VIEW_BY_ID = "getViewById",
   UPDATE_VIEW = "updateView",
   DELETE_VIEW = "deleteView",
+  CREATE_VIEW = "createView",
 }
 
 export interface CoreRestQuerConfig {
@@ -74,6 +75,7 @@ export interface CoreRestQuerConfig {
   [CoreRestQueryType.GET_VIEW_BY_ID]: CoreRestQuery;
   [CoreRestQueryType.UPDATE_VIEW]: CoreRestQuery;
   [CoreRestQueryType.DELETE_VIEW]: CoreRestQuery;
+  [CoreRestQueryType.CREATE_VIEW]: CoreRestQuery;
 }
 
 //! QUERY RESPONSE

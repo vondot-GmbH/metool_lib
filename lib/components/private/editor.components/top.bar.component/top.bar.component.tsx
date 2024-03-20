@@ -60,7 +60,7 @@ const TopBar = ({
       <SizedContainer size="s">
         <Column justifyContent="flex-start">
           <TitleText className={defaultStyles.ml20}>
-            {viewStore?.currentView?.name ?? "--"}
+            {viewStore?.currentSelectedView?.name ?? "--"}
           </TitleText>
         </Column>
       </SizedContainer>

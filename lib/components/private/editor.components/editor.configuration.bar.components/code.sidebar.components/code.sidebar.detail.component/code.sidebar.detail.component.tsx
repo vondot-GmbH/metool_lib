@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { inject, observer } from "mobx-react";
 import { faDatabase, faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
@@ -22,13 +22,13 @@ interface CodeSidebarDetailProps {
   isEditing: boolean;
 }
 
-const CodeSidebarDetail: React.FC<CodeSidebarDetailProps> = ({
+const CodeSidebarDetail = ({
   selectedItem,
   onClose,
   queryStore,
   resourceStore,
   isEditing,
-}) => {
+}: CodeSidebarDetailProps) => {
   const [selectedResource, setSelectedResource] = useState<
     Resource | undefined
   >(resourceStore?.getResource(selectedItem?.resourceID ?? ""));

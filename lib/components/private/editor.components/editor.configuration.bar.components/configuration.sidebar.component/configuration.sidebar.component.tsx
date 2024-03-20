@@ -20,6 +20,15 @@ import {
   faSquarePollHorizontal,
   faTable,
 } from "@fortawesome/pro-light-svg-icons";
+import ViewSidebar from "../view.sidebar.components/view.sidebar.component/view.sidebar.component";
+
+enum TabBarType {
+  VIEWS = "Views",
+  WIDGETS = "Widgets",
+  STATES = "States",
+  CODE = "Code",
+  RESOURCES = "Resources",
+}
 
 interface ConfigurationSidebarProps {
   widgetStore?: WidgetStore;
@@ -33,7 +42,7 @@ const ConfigurationSidebar = ({
   editorStore,
 }: ConfigurationSidebarProps): JSX.Element => {
   const [selectedConfigurationBar, setSelectedConfigurationBar] =
-    useState<string>("Widgets");
+    useState<TabBarType>(TabBarType.WIDGETS);
 
   const _buildTabBar = (): JSX.Element | null => {
     if (editorStore?.editorMode != EditorMode.EDIT) {
@@ -65,7 +74,7 @@ const ConfigurationSidebar = ({
           },
         ]}
         onSelect={(name: string) => {
-          setSelectedConfigurationBar(name);
+          setSelectedConfigurationBar(name as TabBarType);
         }}
         selected={selectedConfigurationBar}
       />
@@ -80,17 +89,20 @@ const ConfigurationSidebar = ({
     let sidebarToRender: JSX.Element | null = null;
 
     switch (selectedConfigurationBar) {
-      case "Widgets":
+      case TabBarType.WIDGETS:
         sidebarToRender = <WidgetSidebar />;
         break;
-      case "States":
+      case TabBarType.STATES:
         sidebarToRender = <StateSidebar />;
         break;
-      case "Code":
+      case TabBarType.CODE:
         sidebarToRender = <CodeSidebar />;
         break;
-      case "Resources":
+      case TabBarType.RESOURCES:
         sidebarToRender = <ResourceSidebar />;
+        break;
+      case TabBarType.VIEWS:
+        sidebarToRender = <ViewSidebar />;
         break;
       default:
         sidebarToRender = null;

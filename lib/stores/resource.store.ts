@@ -39,6 +39,7 @@ class ResourceStore {
 
   private setResources(resources: Resource[] | CoreResource[]): void {
     resources.forEach((resource: any) => {
+      if (resource?.resourceID == null) return;
       this._resources.set(resource?.resourceID, resource);
     });
   }
@@ -122,12 +123,12 @@ class ResourceStore {
       CoreRestQueryType.UPDATE_RESOURCE
     );
 
+    if (resource == null || updateQuery == null) return;
+
     const preparedQuery = {
       ...updateQuery,
       body: resource,
     } as any;
-
-    if (resource == null) return;
 
     const response = await queryExecutor.executeRestQuery(
       preparedQuery,

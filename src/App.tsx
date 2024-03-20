@@ -260,6 +260,17 @@ const coreQueryConfig = {
     url: "/views/:viewID",
     core: true,
   },
+
+  createView: {
+    _id: "createView",
+    queryID: "createView",
+    title: "Create View",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "POST",
+    url: "/views",
+    core: true,
+  },
 } as CoreRestQuerConfig;
 
 InitializeMetool({

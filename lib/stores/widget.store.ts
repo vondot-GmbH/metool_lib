@@ -370,7 +370,7 @@ class WidgetStore {
     const { widgetType, layout, parentID, currentBreakpoint } = args;
 
     const widgetID = layout.i;
-    const viewID = this.stores.viewStore.currentView;
+    const viewID = this.stores.viewStore.currentSelectedView?.viewID;
 
     if (viewID == null) {
       return;
