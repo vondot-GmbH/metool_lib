@@ -77,8 +77,8 @@ class WidgetStore {
 
   // TODO
   async initWidgetsAndProcess(viewID: string): Promise<void> {
-    this.stores.resourceStore?.intializeResources();
-    this.stores.queryStore?.intializeQueries();
+    // this.stores.resourceStore?.intializeResources();
+    // this.stores.queryStore?.intializeQueries();
 
     const widgets = await this.fetchWidgetsForView(viewID);
 

@@ -216,6 +216,50 @@ const coreQueryConfig = {
     url: "/widgets/:widgetID",
     core: true,
   },
+
+  getViews: {
+    _id: "getViews",
+    queryID: "getViews",
+    title: "Get Views",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "GET",
+    url: "/views",
+    core: true,
+  },
+
+  getViewById: {
+    _id: "getViewById",
+    queryID: "getViewById",
+    title: "Get View by ID",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "GET",
+    url: "/views/:viewID",
+    core: true,
+  },
+
+  deleteView: {
+    _id: "deleteView",
+    queryID: "deleteView",
+    title: "Delete View",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "DELETE",
+    url: "/views/:viewID",
+    core: true,
+  },
+
+  updateView: {
+    _id: "updateView",
+    queryID: "updateView",
+    title: "Update View",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "PUT",
+    url: "/views/:viewID",
+    core: true,
+  },
 } as CoreRestQuerConfig;
 
 InitializeMetool({

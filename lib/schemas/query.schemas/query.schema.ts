@@ -44,6 +44,11 @@ export enum CoreRestQueryType {
   UPDATE_WIDGET = "updateWidget",
   DELETE_WIDGET = "deleteWidget",
   CREATE_WIDGET = "createWidget",
+
+  GET_VIEWS = "getViews",
+  GET_VIEW_BY_ID = "getViewById",
+  UPDATE_VIEW = "updateView",
+  DELETE_VIEW = "deleteView",
 }
 
 export interface CoreRestQuerConfig {
@@ -64,6 +69,11 @@ export interface CoreRestQuerConfig {
   [CoreRestQueryType.UPDATE_WIDGET]: CoreRestQuery;
   [CoreRestQueryType.DELETE_WIDGET]: CoreRestQuery;
   [CoreRestQueryType.CREATE_WIDGET]: CoreRestQuery;
+
+  [CoreRestQueryType.GET_VIEWS]: CoreRestQuery;
+  [CoreRestQueryType.GET_VIEW_BY_ID]: CoreRestQuery;
+  [CoreRestQueryType.UPDATE_VIEW]: CoreRestQuery;
+  [CoreRestQueryType.DELETE_VIEW]: CoreRestQuery;
 }
 
 //! QUERY RESPONSE

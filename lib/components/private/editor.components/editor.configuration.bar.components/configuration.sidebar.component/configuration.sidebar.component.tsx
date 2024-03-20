@@ -16,6 +16,7 @@ import ResourceSidebar from "../code.sidebar.components/resource.sidebar.compone
 import {
   faCode,
   faDatabase,
+  faFiles,
   faSquarePollHorizontal,
   faTable,
 } from "@fortawesome/pro-light-svg-icons";
@@ -42,6 +43,10 @@ const ConfigurationSidebar = ({
     return (
       <IconTabBar
         tabs={[
+          {
+            icon: faFiles,
+            name: "Views",
+          },
           {
             icon: faTable,
             name: "Widgets",

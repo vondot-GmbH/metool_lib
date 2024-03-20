@@ -20,6 +20,7 @@ interface RenderScreenProps {
   queryStore?: QueryStore;
   editorStore?: EditorStore;
   resourceStore?: ResourceStore;
+
   showVisualWidgetOutline?: boolean;
   viewToRender: string;
 }
@@ -30,6 +31,8 @@ const RenderView = ({
   showVisualWidgetOutline = false,
   viewToRender,
   viewStore,
+  resourceStore,
+  queryStore,
 }: RenderScreenProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const [structuredWidgets, setStructuredWidgets] = useState<
@@ -37,11 +40,13 @@ const RenderView = ({
   >(undefined);
 
   useEffect(() => {
-    // set the viewID in the viewStore
-    viewStore?.setCurrentView(viewToRender);
-
     const loadWidgets = async () => {
+      await resourceStore?.intializeResources();
+      await queryStore?.intializeQueries();
+
       if (viewToRender) {
+        // set the viewID in the viewStore
+        await viewStore?.intializeView(viewToRender);
         await widgetStore?.initWidgetsAndProcess(viewToRender);
         const structuredData = widgetStore?.getStructuredData();
         setStructuredWidgets(structuredData);
