@@ -29,7 +29,7 @@ class QueryStore {
   ): Promise<void> {
     // fetch all queries if the editor mode is set otherwise only fetch the dependencies for the current view
     const fetchAllQueries =
-      this.stores.editorStore?.editorMode == EditorMode.EDIT ?? false;
+      this.stores.editorStore?.editorMode == EditorMode.EDIT ? true : false;
 
     // Verwende map und flat, um eine flache Liste aller Abhängigkeiten zu erstellen
     const allDependencies = Array.from(analyzedWidgetOptions.values())
@@ -122,7 +122,7 @@ class QueryStore {
     for (const dependency of filteredDependencies) {
       let requestedQuery = this.getQuery(dependency.widgetID);
 
-      const queryID = dependency.widgetID ?? null; // TODO check and rename widgetID to targetID
+      const queryID = dependency.widgetID; // TODO check and rename widgetID to targetID
 
       if (!fetchAllQueries || requestedQuery == null) {
         requestedQuery = await this.fetchAndSaveRestQueryById(queryID);

@@ -1,7 +1,10 @@
 import { Dependency } from "../../stores/state.store";
 
 export const isValidStateSyntax = (value: string): boolean => {
-  return /\{\{(.+?)\}\}/.test(value);
+  if (value.includes("{{") && value.includes("}}")) {
+    return true;
+  }
+  return false;
 };
 
 interface WidgetOptions {
