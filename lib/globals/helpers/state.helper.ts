@@ -28,7 +28,7 @@ export const extractDynamicPatterns = (args: {
     dynamicPatterns.push({
       field: args.key,
       selector: match[1],
-      widgetID: match[2],
+      identifierID: match[2],
       stateKeys: match[3].split("."),
     });
   }

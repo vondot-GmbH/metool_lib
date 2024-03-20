@@ -16,7 +16,7 @@ interface WidgetState {
 
 interface PendingSubscription {
   selector: StateSelector;
-  widgetID: string;
+  identifierID: string;
   stateKeys: string[];
   callback: (value: any) => void;
 }
@@ -24,7 +24,7 @@ interface PendingSubscription {
 export interface Dependency {
   field: string;
   selector: string;
-  widgetID: string;
+  identifierID: string;
   stateKeys: string[];
 }
 
@@ -42,44 +42,44 @@ export class StateStore {
 
   private generateStateKey(
     selector: StateSelector,
-    widgetID: string,
+    identifierID: string,
     ...keys: string[]
   ): string {
-    return `${selector}.${widgetID}.${keys.join(".")}`;
+    return `${selector}.${identifierID}.${keys.join(".")}`;
   }
 
   initializeStates(
     initialStateConfigs: {
       selector: StateSelector;
-      widgetID: string;
+      identifierID: string;
       initialStates: Record<string, any>;
     }[]
   ) {
-    initialStateConfigs.forEach(({ selector, widgetID, initialStates }) => {
+    initialStateConfigs.forEach(({ selector, identifierID, initialStates }) => {
       Object.entries(initialStates).forEach(([key, value]) => {
-        this.setStateValue(selector, widgetID, key, value);
+        this.setStateValue(selector, identifierID, key, value);
       });
-      this.processPendingSubscriptions(selector, widgetID);
+      this.processPendingSubscriptions(selector, identifierID);
     });
   }
 
   setStateValue(
     selector: StateSelector,
-    widgetID: string,
+    identifierID: string,
     key: string,
     value: any
   ) {
-    const stateKey = this.generateStateKey(selector, widgetID, key);
+    const stateKey = this.generateStateKey(selector, identifierID, key);
     this.globalStates.set(stateKey, value);
     this.pubSub.publish(`stateChange:${stateKey}`, value);
   }
 
   getWidgetStateValue(
     selector: StateSelector,
-    widgetID: string,
+    identifierID: string,
     key: string
   ): any {
-    const stateKey = this.generateStateKey(selector, widgetID, key);
+    const stateKey = this.generateStateKey(selector, identifierID, key);
     return this.globalStates.get(stateKey);
   }
 
@@ -144,31 +144,31 @@ export class StateStore {
 
   subscribeToStateValue(
     selector: StateSelector,
-    widgetID: string,
+    identifierID: string,
     keys: string[],
     callback: (value: any) => void
   ) {
-    const stateKey = this.generateStateKey(selector, widgetID, ...keys);
+    const stateKey = this.generateStateKey(selector, identifierID, ...keys);
 
     if (this.globalStates.has(stateKey)) {
       this.pubSub.subscribe(`stateChange:${stateKey}`, callback);
     } else {
       this.pendingSubscriptions.push({
         selector,
-        widgetID,
+        identifierID,
         stateKeys: keys,
         callback,
       });
     }
   }
 
-  processPendingSubscriptions(selector: StateSelector, widgetID: string) {
-    const prefix = `${selector}.${widgetID}.`;
+  processPendingSubscriptions(selector: StateSelector, identifierID: string) {
+    const prefix = `${selector}.${identifierID}.`;
     const subscriptionsToProcess = this.pendingSubscriptions.filter(
       (subscription) =>
         this.generateStateKey(
           subscription.selector,
-          subscription.widgetID,
+          subscription.identifierID,
           ...subscription.stateKeys
         ).startsWith(prefix)
     );
@@ -176,7 +176,7 @@ export class StateStore {
     subscriptionsToProcess.forEach((subscription) => {
       const stateKey = this.generateStateKey(
         subscription.selector,
-        subscription.widgetID,
+        subscription.identifierID,
         ...subscription.stateKeys
       );
       this.pubSub.subscribe(`stateChange:${stateKey}`, subscription.callback);
@@ -197,7 +197,12 @@ export class StateStore {
 
     // loop through the dependencies and subscribe to their state changes
     for (const dependency of dependencies) {
-      const { field, selector, widgetID: depWidgetID, stateKeys } = dependency;
+      const {
+        field,
+        selector,
+        identifierID: depWidgetID,
+        stateKeys,
+      } = dependency;
 
       // create a subscription to the state change
       this.subscribeToStateValue(
@@ -247,7 +252,7 @@ export class StateStore {
     });
 
     dependencies.forEach(
-      ({ field, selector, widgetID: depWidgetID, stateKeys }) => {
+      ({ field, selector, identifierID: depWidgetID, stateKeys }) => {
         this.subscribeToStateValue(
           selector as StateSelector,
           depWidgetID,

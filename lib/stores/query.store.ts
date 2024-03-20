@@ -120,9 +120,9 @@ class QueryStore {
     }
 
     for (const dependency of filteredDependencies) {
-      let requestedQuery = this.getQuery(dependency.widgetID);
+      let requestedQuery = this.getQuery(dependency.identifierID);
 
-      const queryID = dependency.widgetID; // TODO check and rename widgetID to targetID
+      const queryID = dependency.identifierID;
 
       if (!fetchAllQueries || requestedQuery == null) {
         requestedQuery = await this.fetchAndSaveRestQueryById(queryID);
