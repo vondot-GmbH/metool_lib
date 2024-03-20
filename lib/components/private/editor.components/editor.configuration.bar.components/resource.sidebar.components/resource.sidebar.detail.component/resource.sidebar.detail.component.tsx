@@ -3,7 +3,6 @@ import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
 import ResourceStore from "../../../../../../stores/resource.store";
-import ResourceRestForm from "../resource.sidebar.component/components/resource.rest.form/resource.rest.form";
 import defaultStyles from "../../../../../../styles/index.module.scss";
 import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
 import { DataSourceType } from "../../../../../../main";
@@ -15,6 +14,7 @@ import {
 import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
 import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
 import Row from "../../../../general.components/row.component/row.component";
+import ResourceRestForm from "../resource.sidebar.component/components/resource.rest.form/resource.rest.form";
 
 interface ResourceSidebarDetailProps {
   resourceStore?: ResourceStore;

@@ -11,9 +11,9 @@ import {
   Resource,
 } from "../../../../../../schemas/resource.schemas/resource.schema";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
-import ResourceSidebarDetail from "../resource.sidebar.detail.component/resource.sidebar.detail.component";
 import { faAdd, faDatabase } from "@fortawesome/pro-regular-svg-icons";
 import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
+import ResourceSidebarDetailComponent from "../resource.sidebar.detail.component/resource.sidebar.detail.component";
 
 interface ResourceSidebarProps {
   resourceStore?: ResourceStore;
@@ -145,7 +145,7 @@ const ResourceSidebar = ({
       </ResizableSidebar>
 
       {selectedItem != null && (
-        <ResourceSidebarDetail
+        <ResourceSidebarDetailComponent
           key={selectedItem.resourceID}
           selectedItem={selectedItem}
           onClose={() => setSelectedItem(undefined)}

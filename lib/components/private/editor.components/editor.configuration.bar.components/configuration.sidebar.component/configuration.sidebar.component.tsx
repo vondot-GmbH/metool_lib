@@ -12,7 +12,6 @@ import StateStore from "../../../../../stores/state.store";
 import styles from "./configuration.sidebar.component.module.scss";
 import Row from "../../../general.components/row.component/row.component";
 import ResourceStore from "../../../../../stores/resource.store";
-import ResourceSidebar from "../code.sidebar.components/resource.sidebar.component/resource.sidebar.component";
 import {
   faCode,
   faDatabase,
@@ -21,6 +20,7 @@ import {
   faTable,
 } from "@fortawesome/pro-light-svg-icons";
 import ViewSidebar from "../view.sidebar.components/view.sidebar.component/view.sidebar.component";
+import ResourceSidebar from "../resource.sidebar.components/resource.sidebar.component/resource.sidebar.component";
 
 enum TabBarType {
   VIEWS = "Views",
