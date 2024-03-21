@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
 import MultiFieldDropdownEditor from "../../../../private/general.components/multi.field.dropdown.editor.component/multi.field.dropdown.editor.component";
@@ -12,6 +11,7 @@ import { v4 as UUID } from "uuid";
 import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
 import SpacingEditor from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
 import defaultStyles from "../../../../../styles/index.module.scss";
+import StateInputEditor from "../../../../private/general.components/state.input.text.component/state.input.text.component";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -32,7 +32,7 @@ const TableWidgetOptionSidebar = ({
     selectedWidgetID ?? ""
   );
 
-  const { pushView, popView } = useSidebar();
+  const { pushView } = useSidebar();
 
   const handleAddColumn = (): void => {
     const newColumn = {
@@ -62,6 +62,19 @@ const TableWidgetOptionSidebar = ({
   return (
     <div>
       <CollapsibleSection title="Content">
+        <StateInputEditor
+          label="Data"
+          value={tableOptions.data}
+          className={defaultStyles.mb20}
+          onChange={(value: string) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "data",
+              value
+            );
+          }}
+        />
+
         <MultiFieldDropdownEditor
           label="Columns"
           items={columnOptions}

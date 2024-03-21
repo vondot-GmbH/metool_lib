@@ -5,40 +5,50 @@ import SizedContainer from "../../general.components/sized.container.component/s
 import TitleText from "../../general.components/text.components/title.text.component/title.text.component";
 import BreakpointSettings from "../breakpoint.settings.component/breakpoint.settings.component";
 import { EditorMode } from "../../../../globals/enums/editor.enum";
-import {
-  faPlayCircle,
-  faCircleXmark,
-} from "@fortawesome/free-regular-svg-icons";
-import { ChangeRecord } from "../../../../globals/interfaces/change.record.interface";
-import ChangeRecordStore from "../../../../stores/change.record.store";
+
 import EditorStore from "../../../../stores/editor.store";
 import WidgetStore from "../../../../stores/widget.store";
 import defaultStyles from "../../../../styles/index.module.scss";
 import styles from "./top.bar.component.module.scss";
 import { inject, observer } from "mobx-react";
+import {
+  faCircleXmark,
+  faCirclePlay,
+} from "@fortawesome/pro-regular-svg-icons";
+import ViewStore from "../../../../stores/view.store";
 
 interface TopBarProps {
   editorStore?: EditorStore;
   widgetStore?: WidgetStore;
-  changeRecordStore?: ChangeRecordStore;
-  onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
+  viewStore?: ViewStore;
 }
 
 const TopBar = ({
   editorStore,
   widgetStore,
-  changeRecordStore,
-  onSaveChanges,
+  viewStore,
 }: TopBarProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
 
-  // TODO
-  const handleOnSaveChanges = () => {
-    if (changeRecordStore && onSaveChanges) {
-      // const changes = changeRecordStore?.processReleaseChanges();
-      const widgetss = widgetStore?.exportWidgetsTEST();
-      console.log(widgetss);
+  const renderPreviewModeButton = (): JSX.Element => {
+    let mode = EditorMode.EDIT;
+
+    if (editorMode == EditorMode.EDIT) {
+      mode = EditorMode.PREVIEW;
     }
+
+    return (
+      <div className={styles.previewModeButton}>
+        <FontAwesomeIcon
+          icon={editorMode == EditorMode.EDIT ? faCirclePlay : faCircleXmark}
+          size="lg"
+          onClick={() => {
+            editorStore?.changeEditorMode(mode);
+            widgetStore?.setSelectWidget(undefined);
+          }}
+        />
+      </div>
+    );
   };
 
   return (
@@ -49,7 +59,9 @@ const TopBar = ({
     >
       <SizedContainer size="s">
         <Column justifyContent="flex-start">
-          <TitleText className={defaultStyles.ml20}>Project Name</TitleText>
+          <TitleText className={defaultStyles.ml20}>
+            {viewStore?.currentSelectedView?.name ?? "--"}
+          </TitleText>
         </Column>
       </SizedContainer>
 
@@ -57,25 +69,7 @@ const TopBar = ({
 
       <SizedContainer size="s">
         <Column alignItems="flex-end">
-          <Column alignItems="center">
-            <FontAwesomeIcon
-              icon={
-                editorMode == EditorMode.EDIT ? faPlayCircle : faCircleXmark
-              }
-              size="lg"
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                // TODO make this more pretty
-                const mode =
-                  editorMode == EditorMode.EDIT
-                    ? EditorMode.PREVIEW
-                    : EditorMode.EDIT;
-                editorStore?.changeEditorMode(mode);
-                widgetStore?.setSelectWidget(undefined);
-                handleOnSaveChanges();
-              }}
-            />
-          </Column>
+          <Column alignItems="center">{renderPreviewModeButton()}</Column>
         </Column>
       </SizedContainer>
     </Row>
@@ -83,7 +77,7 @@ const TopBar = ({
 };
 
 export default inject(
-  "changeRecordStore",
   "editorStore",
-  "widgetStore"
+  "widgetStore",
+  "viewStore"
 )(observer(TopBar));

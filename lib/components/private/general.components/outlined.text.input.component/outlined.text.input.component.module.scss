@@ -3,11 +3,11 @@
   display: flex;
   align-items: center;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 6px;
   padding: 8px 12px;
   background-color: white;
 
-  &:focus-within {
+  &:focus-within:not(.wrapperWithError) {
     border-color: #007bff;
   }
 }
@@ -18,6 +18,10 @@
 
 .wrapperWithIcon {
   padding-left: 34px;
+}
+
+.disabled {
+  background-color: #f2f2f2;
 }
 
 .icon {
@@ -33,11 +37,17 @@
   &::placeholder {
     color: #6c757d;
   }
+
+  &disabled {
+    background-color: #f2f2f2;
+  }
 }
 
-.inputWithError {
+.errorText {
+  color: #dc3545;
 }
 
 .label {
   margin-bottom: 5px;
+  margin-left: 5px;
 }

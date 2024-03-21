@@ -1,8 +1,6 @@
 // base state for all widgets types
 export interface BaseWidgetState {
   isLoading: boolean | null;
-  hidden: boolean | null;
-  disabled: boolean | null;
 }
 
 // state for specific widget types

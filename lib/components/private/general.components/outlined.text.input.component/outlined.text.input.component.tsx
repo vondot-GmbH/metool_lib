@@ -10,6 +10,7 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import styles from "./outlined.text.input.component.module.scss";
 import Column from "../column.component/column.component";
 import RunningText from "../text.components/running.text.component/running.text.component";
+import SmallText from "../text.components/small.text.component/small.text.component";
 
 interface TextInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "className"> {
@@ -17,8 +18,9 @@ interface TextInputProps
   inputRef?: any;
   icon?: IconProp;
   onValueChange?: (value: string | number) => void;
-  hasError?: boolean;
+  validationMessage?: string | null;
   className?: string;
+  disabled?: boolean;
 }
 
 const TextInput = forwardRef(
@@ -26,17 +28,19 @@ const TextInput = forwardRef(
     {
       label,
       icon,
-      hasError,
+      validationMessage,
       onValueChange,
       type = "text",
       className,
       inputRef,
+      disabled = false,
       ...props
     }: TextInputProps,
     ref: ForwardedRef<HTMLInputElement>
   ): JSX.Element => {
     const [inputValue, setInputValue] = useState(props.value);
 
+    // TODO
     // const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
     //   if (type === "number" && onValueChange) {
     //     const value = parseFloat(event.target.value);
@@ -70,12 +74,13 @@ const TextInput = forwardRef(
     };
 
     const inputWrapperClasses = classNames(styles.wrapper, {
-      [styles.wrapperWithError]: hasError,
+      [styles.wrapperWithError]: validationMessage,
       [styles.wrapperWithIcon]: !!icon,
+      [styles.disabled]: disabled,
     });
 
     const inputClasses = classNames(styles.input, {
-      [styles.inputWithError]: hasError,
+      [styles.disabled]: disabled,
     });
 
     return (
@@ -84,6 +89,7 @@ const TextInput = forwardRef(
         <div className={inputWrapperClasses}>
           {icon && <FontAwesomeIcon className={styles.icon} icon={icon} />}
           <input
+            disabled={disabled}
             {...props}
             {...inputRef}
             type={type}
@@ -94,6 +100,13 @@ const TextInput = forwardRef(
             onBlur={handleBlur}
           />
         </div>
+        {validationMessage ? (
+          <SmallText className={styles.errorText}>
+            {validationMessage}
+          </SmallText>
+        ) : (
+          <SmallText className={styles.errorText}>&nbsp;</SmallText>
+        )}
       </Column>
     );
   }

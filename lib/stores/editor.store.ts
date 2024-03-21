@@ -1,22 +1,27 @@
 import { makeAutoObservable } from "mobx";
 import ConfigProvider from "../config/config.provider";
 import { EditorMode } from "../globals/enums/editor.enum";
+import RootStore from "./root.store";
+import { PreparedBreakpointConfig } from "../globals/interfaces/config.interface";
 
 class EditorStore {
-  private _currentBreakpoint: string = "";
+  private _currentBreakpoint: string = "medium"; // TODO consider this when set init current screen width
 
   // for each breakpoint key and values with min, max
-  private _breakpointEditorConfig: {
-    [key: string]: { minWidth: number | null; maxWidth: number | null };
-  } = {};
-
-  private _currentScreenWidth: number = 0;
+  private _breakpointEditorConfig: Record<string, PreparedBreakpointConfig> =
+    {};
 
   private _mode: EditorMode = EditorMode.EDIT;
 
   private _visualWidgetOutlineGuide: boolean = false;
 
-  constructor() {
+  private _currentScreenWidth: number = 440; // TODO calculate the initial width based on the layout config
+
+  // @ts-ignore
+  private stores: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.stores = rootStore;
     makeAutoObservable(this);
   }
 
@@ -25,10 +30,6 @@ class EditorStore {
     this._currentBreakpoint = breakpoint;
   };
 
-  setCurrentScreenWidth(width: number) {
-    this._currentScreenWidth = width;
-  }
-
   changeEditorMode(mode: EditorMode) {
     this._mode = mode;
   }
@@ -36,6 +37,10 @@ class EditorStore {
   setVisualWidgetOutlineGuide = (value: boolean) => {
     this._visualWidgetOutlineGuide = value;
   };
+
+  setCurrentScreenWidth(width: number) {
+    this._currentScreenWidth = width;
+  }
 
   //! Getter
 
@@ -47,11 +52,11 @@ class EditorStore {
     return JSON.parse(JSON.stringify(this._currentBreakpoint));
   }
 
-  get breakpointEditorConfigForCurrentBreakpoint() {
+  get breakpointEditorConfigForCurrentBreakpoint(): PreparedBreakpointConfig {
     return this._breakpointEditorConfig[this._currentBreakpoint];
   }
 
-  get breakpointEditorConfig() {
+  get breakpointEditorConfig(): Record<string, PreparedBreakpointConfig> {
     return this._breakpointEditorConfig;
   }
 

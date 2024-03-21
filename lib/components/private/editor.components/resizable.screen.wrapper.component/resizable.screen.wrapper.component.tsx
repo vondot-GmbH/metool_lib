@@ -13,6 +13,7 @@ const ResizableScreenWrapper = ({
   editorStore,
 }: ResizableSidebarProps): JSX.Element => {
   const editorConfig = editorStore?.breakpointEditorConfigForCurrentBreakpoint;
+
   const [width, setWidth] = useState(500);
   const [isHovering, setIsHovering] = useState(false);
   const [isResizing, setIsResizing] = useState(false);
@@ -29,7 +30,7 @@ const ResizableScreenWrapper = ({
       setMinWidth(editorConfig.minWidth);
       setMaxWidth(editorConfig.maxWidth);
     }
-  }, [editorStore?.currentBreakpoint]);
+  }, [editorStore?.currentBreakpoint, editorConfig]);
 
   useEffect(() => {
     setWidth(editorStore?.currentScreenWidth ?? 500);

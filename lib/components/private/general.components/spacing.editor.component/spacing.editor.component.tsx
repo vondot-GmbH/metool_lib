@@ -3,6 +3,8 @@ import styles from "./spacing.editor.component.module.scss";
 import MultiSwitch from "../multi.switch.component/multi.switch.component";
 import RunningText from "../text.components/running.text.component/running.text.component";
 import Column from "../column.component/column.component";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDistributeSpacingVertical } from "@fortawesome/pro-regular-svg-icons";
 
 export interface SpacingModeValues {
   top: number;
@@ -91,7 +93,9 @@ const SpacingEditor = ({
             placeholder={`${mode} Left`}
           />
 
-          <div className={styles.element}>px</div>
+          <div className={styles.element}>
+            <FontAwesomeIcon icon={faDistributeSpacingVertical} />
+          </div>
 
           <input
             className={styles.input}

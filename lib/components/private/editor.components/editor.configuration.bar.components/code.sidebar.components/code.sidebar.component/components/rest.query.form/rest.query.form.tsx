@@ -1,4 +1,3 @@
-import { inject, observer } from "mobx-react";
 import { useFieldArray, useForm } from "react-hook-form";
 import TextInput from "../../../../../../general.components/outlined.text.input.component/outlined.text.input.component";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -8,30 +7,35 @@ import {
   RestQuery,
   restQuerySchema,
 } from "../../../../../../../../schemas/query.schemas/query.schema";
-import QueryStore from "../../../../../../../../stores/query.store";
 import Row from "../../../../../../general.components/row.component/row.component";
 import SelectDropDown from "../../../../../../general.components/select.dropdown.component/select.dropdown.component";
+import { Resource } from "../../../../../../../../main";
+import SizedContainer from "../../../../../../general.components/sized.container.component/sized.container.component";
 
 interface RestQueryFormprops {
-  iniitialQuery?: RestQuery;
+  initialQuery?: RestQuery;
   onFormSubmit: (query: RestQuery) => void;
-  queryStore?: QueryStore;
+  resource: Resource;
+  disabled?: boolean;
 }
 
 const RestQueryForm = ({
   onFormSubmit,
-  iniitialQuery,
+  initialQuery,
+  resource,
+  disabled = false,
 }: RestQueryFormprops): JSX.Element | null => {
   const {
     register,
     control,
+    setValue,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
   } = useForm({
     resolver: yupResolver(restQuerySchema),
     mode: "onTouched",
     reValidateMode: "onChange",
-    defaultValues: (iniitialQuery as any) ?? {},
+    defaultValues: (initialQuery as any) ?? {},
   });
 
   const methodItems = [
@@ -54,24 +58,22 @@ const RestQueryForm = ({
   ];
 
   const {
-    fields: defaultHeadersFields,
-    append: appendDefaultHeader,
-    remove: removeDefaultHeader,
-  } = useFieldArray({
-    control,
-    name: "resource.defaultHeaders", // Eindeutiger Name für das erste Feldarray
-  });
-
-  const {
     fields: headersFields,
     append: appendHeader,
     remove: removeHeader,
   } = useFieldArray({
     control,
-    name: "headers", // Eindeutiger Name für das zweite Feldarray
+    name: "headers",
   });
 
-  // TODO show error message
+  const {
+    fields: paramsFields,
+    append: appendParams,
+    remove: removeParams,
+  } = useFieldArray({
+    control,
+    name: "params",
+  });
 
   return (
     <form
@@ -84,63 +86,95 @@ const RestQueryForm = ({
       <TextInput
         {...register("title")}
         label="Name"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mt10}
+        validationMessage={errors.title?.message?.toString()}
+        disabled={disabled}
       />
       <TextInput
         {...register("description")}
         label="Description"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mb10}
+        validationMessage={errors.description?.message?.toString()}
+        disabled={disabled}
       />
 
       <Row alignItems="center">
         <TextInput
           disabled={true}
-          {...register("resource.baseUrl")}
+          value={resource?.baseUrl}
           label="Base URL"
-          className={defaultStyles.mb20}
+          className={defaultStyles.mb10}
+          style={{ fontSize: "12px" }}
         />
 
-        <TextInput
-          {...register("url")}
-          label="URL"
-          className={defaultStyles.mb20}
-        />
+        <SizedContainer customSize={300} size="CUSTOM">
+          <TextInput
+            style={{ width: "150px" }}
+            {...register("url")}
+            label="URL"
+            className={defaultStyles.mb10}
+            validationMessage={errors.url?.message?.toString()}
+            disabled={disabled}
+          />
+        </SizedContainer>
       </Row>
 
       <SelectDropDown
+        className={defaultStyles.mb30}
         label="Method"
-        selectedItem={iniitialQuery?.method}
+        selectedItem={initialQuery?.method}
         items={methodItems}
+        validationMessage={errors.method?.message?.toString()}
+        disabled={disabled}
+        onChange={(item) => {
+          if (item?.value != null) {
+            setValue("method", item?.value);
+          }
+        }}
       />
 
       <KeyValueInput
         className={defaultStyles.mb20}
         disabled={true}
         label="Default Headers"
-        fields={defaultHeadersFields}
-        append={appendDefaultHeader}
-        remove={removeDefaultHeader}
-        register={register}
-        arrayFieldName={"resource.defaultHeaders"}
+        fields={resource?.defaultHeaders}
       />
 
       <KeyValueInput
         className={defaultStyles.mb20}
+        disabled={disabled}
         label="Headers"
         fields={headersFields}
         append={appendHeader}
         remove={removeHeader}
         register={register}
         arrayFieldName={"headers"}
+        validationErrors={errors}
+        addLabel="Add Header"
+      />
+
+      <KeyValueInput
+        className={defaultStyles.mb20}
+        disabled={disabled}
+        label="Params"
+        fields={paramsFields}
+        append={appendParams}
+        remove={removeParams}
+        register={register}
+        arrayFieldName={"params"}
+        validationErrors={errors}
+        addLabel="Add Param"
       />
 
       <TextInput
+        validationMessage={errors.body?.message?.toString()}
         {...register("body")}
         label="body"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mb10}
+        disabled={disabled}
       />
     </form>
   );
 };
 
-export default inject("queryStore")(observer(RestQueryForm));
+export default RestQueryForm;

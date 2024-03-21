@@ -5,6 +5,7 @@ import {
   WidgetLayouts,
   WidgetPositioning,
 } from "../../schemas/widget.schemas/widget.schema";
+import { PreparedBreakpointConfig } from "../interfaces/config.interface";
 
 // convert widgets to the grid layout format for react-grid-layout
 export const convertToGridLayout = (

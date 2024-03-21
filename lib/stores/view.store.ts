@@ -1,29 +1,133 @@
 import { makeAutoObservable } from "mobx";
-import { DataItem } from "../globals/interfaces/pagination.interface";
-import { View_old } from "../schemas/view.schemas/view.schema";
+import RootStore from "./root.store";
+import { CoreRestQueryType } from "../schemas/query.schemas/query.schema";
+import { queryExecutor } from "../provider/http/http.rest.query.client";
+import { View } from "../schemas/view.schemas/view.schema";
+import { getUniqueID } from "../globals/helpers/global.helper";
 
 class ViewStore {
-  private _currentView: DataItem<View_old> = {
-    data: undefined,
-    isLoading: false,
-  };
+  private _currentSelectedView: View | undefined;
 
-  constructor() {
+  private _views: Map<string, View> = new Map();
+
+  private stores: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.stores = rootStore;
     makeAutoObservable(this);
   }
 
   //! Setter
-  setCurrentView = (view: View_old): void => {
-    this._currentView.data = view;
+
+  setCurrentSelectedView = (view: View): void => {
+    this._currentSelectedView = view;
+  };
+
+  setViews = (views: View[]): void => {
+    views.forEach((view: View) => {
+      if (view?.viewID == null) return;
+      this._views.set(view.viewID, view);
+    });
   };
 
   //! Getter
-  get currentView(): DataItem<View_old> | undefined {
-    if (this._currentView == null) {
-      return;
-    }
+  get currentSelectedView(): View | undefined {
+    return this._currentSelectedView;
+  }
 
-    return JSON.parse(JSON.stringify(this._currentView));
+  get views(): View[] {
+    return Array.from(this._views.values());
+  }
+
+  getView(viewID: string): View | undefined {
+    return this._views.get(viewID);
+  }
+
+  //! Methods
+
+  createInitialView(): View {
+    const view = {
+      viewID: "new",
+      name: "New View",
+    } as View;
+
+    this.setCurrentSelectedView(view);
+
+    return view;
+  }
+
+  intializeView = async (viewID: string): Promise<void> => {
+    return await this.fetchAndSaveViewById(viewID);
+  };
+
+  async fetchAndSaveViewById(viewID: string): Promise<void> {
+    const viewQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.GET_VIEW_BY_ID
+    );
+
+    if (viewQuery == null || viewID == null) return;
+
+    const response = await queryExecutor.executeRestQuery(
+      viewQuery,
+      {
+        viewID: viewID,
+      },
+      this.stores.resourceStore
+    );
+
+    if (response == null) return;
+
+    this.setCurrentSelectedView(response);
+    this.setViews([response]);
+  }
+
+  async updateAndSaveView(view: View): Promise<void> {
+    const updateQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.UPDATE_VIEW
+    );
+
+    if (view == null || updateQuery == null) return;
+
+    const preparedView = {
+      ...updateQuery,
+      body: view,
+    } as any;
+
+    const response = await queryExecutor.executeRestQuery(
+      preparedView,
+      { viewID: view.viewID },
+      this.stores.resourceStore
+    );
+
+    if (response == null || response?.viewID == null) return;
+
+    this.setCurrentSelectedView(response);
+    this.setViews([response]);
+  }
+
+  async createAndSaveView(view: View): Promise<void> {
+    const createQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.CREATE_VIEW
+    );
+
+    const preparedView = {
+      ...createQuery,
+      body: {
+        ...view,
+        viewID: getUniqueID(),
+      },
+    } as any;
+
+    const response = await queryExecutor.executeRestQuery(
+      preparedView,
+      {},
+      this.stores.resourceStore
+    );
+
+    if (response == null || response?.viewID == null) return;
+
+    this.setCurrentSelectedView(response);
+    this.setViews([response]);
   }
 }
 

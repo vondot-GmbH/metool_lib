@@ -2,9 +2,8 @@ import { useState } from "react";
 import styles from "./collapsible.section.component.module.scss";
 import RunningText from "../text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowAltCircleDown } from "@fortawesome/free-regular-svg-icons/faArrowAltCircleDown";
-import { faSquareCaretDown } from "@fortawesome/free-regular-svg-icons";
 import Row from "../row.component/row.component";
+import { faAngleDown, faAngleUp } from "@fortawesome/pro-regular-svg-icons";
 
 interface CollapsibleSectionProps {
   title: string;
@@ -19,7 +18,7 @@ const CollapsibleSection = ({ title, children }: CollapsibleSectionProps) => {
   const _buildHeaderIcon = (): JSX.Element => {
     return (
       <FontAwesomeIcon
-        icon={isOpen ? faArrowAltCircleDown : faSquareCaretDown}
+        icon={isOpen ? faAngleUp : faAngleDown}
         className={styles.sectionIcon}
       />
     );

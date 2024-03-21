@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import {
+  AnalyzedWidgetOptions,
   Widget,
   WidgetHierarchy,
   WidgetHierarchyMap,
@@ -7,13 +8,20 @@ import {
   WidgetPositioning,
 } from "../schemas/widget.schemas/widget.schema";
 import { WidgetContextMenu } from "../globals/interfaces/widget.state.interface";
-import ChangeRecordStore from "./change.record.store";
 import { Layout } from "react-grid-layout";
 import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
+import { extractDependenciesAndNonDependencies } from "../globals/helpers/state.helper";
+import { runInAction } from "mobx";
+import RootStore from "./root.store";
+import { CoreRestQueryType } from "../schemas/query.schemas/query.schema";
+import { queryExecutor } from "../provider/http/http.rest.query.client";
+import { ChangeRecord } from "../globals/interfaces/change.record.interface";
 
 class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
+  private _analyzedWidgetOptions: Map<string, AnalyzedWidgetOptions> =
+    new Map();
 
   // TODO maby move this to editor store
   private _selectedWidget: WidgetHierarchy | undefined;
@@ -25,10 +33,10 @@ class WidgetStore {
     selectedWidgetID: null,
   };
 
-  private changeRecordStore: ChangeRecordStore;
+  private stores: RootStore;
 
-  constructor(changeRecordStore: ChangeRecordStore) {
-    this.changeRecordStore = changeRecordStore;
+  constructor(rootStore: RootStore) {
+    this.stores = rootStore;
     makeAutoObservable(this);
   }
 
@@ -36,8 +44,51 @@ class WidgetStore {
 
   setInitialWidgetAndConvert(widgets: Widget[]): WidgetHierarchyMap {
     const structuredWidgets = structureWidgetsHierarchy(widgets);
-    this._structuredWidgetHierarchy = structuredWidgets;
+
+    runInAction(() => {
+      this._structuredWidgetHierarchy = structuredWidgets;
+    });
+
+    const widgetIDs = Array.from(this._structuredWidgetHierarchy.keys());
+
+    for (let i = 0; i < widgetIDs.length; i++) {
+      const widgetID = widgetIDs[i];
+      const widgetHierarchy = this._structuredWidgetHierarchy.get(widgetID);
+
+      if (widgetHierarchy) {
+        const { dependencies, nonDependencies } =
+          extractDependenciesAndNonDependencies(widgetHierarchy.widget.options);
+
+        runInAction(() => {
+          this._analyzedWidgetOptions.set(widgetID, {
+            options: nonDependencies,
+            dependencies: dependencies,
+          });
+        });
+      }
+    }
+
+    this.stores.queryStore.executeAndSaveDependencies(
+      this._analyzedWidgetOptions
+    );
+
     return this._structuredWidgetHierarchy;
+  }
+
+  // TODO
+  async initWidgetsAndProcess(viewID: string): Promise<void> {
+    // this.stores.resourceStore?.intializeResources();
+    // this.stores.queryStore?.intializeQueries();
+
+    const widgets = await this.fetchWidgetsForView(viewID);
+
+    if (widgets == null) {
+      return;
+    }
+
+    runInAction(() => {
+      this.setInitialWidgetAndConvert(widgets);
+    });
   }
 
   setStructuredWidgetHierarchy(
@@ -67,20 +118,13 @@ class WidgetStore {
     this._contextMenu = contextMenu;
   }
 
-  // TODO
-  exportWidgetsTEST() {
-    const widgets = [] as any[];
-    const widget = this.getStructuredData();
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    for (const [key, value] of Object.entries(widget)) {
-      widgets.push(value.widget);
-    }
-
-    return JSON.stringify(widgets, null, 2);
-  }
-
   //! getter
+
+  getAnalyzedWidgetOptions(
+    widgetID: string
+  ): AnalyzedWidgetOptions | undefined {
+    return this._analyzedWidgetOptions.get(widgetID) ?? undefined;
+  }
 
   getStructuredWidgetHierarchyByWidgetID(
     widgetID: string
@@ -127,7 +171,7 @@ class WidgetStore {
 
       this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
 
-      this.changeRecordStore.setChangeWidgetRecord(
+      this.stores.changeRecordStore.setChangeWidgetRecord(
         widgetID,
         "UPDATE",
         updatedWidgetHierarchy.widget
@@ -170,7 +214,7 @@ class WidgetStore {
 
       this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
 
-      this.changeRecordStore.setChangeWidgetRecord(
+      this.stores.changeRecordStore.setChangeWidgetRecord(
         widgetID,
         "UPDATE",
         updatedWidgetHierarchy.widget
@@ -228,7 +272,7 @@ class WidgetStore {
         this.setStructuredWidgetHierarchy(widgetID, widgetHierarchy);
 
         // update the change record store
-        this.changeRecordStore.setChangeWidgetRecord(
+        this.stores.changeRecordStore.setChangeWidgetRecord(
           widgetID,
           "UPDATE",
           widgetHierarchy.widget
@@ -264,7 +308,7 @@ class WidgetStore {
           );
 
           // update the change record store
-          this.changeRecordStore.setChangeWidgetRecord(
+          this.stores.changeRecordStore.setChangeWidgetRecord(
             widgetID,
             "UPDATE",
             this.getStructuredWidgetHierarchyByWidgetID(widgetID)?.widget
@@ -310,7 +354,7 @@ class WidgetStore {
     this._structuredWidgetHierarchy.delete(widgetID);
 
     // set the change record for the widget to delete
-    this.changeRecordStore.setChangeWidgetRecord(
+    this.stores.changeRecordStore.setChangeWidgetRecord(
       widgetID,
       "DELETE",
       widgetToDelete.widget
@@ -326,21 +370,38 @@ class WidgetStore {
     const { widgetType, layout, parentID, currentBreakpoint } = args;
 
     const widgetID = layout.i;
+    const viewID = this.stores.viewStore.currentSelectedView?.viewID;
+
+    if (viewID == null) {
+      return;
+    }
 
     // create the new widget object
     const newWidget: WidgetHierarchy = {
       widget: {
         widgetID,
         widgetType,
-        view: "",
+        viewID: viewID,
         positioning: {
           i: widgetID,
 
           [currentBreakpoint]: {
-            x: layout.x,
-            y: layout.y,
-            w: layout.w,
-            h: layout.h,
+            x: {
+              value: layout.x,
+              isInfinity: false,
+            },
+            y: {
+              value: layout.y,
+              isInfinity: false,
+            },
+            w: {
+              value: layout.w,
+              isInfinity: false,
+            },
+            h: {
+              value: layout.h,
+              isInfinity: false,
+            },
           },
         } as any,
       },
@@ -366,11 +427,101 @@ class WidgetStore {
     }
 
     // set the change record for the new widget
-    this.changeRecordStore.setChangeWidgetRecord(
+    this.stores.changeRecordStore.setChangeWidgetRecord(
       widgetID,
       "CREATE",
       newWidget.widget
     );
+  }
+
+  //! QUERY METHODS
+
+  async processWidgetChange(record: ChangeRecord): Promise<void> {
+    switch (record.action) {
+      case "CREATE":
+        await this.createWidget(record.data);
+        break;
+      case "UPDATE":
+        await this.updateWidget(record.data);
+
+        break;
+      case "DELETE":
+        await this.deleteWidgetByID(record.data);
+        break;
+
+      default:
+        return;
+    }
+  }
+
+  async createWidget(widget: Widget): Promise<Widget | undefined> {
+    const createQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.CREATE_WIDGET
+    );
+
+    const preparedQuery = {
+      ...createQuery,
+      body: widget,
+    } as any;
+
+    const response = await queryExecutor.executeRestQuery(
+      preparedQuery,
+      {},
+      this.stores.resourceStore
+    );
+
+    return response;
+  }
+
+  async updateWidget(widget: Widget): Promise<Widget | undefined> {
+    const updateQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.UPDATE_WIDGET
+    );
+
+    const preparedQuery = {
+      ...updateQuery,
+      body: widget,
+    } as any;
+
+    const response = await queryExecutor.executeRestQuery(
+      preparedQuery,
+      { widgetID: widget.widgetID },
+      this.stores.resourceStore
+    );
+
+    return response;
+  }
+
+  async deleteWidgetByID(widget: Widget): Promise<void> {
+    const deleteQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.DELETE_WIDGET
+    );
+
+    const preparedQuery = {
+      ...deleteQuery,
+    } as any;
+
+    await queryExecutor.executeRestQuery(
+      preparedQuery,
+      { widgetID: widget.widgetID },
+      this.stores.resourceStore
+    );
+  }
+  // TODO
+  async fetchWidgetsForView(viewID: string): Promise<void> {
+    const getWidgetsQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.GET_WIDGETS
+    );
+
+    if (getWidgetsQuery == null) return;
+
+    const response = await queryExecutor.executeRestQuery(
+      getWidgetsQuery,
+      { viewID: viewID },
+      this.stores.resourceStore
+    );
+
+    return response;
   }
 }
 

@@ -1,12 +1,11 @@
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
-import StateStore from "../../../../../stores/state.store";
+import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import { TableWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
 import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import Table from "../../../../private/general.components/table.component/data.table.component";
 import { TableOptions, TableColumn } from "../schemas/table.widget.schema";
-import { queryExecutor } from "../../../../../provider/http/http.rest.query.client";
 
 interface TableWidgetProps {
   widgetID: string;
@@ -22,23 +21,22 @@ const TableWidget = ({
   const [usersData, setUsersData] = useState<any[]>([]);
 
   useEffect(() => {
-    stateStore?.initializeWidgetStates(widgetID, _getInitialTableWidgetState());
-    getDataFromQuery();
-  }, [widgetID]);
+    const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
+
+    if (!analized) return;
+
+    stateStore?.initializeDynamicOptions(
+      widgetID,
+      analized,
+      (data) => {
+        setUsersData(data.data);
+      },
+      _getInitialTableWidgetState()
+    );
+  }, []);
 
   const tableOptions: TableOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);
-
-  const getDataFromQuery = async () => {
-    const query = tableOptions?.dataQuery;
-
-    if (query) {
-      const data = await queryExecutor.executeRestQuery(query);
-      if (data) {
-        setUsersData(data);
-      }
-    }
-  };
 
   const prepareColumns = (tableOptions: TableOptions): TableColumn[] => {
     return tableOptions?.columns?.map((column) => ({
@@ -52,13 +50,15 @@ const TableWidget = ({
 
   const handleSelectionDataChange = (selectedData: any) => {
     if (tableOptions?.rowSelectionType === "single") {
-      stateStore?.setWidgetStateValue(
+      stateStore?.setStateValue(
+        StateSelector.WIDGETS,
         widgetID,
         "selectedSourceRow",
         selectedData
       );
     } else if (tableOptions?.rowSelectionType === "multiple") {
-      stateStore?.setWidgetStateValue(
+      stateStore?.setStateValue(
+        StateSelector.WIDGETS,
         widgetID,
         "selectedSourceRows",
         selectedData
@@ -70,7 +70,7 @@ const TableWidget = ({
     <Table
       key={widgetID}
       columns={(prepareColumns(tableOptions) as any[]) || []}
-      data={usersData}
+      data={usersData || []}
       rowKey="id"
       noDataText="No data available"
       defaultBorderBottomColor={tableOptions?.borderBottomColor}
@@ -83,7 +83,8 @@ const TableWidget = ({
       onSelectionDataChange={(selectedData) => {
         handleSelectionDataChange(selectedData);
       }}
-      onSelectionIndexChange={(selectedIndexes) => {
+      onSelectionIndexChange={() => {
+        // TODO: Implement this
         // console.log("selectedIndexes");
         // console.log(selectedIndexes);
       }}
@@ -93,8 +94,6 @@ const TableWidget = ({
 
 const _getInitialTableWidgetState = (): TableWidgetState => {
   const tableState = {
-    disabled: null,
-    hidden: null,
     isLoading: null,
     selectedSourceRow: null,
     selectedDataIndex: null,

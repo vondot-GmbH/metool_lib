@@ -46,7 +46,9 @@ const BreakpointSettings = ({
   return (
     <div className={styles.breakpointSettings}>
       {preparedLayoutConfigs.map((layoutConfig) => {
-        return <div>{_buildBreakpointItem(layoutConfig)}</div>;
+        return (
+          <div key={layoutConfig.key}>{_buildBreakpointItem(layoutConfig)}</div>
+        );
       })}
 
       <Column alignItems="center" className={styles.currentBreakpoint}>

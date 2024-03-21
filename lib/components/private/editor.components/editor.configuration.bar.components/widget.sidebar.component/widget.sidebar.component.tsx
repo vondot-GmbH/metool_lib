@@ -8,6 +8,7 @@ import Column from "../../../general.components/column.component/column.componen
 import ComponentWrapper from "../../../general.components/component.wrapper.component/component.wrapper.component";
 import Row from "../../../general.components/row.component/row.component";
 import ConfigProvider from "../../../../../config/config.provider";
+import ResizableSidebar from "../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 
 interface WidgetSidebarProps {}
 
@@ -40,25 +41,27 @@ const WidgetSidebar = ({}: WidgetSidebarProps): JSX.Element => {
   };
 
   return (
-    <ComponentWrapper title={"Widgets"}>
-      <Wrap
-        className={styles.widgetSidebar}
-        justifyContent="center"
-        gap="12px 8px"
-      >
-        {registeredWidgets.map((widget) => {
-          return (
-            <>
-              {_buildWidgetItem({
-                icon: widget.icon || fallbackImage,
-                name: widget.name,
-                type: widget.type,
-              })}
-            </>
-          );
-        })}
-      </Wrap>
-    </ComponentWrapper>
+    <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
+      <ComponentWrapper title={"Widgets"}>
+        <Wrap
+          className={styles.widgetSidebar}
+          justifyContent="center"
+          gap="12px 8px"
+        >
+          {registeredWidgets.map((widget) => {
+            return (
+              <div key={widget.type}>
+                {_buildWidgetItem({
+                  icon: widget.icon || fallbackImage,
+                  name: widget.name,
+                  type: widget.type,
+                })}
+              </div>
+            );
+          })}
+        </Wrap>
+      </ComponentWrapper>
+    </ResizableSidebar>
   );
 };
 

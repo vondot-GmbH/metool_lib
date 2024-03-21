@@ -17,6 +17,11 @@ export interface BreakpointConfig {
   title?: string;
 }
 
+export interface PreparedBreakpointConfig {
+  minWidth: number | null;
+  maxWidth: number | null;
+}
+
 export type LayoutConfig = {
   root: { [key: string]: BreakpointConfig };
   nested: { [key: string]: BreakpointConfig };

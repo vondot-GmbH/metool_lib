@@ -1,4 +1,3 @@
-import { inject, observer } from "mobx-react";
 import {
   RestResource,
   resourceRestSchema,
@@ -12,11 +11,13 @@ import KeyValueInput from "../../../../../../general.components/key.value.input.
 interface ResourceRestFormProps {
   iniitialResource?: RestResource;
   onFormSubmit: (resource: RestResource) => void;
+  disabled?: boolean;
 }
 
 const ResourceRestForm = ({
   onFormSubmit,
   iniitialResource,
+  disabled = false,
 }: ResourceRestFormProps): JSX.Element | null => {
   const {
     register,
@@ -35,9 +36,6 @@ const ResourceRestForm = ({
     name: "defaultHeaders",
   });
 
-  // TODO show error message
-  console.log("errors", errors);
-
   return (
     <form
       id="rest-resource-form"
@@ -49,18 +47,25 @@ const ResourceRestForm = ({
       <TextInput
         {...register("title")}
         label="Name"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mb10}
+        validationMessage={errors.title?.message?.toString()}
+        disabled={disabled}
       />
+
       <TextInput
         {...register("description")}
         label="Description"
-        className={defaultStyles.mb20}
+        className={defaultStyles.mb10}
+        disabled={disabled}
+        validationMessage={errors.description?.message?.toString()}
       />
 
       <TextInput
         {...register("baseUrl")}
         label="Base URL"
         className={defaultStyles.mb20}
+        disabled={disabled}
+        validationMessage={errors.baseUrl?.message?.toString()}
       />
 
       <KeyValueInput
@@ -70,9 +75,11 @@ const ResourceRestForm = ({
         remove={remove}
         register={register}
         arrayFieldName={"defaultHeaders"}
+        validationErrors={errors}
+        disabled={disabled}
       />
     </form>
   );
 };
 
-export default inject("resourceStore")(observer(ResourceRestForm));
+export default ResourceRestForm;

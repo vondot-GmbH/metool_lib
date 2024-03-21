@@ -7,12 +7,12 @@ import {
 import { WidgetHierarchyMap } from "../../../../schemas/widget.schemas/widget.schema";
 import { useEffect, useMemo, useState } from "react";
 import styles from "./grid.layout.component.module.scss";
-import { v4 as UUID } from "uuid";
 import ViewStore from "../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../stores/widget.store";
 import ConfigProvider from "../../../../config/config.provider";
 import EditorStore from "../../../../stores/editor.store";
+import { getUniqueID } from "../../../../globals/helpers/global.helper";
 
 interface GridLayoutProps {
   key: string;
@@ -48,7 +48,8 @@ const GridLayout = ({
   readonly = false,
   selectedWidgetID,
 }: GridLayoutProps): JSX.Element => {
-  const [localCurrentBreakpoint, setLocalCurrentBreakpoint] = useState("");
+  const [localCurrentBreakpoint, setLocalCurrentBreakpoint] =
+    useState<string>("");
 
   const currentBreakpoint = isNested
     ? localCurrentBreakpoint ?? ""
@@ -76,13 +77,7 @@ const GridLayout = ({
   const [savedLayouts, setSavedLayouts] = useState(layouts);
 
   const dynamicLayouts = useMemo(() => {
-    const dynamic = convertDynamicLayouts(
-      selectedWidgetID,
-      savedLayouts,
-      readonly
-    );
-
-    return dynamic;
+    return convertDynamicLayouts(selectedWidgetID, savedLayouts, readonly);
   }, [selectedWidgetID, savedLayouts, readonly]);
 
   const gridBackgroundStyle = {
@@ -95,7 +90,7 @@ const GridLayout = ({
   }
 
   const onBreakpointChange = (newBreakpoint: string) => {
-    if (isNested) {
+    if (isNested || readonly) {
       setLocalCurrentBreakpoint(newBreakpoint);
     } else {
       editorStore?.setCurrentBreakpoint(newBreakpoint);
@@ -103,12 +98,12 @@ const GridLayout = ({
   };
 
   // TODO
-  const handleDrop = (layout: any, layoutItem: any, event: any): void => {
+  const handleDrop = (_layout: any, layoutItem: any, event: any): void => {
     if (currentBreakpoint == null) {
       return;
     }
 
-    const widgetID = UUID();
+    const widgetID = getUniqueID();
 
     const layoutNEW: Layout = {
       i: widgetID,
@@ -236,7 +231,9 @@ const GridLayout = ({
       margin={[0, 0]}
       layouts={dynamicLayouts}
       breakpoints={breakpoints}
-      breakpoint={isNested ? undefined : editorStore?.currentBreakpoint}
+      breakpoint={
+        isNested || readonly ? undefined : editorStore?.currentBreakpoint
+      }
       cols={cols}
       rowHeight={rowHeight}
       style={gridBackgroundStyle}

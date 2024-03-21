@@ -6,40 +6,46 @@ import {
   MixedResource,
 } from "../schemas/resource.schemas/resource.schema";
 import { makeAutoObservable } from "mobx";
-import ChangeRecordStore from "./change.record.store";
-import { ChangeRecord } from "../globals/interfaces/change.record.interface";
+import { CoreRestQueryType } from "../schemas/query.schemas/query.schema";
+import { queryExecutor } from "../provider/http/http.rest.query.client";
+import RootStore from "./root.store";
+import { getUniqueID } from "../globals/helpers/global.helper";
 
 class ResourceStore {
   private _resources: MixedResourceMap = new Map();
-  private _changeRecordStore: ChangeRecordStore;
+  private _currentSelectedResource: Resource | null = null;
 
-  constructor(changeRecordStore: ChangeRecordStore) {
-    this._changeRecordStore = changeRecordStore;
+  private stores: RootStore;
+
+  constructor(rootStore: RootStore) {
+    this.stores = rootStore;
     makeAutoObservable(this);
   }
+
   //! Setter
 
-  intializeResources(resources: Resource[]): void {
+  async intializeResources(resources?: Resource[]): Promise<Resource[]> {
     const configProvider = ConfigProvider.getInstance();
     const coreResources = configProvider.getCoreResources();
 
     // set all provided resources
-    this.setResources(resources);
+    if (resources != null) this.setResources(resources);
 
     // set all core resources from the config provider
     this.setResources(coreResources);
+
+    return this.resources;
   }
 
   private setResources(resources: Resource[] | CoreResource[]): void {
     resources.forEach((resource: any) => {
-      if (resource?.coreResource || resource?._id != null) {
-        this._resources.set(resource._id, resource);
-      }
-
-      if (resource?._id != null && !resource?.coreResource) {
-        this._resources.set(resource._id, resource);
-      }
+      if (resource?.resourceID == null) return;
+      this._resources.set(resource?.resourceID, resource);
     });
+  }
+
+  setCurrentSelectedResource(resource: Resource): void {
+    this._currentSelectedResource = resource;
   }
 
   //! Getter
@@ -52,31 +58,88 @@ class ResourceStore {
     return this._resources.get(resourceID);
   }
 
-  //! Methods
-
-  saveResourceChangesAndProcess(resource: Resource): ChangeRecord[] {
-    if (resource?._id == null || resource?._id === "newResource") {
-      this._changeRecordStore.setResourceRecord(
-        "newResource",
-        "CREATE",
-        resource
-      );
-    } else if (resource?._id != null) {
-      this._changeRecordStore.setResourceRecord(
-        resource._id,
-        "UPDATE",
-        resource
-      );
-    }
-
-    return this._changeRecordStore.processReleaseChanges();
+  get currentSelectedResource(): Resource | null {
+    return this._currentSelectedResource;
   }
 
-  addInitialResource(): void {
-    this._resources.set("newResource", {
-      _id: "newResource",
+  //! Methods
+
+  createInitialResource(): Resource {
+    const resource = {
+      resourceID: "new",
       title: "New Resource",
-    } as any);
+    } as Resource;
+
+    this.setCurrentSelectedResource(resource);
+
+    return resource;
+  }
+
+  async fetchAllResourcesAndSave(): Promise<void> {
+    const query = this.stores.queryStore.getQuery(
+      CoreRestQueryType.GET_RESOURCES
+    );
+
+    if (query == null) return;
+
+    const response = await queryExecutor.executeRestQuery(
+      query,
+      {},
+      this.stores.resourceStore
+    );
+
+    if (response == null) return;
+
+    this.setResources(response);
+  }
+
+  async createAndSaveResource(resource: Resource): Promise<void> {
+    const createQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.CREATE_RESOURCE
+    );
+
+    const preparedQuery = {
+      ...createQuery,
+      body: {
+        ...resource,
+        resourceID: getUniqueID(),
+      },
+    } as any;
+
+    const response = await queryExecutor.executeRestQuery(
+      preparedQuery,
+      {},
+      this.stores.resourceStore
+    );
+
+    if (response == null || response?.resourceID == null) return;
+
+    this.setCurrentSelectedResource(response);
+    this._resources.set(response?.resourceID, response);
+  }
+
+  async updateAndSaveResource(resource: Resource): Promise<void> {
+    const updateQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.UPDATE_RESOURCE
+    );
+
+    if (resource == null || updateQuery == null) return;
+
+    const preparedQuery = {
+      ...updateQuery,
+      body: resource,
+    } as any;
+
+    const response = await queryExecutor.executeRestQuery(
+      preparedQuery,
+      { resourceID: resource.resourceID },
+      this.stores.resourceStore
+    );
+
+    if (response == null || response?.resourceID == null) return;
+
+    this.setCurrentSelectedResource(response);
+    this._resources.set(response?.resourceID, response);
   }
 }
 

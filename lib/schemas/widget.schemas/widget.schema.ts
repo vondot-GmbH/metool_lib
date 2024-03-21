@@ -1,10 +1,12 @@
+import { Dependency } from "../../stores/state.store";
+
 export interface Widget {
   _id?: string;
   widgetType: string;
   widgetID: string;
   positioning: WidgetLayouts;
   parentID?: string;
-  view: string;
+  viewID: string;
   options?: Record<string, any>;
 }
 
@@ -31,4 +33,9 @@ export interface WidgetHierarchy {
   widget: Widget;
   children: string[];
   level: "ROOT" | "NESTED";
+}
+
+export interface AnalyzedWidgetOptions {
+  options: any;
+  dependencies: Dependency[];
 }

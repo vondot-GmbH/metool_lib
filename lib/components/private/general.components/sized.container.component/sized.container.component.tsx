@@ -6,7 +6,7 @@ interface SizedContainerProps {
   children?: React.ReactNode | React.ReactNode[];
   size?: "s" | "m" | "l" | "xml" | "xl" | "xxl" | "CUSTOM";
   className?: string;
-  customSize?: number;
+  customSize?: number | string;
 }
 
 const SizedContainer = ({
@@ -22,8 +22,12 @@ const SizedContainer = ({
   }
 
   if (size === "CUSTOM") {
+    // if number use pixels, if string use string
+    const sizeValue =
+      typeof customSize === "number" ? `${customSize}px` : customSize;
+
     return (
-      <div className="sized-container" style={{ maxWidth: `${customSize}px` }}>
+      <div className="sized-container" style={{ maxWidth: sizeValue }}>
         {children}
       </div>
     );

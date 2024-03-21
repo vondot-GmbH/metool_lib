@@ -3,13 +3,14 @@ import * as yup from "yup";
 
 export interface BaseResource {
   _id?: string;
+  resourceID: string;
   title: string;
   description?: string;
   type: DataSourceType;
 }
 
 export interface BaseCoreResource extends BaseResource {
-  coreResource: true; // defines resources that are set in code and cannot be edited
+  core: true; // defines resources that are set in code and cannot be edited
 }
 
 //! REST API

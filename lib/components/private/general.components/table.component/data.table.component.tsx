@@ -100,7 +100,7 @@ function Table<T extends { [key: string]: any }>({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleRowSelectionChange = (
     recordKey: string | number,
-    recordIndex: number
+    _recordIndex: number
   ): void => {
     let newSelectedRowKeys: Array<string | number> = [];
 

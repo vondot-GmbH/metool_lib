@@ -1,23 +1,25 @@
+import { useState, useCallback } from "react";
 import { inject, observer } from "mobx-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
+import { faDatabase, faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
 import QueryStore from "../../../../../../stores/query.store";
 import RestQueryForm from "../code.sidebar.component/components/rest.query.form/rest.query.form";
-import SizedContainer from "../../../../general.components/sized.container.component/sized.container.component";
-import { RestQuery } from "../../../../../../schemas/query.schemas/query.schema";
-import defaultStyles from "../../../../../../styles/index.module.scss";
-import { DataSourceType, Resource } from "../../../../../../main";
-import { useState } from "react";
 import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
 import ResourceStore from "../../../../../../stores/resource.store";
+import { DataSourceType, Resource } from "../../../../../../main";
+import { RestQuery } from "../../../../../../schemas/query.schemas/query.schema";
+import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
+import Row from "../../../../general.components/row.component/row.component";
+import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons";
+import defaultStyles from "../../../../../../styles/index.module.scss";
 
 interface CodeSidebarDetailProps {
   queryStore?: QueryStore;
   resourceStore?: ResourceStore;
-  selectedItem?: string;
+  selectedItem: RestQuery;
   onClose: () => void;
+  isEditing: boolean;
 }
 
 const CodeSidebarDetail = ({
@@ -25,53 +27,80 @@ const CodeSidebarDetail = ({
   onClose,
   queryStore,
   resourceStore,
-}: CodeSidebarDetailProps): JSX.Element | null => {
-  const selectedQuery = queryStore?.getQuery(selectedItem ?? "");
+  isEditing,
+}: CodeSidebarDetailProps) => {
+  const [selectedResource, setSelectedResource] = useState<
+    Resource | undefined
+  >(resourceStore?.getResource(selectedItem?.resourceID ?? ""));
 
-  const [selectedResource, setSelectedResource] = useState<Resource | null>(
-    selectedQuery?.resource ?? null
+  const handleResourceChange = useCallback(
+    (resourceId: string) => {
+      const resource = resourceStore?.getResource(resourceId);
+      setSelectedResource(resource);
+    },
+    [resourceStore]
   );
 
-  const handleTypeChange = (item: any) => {
-    setSelectedResource(item);
+  const handleSubmit = (data: RestQuery) => {
+    if (!data || !selectedResource) {
+      return;
+    }
+
+    const query = {
+      ...data,
+      resourceID: selectedResource.resourceID,
+      type: selectedResource.type,
+    };
+
+    if (isEditing) {
+      queryStore?.updateAndSaveQuery(query);
+    } else {
+      queryStore?.createAndSaveQuery(query);
+    }
   };
 
-  const resources = resourceStore?.resources;
-
   return (
-    <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={500}>
+    <ResizableSidebar initialWidth={410} minWidth={300} maxWidth={700}>
       <ComponentWrapper
-        title={selectedItem}
+        title={selectedItem.title}
         action={
-          <SizedContainer size="s">
-            <button type="submit" form="rest-query-form">
-              Save
-            </button>
-            <FontAwesomeIcon
-              className={defaultStyles.ml10}
-              icon={faXmarkCircle}
-              style={{ cursor: "pointer" }}
-              onClick={onClose}
-            />
-          </SizedContainer>
+          <Row>
+            {!(selectedItem as any)?.core && (
+              <IconButton
+                className={defaultStyles.mr10}
+                type="submit"
+                form="rest-query-form"
+                icon={isEditing ? faFloppyDisk : faPlus}
+                label={isEditing ? "Speichern" : "Hinzufügen"}
+                showBorder
+              />
+            )}
+            <IconButton icon={faX} onClick={onClose} showBorder />
+          </Row>
         }
       >
         <SelectDropDown
           label="Resource"
           labelPropertyName="title"
-          valuePropertyName="_id"
-          selectedItem={selectedResource}
-          items={resources ?? []}
-          onChange={(item) => handleTypeChange(item)}
+          valuePropertyName="resourceID"
+          iconPropertyName="icon"
+          selectedItem={selectedResource?.resourceID}
+          items={
+            resourceStore?.resources?.map((resource) => ({
+              ...resource,
+              icon: faDatabase,
+            })) ?? []
+          }
+          onChange={(item) => handleResourceChange(item?.resourceID)}
+          disabled={(selectedItem as any)?.core}
         />
 
         {selectedResource?.type === DataSourceType.REST_API && (
           <RestQueryForm
-            iniitialQuery={selectedQuery}
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            onFormSubmit={(data: RestQuery) => {
-              // TODO save
-            }}
+            initialQuery={selectedItem}
+            resource={selectedResource}
+            onFormSubmit={handleSubmit}
+            disabled={(selectedItem as any)?.core}
           />
         )}
       </ComponentWrapper>

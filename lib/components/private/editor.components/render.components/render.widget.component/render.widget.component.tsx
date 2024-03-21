@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
 import styles from "./render.widget.comonent.module.scss";
@@ -13,7 +14,7 @@ import WidgetContextMenu from "../../widget.context.menu.component/widget.contex
 import WidgetStore from "../../../../../stores/widget.store";
 import classNames from "classnames";
 import ConfigProvider from "../../../../../config/config.provider";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import SmallText from "../../../general.components/text.components/small.text.component/small.text.component";
 import { WidgetConfig } from "../../../../../main";
 import StateStore from "../../../../../stores/state.store";
@@ -39,20 +40,25 @@ const RenderWidget = ({
   const contextMenu = widgetStore?.getContextMenuState();
   const allWidgets = widgetStore?.getStructuredData();
   const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
-
+  const widgetRef = useRef(null);
+  // @ts-ignore
   const [hoveredWidgetID, setHoveredWidgetID] = useState<string | undefined>();
 
-  const handleHoverWidget = (event: any, widgetID: string) => {
-    if (readonly) return;
+  // TODO prevent rerendering of the widget on hover
+  // const handleHoverWidget = useCallback(
+  //   (event: any, widgetID: string) => {
+  //     if (readonly) return;
 
-    event.stopPropagation();
-    setHoveredWidgetID(widgetID);
-  };
+  //     event.stopPropagation();
+  //     setHoveredWidgetID(widgetID);
+  //   },
+  //   [readonly]
+  // );
 
-  const handleLeaveWidget = () => {
-    if (readonly) return;
-    setHoveredWidgetID(undefined);
-  };
+  // const handleLeaveWidget = useCallback(() => {
+  //   if (readonly) return;
+  //   setHoveredWidgetID(undefined);
+  // }, [readonly]);
 
   const widgetContainerClassName = classNames(styles.widgetContainer, {
     [styles.hovered]: hoveredWidgetID === widgetToRender.widget.widgetID,
@@ -172,27 +178,6 @@ const RenderWidget = ({
     );
   };
 
-  // render the widget component based on the widget type and the registered widgets
-  // const renderWidgetComponent = (widgetType: string): JSX.Element => {
-  //   // find the widget in the registered widgets
-  //   const widget = registeredWidgets?.find(
-  //     (widget) => widget.type === widgetType
-  //   );
-
-  //   if (!widget || !widget.component) {
-  //     return <div>Widget not found</div>;
-  //   }
-  //   // render the widget component if it exists
-  //   const WidgetComponent = widget.component as React.ComponentType<any>;
-
-  //   return React.createElement(WidgetComponent, {
-  //     widgetID: widgetToRender.widget.widgetID,
-  //     widgetStore,
-  //     stateStore,
-  //     children: renderNestedWidgets(widget),
-  //   });
-  // };
-
   const renderWidgetComponent = React.useMemo(() => {
     const widgetType = widgetToRender.widget.widgetType;
     const widget = registeredWidgets?.find(
@@ -241,6 +226,7 @@ const RenderWidget = ({
 
   return (
     <div
+      ref={widgetRef}
       onDoubleClick={(e) =>
         handleWidgetClick(e, widgetToRender.widget.widgetID)
       }
@@ -249,8 +235,12 @@ const RenderWidget = ({
       onContextMenu={(e) =>
         handleOnContextMenu(e, widgetToRender.widget.widgetID)
       }
-      onMouseEnter={(e) => handleHoverWidget(e, widgetToRender.widget.widgetID)}
-      onMouseLeave={handleLeaveWidget}
+      // onMouseEnter={(e) => {
+      //   handleHoverWidget(e, widgetToRender.widget.widgetID);
+      // }}
+      // onMouseLeave={() => {
+      //   handleLeaveWidget();
+      // }}
     >
       {renderWidgetTypeLabel()}
 

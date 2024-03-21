@@ -1,39 +1,37 @@
 import { inject, observer } from "mobx-react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faXmarkCircle } from "@fortawesome/free-regular-svg-icons";
+import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
 import ResourceStore from "../../../../../../stores/resource.store";
-import ResourceRestForm from "../resource.sidebar.component/components/resource.rest.form/resource.rest.form";
-import SizedContainer from "../../../../general.components/sized.container.component/sized.container.component";
 import defaultStyles from "../../../../../../styles/index.module.scss";
 import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
 import { DataSourceType } from "../../../../../../main";
 import { useState } from "react";
-import { RestResource } from "../../../../../../schemas/resource.schemas/resource.schema";
-import { ChangeRecord } from "../../../../../../globals/interfaces/change.record.interface";
+import {
+  Resource,
+  RestResource,
+} from "../../../../../../schemas/resource.schemas/resource.schema";
+import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
+import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
+import Row from "../../../../general.components/row.component/row.component";
+import ResourceRestForm from "../resource.sidebar.component/components/resource.rest.form/resource.rest.form";
 
 interface ResourceSidebarDetailProps {
   resourceStore?: ResourceStore;
-  selectedItem?: string;
+  selectedItem?: Resource;
   onClose: () => void;
-  onSaveChanges?: (changeRecords: ChangeRecord[]) => void;
+  isEditing: boolean;
 }
 
 const ResourceSidebarDetail = ({
   selectedItem,
   resourceStore,
+  isEditing,
   onClose,
 }: ResourceSidebarDetailProps): JSX.Element | null => {
-  const selectedResource = resourceStore?.getResource(selectedItem ?? "");
-
   const [selectedType, setSelectedType] = useState<DataSourceType | null>(
-    selectedResource?.type ?? null
+    selectedItem?.type ?? null
   );
-
-  const handleTypeChange = (item: any) => {
-    setSelectedType(item?.value);
-  };
 
   const typeItems = Object.values(DataSourceType).map((key) => {
     return {
@@ -42,26 +40,43 @@ const ResourceSidebarDetail = ({
     };
   });
 
-  const handleSaveChanges = (data: RestResource) => {
-    resourceStore?.saveResourceChangesAndProcess(data);
+  const handleTypeChange = (item: any) => {
+    setSelectedType(item?.value);
+  };
+
+  const handleSubmit = (data: Resource) => {
+    if (!data) return;
+
+    const resource = {
+      ...data,
+      // type: selectedType,
+    };
+
+    if (isEditing) {
+      resourceStore?.updateAndSaveResource(resource);
+    } else {
+      resourceStore?.createAndSaveResource(resource);
+    }
   };
 
   return (
     <ResizableSidebar initialWidth={380} minWidth={300} maxWidth={500}>
       <ComponentWrapper
-        title={selectedItem}
+        title={selectedItem?.title}
         action={
-          <SizedContainer size="s">
-            <button type="submit" form="rest-resource-form">
-              Save
-            </button>
-            <FontAwesomeIcon
-              className={defaultStyles.ml10}
-              icon={faXmarkCircle}
-              style={{ cursor: "pointer" }}
-              onClick={onClose}
-            />
-          </SizedContainer>
+          <Row>
+            {!(selectedItem as any)?.core && (
+              <IconButton
+                className={defaultStyles.mr10}
+                type="submit"
+                form="rest-resource-form"
+                icon={isEditing ? faFloppyDisk : faPlus}
+                label={isEditing ? "Speichern" : "Hinzufügen"}
+                showBorder
+              />
+            )}
+            <IconButton icon={faX} onClick={onClose} showBorder />
+          </Row>
         }
       >
         <SelectDropDown
@@ -69,15 +84,18 @@ const ResourceSidebarDetail = ({
           selectedItem={selectedType}
           items={typeItems}
           onChange={(item) => handleTypeChange(item)}
+          disabled={(selectedItem as any)?.core}
+          className={defaultStyles.mb20}
         />
 
         {selectedType === DataSourceType.REST_API && (
           <ResourceRestForm
+            disabled={(selectedItem as any)?.core}
             onFormSubmit={(data: RestResource) => {
-              handleSaveChanges(data);
+              handleSubmit(data);
             }}
             iniitialResource={
-              { type: selectedType, ...selectedResource } as RestResource
+              { type: selectedType, ...selectedItem } as RestResource
             }
           />
         )}
