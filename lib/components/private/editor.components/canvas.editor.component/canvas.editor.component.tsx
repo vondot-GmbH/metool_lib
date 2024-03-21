@@ -16,7 +16,7 @@ import QueryStore from "../../../../stores/query.store";
 import ConfigurationSidebar from "../editor.configuration.bar.components/configuration.sidebar.component/configuration.sidebar.component";
 import TopBarComponent from "../top.bar.component/top.bar.component";
 import ResourceStore from "../../../../stores/resource.store";
-import RenderView from "../render.components/render.view.component/render.view.conponent";
+import RenderPage from "../../../private/editor.components/render.components/render.page.component/render.page.component";
 
 interface CanvasEditorProps {
   viewToRender: string;
@@ -49,7 +49,7 @@ const CanvasEditor = ({
           <div className={styles.canvasWrapper}>
             <div className={styles.editorCanvasWrapper}>
               <ResizableScreenWrapper>
-                <RenderView
+                <RenderPage
                   viewToRender={viewToRender}
                   readonly={readonly}
                   showVisualWidgetOutline={showVisualWidgetOutline}

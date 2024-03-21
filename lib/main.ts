@@ -1,6 +1,6 @@
 // public package copmonents
 export { default as CanvasEditorPublic } from "./components/public/canvas.editor.component/canvas.editor.component";
-export { default as RenderView } from "./components/public/render.view.component/render.view.component";
+export { default as RenderPage } from "./components/public/render.page.component/render.pagge.component";
 
 // widgets
 export { TableWidgetConfig as TableWidget } from "./components/public/widget.components/table.widget/table.widget.config";

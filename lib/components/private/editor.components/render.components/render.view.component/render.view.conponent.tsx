@@ -1,6 +1,5 @@
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import styles from "./render.view.component.module.scss";
 import RenderWidget from "../render.widget.component/render.widget.component";
 import { WidgetHierarchyMap } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
@@ -78,10 +77,7 @@ const RenderView = ({
     >
       {preparedRootLevelWidgets.map((rootLevelWidgets) => {
         return (
-          <div
-            key={rootLevelWidgets.widget.positioning.i}
-            className={styles.widgetContainer}
-          >
+          <div key={rootLevelWidgets.widget.positioning.i}>
             <RenderWidget
               showVisualWidgetOutline={showVisualWidgetOutline}
               readonly={readonly}
