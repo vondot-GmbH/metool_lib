@@ -1,7 +1,8 @@
 import { DEFAULT_LAYOUT_CONFIG } from "../globals/config/grid.layout.config";
 import {
   BreakpointConfig,
-  LayoutConfig,
+  GridLayoutConfig,
+  PageLayoutConfig,
   WidgetConfig,
 } from "../globals/interfaces/config.interface";
 import {
@@ -17,13 +18,30 @@ import {
 class ConfigProvider {
   private static _instance: ConfigProvider;
   private _registeredWidgets: Map<string, WidgetConfig> = new Map();
-  private _layoutConfig: LayoutConfig = { root: {}, nested: {} };
+  private _layoutConfig: GridLayoutConfig = { root: {}, nested: {} };
   private _coreResources: CoreResourceMap = new Map();
   private _coreQueries: CoreQueryMap = new Map();
+  private _pageLayoutConfigs: Map<string, PageLayoutConfig> = new Map();
 
   private constructor() {}
 
   //! setter
+
+  public registerPageLayouts(
+    pageLayoutConfigs: PageLayoutConfig[] | undefined
+  ) {
+    if (pageLayoutConfigs == null) {
+      return;
+    }
+
+    pageLayoutConfigs.forEach((pageLayoutConfig) => {
+      if (pageLayoutConfig?.layoutID == null) {
+        return;
+      }
+
+      this._pageLayoutConfigs.set(pageLayoutConfig?.layoutID, pageLayoutConfig);
+    });
+  }
 
   public registerCoreResources(resources: CoreResource[] | undefined) {
     if (resources == null) {
@@ -55,7 +73,7 @@ class ConfigProvider {
     });
   }
 
-  public setLayoutConfig(layoutConfig: LayoutConfig | undefined) {
+  public setLayoutConfig(layoutConfig: GridLayoutConfig | undefined) {
     if (layoutConfig == null) {
       this._layoutConfig = DEFAULT_LAYOUT_CONFIG;
       return;
@@ -65,6 +83,10 @@ class ConfigProvider {
   }
 
   //! getter
+
+  public getPageLayoutConfig(layoutID: string): PageLayoutConfig | undefined {
+    return this._pageLayoutConfigs.get(layoutID);
+  }
 
   public getCoreResource(resourceKey: string): CoreResource | undefined {
     return this._coreResources.get(resourceKey);
@@ -89,7 +111,7 @@ class ConfigProvider {
     return ConfigProvider._instance;
   }
 
-  public getLayoutConfig(): LayoutConfig {
+  public getLayoutConfig(): GridLayoutConfig {
     return this._layoutConfig;
   }
 

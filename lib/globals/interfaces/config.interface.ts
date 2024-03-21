@@ -22,7 +22,22 @@ export interface PreparedBreakpointConfig {
   maxWidth: number | null;
 }
 
-export type LayoutConfig = {
+export type GridLayoutConfig = {
   root: { [key: string]: BreakpointConfig };
   nested: { [key: string]: BreakpointConfig };
 };
+
+// page layout config
+
+export interface PageLayoutConfig {
+  layoutID: string;
+  name: string;
+  areas: PageLayoutAreaConfig[];
+  component: React.ComponentType<any>;
+}
+
+export interface PageLayoutAreaConfig {
+  layoutAreaID: string;
+  propName: string;
+  allowedWidgetTypes?: string[];
+}

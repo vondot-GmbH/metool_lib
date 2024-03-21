@@ -1,5 +1,6 @@
 import {
-  LayoutConfig,
+  GridLayoutConfig,
+  PageLayoutConfig,
   WidgetConfig,
 } from "../globals/interfaces/config.interface";
 import { CoreRestQuerConfig } from "../schemas/query.schemas/query.schema";
@@ -8,22 +9,26 @@ import ConfigProvider from "./config.provider";
 
 interface InitOptions {
   widgets: WidgetConfig[];
-  layoutConfig?: LayoutConfig;
+  gridLayoutConfig?: GridLayoutConfig;
   coreResources?: CoreResource[];
   coreQueryConfig: CoreRestQuerConfig;
+  pageLayoutConfigs?: PageLayoutConfig[];
 }
 
 const initialize = ({
   widgets,
-  layoutConfig,
+  gridLayoutConfig,
   coreResources,
   coreQueryConfig,
+  pageLayoutConfigs,
 }: InitOptions) => {
   const configProvider = ConfigProvider.getInstance();
+
   configProvider.registerWidgets(widgets);
-  configProvider.setLayoutConfig(layoutConfig);
+  configProvider.setLayoutConfig(gridLayoutConfig);
   configProvider.registerCoreResources(coreResources);
   configProvider.registerCoreQueries(coreQueryConfig);
+  configProvider.registerPageLayouts(pageLayoutConfigs);
 };
 
 export default initialize;

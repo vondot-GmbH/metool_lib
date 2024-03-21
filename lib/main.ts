@@ -7,13 +7,16 @@ export { TableWidgetConfig as TableWidget } from "./components/public/widget.com
 export { ContainerWidgetConfig as ContainerWidget } from "./components/public/widget.components/container.widget/container.widget.config";
 export { TextWidgetConfig as TextWidget } from "./components/public/widget.components/text.widget/text.widget.config";
 
+// page layouts
+export { DashboardPageLayoutConfig as DashboardPageLayout } from "./components/public/page.layout.components/dashboard.page.layout/dashboard.page.layout.config";
+
 // init
 export { default as InitializeMetool } from "./config/init";
 
 // types
 export type {
   WidgetConfig,
-  LayoutConfig,
+  GridLayoutConfig as LayoutConfig,
 } from "./globals/interfaces/config.interface";
 
 export type {

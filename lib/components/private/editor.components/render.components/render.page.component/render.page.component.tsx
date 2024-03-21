@@ -2,11 +2,10 @@ import ViewStore from "../../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
 import QueryStore from "../../../../../stores/query.store";
 import ResourceStore from "../../../../../stores/resource.store";
-import MainLayout from "../../../../../layouts/main.layout/main.layout";
 import RenderView from "../render.view.component/render.view.conponent";
-import RunningText from "../../../general.components/text.components/running.text.component/running.text.component";
 import { useEffect, useState } from "react";
 import PageStore from "../../../../../stores/page.store";
+import RenderPageLayout from "../render.page.layout.component/render.page.layout.component";
 
 interface RenderPageProps {
   readonly?: boolean;
@@ -55,27 +54,19 @@ const RenderPage = ({
     initializeRenderPage();
   }, [pageToRender]);
 
-  const buildTopBar = () => {
-    return (
-      <div>
-        <RunningText> render bar</RunningText>
-        <RunningText> render bar</RunningText>
-      </div>
-    );
-  };
-
   if (isLoading || viewToRender == null) {
     return <div>Loading Page...</div>;
   }
 
   return (
-    <MainLayout topBars={[buildTopBar()]} sideBars={[buildTopBar()]}>
+    // TODO hardcoded layout
+    <RenderPageLayout pageLayoutID="defaultDashboardLayout">
       <RenderView
         viewToRender={viewToRender ?? ""}
         readonly={readonly}
         showVisualWidgetOutline={showVisualWidgetOutline}
       />
-    </MainLayout>
+    </RenderPageLayout>
   );
 };
 

@@ -3,9 +3,9 @@ import {
   faMobileNotch,
   faTabletScreenButton,
 } from "@fortawesome/pro-regular-svg-icons";
-import { LayoutConfig } from "../interfaces/config.interface";
+import { GridLayoutConfig } from "../interfaces/config.interface";
 
-export const DEFAULT_LAYOUT_CONFIG: LayoutConfig = {
+export const DEFAULT_LAYOUT_CONFIG: GridLayoutConfig = {
   nested: {
     large: {
       cols: 48,
