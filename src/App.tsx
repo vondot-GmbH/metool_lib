@@ -271,6 +271,61 @@ const coreQueryConfig = {
     url: "/views",
     core: true,
   },
+
+  getPages: {
+    _id: "getPages",
+    queryID: "getPages",
+    title: "Get Pages",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "GET",
+    url: "/pages",
+    core: true,
+  },
+
+  getPageById: {
+    _id: "getPageById",
+    queryID: "getPageById",
+    title: "Get Page by ID",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "GET",
+    url: "/pages/:pageID",
+    core: true,
+  },
+
+  createPage: {
+    _id: "createPage",
+    queryID: "createPage",
+    title: "Create Page",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "POST",
+    url: "/pages",
+    core: true,
+  },
+
+  deletePage: {
+    _id: "deletePage",
+    queryID: "deletePage",
+    title: "Delete Page",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "DELETE",
+    url: "/pages/:pageID",
+    core: true,
+  },
+
+  updatePage: {
+    _id: "updatePage",
+    queryID: "updatePage",
+    title: "Update Page",
+    resourceID: "baseResource",
+    type: DataSourceType.REST_API,
+    method: "PUT",
+    url: "/pages/:pageID",
+    core: true,
+  },
 } as CoreRestQuerConfig;
 
 InitializeMetool({
