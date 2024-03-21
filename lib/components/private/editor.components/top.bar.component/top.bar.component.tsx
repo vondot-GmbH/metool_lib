@@ -15,18 +15,18 @@ import {
   faCircleXmark,
   faCirclePlay,
 } from "@fortawesome/pro-regular-svg-icons";
-import ViewStore from "../../../../stores/view.store";
+import PageStore from "../../../../stores/page.store";
 
 interface TopBarProps {
   editorStore?: EditorStore;
   widgetStore?: WidgetStore;
-  viewStore?: ViewStore;
+  pageStore?: PageStore;
 }
 
 const TopBar = ({
   editorStore,
   widgetStore,
-  viewStore,
+  pageStore,
 }: TopBarProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
 
@@ -60,7 +60,7 @@ const TopBar = ({
       <SizedContainer size="s">
         <Column justifyContent="flex-start">
           <TitleText className={defaultStyles.ml20}>
-            {viewStore?.currentSelectedView?.name ?? "--"}
+            {pageStore?.currentSelectedPage?.name ?? "--"}
           </TitleText>
         </Column>
       </SizedContainer>
@@ -79,5 +79,5 @@ const TopBar = ({
 export default inject(
   "editorStore",
   "widgetStore",
-  "viewStore"
+  "pageStore"
 )(observer(TopBar));

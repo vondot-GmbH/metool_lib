@@ -39,11 +39,11 @@ class PageStore {
     return page;
   }
 
-  intializePage = async (pageID: string): Promise<void> => {
+  intializePage = async (pageID: string): Promise<Page | undefined> => {
     return await this.fetchAndSavePageById(pageID);
   };
 
-  async fetchAndSavePageById(pageID: string): Promise<void> {
+  async fetchAndSavePageById(pageID: string): Promise<Page | undefined> {
     const pageQuery = this.stores.queryStore.getQuery(
       CoreRestQueryType.GET_PAGE_BY_ID
     );
@@ -61,6 +61,8 @@ class PageStore {
     if (response == null) return;
 
     this.setCurrentSelectedPage(response);
+
+    return response;
   }
 
   async updateAndSavePage(page: Page): Promise<void> {

@@ -2,13 +2,13 @@ import StoreProvider from "../../private/store.provider.component/store.provider
 import RenderPageComponent from "../../private/editor.components/render.components/render.page.component/render.page.component";
 
 interface RenderPageProps {
-  viewToRender: string;
+  pageToRender: string;
 }
 
-const RenderPage = ({ viewToRender }: RenderPageProps): JSX.Element => {
+const RenderPage = ({ pageToRender }: RenderPageProps): JSX.Element => {
   return (
     <StoreProvider>
-      <RenderPageComponent viewToRender={viewToRender} />
+      <RenderPageComponent pageToRender={pageToRender} />
     </StoreProvider>
   );
 };

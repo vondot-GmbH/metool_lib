@@ -12,7 +12,7 @@ import ResourceStore from "../../../../../stores/resource.store";
 import { useEffect, useState } from "react";
 import EditorStore from "../../../../../stores/editor.store";
 
-interface RenderScreenProps {
+interface RenderViewProps {
   readonly?: boolean;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
@@ -30,19 +30,14 @@ const RenderView = ({
   showVisualWidgetOutline = false,
   viewToRender,
   viewStore,
-  resourceStore,
-  queryStore,
-}: RenderScreenProps): JSX.Element => {
+}: RenderViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const [structuredWidgets, setStructuredWidgets] = useState<
     WidgetHierarchyMap | undefined
   >(undefined);
 
   useEffect(() => {
-    const loadWidgets = async () => {
-      await resourceStore?.intializeResources();
-      await queryStore?.intializeQueries();
-
+    const initializeRenderView = async () => {
       if (viewToRender) {
         // set the viewID in the viewStore
         await viewStore?.intializeView(viewToRender);
@@ -53,7 +48,7 @@ const RenderView = ({
       }
     };
 
-    loadWidgets();
+    initializeRenderView();
   }, [viewStore, viewToRender, widgetStore]); // TODO INFO reredner added widgetStore
 
   if (isLoading) {

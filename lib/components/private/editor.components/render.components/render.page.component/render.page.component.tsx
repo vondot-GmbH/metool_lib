@@ -1,30 +1,60 @@
 import ViewStore from "../../../../../stores/view.store";
-import WidgetStore from "../../../../../stores/widget.store";
 import { inject, observer } from "mobx-react";
 import QueryStore from "../../../../../stores/query.store";
 import ResourceStore from "../../../../../stores/resource.store";
-import EditorStore from "../../../../../stores/editor.store";
 import MainLayout from "../../../../../layouts/main.layout/main.layout";
 import RenderView from "../render.view.component/render.view.conponent";
 import RunningText from "../../../general.components/text.components/running.text.component/running.text.component";
+import { useEffect, useState } from "react";
+import PageStore from "../../../../../stores/page.store";
 
 interface RenderPageProps {
   readonly?: boolean;
   viewStore?: ViewStore;
-  widgetStore?: WidgetStore;
   queryStore?: QueryStore;
-  editorStore?: EditorStore;
   resourceStore?: ResourceStore;
+  pageStore?: PageStore;
 
   showVisualWidgetOutline?: boolean;
-  viewToRender: string;
+  pageToRender: string;
 }
 
 const RenderPage = ({
-  viewToRender,
+  pageToRender,
   readonly = true,
   showVisualWidgetOutline = false,
+  resourceStore,
+  queryStore,
+  pageStore,
+  viewStore,
 }: RenderPageProps): JSX.Element => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [viewToRender, setViewToRender] = useState<string | undefined>(
+    undefined
+  );
+
+  // TODO remove hardcoded stuff for development
+  useEffect(() => {
+    const initializeRenderPage = async () => {
+      await resourceStore?.intializeResources();
+      await queryStore?.intializeQueries();
+
+      if (pageToRender) {
+        // initialize page
+        const page = await pageStore?.intializePage(pageToRender);
+        if (page != null && page?.views != null) {
+          const views = await viewStore?.fetchAndSaveViews(page.views);
+          if (views != null) {
+            setViewToRender((views as any)[0].viewID); // TODO make this dynamic
+          }
+        }
+        setIsLoading(false);
+      }
+    };
+
+    initializeRenderPage();
+  }, [pageToRender]);
+
   const buildTopBar = () => {
     return (
       <div>
@@ -34,10 +64,14 @@ const RenderPage = ({
     );
   };
 
+  if (isLoading || viewToRender == null) {
+    return <div>Loading Page...</div>;
+  }
+
   return (
     <MainLayout topBars={[buildTopBar()]} sideBars={[buildTopBar()]}>
       <RenderView
-        viewToRender={viewToRender}
+        viewToRender={viewToRender ?? ""}
         readonly={readonly}
         showVisualWidgetOutline={showVisualWidgetOutline}
       />
@@ -47,8 +81,7 @@ const RenderPage = ({
 
 export default inject(
   "viewStore",
-  "widgetStore",
+  "pageStore",
   "queryStore",
-  "resourceStore",
-  "editorStore"
+  "resourceStore"
 )(observer(RenderPage));

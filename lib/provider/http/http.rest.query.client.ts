@@ -12,7 +12,8 @@ class QueryExecutor<Q extends Query> {
   async executeRestQuery(
     query: Q,
     variables: Record<string, string>,
-    resourcesStore: ResourceStore
+    resourcesStore: ResourceStore,
+    additionalParams?: Record<string, string | string[]>
   ): Promise<any> {
     // check if query is of type REST_API
     if (query.type != DataSourceType.REST_API) {
@@ -30,7 +31,12 @@ class QueryExecutor<Q extends Query> {
     }
 
     // create an axios instance with the data from query and resource
-    const config = this.createAxiosConfig(query, resource, variables);
+    const config = this.createAxiosConfig(
+      query,
+      resource,
+      variables,
+      additionalParams
+    );
     const axiosInstance = axios.create(config);
 
     // if resource is a core resource, apply interceptors if exist
@@ -49,12 +55,17 @@ class QueryExecutor<Q extends Query> {
   private createAxiosConfig(
     query: Q,
     resource: Resource,
-    variables: Record<string, string>
+    variables: Record<string, string>,
+    additionalParams?: Record<string, string | string[]>
   ): AxiosRequestConfig {
     const headers = this.processHeaders(query, resource);
 
     const url = this.resolveUrl(query.url, variables); // TODO resovle params too
-    const params = this.processParams(query.params, variables);
+    const params = this.processParams(
+      query.params,
+      variables,
+      additionalParams
+    );
 
     const config: AxiosRequestConfig = {
       baseURL: resource.baseUrl,
@@ -186,18 +197,48 @@ class QueryExecutor<Q extends Query> {
     });
   }
 
+  // private processParams(
+  //   params?: { key: string; value: string }[],
+  //   variables?: Record<string, string>
+  // ): Record<string, string> {
+
+  //   if (!params || params.length === 0) return {};
+
+  //   const safeVariables = variables || {};
+
+  //   const processedParams = params.reduce((acc, { key, value }) => {
+  //     const resolvedValue = this.replacePlaceholders(value, safeVariables);
+  //     return { ...acc, [key]: resolvedValue };
+  //   }, {});
+
+  //   return processedParams;
+  // }
+
   private processParams(
     params?: { key: string; value: string }[],
-    variables?: Record<string, string>
-  ): Record<string, string> {
-    if (!params || params.length === 0) return {};
+    variables?: Record<string, string>,
+    additionalParams?: Record<string, string | string[]>
+  ): Record<string, string | string[]> {
+    // Grundlegende Verarbeitung der params
+    let processedParams: Record<string, string | string[]> = {};
 
-    const safeVariables = variables || {};
+    if (params && params.length > 0) {
+      const safeVariables = variables || {};
 
-    const processedParams = params.reduce((acc, { key, value }) => {
-      const resolvedValue = this.replacePlaceholders(value, safeVariables);
-      return { ...acc, [key]: resolvedValue };
-    }, {});
+      processedParams = params.reduce((acc, { key, value }) => {
+        const resolvedValue = this.replacePlaceholders(value, safeVariables);
+        acc[key] = resolvedValue;
+        return acc;
+      }, processedParams);
+    }
+
+    // Hinzufügen/Überschreiben mit additionalParams
+    if (additionalParams) {
+      for (const [key, value] of Object.entries(additionalParams)) {
+        // Hier wird jeder Wert als String behandelt, um den Typfehler zu vermeiden
+        processedParams[key] = Array.isArray(value) ? value.join(",") : value;
+      }
+    }
 
     return processedParams;
   }

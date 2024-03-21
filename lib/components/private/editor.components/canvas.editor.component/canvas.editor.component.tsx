@@ -19,7 +19,7 @@ import ResourceStore from "../../../../stores/resource.store";
 import RenderPage from "../../../private/editor.components/render.components/render.page.component/render.page.component";
 
 interface CanvasEditorProps {
-  viewToRender: string;
+  pageToRender: string;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   changeRecordStore?: ChangeRecordStore;
@@ -31,7 +31,7 @@ interface CanvasEditorProps {
 
 const CanvasEditor = ({
   editorStore,
-  viewToRender,
+  pageToRender,
 }: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
@@ -50,7 +50,7 @@ const CanvasEditor = ({
             <div className={styles.editorCanvasWrapper}>
               <ResizableScreenWrapper>
                 <RenderPage
-                  viewToRender={viewToRender}
+                  pageToRender={pageToRender}
                   readonly={readonly}
                   showVisualWidgetOutline={showVisualWidgetOutline}
                 />

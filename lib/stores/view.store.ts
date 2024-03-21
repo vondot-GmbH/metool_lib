@@ -57,8 +57,41 @@ class ViewStore {
   }
 
   intializeView = async (viewID: string): Promise<void> => {
+    const viewExists = this.getView(viewID);
+
+    if (viewExists) {
+      this.setCurrentSelectedView(viewExists);
+      return;
+    }
+
     return await this.fetchAndSaveViewById(viewID);
   };
+
+  async fetchAndSaveViews(viewIDs: string[]): Promise<View[] | undefined> {
+    const viewQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.GET_VIEWS
+    );
+
+    if (!viewQuery || !viewIDs.length) return;
+
+    // filter the views by viewIDs
+    const additionalParams = {
+      filter: JSON.stringify({ viewID: { $in: viewIDs } }),
+    };
+
+    const response = await queryExecutor.executeRestQuery(
+      viewQuery,
+      {},
+      this.stores.resourceStore,
+      additionalParams
+    );
+
+    if (!response) return;
+
+    this.setViews(response);
+
+    return response;
+  }
 
   async fetchAndSaveViewById(viewID: string): Promise<void> {
     const viewQuery = this.stores.queryStore.getQuery(
