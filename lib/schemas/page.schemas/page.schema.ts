@@ -13,16 +13,21 @@ export interface PageLayoutConfig {
 }
 
 export interface AreaOptions {
-  maxWidth?: number;
-  maxHeight?: number;
-  height?: number;
-  width?: number;
+  height?: string;
+  width?: string;
   backgroundColor?: string;
   padding?: string;
+  margin?: string;
+  maxHeight?: string;
+  minHeight?: string;
+  maxWidth?: string;
+  minWidth?: string;
+
   // ... // TODO
 }
 
 export interface LayoutOptions {
   backgroundColor?: string;
+  layoutType?: string;
   // ...
 }

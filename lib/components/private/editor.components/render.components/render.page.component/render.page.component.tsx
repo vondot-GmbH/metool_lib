@@ -32,11 +32,10 @@ const RenderPage = ({
   const [viewToRender, setViewToRender] = useState<string | undefined>(
     undefined
   );
-  const [layoutConfig, setLayoutConfig] = useState<PageLayoutConfig | null>(
-    null
-  );
+  const [layoutConfig, setLayoutConfig] = useState<
+    PageLayoutConfig | undefined
+  >(undefined);
 
-  // TODO remove hardcoded stuff for development
   useEffect(() => {
     const initializeRenderPage = async () => {
       await resourceStore?.intializeResources();
@@ -45,9 +44,12 @@ const RenderPage = ({
       if (pageToRender) {
         // initialize page
         const page = await pageStore?.intializePage(pageToRender);
+
+        // if page is not null set layout config and fetch views
         if (page != null && page?.views != null) {
           setLayoutConfig(page?.layoutConfig);
           const views = await viewStore?.fetchAndSaveViews(page.views);
+
           if (views != null) {
             setViewToRender((views as any)[0].viewID); // TODO make this dynamic
           }
@@ -64,8 +66,7 @@ const RenderPage = ({
   }
 
   return (
-    // TODO hardcoded layout
-    <RenderPageLayout pageLayoutID={layoutConfig?.layoutID}>
+    <RenderPageLayout pageLayoutConfig={layoutConfig}>
       <RenderView
         viewToRender={viewToRender ?? ""}
         readonly={readonly}

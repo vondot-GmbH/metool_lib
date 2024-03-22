@@ -1,32 +1,39 @@
 import React from "react";
 import ConfigProvider from "../../../../../config/config.provider";
+import { PageLayoutConfig } from "../../../../../schemas/page.schemas/page.schema";
 
 interface RenderPageLayoutProps {
-  pageLayoutID?: string;
+  pageLayoutConfig?: PageLayoutConfig;
   children?: React.ReactNode;
 }
 
 const RenderPageLayout = ({
-  pageLayoutID,
+  pageLayoutConfig,
   children,
 }: RenderPageLayoutProps) => {
-  const configProvider = ConfigProvider.getInstance();
-  const pageLayoutConfig = configProvider.getPageLayoutConfig(pageLayoutID);
-
-  // if no layout is defined, render the view without a layout
-  if (pageLayoutConfig == null) {
+  if (!pageLayoutConfig) {
     return <>{children}</>;
   }
 
-  // get the layout component and the areas from the layout config
-  const { component: LayoutComponent, areas } = pageLayoutConfig;
+  const configProvider = ConfigProvider.getInstance();
+  const corePageLayoutConfig = configProvider.getPageLayoutConfig(
+    pageLayoutConfig.layoutID
+  );
 
+  if (!corePageLayoutConfig) {
+    return <>{children}</>;
+  }
+
+  // generate the content for a layout area
   const getPageLayoutAreaContent = (layoutAreaID: string) => {
     return <div key={layoutAreaID}>Dynamischer Inhalt für {layoutAreaID}</div>;
   };
 
-  // generate the props for the layout component
-  const layoutProps = areas.reduce(
+  // extract the layout component and areas from the core layout config
+  const { component: LayoutComponent, areas } = corePageLayoutConfig;
+
+  // generate the props for the layout content
+  const contentLayoutProps = areas.reduce(
     (props, areaConfig) => {
       const { layoutAreaID, propName } = areaConfig;
       props[propName] = getPageLayoutAreaContent(layoutAreaID);
@@ -35,6 +42,15 @@ const RenderPageLayout = ({
     { children: children } as Record<string, React.ReactNode>
   );
 
+  // prepare the props for the layout component
+  const layoutProps = {
+    options: pageLayoutConfig?.options,
+    areas: pageLayoutConfig?.areas,
+    children: children,
+    ...contentLayoutProps,
+  };
+
+  // render the defined layout component with the prepared props
   return <LayoutComponent {...layoutProps} />;
 };
 

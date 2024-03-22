@@ -1,47 +1,98 @@
+// .pageContainerWrapper {
+//   display: flex;
+//   height: 100%;
+//   width: 100%;
+
+//   &.sidebarFirst {
+//     flex-direction: row;
+
+//     .pageContainerSidebar {
+//       order: 1;
+//     }
+
+//     .topbarsBodyContainer {
+//       order: 2;
+//       width: 100%;
+//     }
+//   }
+
+//   &.topbarFirst {
+//     flex-direction: row;
+
+//     .pageContainerSidebar {
+//       order: 2;
+//     }
+
+//     .topbarsBodyContainer {
+//       order: 1;
+//       width: 100%;
+//     }
+//   }
+
+//   .topbarsBodyContainer {
+//     display: flex;
+//     flex-direction: column;
+//     flex: 1;
+
+//     .pageContainerTopbar {
+//       // height: auto;
+//     }
+
+//     .pageContainerBody {
+//       flex: 1;
+//       overflow-y: auto;
+//       background-color: #f7fafa;
+//     }
+//   }
+// }
+// dashboard.page.layout.component.module.scss
+// dashboard.page.layout.component.module.scss
+// dashboard.page.layout.component.module.scss
 .pageContainerWrapper {
   display: flex;
   height: 100%;
   width: 100%;
+  background-color: inherit; // Erbt die Hintergrundfarbe von den Inline-Styles
 
   &.sidebarFirst {
-    flex-direction: row;
+    flex-direction: row; // Sidebar links (durchgehend), Topbar und Content-Bereich rechts
 
     .pageContainerSidebar {
-      order: 1;
+      flex: 0 0 auto; // Größe basierend auf Inhalt, ohne Wachstum und Schrumpfung
+      height: 100%; // Volle Höhe
     }
 
     .topbarsBodyContainer {
-      order: 2;
-      width: 100%;
+      flex: 1; // Nimmt den verbleibenden Raum ein
+      display: flex;
+      flex-direction: column; // Topbar und Content-Bereich übereinander
+
+      .pageContainerTopbar {
+        flex: 0 0 auto; // Größe basierend auf Inhalt, ohne Wachstum und Schrumpfung
+      }
+
+      .pageContainerBody {
+        flex: 1; // Nimmt den verbleibenden Raum ein
+        overflow-y: auto; // Ermöglicht das Scrollen, wenn der Inhalt die Höhe überschreitet
+      }
     }
   }
 
   &.topbarFirst {
-    flex-direction: row;
-
-    .pageContainerSidebar {
-      order: 2;
-    }
-
-    .topbarsBodyContainer {
-      order: 1;
-      width: 100%;
-    }
-  }
-
-  .topbarsBodyContainer {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+    flex-direction: column; // Topbar oben (durchgehend), Sidebar und Content-Bereich unten
 
     .pageContainerTopbar {
-      height: auto;
+      flex: 0 0 auto; // Größe basierend auf Inhalt, ohne Wachstum und Schrumpfung
+    }
+
+    .pageContainerSidebar {
+      order: 2; // Sidebar direkt unter der Topbar
+      flex: 0 0 auto; // Größe basierend auf Inhalt, ohne Wachstum und Schrumpfung
     }
 
     .pageContainerBody {
-      flex: 1;
-      overflow-y: auto;
-      background-color: #f7fafa;
+      flex: 1; // Nimmt den verbleibenden Raum ein
+      overflow-y: auto; // Ermöglicht das Scrollen, wenn der Inhalt die Höhe überschreitet
     }
   }
 }
