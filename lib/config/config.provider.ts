@@ -2,7 +2,7 @@ import { DEFAULT_LAYOUT_CONFIG } from "../globals/config/grid.layout.config";
 import {
   BreakpointConfig,
   GridLayoutConfig,
-  PageLayoutConfig,
+  CorePageLayoutConfig,
   WidgetConfig,
 } from "../globals/interfaces/config.interface";
 import {
@@ -21,14 +21,14 @@ class ConfigProvider {
   private _layoutConfig: GridLayoutConfig = { root: {}, nested: {} };
   private _coreResources: CoreResourceMap = new Map();
   private _coreQueries: CoreQueryMap = new Map();
-  private _pageLayoutConfigs: Map<string, PageLayoutConfig> = new Map();
+  private _pageLayoutConfigs: Map<string, CorePageLayoutConfig> = new Map();
 
   private constructor() {}
 
   //! setter
 
   public registerPageLayouts(
-    pageLayoutConfigs: PageLayoutConfig[] | undefined
+    pageLayoutConfigs: CorePageLayoutConfig[] | undefined
   ) {
     if (pageLayoutConfigs == null) {
       return;
@@ -84,7 +84,10 @@ class ConfigProvider {
 
   //! getter
 
-  public getPageLayoutConfig(layoutID: string): PageLayoutConfig | undefined {
+  public getPageLayoutConfig(
+    layoutID: string | undefined
+  ): CorePageLayoutConfig | undefined {
+    if (layoutID == null) return;
     return this._pageLayoutConfigs.get(layoutID);
   }
 

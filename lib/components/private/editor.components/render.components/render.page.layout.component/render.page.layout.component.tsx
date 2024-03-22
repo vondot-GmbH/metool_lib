@@ -2,7 +2,7 @@ import React from "react";
 import ConfigProvider from "../../../../../config/config.provider";
 
 interface RenderPageLayoutProps {
-  pageLayoutID: string;
+  pageLayoutID?: string;
   children?: React.ReactNode;
 }
 

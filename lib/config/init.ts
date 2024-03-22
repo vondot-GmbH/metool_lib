@@ -1,6 +1,6 @@
 import {
   GridLayoutConfig,
-  PageLayoutConfig,
+  CorePageLayoutConfig,
   WidgetConfig,
 } from "../globals/interfaces/config.interface";
 import { CoreRestQuerConfig } from "../schemas/query.schemas/query.schema";
@@ -12,7 +12,7 @@ interface InitOptions {
   gridLayoutConfig?: GridLayoutConfig;
   coreResources?: CoreResource[];
   coreQueryConfig: CoreRestQuerConfig;
-  pageLayoutConfigs?: PageLayoutConfig[];
+  pageLayoutConfigs?: CorePageLayoutConfig[];
 }
 
 const initialize = ({

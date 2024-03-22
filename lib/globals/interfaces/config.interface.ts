@@ -29,14 +29,14 @@ export type GridLayoutConfig = {
 
 // page layout config
 
-export interface PageLayoutConfig {
+export interface CorePageLayoutConfig {
   layoutID: string;
   name: string;
-  areas: PageLayoutAreaConfig[];
+  areas: CorePageLayoutAreaConfig[];
   component: React.ComponentType<any>;
 }
 
-export interface PageLayoutAreaConfig {
+export interface CorePageLayoutAreaConfig {
   layoutAreaID: string;
   propName: string;
   allowedWidgetTypes?: string[];
