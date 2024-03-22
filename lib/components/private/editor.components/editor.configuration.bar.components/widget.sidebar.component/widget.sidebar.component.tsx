@@ -41,7 +41,7 @@ const WidgetSidebar = ({}: WidgetSidebarProps): JSX.Element => {
   };
 
   return (
-    <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
+    <ResizableSidebar initialWidth={330} minWidth={200} maxWidth={450}>
       <ComponentWrapper title={"Widgets"}>
         <Wrap
           className={styles.widgetSidebar}

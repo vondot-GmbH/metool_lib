@@ -8,6 +8,8 @@ import { Page } from "../schemas/page.schemas/page.schema";
 class PageStore {
   private _currentSelectedPage: Page | undefined;
 
+  private _pages: Map<string, Page> = new Map();
+
   private stores: RootStore;
 
   constructor(rootStore: RootStore) {
@@ -21,9 +23,20 @@ class PageStore {
     this._currentSelectedPage = page;
   };
 
+  setPages = (pages: Page[]): void => {
+    pages.forEach((page) => {
+      if (page.pageID == null) return;
+      this._pages.set(page.pageID, page);
+    });
+  };
+
   //! Getter
   get currentSelectedPage(): Page | undefined {
     return this._currentSelectedPage;
+  }
+
+  get pages(): Page[] {
+    return Array.from(this._pages.values());
   }
 
   //! Methods
@@ -110,6 +123,24 @@ class PageStore {
     if (response == null || response?.pageID == null) return;
 
     this.setCurrentSelectedPage(response);
+  }
+
+  async fetchAllPagesAndSave(): Promise<void> {
+    const pageQuery = this.stores.queryStore.getQuery(
+      CoreRestQueryType.GET_PAGES
+    );
+
+    if (pageQuery == null) return;
+
+    const response = await queryExecutor.executeRestQuery(
+      pageQuery,
+      {},
+      this.stores.resourceStore
+    );
+
+    if (response == null) return;
+
+    this.setPages(response);
   }
 }
 

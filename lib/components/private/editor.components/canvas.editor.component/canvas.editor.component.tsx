@@ -17,6 +17,7 @@ import ConfigurationSidebar from "../editor.configuration.bar.components/configu
 import TopBarComponent from "../top.bar.component/top.bar.component";
 import ResourceStore from "../../../../stores/resource.store";
 import RenderPage from "../../../private/editor.components/render.components/render.page.component/render.page.component";
+import PageStore from "../../../../stores/page.store";
 
 interface CanvasEditorProps {
   pageToRender: string;
@@ -27,11 +28,13 @@ interface CanvasEditorProps {
   stateStore?: StateStore;
   queryStore?: QueryStore;
   resourceStore?: ResourceStore;
+  pageStore?: PageStore;
 }
 
 const CanvasEditor = ({
   editorStore,
   pageToRender,
+  pageStore,
 }: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
@@ -40,6 +43,10 @@ const CanvasEditor = ({
   useEffect(() => {
     // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
     editorStore?.initializeEditorBreakpointConfig();
+
+    // fetch all available pages
+    // TODO adding logic to all detail method bevore fetch data look if the data is already in the store
+    pageStore?.fetchAllPagesAndSave();
   }, []);
 
   return (
@@ -71,5 +78,6 @@ export default inject(
   "editorStore",
   "stateStore",
   "queryStore",
-  "resourceStore"
+  "resourceStore",
+  "pageStore"
 )(observer(CanvasEditor));

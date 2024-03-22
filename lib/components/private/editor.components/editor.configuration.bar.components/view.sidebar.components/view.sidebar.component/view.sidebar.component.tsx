@@ -11,12 +11,17 @@ import ViewStore from "../../../../../../stores/view.store";
 import { View } from "../../../../../../schemas/view.schemas/view.schema";
 import styles from "./view.sidebar.component.module.scss";
 import ViewSidebarDetail from "../view.sidebar.detail.component/view.sidebar.detail.component";
+import PageStore from "../../../../../../stores/page.store";
 
 interface ViewSidebarProps {
   viewStore?: ViewStore;
+  pageStore?: PageStore;
 }
 
-const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
+const ViewSidebar = ({
+  viewStore,
+  pageStore,
+}: ViewSidebarProps): JSX.Element => {
   const views: View[] = useMemo(() => {
     return viewStore?.views ?? [];
   }, [viewStore?.views]);
@@ -60,7 +65,7 @@ const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
     return (
       <>
         <ComponentWrapper
-          title={"Views"}
+          title={`Ansichten von ${pageStore?.currentSelectedPage?.name}`}
           action={
             <IconButton
               icon={faAdd}
@@ -92,7 +97,7 @@ const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
 
   return (
     <Row className={styles.configurationSidebar}>
-      <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
+      <ResizableSidebar initialWidth={330} minWidth={200} maxWidth={450}>
         {buildViews()}
       </ResizableSidebar>
 
@@ -108,4 +113,4 @@ const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
   );
 };
 
-export default inject("viewStore")(observer(ViewSidebar));
+export default inject("viewStore", "pageStore")(observer(ViewSidebar));
