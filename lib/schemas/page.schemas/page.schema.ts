@@ -22,12 +22,11 @@ export interface AreaOptions {
   minHeight?: string;
   maxWidth?: string;
   minWidth?: string;
-
-  // ... // TODO
+  border?: string;
+  borderRadius?: string;
 }
 
 export interface LayoutOptions {
   backgroundColor?: string;
   layoutType?: string;
-  // ...
 }

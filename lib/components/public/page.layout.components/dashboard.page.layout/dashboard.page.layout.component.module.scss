@@ -1,98 +1,61 @@
-// .pageContainerWrapper {
-//   display: flex;
-//   height: 100%;
-//   width: 100%;
+.topbar,
+.sidebar {
+  flex: 0 0 auto;
+}
 
-//   &.sidebarFirst {
-//     flex-direction: row;
+.pageContent {
+  flex: 1;
+}
 
-//     .pageContainerSidebar {
-//       order: 1;
-//     }
-
-//     .topbarsBodyContainer {
-//       order: 2;
-//       width: 100%;
-//     }
-//   }
-
-//   &.topbarFirst {
-//     flex-direction: row;
-
-//     .pageContainerSidebar {
-//       order: 2;
-//     }
-
-//     .topbarsBodyContainer {
-//       order: 1;
-//       width: 100%;
-//     }
-//   }
-
-//   .topbarsBodyContainer {
-//     display: flex;
-//     flex-direction: column;
-//     flex: 1;
-
-//     .pageContainerTopbar {
-//       // height: auto;
-//     }
-
-//     .pageContainerBody {
-//       flex: 1;
-//       overflow-y: auto;
-//       background-color: #f7fafa;
-//     }
-//   }
-// }
-// dashboard.page.layout.component.module.scss
-// dashboard.page.layout.component.module.scss
-// dashboard.page.layout.component.module.scss
-.pageContainerWrapper {
+/* topbar first */
+.topbarFirstContainer {
   display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
-  background-color: inherit; // Erbt die Hintergrundfarbe von den Inline-Styles
 
-  &.sidebarFirst {
-    flex-direction: row; // Sidebar links (durchgehend), Topbar und Content-Bereich rechts
-
-    .pageContainerSidebar {
-      flex: 0 0 auto; // Größe basierend auf Inhalt, ohne Wachstum und Schrumpfung
-      height: 100%; // Volle Höhe
-    }
-
-    .topbarsBodyContainer {
-      flex: 1; // Nimmt den verbleibenden Raum ein
-      display: flex;
-      flex-direction: column; // Topbar und Content-Bereich übereinander
-
-      .pageContainerTopbar {
-        flex: 0 0 auto; // Größe basierend auf Inhalt, ohne Wachstum und Schrumpfung
-      }
-
-      .pageContainerBody {
-        flex: 1; // Nimmt den verbleibenden Raum ein
-        overflow-y: auto; // Ermöglicht das Scrollen, wenn der Inhalt die Höhe überschreitet
-      }
-    }
+  .topbar {
+    width: 100%;
   }
 
-  &.topbarFirst {
-    flex-direction: column; // Topbar oben (durchgehend), Sidebar und Content-Bereich unten
+  .contentContainer {
+    flex: 1;
+    display: flex;
+    width: 100%;
 
-    .pageContainerTopbar {
-      flex: 0 0 auto; // Größe basierend auf Inhalt, ohne Wachstum und Schrumpfung
+    .sidebar,
+    .pageContent {
+      flex: 0 0 auto;
     }
 
-    .pageContainerSidebar {
-      order: 2; // Sidebar direkt unter der Topbar
-      flex: 0 0 auto; // Größe basierend auf Inhalt, ohne Wachstum und Schrumpfung
+    .pageContent {
+      flex: 1;
+    }
+  }
+}
+
+/* sidebarFirst */
+.sidebarFirstContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+
+  .sidebar {
+    flex: 0 0 auto;
+  }
+
+  .contentContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    .topbar {
+      width: 100%;
     }
 
-    .pageContainerBody {
-      flex: 1; // Nimmt den verbleibenden Raum ein
-      overflow-y: auto; // Ermöglicht das Scrollen, wenn der Inhalt die Höhe überschreitet
+    .pageContent {
+      flex: 1;
     }
   }
 }
