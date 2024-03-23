@@ -3,10 +3,9 @@ import { inject, observer } from "mobx-react";
 import QueryStore from "../../../../../stores/query.store";
 import ResourceStore from "../../../../../stores/resource.store";
 import RenderView from "../render.view.component/render.view.conponent";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PageStore from "../../../../../stores/page.store";
 import RenderPageLayout from "../render.page.layout.component/render.page.layout.component";
-import { PageLayoutConfig } from "../../../../../schemas/page.schemas/page.schema";
 
 interface RenderPageProps {
   readonly?: boolean;
@@ -26,41 +25,36 @@ const RenderPage = ({
   resourceStore,
   queryStore,
   pageStore,
-  viewStore,
 }: RenderPageProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
-  const [viewToRender, setViewToRender] = useState<string | undefined>(
-    undefined
-  );
-  const [layoutConfig, setLayoutConfig] = useState<
-    PageLayoutConfig | undefined
-  >(undefined);
 
+  // fetch all necessary data for the page
   useEffect(() => {
     const initializeRenderPage = async () => {
-      // set core data for render page if they allready exist they will be overwritten
       resourceStore?.intializeResources();
       queryStore?.intializeQueries();
 
       if (pageToRender) {
-        // initialize page
         const page = await pageStore?.intializePage(pageToRender);
-
-        // if page is not null set layout config and fetch views
-        if (page != null && page?.views != null) {
-          setLayoutConfig(page?.layoutConfig);
-          const views = await viewStore?.fetchAndSaveViews(page.views);
-
-          if (views != null) {
-            setViewToRender((views as any)[0].viewID); // TODO make this dynamic
-          }
-        }
         setIsLoading(false);
+        return page;
       }
     };
 
     initializeRenderPage();
   }, [pageToRender]);
+
+  // get the layout config of the current page
+  const layoutConfig = useMemo(() => {
+    return pageStore?.currentSelectedPage?.layoutConfig;
+  }, [pageStore?.currentSelectedPage?.layoutConfig]);
+
+  // find the default view to render
+  const viewToRender = useMemo(() => {
+    const views = pageStore?.currentSelectedPage?.views;
+    const defaultView = views?.find((view) => view.defaultView) || views?.[0];
+    return defaultView?.viewID;
+  }, [pageStore?.currentSelectedPage?.views]);
 
   if (isLoading || viewToRender == null) {
     return <div>Loading Page...</div>;
@@ -69,7 +63,7 @@ const RenderPage = ({
   return (
     <RenderPageLayout pageLayoutConfig={layoutConfig}>
       <RenderView
-        viewToRender={viewToRender ?? ""}
+        viewToRender={viewToRender}
         readonly={readonly}
         showVisualWidgetOutline={showVisualWidgetOutline}
       />

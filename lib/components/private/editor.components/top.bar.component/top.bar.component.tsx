@@ -75,7 +75,13 @@ const TopBar = ({
         </Column>
       </SizedContainer>
 
-      {isPageDropdownOpen && <PageOverviewDropdown />}
+      {isPageDropdownOpen && (
+        <PageOverviewDropdown
+          onSelectedPageChange={() => {
+            setIsPageDropdownOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -12,13 +12,23 @@ import Column from "../../../general.components/column.component/column.componen
 
 interface PageOverviewDropdownProps {
   pageStore?: PageStore;
+  onSelectedPageChange?: (page: Page) => void;
 }
 
 const PageOverviewDropdown = ({
   pageStore,
+  onSelectedPageChange,
 }: PageOverviewDropdownProps): JSX.Element => {
   const currentSelectedPage = pageStore?.currentSelectedPage;
   const pages = pageStore?.pages;
+
+  const handlePageSelection = (page: Page) => {
+    pageStore?.setCurrentSelectedPage(page);
+
+    if (onSelectedPageChange) {
+      onSelectedPageChange(page);
+    }
+  };
 
   const itemClassName = (pageID: string | undefined) => {
     return (
@@ -34,10 +44,7 @@ const PageOverviewDropdown = ({
         alignItems="center"
         className={itemClassName(page?.pageID)}
         key={page?.pageID}
-        onClick={() => {
-          pageStore?.setCurrentSelectedPage(page);
-          // setIsPageDropdownOpen(false);
-        }}
+        onClick={() => handlePageSelection(page)}
       >
         <FontAwesomeIcon icon={faFolderOpen} className={styles.codeIcon} />
         <Column>
@@ -59,12 +66,11 @@ const PageOverviewDropdown = ({
         selectedIdentifier={currentSelectedPage?.pageID}
         onSelectItem={(selectedItem: Page) => {
           pageStore?.setCurrentSelectedPage(selectedItem);
-          // setIsPageDropdownOpen(false);
         }}
         renderItem={(item: Page) => {
           return buildPageItem(item);
         }}
-        onAddNew={() => {}} // Diese Funktion muss definiert sein
+        onAddNew={() => {}} // TODO
       />
     </div>
   );

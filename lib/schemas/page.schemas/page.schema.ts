@@ -3,7 +3,12 @@ export interface Page {
   pageID: string;
   name: string;
   layoutConfig: PageLayoutConfig;
-  views: string[];
+  views: PageView[];
+}
+
+export interface PageView {
+  viewID: string;
+  defaultView: boolean;
 }
 
 export interface PageLayoutConfig {

@@ -22,10 +22,6 @@ const ViewSidebar = ({
   viewStore,
   pageStore,
 }: ViewSidebarProps): JSX.Element => {
-  const views: View[] = useMemo(() => {
-    return viewStore?.views ?? [];
-  }, [viewStore?.views]);
-
   const [selectedItem, setSelectedItem] = useState<View | undefined>(undefined);
 
   const [isEditing, setIsEditing] = useState<boolean>(
@@ -39,6 +35,17 @@ const ViewSidebar = ({
       setIsEditing(true);
     }
   }, [selectedItem]);
+
+  // views of the current selected page
+  const views: View[] = useMemo(() => {
+    const currentViewIds = pageStore?.currentSelectedPage?.views.map(
+      (view) => view.viewID
+    );
+
+    return viewStore?.views.filter((view) =>
+      currentViewIds?.includes(view.viewID)
+    ) as View[];
+  }, [viewStore?.views, pageStore?.currentSelectedPage?.views]);
 
   const itemClassName = (viewID: string | null) => {
     return (
@@ -65,7 +72,7 @@ const ViewSidebar = ({
     return (
       <>
         <ComponentWrapper
-          title={`Ansichten von ${pageStore?.currentSelectedPage?.name}`}
+          title={`Views von ${pageStore?.currentSelectedPage?.name}`}
           action={
             <IconButton
               icon={faAdd}

@@ -4,7 +4,7 @@ import ViewStore from "../../../../stores/view.store";
 import styles from "./canvas.editor.component.module.scss";
 import WidgetStore from "../../../../stores/widget.store";
 import ChangeRecordStore from "../../../../stores/change.record.store";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import EditorStore from "../../../../stores/editor.store";
 import ResizableScreenWrapper from "../resizable.screen.wrapper.component/resizable.screen.wrapper.component";
 import { EditorMode } from "../../../../globals/enums/editor.enum";
@@ -33,14 +33,26 @@ interface CanvasEditorProps {
 
 const CanvasEditor = ({
   editorStore,
-  pageToRender,
+  pageToRender: initialPageToRender,
   pageStore,
   resourceStore,
   queryStore,
 }: CanvasEditorProps): JSX.Element => {
+  const [pageToRender, setPageToRender] = useState(initialPageToRender);
+
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
   const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
+
+  useEffect(() => {
+    setPageToRender(initialPageToRender);
+  }, [initialPageToRender]);
+
+  useEffect(() => {
+    if (pageStore?.currentSelectedPage?.pageID) {
+      setPageToRender(pageStore.currentSelectedPage.pageID);
+    }
+  }, [pageStore?.currentSelectedPage]);
 
   useEffect(() => {
     // set core data for the editor
