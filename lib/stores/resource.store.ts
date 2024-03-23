@@ -24,7 +24,7 @@ class ResourceStore {
 
   //! Setter
 
-  async intializeResources(resources?: Resource[]): Promise<Resource[]> {
+  intializeResources(resources?: Resource[]): Resource[] {
     const configProvider = ConfigProvider.getInstance();
     const coreResources = configProvider.getCoreResources();
 

@@ -80,7 +80,7 @@ class QueryStore {
 
   //! Methods
 
-  async intializeQueries(queries?: Query[]): Promise<Query[]> {
+  intializeQueries(queries?: Query[]): Query[] {
     const configProvider = ConfigProvider.getInstance();
     const coreQueries = configProvider.getCoreQueries();
 

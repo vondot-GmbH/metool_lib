@@ -38,8 +38,9 @@ const RenderPage = ({
 
   useEffect(() => {
     const initializeRenderPage = async () => {
-      await resourceStore?.intializeResources();
-      await queryStore?.intializeQueries();
+      // set core data for render page if they allready exist they will be overwritten
+      resourceStore?.intializeResources();
+      queryStore?.intializeQueries();
 
       if (pageToRender) {
         // initialize page

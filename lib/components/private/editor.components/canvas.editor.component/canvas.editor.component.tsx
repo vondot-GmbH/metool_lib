@@ -35,17 +35,23 @@ const CanvasEditor = ({
   editorStore,
   pageToRender,
   pageStore,
+  resourceStore,
+  queryStore,
 }: CanvasEditorProps): JSX.Element => {
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
   const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
 
   useEffect(() => {
+    // set core data for the editor
+    resourceStore?.intializeResources();
+    queryStore?.intializeQueries();
+
     // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
     editorStore?.initializeEditorBreakpointConfig();
 
-    // fetch all available pages
     // TODO adding logic to all detail method bevore fetch data look if the data is already in the store
+    // fetch all available pages
     pageStore?.fetchAllPagesAndSave();
   }, []);
 

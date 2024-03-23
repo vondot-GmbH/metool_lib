@@ -14,19 +14,6 @@
     border-radius: 6px;
     background-color: #d1d1d18f;
   }
-
-  .pageDropdownWrapper {
-    z-index: 100;
-    position: absolute;
-    top: 50px;
-    left: 0;
-    width: 100%;
-    max-width: 380px;
-    height: calc(100vh - 52px);
-    background-color: #f7fafa;
-    border-top: 1px solid #d7d6d6;
-    border-right: 1px solid #d7d6d6;
-  }
 }
 
 .previewModeButton {
