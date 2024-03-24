@@ -33,7 +33,6 @@ const ViewSidebar = ({
   );
 
   const currentViewID = pageStore?.currentViewIdToRender;
-  console.log("v ViewSidebar currentViewID: ", currentViewID);
 
   useEffect(() => {
     if (selectedItem?.viewID === "new") {

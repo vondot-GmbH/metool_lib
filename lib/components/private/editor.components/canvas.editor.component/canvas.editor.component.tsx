@@ -4,7 +4,7 @@ import ViewStore from "../../../../stores/view.store";
 import styles from "./canvas.editor.component.module.scss";
 import WidgetStore from "../../../../stores/widget.store";
 import ChangeRecordStore from "../../../../stores/change.record.store";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import EditorStore from "../../../../stores/editor.store";
 import ResizableScreenWrapper from "../resizable.screen.wrapper.component/resizable.screen.wrapper.component";
 import { EditorMode } from "../../../../globals/enums/editor.enum";
@@ -33,39 +33,37 @@ interface CanvasEditorProps {
 
 const CanvasEditor = ({
   editorStore,
-  pageToRender: initialPageToRender,
+  pageToRender,
   pageStore,
   resourceStore,
   queryStore,
 }: CanvasEditorProps): JSX.Element => {
-  const [pageToRender, setPageToRender] = useState(initialPageToRender);
-
+  const [isLoading, setIsLoading] = useState(true);
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
   const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
 
   useEffect(() => {
-    setPageToRender(initialPageToRender);
-  }, [initialPageToRender]);
+    const initializeEditor = async () => {
+      // set core data for the editor
+      resourceStore?.intializeResources();
+      queryStore?.intializeQueries();
 
-  useEffect(() => {
-    if (pageStore?.currentPageToRender?.pageID) {
-      setPageToRender(pageStore.currentPageToRender.pageID);
-    }
-  }, [pageStore?.currentPageToRender]);
+      // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
+      editorStore?.initializeEditorBreakpointConfig();
 
-  useEffect(() => {
-    // set core data for the editor
-    resourceStore?.intializeResources();
-    queryStore?.intializeQueries();
+      // fetch all pages for the editor to be used in the page overview dropdown
+      await pageStore?.fetchAllPagesAndSave();
 
-    // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
-    editorStore?.initializeEditorBreakpointConfig();
+      setIsLoading(false);
+    };
 
-    // TODO adding logic to all detail method bevore fetch data look if the data is already in the store
-    // fetch all available pages
-    pageStore?.fetchAllPagesAndSave();
+    initializeEditor();
   }, []);
+
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
 
   return (
     <MainLayout topBars={[<TopBarComponent />]}>

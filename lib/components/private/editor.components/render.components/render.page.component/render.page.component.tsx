@@ -19,7 +19,7 @@ interface RenderPageProps {
 }
 
 const RenderPage = ({
-  pageToRender,
+  pageToRender: initialPageToRender,
   readonly = true,
   showVisualWidgetOutline = false,
   resourceStore,
@@ -27,27 +27,29 @@ const RenderPage = ({
   pageStore,
 }: RenderPageProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
-  const viewIdToRender = pageStore?.currentViewIdToRender;
 
   useEffect(() => {
-    console.log("RenderPage useEffect");
-    console.log("viewIdToRender: ", viewIdToRender);
-    const initializeRenderPage = async () => {
-      // Initialisiere Ressourcen und Queries, falls RenderPage einzeln verwendet wird
-      resourceStore?.intializeResources();
-      queryStore?.intializeQueries();
+    resourceStore?.intializeResources();
+    queryStore?.intializeQueries();
 
-      // Initialisiere die Seite und setze den aktuellen View im ViewStore
-      await pageStore?.intializePage(pageToRender);
+    // set the initial page to render
+    pageStore?.setAndFetchPageToRender(initialPageToRender);
+  }, [initialPageToRender]);
+
+  useEffect(() => {
+    if (pageStore?.currentPageToRender?.pageID !== initialPageToRender) {
       setIsLoading(false);
-    };
-
-    initializeRenderPage();
-  }, [pageToRender, viewIdToRender]);
+    }
+  }, [pageStore?.currentPageToRender, initialPageToRender]);
 
   const layoutConfig = pageStore?.currentPageToRender?.layoutConfig;
+  const viewIdToRender = pageStore?.currentViewIdToRender;
 
   if (isLoading || viewIdToRender == null) {
+    console.log("Loading Page...");
+    console.log("RENDER PAGE");
+    console.log("isLoading", isLoading);
+    console.log("viewIdToRender", viewIdToRender);
     return <div>Loading Page... RENDER PAGE</div>;
   }
 

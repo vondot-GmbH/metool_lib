@@ -20,6 +20,24 @@ class PageStore {
 
   //! Setter
 
+  setAndFetchPageToRender = async (pageID: string): Promise<void> => {
+    const page = await this.fetchAndSavePageById(pageID);
+
+    console.log("Page", JSON.stringify(page, null, 2));
+    if (!page) return;
+
+    // find the default view of the page and set it as the current view to render
+    const defaultViewId =
+      page.views.find((view) => view.defaultView)?.viewID ||
+      page.views[0]?.viewID;
+    this.setCurrentViewIdToRender(defaultViewId);
+
+    const viewIDs = page.views.map((view) => view.viewID);
+    await this.stores.viewStore.fetchAndSaveViews(viewIDs);
+
+    if (!page) return;
+  };
+
   setCurrentPageToRender = (page: Page): void => {
     this._currentPageToRender = page;
   };
@@ -62,71 +80,30 @@ class PageStore {
     return page;
   }
 
-  // intializePage = async (pageID: string): Promise<Page | undefined> => {
-  //   const page = await this.fetchAndSavePageById(pageID);
-  //   if (!page) return;
+  async fetchAndSavePageById(pageID: string): Promise<Page | undefined> {
+    let page = this._pages.get(pageID);
 
-  //   this.setCurrentPageToRender(page);
+    if (page == null) {
+      const pageQuery = this.stores.queryStore.getQuery(
+        CoreRestQueryType.GET_PAGE_BY_ID
+      );
 
-  //   // Prüfe, ob eine `currentViewIdToRender` bereits im Editor manuell gesetzt wurde
-  //   if (!this.currentViewIdToRender) {
-  //     // Wenn nicht, setze den Standardview oder den ersten View der Seite
-  //     const defaultViewId =
-  //       page.views.find((view) => view.defaultView)?.viewID ||
-  //       page.views[0]?.viewID;
-  //     this.setCurrentViewIdToRender(defaultViewId);
-  //   }
+      if (pageQuery == null || pageID == null) return;
 
-  //   // Hole und speichere alle Views der Seite
-  //   const viewIDs = page.views.map((view) => view.viewID);
-  //   await this.stores.viewStore.fetchAndSaveViews(viewIDs);
+      page = await queryExecutor.executeRestQuery(
+        pageQuery,
+        {
+          pageID: pageID,
+        },
+        this.stores.resourceStore
+      );
 
-  //   return page;
-  // };
-
-  intializePage = async (pageID: string): Promise<Page | undefined> => {
-    const page = await this.fetchAndSavePageById(pageID);
-    if (!page) return;
+      if (page == null) return;
+    }
 
     this.setCurrentPageToRender(page);
 
-    // Nur den Standardview oder den ersten View setzen, wenn noch keine manuelle Auswahl getroffen wurde
-    // if (
-    //   !this.currentViewIdToRender ||
-    //   this.currentViewIdToRender === page.pageID
-    // ) {
-    const defaultViewId =
-      page.views.find((view) => view.defaultView)?.viewID ||
-      page.views[0]?.viewID;
-    this.setCurrentViewIdToRender(defaultViewId);
-    // }
-
-    const viewIDs = page.views.map((view) => view.viewID);
-    await this.stores.viewStore.fetchAndSaveViews(viewIDs);
-
     return page;
-  };
-
-  async fetchAndSavePageById(pageID: string): Promise<Page | undefined> {
-    const pageQuery = this.stores.queryStore.getQuery(
-      CoreRestQueryType.GET_PAGE_BY_ID
-    );
-
-    if (pageQuery == null || pageID == null) return;
-
-    const response = await queryExecutor.executeRestQuery(
-      pageQuery,
-      {
-        pageID: pageID,
-      },
-      this.stores.resourceStore
-    );
-
-    if (response == null) return;
-
-    this.setCurrentPageToRender(response);
-
-    return response;
   }
 
   async updateAndSavePage(page: Page): Promise<void> {

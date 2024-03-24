@@ -65,7 +65,7 @@ const PageOverviewDropdown = ({
         identifierKey="pageID"
         selectedIdentifier={currentSelectedPage?.pageID}
         onSelectItem={(selectedItem: Page) => {
-          pageStore?.setCurrentPageToRender(selectedItem);
+          pageStore?.setAndFetchPageToRender(selectedItem?.pageID);
         }}
         renderItem={(item: Page) => {
           return buildPageItem(item);
