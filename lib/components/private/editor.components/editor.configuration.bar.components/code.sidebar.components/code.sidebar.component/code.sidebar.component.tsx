@@ -78,7 +78,6 @@ const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
                   className={itemClassName(query?.queryID)}
                   key={query?.queryID}
                   onClick={() => {
-                    console.log("onClick: ", query);
                     handleSelectItem(query?.queryID);
                   }}
                 >

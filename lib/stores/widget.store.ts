@@ -77,18 +77,11 @@ class WidgetStore {
 
   // TODO
   async initWidgetsAndProcess(viewID: string): Promise<void> {
-    // this.stores.resourceStore?.intializeResources();
-    // this.stores.queryStore?.intializeQueries();
-
-    console.log("initWidgetsAndProcess", viewID);
-
     const widgets = await this.fetchWidgetsForView(viewID);
 
-    console.log("initWidgetsAndProcess widgets: ", widgets);
-
-    // if (widgets == null) {
-    //   return;
-    // }
+    if (widgets == null) {
+      return;
+    }
 
     runInAction(() => {
       this.setInitialWidgetAndConvert(widgets ?? []);

@@ -144,9 +144,6 @@ const StateInputEditor = ({
 
       if (matches && availableStates.includes(matches[0].innerText)) {
         onChange(internalValue);
-
-        console.log("internalValue", internalValue);
-        console.log("init value", initialValue);
       }
     }
   };

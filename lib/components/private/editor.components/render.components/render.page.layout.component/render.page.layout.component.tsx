@@ -26,7 +26,13 @@ const RenderPageLayout = ({
 
   // generate the content for a layout area
   const getPageLayoutAreaContent = (layoutAreaID: string) => {
-    return <div key={layoutAreaID}>Dynamischer Inhalt für {layoutAreaID}</div>;
+    if (pageLayoutConfig?.areas && pageLayoutConfig.areas[layoutAreaID]) {
+      return (
+        <div key={layoutAreaID}>Dynamischer Inhalt für {layoutAreaID}</div>
+      );
+    }
+
+    return null;
   };
 
   // extract the layout component and areas from the core layout config

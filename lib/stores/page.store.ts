@@ -23,7 +23,6 @@ class PageStore {
   setAndFetchPageToRender = async (pageID: string): Promise<void> => {
     const page = await this.fetchAndSavePageById(pageID);
 
-    console.log("Page", JSON.stringify(page, null, 2));
     if (!page) return;
 
     // find the default view of the page and set it as the current view to render

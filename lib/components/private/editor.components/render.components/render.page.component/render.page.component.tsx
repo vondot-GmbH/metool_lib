@@ -27,30 +27,24 @@ const RenderPage = ({
   pageStore,
 }: RenderPageProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    resourceStore?.intializeResources();
-    queryStore?.intializeQueries();
-
-    // set the initial page to render
-    pageStore?.setAndFetchPageToRender(initialPageToRender);
-  }, [initialPageToRender]);
-
-  useEffect(() => {
-    if (pageStore?.currentPageToRender?.pageID !== initialPageToRender) {
-      setIsLoading(false);
-    }
-  }, [pageStore?.currentPageToRender, initialPageToRender]);
-
   const layoutConfig = pageStore?.currentPageToRender?.layoutConfig;
   const viewIdToRender = pageStore?.currentViewIdToRender;
 
+  useEffect(() => {
+    const initializeRenderPage = async () => {
+      resourceStore?.intializeResources();
+      queryStore?.intializeQueries();
+
+      // set the initial page to render
+      await pageStore?.setAndFetchPageToRender(initialPageToRender);
+      setIsLoading(false);
+    };
+
+    initializeRenderPage();
+  }, [initialPageToRender]);
+
   if (isLoading || viewIdToRender == null) {
-    console.log("Loading Page...");
-    console.log("RENDER PAGE");
-    console.log("isLoading", isLoading);
-    console.log("viewIdToRender", viewIdToRender);
-    return <div>Loading Page... RENDER PAGE</div>;
+    return <div>Loading...</div>;
   }
 
   return (

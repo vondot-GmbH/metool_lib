@@ -83,9 +83,9 @@ Gleap.initialize("YZ6N1CITLut6MeqEhbITgwBid7oB7nc6");
 function App() {
   return (
     <div className="main-container">
-      <CanvasEditorPublic pageToRender="5f404b6b9I6b4c3017f99979" />
+      {/* <CanvasEditorPublic pageToRender="5f404b6b9I6b4c3017f99979" /> */}
 
-      {/* <RenderPage pageToRender="5f9e9b6b9I6b4c3017f93k39" /> */}
+      <RenderPage pageToRender="5f404b6b9I6b4c3017f99979" />
     </div>
   );
 }
