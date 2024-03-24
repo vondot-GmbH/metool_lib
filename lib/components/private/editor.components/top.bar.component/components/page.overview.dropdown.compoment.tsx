@@ -19,11 +19,11 @@ const PageOverviewDropdown = ({
   pageStore,
   onSelectedPageChange,
 }: PageOverviewDropdownProps): JSX.Element => {
-  const currentSelectedPage = pageStore?.currentSelectedPage;
+  const currentSelectedPage = pageStore?.currentPageToRender;
   const pages = pageStore?.pages;
 
   const handlePageSelection = (page: Page) => {
-    pageStore?.setCurrentSelectedPage(page);
+    pageStore?.setCurrentPageToRender(page);
 
     if (onSelectedPageChange) {
       onSelectedPageChange(page);
@@ -65,7 +65,7 @@ const PageOverviewDropdown = ({
         identifierKey="pageID"
         selectedIdentifier={currentSelectedPage?.pageID}
         onSelectItem={(selectedItem: Page) => {
-          pageStore?.setCurrentSelectedPage(selectedItem);
+          pageStore?.setCurrentPageToRender(selectedItem);
         }}
         renderItem={(item: Page) => {
           return buildPageItem(item);

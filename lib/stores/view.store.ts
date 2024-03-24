@@ -86,6 +86,8 @@ class ViewStore {
       additionalParams
     );
 
+    console.log("fetchAndSaveViews:: ", response);
+
     if (!response) return;
 
     this.setViews(response);

@@ -64,7 +64,7 @@ const TopBar = ({
           setIsPageDropdownOpen(!isPageDropdownOpen);
         }}
       >
-        <TitleText>{pageStore?.currentSelectedPage?.name ?? "-"}</TitleText>
+        <TitleText>{pageStore?.currentPageToRender?.name ?? "-"}</TitleText>
       </div>
 
       <BreakpointSettings />

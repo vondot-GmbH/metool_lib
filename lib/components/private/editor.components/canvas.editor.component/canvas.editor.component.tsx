@@ -49,10 +49,10 @@ const CanvasEditor = ({
   }, [initialPageToRender]);
 
   useEffect(() => {
-    if (pageStore?.currentSelectedPage?.pageID) {
-      setPageToRender(pageStore.currentSelectedPage.pageID);
+    if (pageStore?.currentPageToRender?.pageID) {
+      setPageToRender(pageStore.currentPageToRender.pageID);
     }
-  }, [pageStore?.currentSelectedPage]);
+  }, [pageStore?.currentPageToRender]);
 
   useEffect(() => {
     // set core data for the editor

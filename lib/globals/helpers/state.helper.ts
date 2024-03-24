@@ -1,7 +1,7 @@
 import { Dependency } from "../../stores/state.store";
 
 export const isValidStateSyntax = (value: string): boolean => {
-  if (value.includes("{{") && value.includes("}}")) {
+  if (value?.includes("{{") && value?.includes("}}")) {
     return true;
   }
   return false;

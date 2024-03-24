@@ -80,14 +80,18 @@ class WidgetStore {
     // this.stores.resourceStore?.intializeResources();
     // this.stores.queryStore?.intializeQueries();
 
+    console.log("initWidgetsAndProcess", viewID);
+
     const widgets = await this.fetchWidgetsForView(viewID);
 
-    if (widgets == null) {
-      return;
-    }
+    console.log("initWidgetsAndProcess widgets: ", widgets);
+
+    // if (widgets == null) {
+    //   return;
+    // }
 
     runInAction(() => {
-      this.setInitialWidgetAndConvert(widgets);
+      this.setInitialWidgetAndConvert(widgets ?? []);
     });
   }
 
@@ -508,7 +512,7 @@ class WidgetStore {
     );
   }
   // TODO
-  async fetchWidgetsForView(viewID: string): Promise<void> {
+  async fetchWidgetsForView(viewID: string): Promise<Widget[] | undefined> {
     const getWidgetsQuery = this.stores.queryStore.getQuery(
       CoreRestQueryType.GET_WIDGETS
     );

@@ -5,7 +5,11 @@ import RunningText from "../../../../general.components/text.components/running.
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useMemo, useState } from "react";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
-import { faAdd, faFiles } from "@fortawesome/pro-regular-svg-icons";
+import {
+  faAdd,
+  faFileCircleCheck,
+  faFiles,
+} from "@fortawesome/pro-regular-svg-icons";
 import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
 import ViewStore from "../../../../../../stores/view.store";
 import { View } from "../../../../../../schemas/view.schemas/view.schema";
@@ -28,6 +32,9 @@ const ViewSidebar = ({
     selectedItem?.viewID != "new"
   );
 
+  const currentViewID = pageStore?.currentViewIdToRender;
+  console.log("v ViewSidebar currentViewID: ", currentViewID);
+
   useEffect(() => {
     if (selectedItem?.viewID === "new") {
       setIsEditing(false);
@@ -38,28 +45,41 @@ const ViewSidebar = ({
 
   // views of the current selected page
   const views: View[] = useMemo(() => {
-    const currentViewIds = pageStore?.currentSelectedPage?.views.map(
+    const currentViewIds = pageStore?.currentPageToRender?.views.map(
       (view) => view.viewID
     );
 
     return viewStore?.views.filter((view) =>
       currentViewIds?.includes(view.viewID)
     ) as View[];
-  }, [viewStore?.views, pageStore?.currentSelectedPage?.views]);
+  }, [viewStore?.views, pageStore?.currentPageToRender?.views]);
 
   const itemClassName = (viewID: string | null) => {
     return (
       styles.viewItem +
       " " +
-      (selectedItem?.viewID === viewID ? styles.viewItemSelected : "")
+      (currentViewID === viewID ? styles.viewItemSelected : "")
+    );
+  };
+
+  const getDefaultViewIcon = (view: View) => {
+    const currentPage = pageStore?.currentPageToRender;
+
+    const isDefault = currentPage?.views?.find(
+      (item) => item?.viewID === view.viewID
+    )?.defaultView;
+    return isDefault ? (
+      <FontAwesomeIcon icon={faFileCircleCheck} className={styles.viewIcon} />
+    ) : (
+      <FontAwesomeIcon icon={faFiles} className={styles.viewIcon} />
     );
   };
 
   const handleSelectItem = (viewID: string | null) => {
     if (viewID == null) return;
 
-    const view = viewStore?.getView(viewID);
-    setSelectedItem(view);
+    // Setze den View als den zu rendernden View
+    pageStore?.setCurrentViewIdToRender(viewID);
   };
 
   const handleAddView = () => {
@@ -72,7 +92,7 @@ const ViewSidebar = ({
     return (
       <>
         <ComponentWrapper
-          title={`Views von ${pageStore?.currentSelectedPage?.name}`}
+          title={`Views von ${pageStore?.currentPageToRender?.name}`}
           action={
             <IconButton
               icon={faAdd}
@@ -92,7 +112,7 @@ const ViewSidebar = ({
                   handleSelectItem(view?.viewID);
                 }}
               >
-                <FontAwesomeIcon icon={faFiles} className={styles.viewIcon} />
+                {getDefaultViewIcon(view)}
                 <RunningText>{view.name}</RunningText>
               </Row>
             );
