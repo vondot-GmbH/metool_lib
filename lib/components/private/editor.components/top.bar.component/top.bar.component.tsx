@@ -16,17 +16,22 @@ import PageStore from "../../../../stores/page.store";
 import { useRef, useState } from "react";
 import { useClickedOutside } from "../../../../globals/helpers/hook.helper";
 import PageOverviewDropdown from "./components/page.overview.dropdown.compoment";
+import SmallText from "../../general.components/text.components/small.text.component/small.text.component";
+import ViewStore from "../../../../stores/view.store";
+import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
 
 interface TopBarProps {
   editorStore?: EditorStore;
   widgetStore?: WidgetStore;
   pageStore?: PageStore;
+  viewStore?: ViewStore;
 }
 
 const TopBar = ({
   editorStore,
   widgetStore,
   pageStore,
+  viewStore,
 }: TopBarProps): JSX.Element => {
   const topBarRef = useRef(null);
   const editorMode = editorStore?.editorMode;
@@ -64,7 +69,10 @@ const TopBar = ({
           setIsPageDropdownOpen(!isPageDropdownOpen);
         }}
       >
-        <TitleText>{pageStore?.currentPageToRender?.name ?? "-"}</TitleText>
+        <TitleText className={styles.pageName}>
+          {pageStore?.currentPageToRender?.name ?? "-"}
+        </TitleText>
+        <RunningText>{viewStore?.currentSelectedView?.name ?? "-"}</RunningText>
       </div>
 
       <BreakpointSettings />
@@ -89,5 +97,6 @@ const TopBar = ({
 export default inject(
   "editorStore",
   "widgetStore",
-  "pageStore"
+  "pageStore",
+  "viewStore"
 )(observer(TopBar));
