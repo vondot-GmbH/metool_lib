@@ -36,7 +36,7 @@ const TextWidget = ({
 
   return (
     <div>
-      <RunningText>{JSON.stringify(data ?? "")}</RunningText>
+      <RunningText>{JSON.stringify(data ?? "----")}</RunningText>
     </div>
   );
 };

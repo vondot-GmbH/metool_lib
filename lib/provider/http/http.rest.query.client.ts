@@ -58,14 +58,13 @@ class QueryExecutor<Q extends Query> {
     variables: Record<string, string>,
     additionalParams?: Record<string, string | string[]>
   ): AxiosRequestConfig {
-    const headers = this.processHeaders(query, resource);
+    let headers = {};
+    let params = {};
+    let url = "";
 
-    const url = this.resolveUrl(query.url, variables); // TODO resovle params too
-    const params = this.processParams(
-      query.params,
-      variables,
-      additionalParams
-    );
+    headers = this.processHeaders(query, resource);
+    url = this.resolveUrl(query.url, variables); // TODO resovle params too
+    params = this.processParams(query.params, variables, additionalParams);
 
     const config: AxiosRequestConfig = {
       baseURL: resource.baseUrl,
@@ -196,23 +195,6 @@ class QueryExecutor<Q extends Query> {
       return encodeURIComponent(value);
     });
   }
-
-  // private processParams(
-  //   params?: { key: string; value: string }[],
-  //   variables?: Record<string, string>
-  // ): Record<string, string> {
-
-  //   if (!params || params.length === 0) return {};
-
-  //   const safeVariables = variables || {};
-
-  //   const processedParams = params.reduce((acc, { key, value }) => {
-  //     const resolvedValue = this.replacePlaceholders(value, safeVariables);
-  //     return { ...acc, [key]: resolvedValue };
-  //   }, {});
-
-  //   return processedParams;
-  // }
 
   private processParams(
     params?: { key: string; value: string }[],

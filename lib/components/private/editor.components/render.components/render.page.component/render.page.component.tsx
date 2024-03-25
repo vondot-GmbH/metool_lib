@@ -6,6 +6,7 @@ import RenderView from "../render.view.component/render.view.conponent";
 import { useEffect, useState } from "react";
 import PageStore from "../../../../../stores/page.store";
 import RenderPageLayout from "../render.page.layout.component/render.page.layout.component";
+import LayoutStore from "../../../../../stores/layout.store";
 
 interface RenderPageProps {
   readonly?: boolean;
@@ -13,6 +14,7 @@ interface RenderPageProps {
   queryStore?: QueryStore;
   resourceStore?: ResourceStore;
   pageStore?: PageStore;
+  layoutStore?: LayoutStore;
 
   showVisualWidgetOutline?: boolean;
   pageToRender: string;
@@ -37,6 +39,7 @@ const RenderPage = ({
 
       // set the initial page to render
       await pageStore?.setAndFetchPageToRender(initialPageToRender);
+
       setIsLoading(false);
     };
 
@@ -48,7 +51,7 @@ const RenderPage = ({
   }
 
   return (
-    <RenderPageLayout pageLayoutConfig={layoutConfig}>
+    <RenderPageLayout readonly={readonly}>
       <RenderView
         key={viewIdToRender}
         viewToRender={viewIdToRender}
@@ -63,5 +66,6 @@ export default inject(
   "viewStore",
   "pageStore",
   "queryStore",
-  "resourceStore"
+  "resourceStore",
+  "layoutStore"
 )(observer(RenderPage));

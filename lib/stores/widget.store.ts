@@ -3,6 +3,7 @@ import {
   AnalyzedWidgetOptions,
   Widget,
   WidgetHierarchy,
+  WidgetHierarchyLocation,
   WidgetHierarchyMap,
   WidgetLayouts,
   WidgetPositioning,
@@ -75,19 +76,6 @@ class WidgetStore {
     return this._structuredWidgetHierarchy;
   }
 
-  // TODO
-  async initWidgetsAndProcess(viewID: string): Promise<void> {
-    const widgets = await this.fetchWidgetsForView(viewID);
-
-    if (widgets == null) {
-      return;
-    }
-
-    runInAction(() => {
-      this.setInitialWidgetAndConvert(widgets ?? []);
-    });
-  }
-
   setStructuredWidgetHierarchy(
     widgetID: string,
     newHierarchy: WidgetHierarchy
@@ -150,6 +138,19 @@ class WidgetStore {
   }
 
   //! methods
+
+  // TODO
+  async initWidgetsAndProcess(viewID: string): Promise<void> {
+    const widgets = await this.fetchWidgetsForView(viewID);
+
+    if (widgets == null) {
+      return;
+    }
+
+    runInAction(() => {
+      this.setInitialWidgetAndConvert(widgets ?? []);
+    });
+  }
 
   // update a single option of a widget by the widgetID and the option name
   updateWidgetOption(widgetID: string, optionName: string, value: any): void {
@@ -326,7 +327,10 @@ class WidgetStore {
     }
 
     // if this is the root call (not a recursive call), update the parent widget's children list
-    if (isRootCall && widgetToDelete.level === "NESTED") {
+    if (
+      isRootCall &&
+      widgetToDelete.location === WidgetHierarchyLocation.NESTED
+    ) {
       for (const [parentID, parentWidget] of this._structuredWidgetHierarchy) {
         const childIndex = parentWidget.children.indexOf(widgetID);
 
@@ -403,7 +407,9 @@ class WidgetStore {
         } as any,
       },
       children: [],
-      level: parentID ? "NESTED" : "ROOT",
+      location: parentID
+        ? WidgetHierarchyLocation.NESTED
+        : WidgetHierarchyLocation.ROOT,
     };
 
     if (parentID) {
@@ -514,8 +520,9 @@ class WidgetStore {
 
     const response = await queryExecutor.executeRestQuery(
       getWidgetsQuery,
-      { viewID: viewID },
-      this.stores.resourceStore
+      {},
+      this.stores.resourceStore,
+      { viewID: viewID }
     );
 
     return response;

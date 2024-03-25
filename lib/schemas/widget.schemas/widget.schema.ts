@@ -6,7 +6,9 @@ export interface Widget {
   widgetID: string;
   positioning: WidgetLayouts;
   parentID?: string;
-  viewID: string;
+  viewID?: string;
+  pageID?: string;
+  layoutAreaID?: string;
   options?: Record<string, any>;
 }
 
@@ -32,7 +34,13 @@ export type WidgetHierarchyMap = Map<string, WidgetHierarchy>;
 export interface WidgetHierarchy {
   widget: Widget;
   children: string[];
-  level: "ROOT" | "NESTED";
+  location: WidgetHierarchyLocation;
+}
+
+export enum WidgetHierarchyLocation {
+  ROOT = "root",
+  NESTED = "nested",
+  LAYOUT_AREA = "layout_area",
 }
 
 export interface AnalyzedWidgetOptions {

@@ -9,7 +9,6 @@ import {
   WidgetHierarchyMap,
 } from "../../../../schemas/widget.schemas/widget.schema";
 import { useEffect, useMemo, useState } from "react";
-import styles from "./grid.layout.component.module.scss";
 import ViewStore from "../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../stores/widget.store";
@@ -21,11 +20,6 @@ interface GridLayoutProps {
   key: string;
   children: React.ReactNode | React.ReactNode[];
   content: WidgetHierarchyMap;
-  onDragStart?: ReactGridLayout.ItemCallback | undefined;
-  isNested?: boolean;
-  onDragStop?: ReactGridLayout.ItemCallback | undefined;
-  onResizeStart?: ReactGridLayout.ItemCallback | undefined;
-  onResizeStop?: ReactGridLayout.ItemCallback | undefined;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
@@ -36,27 +30,17 @@ interface GridLayoutProps {
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
-const GridLayout = ({
-  key = "grid-layout",
+const LayoutAreaGridLayout = ({
+  key = "layout-area-grid-layout",
   children,
   content,
-  onDragStart: propOnDragStart,
-  onDragStop: propOnDragStop,
-  onResizeStart: propOnResizeStart,
-  onResizeStop: propOnResizeStop,
-  isNested = false,
   widgetStore,
   editorStore,
   parentWidgetID,
   readonly = false,
   selectedWidgetID,
 }: GridLayoutProps): JSX.Element => {
-  const [localCurrentBreakpoint, setLocalCurrentBreakpoint] =
-    useState<string>("");
-
-  const currentBreakpoint = isNested
-    ? localCurrentBreakpoint ?? ""
-    : editorStore?.currentBreakpoint ?? "";
+  const currentBreakpoint = editorStore?.currentBreakpoint ?? "";
 
   const [gridBackground, setGridBackground] = useState("");
   const [showGrid, setShowGrid] = useState(false);
@@ -64,16 +48,16 @@ const GridLayout = ({
   const configProvider = ConfigProvider.getInstance();
 
   const breakpoints = configProvider.getBreakpointsForAllLayouts(
-    isNested ? WidgetHierarchyLocation.NESTED : WidgetHierarchyLocation.ROOT
+    WidgetHierarchyLocation.ROOT
   );
 
   const rowHeight = configProvider.getRowHeight(
-    isNested ? WidgetHierarchyLocation.NESTED : WidgetHierarchyLocation.ROOT,
+    WidgetHierarchyLocation.ROOT,
     currentBreakpoint
   );
 
   const cols = configProvider.getColsForAllLayouts(
-    isNested ? WidgetHierarchyLocation.NESTED : WidgetHierarchyLocation.ROOT
+    WidgetHierarchyLocation.ROOT
   );
 
   const layouts = convertToGridLayout(content, breakpoints);
@@ -88,16 +72,8 @@ const GridLayout = ({
     height: "100%",
   } as any;
 
-  if (isNested) {
-    gridBackgroundStyle.height = "100%";
-  }
-
   const onBreakpointChange = (newBreakpoint: string) => {
-    if (isNested || readonly) {
-      setLocalCurrentBreakpoint(newBreakpoint);
-    } else {
-      editorStore?.setCurrentBreakpoint(newBreakpoint);
-    }
+    editorStore?.setCurrentBreakpoint(newBreakpoint);
   };
 
   // TODO
@@ -150,9 +126,6 @@ const GridLayout = ({
     event.preventDefault();
     setShowGrid(true);
     editorStore?.setVisualWidgetOutlineGuide(true);
-
-    if (propOnDragStart)
-      propOnDragStart(layout, oldItem, newItem, placeholder, event, element);
   };
 
   const handleDragStop = (
@@ -173,9 +146,6 @@ const GridLayout = ({
       currentBreakpoint,
       breakpoints
     );
-
-    if (propOnDragStop)
-      propOnDragStop(layout, oldItem, newItem, placeholder, event, element);
   };
 
   const handleResizeStart = (
@@ -190,9 +160,6 @@ const GridLayout = ({
     event.preventDefault();
     setShowGrid(true);
     editorStore?.setVisualWidgetOutlineGuide(true);
-
-    if (propOnResizeStart)
-      propOnResizeStart(layout, oldItem, newItem, placeholder, event, element);
   };
 
   const handleResizeStop = (
@@ -208,14 +175,11 @@ const GridLayout = ({
     setShowGrid(false);
     editorStore?.setVisualWidgetOutlineGuide(false);
 
-    widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
-      layout,
-      currentBreakpoint,
-      breakpoints
-    );
-
-    if (propOnResizeStop)
-      propOnResizeStop(layout, oldItem, newItem, placeholder, event, element);
+    // widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
+    //   layout,
+    //   currentBreakpoint,
+    //   breakpoints
+    // );
   };
 
   useEffect(() => {
@@ -230,13 +194,11 @@ const GridLayout = ({
   return (
     <ResponsiveGridLayout
       key={key}
-      className={isNested ? undefined : styles.gridLayout}
+      //   className={styles.gridLayout}
       margin={[0, 0]}
       layouts={dynamicLayouts}
       breakpoints={breakpoints}
-      breakpoint={
-        isNested || readonly ? undefined : editorStore?.currentBreakpoint
-      }
+      breakpoint={readonly ? undefined : editorStore?.currentBreakpoint}
       cols={cols}
       rowHeight={rowHeight}
       style={gridBackgroundStyle}
@@ -261,4 +223,4 @@ export default inject(
   "viewStore",
   "widgetStore",
   "editorStore"
-)(observer(GridLayout));
+)(observer(LayoutAreaGridLayout));
