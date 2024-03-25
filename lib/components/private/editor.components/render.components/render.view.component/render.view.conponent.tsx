@@ -30,6 +30,7 @@ const RenderView = ({
   showVisualWidgetOutline = false,
   viewToRender,
   viewStore,
+  editorStore,
 }: RenderViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const [structuredWidgets, setStructuredWidgets] = useState<
@@ -60,7 +61,7 @@ const RenderView = ({
   );
 
   const preparedRootLevelWidgets = Array.from(rootLevelWidgets.values());
-  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
+  const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
 
   return (
     <GridLayout

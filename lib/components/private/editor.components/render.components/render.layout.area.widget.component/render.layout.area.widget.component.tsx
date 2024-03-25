@@ -9,6 +9,7 @@ import ConfigProvider from "../../../../../config/config.provider";
 import React, { useRef, useState } from "react";
 import SmallText from "../../../general.components/text.components/small.text.component/small.text.component";
 import StateStore from "../../../../../stores/state.store";
+import EditorStore from "../../../../../stores/editor.store";
 
 interface RenderWidgetProps {
   readonly?: boolean;
@@ -16,6 +17,7 @@ interface RenderWidgetProps {
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   stateStore?: StateStore;
+  editorStore?: EditorStore;
   showVisualWidgetOutline: boolean;
 }
 
@@ -23,12 +25,13 @@ const RenderLayoutAreaWidget = ({
   widgetToRender,
   readonly,
   widgetStore,
+  editorStore,
   stateStore,
   showVisualWidgetOutline,
 }: RenderWidgetProps): JSX.Element => {
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
-  const contextMenu = widgetStore?.getContextMenuState();
-  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
+  const contextMenu = editorStore?.widgetContextMenu;
+  const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
   const widgetRef = useRef(null);
   // @ts-ignore
   const [hoveredWidgetID, setHoveredWidgetID] = useState<string | undefined>();
@@ -42,7 +45,7 @@ const RenderLayoutAreaWidget = ({
   const handleCloseContextMenu = () => {
     if (readonly) return;
 
-    widgetStore?.setContextMenuState({
+    editorStore?.setWidgetContextMenu({
       isOpen: false,
       anchorPoint: { x: 0, y: 0 },
       selectedWidgetID: null,
@@ -58,9 +61,9 @@ const RenderLayoutAreaWidget = ({
     event.preventDefault();
     event.stopPropagation();
 
-    widgetStore?.setSelectWidget(widgetID);
+    editorStore?.setSelectWidget(widgetID);
 
-    widgetStore?.setContextMenuState({
+    editorStore?.setWidgetContextMenu({
       isOpen: true,
       anchorPoint: {
         x: event.clientX + window.scrollX,
@@ -123,7 +126,7 @@ const RenderLayoutAreaWidget = ({
     if (readonly) return;
     event.stopPropagation();
     event.preventDefault();
-    widgetStore?.setSelectWidget(widgetID);
+    editorStore?.setSelectWidget(widgetID);
   };
 
   return (
@@ -151,5 +154,6 @@ const RenderLayoutAreaWidget = ({
 export default inject(
   "viewStore",
   "widgetStore",
-  "stateStore"
+  "stateStore",
+  "editorStore"
 )(observer(RenderLayoutAreaWidget));

@@ -16,7 +16,6 @@ import PageStore from "../../../../stores/page.store";
 import { useRef, useState } from "react";
 import { useClickedOutside } from "../../../../globals/helpers/hook.helper";
 import PageOverviewDropdown from "./components/page.overview.dropdown.compoment";
-import SmallText from "../../general.components/text.components/small.text.component/small.text.component";
 import ViewStore from "../../../../stores/view.store";
 import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
 
@@ -54,7 +53,7 @@ const TopBar = ({
           size="lg"
           onClick={() => {
             editorStore?.changeEditorMode(mode);
-            widgetStore?.setSelectWidget(undefined);
+            editorStore?.setSelectWidget(undefined);
           }}
         />
       </div>

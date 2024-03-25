@@ -74,6 +74,10 @@ class LayoutStore {
 
     return widgets;
   }
+
+  getLayoutAreaWidget(widgetID: string): WidgetHierarchy | undefined {
+    return this._structuredLayoutAreaWidgets.get(widgetID);
+  }
   //! methods
 
   async initLayoutAreaWidgetsAndProcess(pageID: string): Promise<void> {

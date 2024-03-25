@@ -24,22 +24,8 @@ export const structureWidgetsHierarchy = (
   const processWidget = (currentWidget: Widget, parentId: string | null) => {
     const location = determineWidgetLocation(currentWidget);
 
-    const log = location === WidgetHierarchyLocation.LAYOUT_AREA;
-
-    if (log) {
-      console.log("location:");
-      console.log(JSON.stringify(location));
-      console.log(
-        "!widgetMap.has(currentWidget.widgetID)",
-        !widgetMap.has(currentWidget.widgetID)
-      );
-      console.log("(widgetID)", currentWidget);
-    }
     // add widget to map if it does not exist
     if (!widgetMap.has(currentWidget.widgetID)) {
-      if (log) {
-        console.log("if block..");
-      }
       widgetMap.set(currentWidget.widgetID, {
         widget: currentWidget,
         children: [],
@@ -60,11 +46,6 @@ export const structureWidgetsHierarchy = (
       if (widget.parentID === currentWidget.widgetID) {
         processWidget(widget, currentWidget.widgetID);
       }
-    }
-
-    if (log) {
-      console.log("widgetMap:");
-      console.log(JSON.stringify(widgetMap));
     }
   };
 

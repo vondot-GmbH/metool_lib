@@ -29,7 +29,6 @@ const RenderPage = ({
   pageStore,
 }: RenderPageProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
-  const layoutConfig = pageStore?.currentPageToRender?.layoutConfig;
   const viewIdToRender = pageStore?.currentViewIdToRender;
 
   useEffect(() => {

@@ -49,7 +49,7 @@ class PageStore {
   };
 
   setCurrentViewIdToRender = (viewID: string) => {
-    this.stores.widgetStore.setSelectWidget(undefined);
+    this.stores.editorStore.setSelectWidget(undefined);
     this._currentViewToRenderID = viewID;
   };
 

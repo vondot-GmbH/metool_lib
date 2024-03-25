@@ -12,15 +12,18 @@ import MultiSwitch from "../../../../private/general.components/multi.switch.com
 import SpacingEditor from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
 import defaultStyles from "../../../../../styles/index.module.scss";
 import StateInputEditor from "../../../../private/general.components/state.input.text.component/state.input.text.component";
+import EditorStore from "../../../../../stores/editor.store";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
+  editorStore?: EditorStore;
 }
 
 const TableWidgetOptionSidebar = ({
   widgetStore,
+  editorStore,
 }: TableWidgetOptionSidebarProps): JSX.Element => {
-  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
+  const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
 
   // TODO
   const columnOptions: TableColumn[] = widgetStore?.getWidgetOption(
@@ -209,4 +212,7 @@ const TableWidgetOptionSidebar = ({
   );
 };
 
-export default inject("widgetStore")(observer(TableWidgetOptionSidebar));
+export default inject(
+  "widgetStore",
+  "editorStore"
+)(observer(TableWidgetOptionSidebar));

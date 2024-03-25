@@ -3,6 +3,11 @@ import ConfigProvider from "../config/config.provider";
 import { EditorMode } from "../globals/enums/editor.enum";
 import RootStore from "./root.store";
 import { PreparedBreakpointConfig } from "../globals/interfaces/config.interface";
+import { WidgetContextMenu } from "../globals/interfaces/widget.state.interface";
+import {
+  WidgetHierarchy,
+  WidgetHierarchyLocation,
+} from "../schemas/widget.schemas/widget.schema";
 
 class EditorStore {
   private _currentBreakpoint: string = "medium"; // TODO consider this when set init current screen width
@@ -16,6 +21,14 @@ class EditorStore {
   private _visualWidgetOutlineGuide: boolean = false;
 
   private _currentScreenWidth: number = 440; // TODO calculate the initial width based on the layout config
+
+  private _selectedWidget: WidgetHierarchy | undefined;
+
+  private _widgetContextMenu: WidgetContextMenu = {
+    isOpen: false,
+    anchorPoint: { x: 0, y: 0 },
+    selectedWidgetID: null,
+  };
 
   // @ts-ignore
   private stores: RootStore;
@@ -42,6 +55,27 @@ class EditorStore {
     this._currentScreenWidth = width;
   }
 
+  setSelectWidget(
+    widgetID: string | undefined,
+    location?: WidgetHierarchyLocation
+  ): void {
+    if (widgetID == null) {
+      this._selectedWidget = undefined;
+      return;
+    }
+
+    if (location == WidgetHierarchyLocation.LAYOUT_AREA) {
+      this._selectedWidget =
+        this.stores?.layoutStore?.getLayoutAreaWidget(widgetID);
+    } else {
+      this.stores?.widgetStore?.getStructuredWidget(widgetID);
+    }
+  }
+
+  setWidgetContextMenu(contextMenu: WidgetContextMenu): void {
+    this._widgetContextMenu = contextMenu;
+  }
+
   //! Getter
 
   get currentScreenWidth(): number {
@@ -66,6 +100,19 @@ class EditorStore {
 
   get visualWidgetOutlineGuideState(): boolean {
     return this._visualWidgetOutlineGuide;
+  }
+
+  get selectedWidget(): WidgetHierarchy | undefined {
+    if (this._selectedWidget == null) {
+      return;
+    }
+
+    return this._selectedWidget;
+  }
+
+  // TODO is parse necessary?
+  get widgetContextMenu(): WidgetContextMenu {
+    return JSON.parse(JSON.stringify(this._widgetContextMenu));
   }
 
   // calculate the max and min width for each breakpoint based on the layout config

@@ -8,7 +8,6 @@ import {
   WidgetLayouts,
   WidgetPositioning,
 } from "../schemas/widget.schemas/widget.schema";
-import { WidgetContextMenu } from "../globals/interfaces/widget.state.interface";
 import { Layout } from "react-grid-layout";
 import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
@@ -23,16 +22,6 @@ class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
   private _analyzedWidgetOptions: Map<string, AnalyzedWidgetOptions> =
     new Map();
-
-  // TODO maby move this to editor store
-  private _selectedWidget: WidgetHierarchy | undefined;
-
-  // TODO maby move this to editor store
-  private _contextMenu: WidgetContextMenu = {
-    isOpen: false,
-    anchorPoint: { x: 0, y: 0 },
-    selectedWidgetID: null,
-  };
 
   private stores: RootStore;
 
@@ -83,26 +72,6 @@ class WidgetStore {
     this._structuredWidgetHierarchy.set(widgetID, newHierarchy);
   }
 
-  setSelectWidget(widgetID: string | undefined): void {
-    if (widgetID == null) {
-      this._selectedWidget = undefined;
-      return;
-    }
-
-    const selectedWidget = this._structuredWidgetHierarchy.get(widgetID);
-
-    if (selectedWidget == null) {
-      this._selectedWidget = undefined;
-      return;
-    }
-
-    this._selectedWidget = selectedWidget;
-  }
-
-  setContextMenuState(contextMenu: WidgetContextMenu): void {
-    this._contextMenu = contextMenu;
-  }
-
   //! getter
 
   getAnalyzedWidgetOptions(
@@ -125,16 +94,9 @@ class WidgetStore {
     return this._structuredWidgetHierarchy;
   }
 
-  getSelectedWidget(): WidgetHierarchy | undefined {
-    if (this._selectedWidget == null) {
-      return;
-    }
-
-    return this._selectedWidget;
-  }
-
-  getContextMenuState(): WidgetContextMenu {
-    return JSON.parse(JSON.stringify(this._contextMenu));
+  // TODO rename structuredWidgetHierarchy
+  getStructuredWidget(widgetID: string): WidgetHierarchy | undefined {
+    return this._structuredWidgetHierarchy.get(widgetID);
   }
 
   //! methods

@@ -4,15 +4,15 @@ import LayoutAreaGridLayout from "../../layout.area.grid.layout.component/layout
 import LayoutStore from "../../../../../stores/layout.store";
 import { inject, observer } from "mobx-react";
 import { WidgetHierarchyMap } from "../../../../../schemas/widget.schemas/widget.schema";
-import WidgetStore from "../../../../../stores/widget.store";
 import PageStore from "../../../../../stores/page.store";
 import RenderWidget from "../render.widget.component/render.widget.component";
+import EditorStore from "../../../../../stores/editor.store";
 
 interface RenderPageLayoutProps {
   children?: React.ReactNode;
   readonly?: boolean;
   layoutStore?: LayoutStore;
-  widgetStore?: WidgetStore;
+  editorStore?: EditorStore;
   pageStore?: PageStore;
 }
 
@@ -20,13 +20,13 @@ const RenderPageLayout = ({
   children,
   readonly = true,
   layoutStore,
-  widgetStore,
   pageStore,
+  editorStore,
 }: RenderPageLayoutProps) => {
+  const configProvider = ConfigProvider.getInstance();
   const pageLayoutConfig = pageStore?.currentPageToRender?.layoutConfig;
   const pageToRender = pageStore?.currentPageToRender?.pageID;
-  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
-  const configProvider = ConfigProvider.getInstance();
+  const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -121,6 +121,6 @@ const RenderPageLayout = ({
 
 export default inject(
   "layoutStore",
-  "widgetStore",
-  "pageStore"
+  "pageStore",
+  "editorStore"
 )(observer(RenderPageLayout));
