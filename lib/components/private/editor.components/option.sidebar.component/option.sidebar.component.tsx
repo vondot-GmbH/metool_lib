@@ -68,7 +68,6 @@ const OptionSidebar = ({ widgetStore, editorStore }: OptionSidebarProps) => {
 
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
   const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
-
   const selectedWidgetType = editorStore?.selectedWidget?.widget.widgetType;
 
   const selectedWidgetConfig = registeredWidgets?.find(

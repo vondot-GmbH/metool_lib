@@ -59,16 +59,21 @@ class EditorStore {
     widgetID: string | undefined,
     location?: WidgetHierarchyLocation
   ): void {
+    let selectedWidget: WidgetHierarchy | undefined;
+
     if (widgetID == null) {
       this._selectedWidget = undefined;
       return;
     }
 
     if (location == WidgetHierarchyLocation.LAYOUT_AREA) {
-      this._selectedWidget =
-        this.stores?.layoutStore?.getLayoutAreaWidget(widgetID);
+      selectedWidget = this.stores?.layoutStore?.getLayoutAreaWidget(widgetID);
     } else {
-      this.stores?.widgetStore?.getStructuredWidget(widgetID);
+      selectedWidget = this.stores?.widgetStore?.getStructuredWidget(widgetID);
+    }
+
+    if (selectedWidget != null) {
+      this._selectedWidget = selectedWidget;
     }
   }
 

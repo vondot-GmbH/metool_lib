@@ -67,7 +67,7 @@ const TableWidgetOptionSidebar = ({
       <CollapsibleSection title="Content">
         <StateInputEditor
           label="Data"
-          value={tableOptions.data}
+          value={tableOptions?.data}
           className={defaultStyles.mb20}
           onChange={(value: string) => {
             widgetStore?.updateWidgetOption(
