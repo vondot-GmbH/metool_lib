@@ -5,7 +5,6 @@ import TitleText from "../../general.components/text.components/title.text.compo
 import BreakpointSettings from "../breakpoint.settings.component/breakpoint.settings.component";
 import { EditorMode } from "../../../../globals/enums/editor.enum";
 import EditorStore from "../../../../stores/editor.store";
-import WidgetStore from "../../../../stores/widget.store";
 import styles from "./top.bar.component.module.scss";
 import { inject, observer } from "mobx-react";
 import {
@@ -15,29 +14,32 @@ import {
 import PageStore from "../../../../stores/page.store";
 import { useRef, useState } from "react";
 import { useClickedOutside } from "../../../../globals/helpers/hook.helper";
-import PageOverviewDropdown from "./components/page.overview.dropdown.compoment";
+import PageOverviewDropdown from "./components/page.overview.dropdown.compoment/page.overview.dropdown.compoment";
 import ViewStore from "../../../../stores/view.store";
 import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
 
 interface TopBarProps {
   editorStore?: EditorStore;
-  widgetStore?: WidgetStore;
   pageStore?: PageStore;
   viewStore?: ViewStore;
 }
 
 const TopBar = ({
   editorStore,
-  widgetStore,
   pageStore,
   viewStore,
 }: TopBarProps): JSX.Element => {
   const topBarRef = useRef(null);
   const editorMode = editorStore?.editorMode;
   const [isPageDropdownOpen, setIsPageDropdownOpen] = useState(false);
+  const [isPageSelected, setIsPageSelected] = useState(false);
 
   // handle click outside for page dropdown
-  useClickedOutside(topBarRef, () => setIsPageDropdownOpen(false));
+  useClickedOutside(topBarRef, () => {
+    if (!isPageSelected) {
+      setIsPageDropdownOpen(false);
+    }
+  });
 
   const renderPreviewModeButton = (): JSX.Element => {
     let mode = EditorMode.EDIT;
@@ -87,6 +89,9 @@ const TopBar = ({
           onSelectedPageChange={() => {
             setIsPageDropdownOpen(false);
           }}
+          isPageSelected={(isSelected) => {
+            setIsPageSelected(isSelected);
+          }}
         />
       )}
     </div>
@@ -95,7 +100,6 @@ const TopBar = ({
 
 export default inject(
   "editorStore",
-  "widgetStore",
   "pageStore",
   "viewStore"
 )(observer(TopBar));

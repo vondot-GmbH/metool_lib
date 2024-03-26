@@ -66,6 +66,9 @@ class PageStore {
     return Array.from(this._pages.values());
   }
 
+  getPage(pageID: string): Page | undefined {
+    return this._pages.get(pageID);
+  }
   //! Methods
 
   createInitialPage(): Page {

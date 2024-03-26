@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 export interface Page {
   _id?: string;
   pageID: string;
@@ -23,10 +25,6 @@ export interface AreaOptions {
   backgroundColor?: string;
   padding?: string;
   margin?: string;
-  maxHeight?: string;
-  minHeight?: string;
-  maxWidth?: string;
-  minWidth?: string;
   border?: string;
   borderRadius?: string;
 }
@@ -35,3 +33,25 @@ export interface LayoutOptions {
   backgroundColor?: string;
   layoutType?: string;
 }
+
+export const pageSchema = yup.object().shape({
+  name: yup.string().required(),
+});
+
+export const layoutConfigSchema = yup.object().shape({
+  layoutID: yup.string().required(),
+  options: yup.object().shape({
+    backgroundColor: yup.string(),
+    layoutType: yup.string(),
+  }),
+});
+
+export const areaOptionsSchema = yup.object().shape({
+  height: yup.string().notRequired(),
+  width: yup.string().notRequired(),
+  backgroundColor: yup.string().notRequired(),
+  padding: yup.string().notRequired(),
+  margin: yup.string().notRequired(),
+  border: yup.string().notRequired(),
+  borderRadius: yup.string().notRequired(),
+});
