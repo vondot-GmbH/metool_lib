@@ -11,6 +11,7 @@ import EditorStore from "../../../../../stores/editor.store";
 interface RenderPageLayoutProps {
   children?: React.ReactNode;
   readonly?: boolean;
+  showVisualWidgetOutline?: boolean;
   layoutStore?: LayoutStore;
   editorStore?: EditorStore;
   pageStore?: PageStore;
@@ -19,6 +20,7 @@ interface RenderPageLayoutProps {
 const RenderPageLayout = ({
   children,
   readonly = true,
+  showVisualWidgetOutline = false,
   layoutStore,
   pageStore,
   editorStore,
@@ -77,12 +79,13 @@ const RenderPageLayout = ({
         content={structuredWidgets as WidgetHierarchyMap} // TODO
         readonly={readonly}
         selectedWidgetID={selectedWidgetID}
+        layoutAreaID={layoutAreaID}
       >
         {areaWidgets?.map((widget) => {
           return (
             <div key={widget.widget.positioning.i}>
               <RenderWidget
-                showVisualWidgetOutline={false}
+                showVisualWidgetOutline={showVisualWidgetOutline}
                 readonly={readonly}
                 widgetToRender={widget}
                 key={widget.widget.positioning.i}

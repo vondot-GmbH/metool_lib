@@ -94,7 +94,7 @@ const TableWidgetOptionSidebar = ({
                 );
               }}
             >
-              <RunningText>{item.source}</RunningText>
+              <RunningText>{item?.source}</RunningText>
             </div>
           )}
           onAdd={handleAddColumn}
@@ -105,7 +105,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Header Background Color"
-          value={tableOptions.headerBackgroundColor}
+          value={tableOptions?.headerBackgroundColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -119,7 +119,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Row Background Color"
-          value={tableOptions.rowBackgroundColor}
+          value={tableOptions?.rowBackgroundColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -133,7 +133,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Row Hover Color"
-          value={tableOptions.rowHoverColor}
+          value={tableOptions?.rowHoverColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -147,7 +147,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Border Color"
-          value={tableOptions.borderBottomColor}
+          value={tableOptions?.borderBottomColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -164,10 +164,10 @@ const TableWidgetOptionSidebar = ({
           types={["padding"]}
           initialValues={{
             padding: {
-              top: tableOptions.tableCellPadding?.top,
-              right: tableOptions.tableCellPadding?.right,
-              bottom: tableOptions.tableCellPadding?.bottom,
-              left: tableOptions.tableCellPadding?.left,
+              top: tableOptions?.tableCellPadding?.top,
+              right: tableOptions?.tableCellPadding?.right,
+              bottom: tableOptions?.tableCellPadding?.bottom,
+              left: tableOptions?.tableCellPadding?.left,
             },
           }}
           onChange={(_mode, values) => {
@@ -183,7 +183,7 @@ const TableWidgetOptionSidebar = ({
       <CollapsibleSection title="Interaction">
         <MultiSwitch
           label="Row Selection"
-          initialValue={tableOptions.rowSelectionType}
+          initialValue={tableOptions?.rowSelectionType}
           className={defaultStyles.mt10}
           onChange={(value) => {
             widgetStore?.updateWidgetOption(

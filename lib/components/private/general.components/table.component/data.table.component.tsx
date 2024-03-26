@@ -213,7 +213,7 @@ function Table<T extends { [key: string]: any }>({
               width: `${columnWidths[index]}px`,
               textAlign: column.textAlign || "left",
               backgroundColor:
-                column.headerBackgroundColor || defaultHeaderBackgroundColor,
+                column?.headerBackgroundColor || defaultHeaderBackgroundColor,
             }}
           >
             {column.label}

@@ -12,21 +12,23 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import ViewStore from "../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
-import WidgetStore from "../../../../stores/widget.store";
 import ConfigProvider from "../../../../config/config.provider";
 import EditorStore from "../../../../stores/editor.store";
 import { getUniqueID } from "../../../../globals/helpers/global.helper";
+import LayoutStore from "../../../../stores/layout.store";
 
 interface GridLayoutProps {
   key: string;
   children: React.ReactNode | React.ReactNode[];
   content: WidgetHierarchyMap;
-  viewStore?: ViewStore;
-  widgetStore?: WidgetStore;
-  editorStore?: EditorStore;
-  parentWidgetID?: string;
+
   readonly?: boolean;
   selectedWidgetID: string | undefined;
+  layoutAreaID: string;
+
+  viewStore?: ViewStore;
+  editorStore?: EditorStore;
+  layoutStore?: LayoutStore;
 }
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -35,9 +37,9 @@ const LayoutAreaGridLayout = ({
   key = "layout-area-grid-layout",
   children,
   content,
-  widgetStore,
   editorStore,
-  parentWidgetID,
+  layoutStore,
+  layoutAreaID,
   readonly = false,
   selectedWidgetID,
 }: GridLayoutProps): JSX.Element => {
@@ -127,10 +129,10 @@ const LayoutAreaGridLayout = ({
 
     const widgetType = event.dataTransfer.getData("text");
 
-    widgetStore?.addWidget({
+    layoutStore?.addWidget({
+      layoutAreaID: layoutAreaID,
       currentBreakpoint: currentBreakpoint,
       layout: layoutNEW,
-      parentID: parentWidgetID ?? null,
       widgetType,
     });
 
@@ -164,7 +166,7 @@ const LayoutAreaGridLayout = ({
     setShowGrid(false);
     editorStore?.setVisualWidgetOutlineGuide(false);
 
-    widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
+    layoutStore?.updateWidgetsLayoutForCurrentBreakpoint(
       layout,
       currentBreakpoint,
       breakpoints
@@ -198,11 +200,11 @@ const LayoutAreaGridLayout = ({
     setShowGrid(false);
     editorStore?.setVisualWidgetOutlineGuide(false);
 
-    // widgetStore?.updateWidgetsLayoutForCurrentBreakpoint(
-    //   layout,
-    //   currentBreakpoint,
-    //   breakpoints
-    // );
+    layoutStore?.updateWidgetsLayoutForCurrentBreakpoint(
+      layout,
+      currentBreakpoint,
+      breakpoints
+    );
   };
 
   return (
@@ -236,6 +238,6 @@ const LayoutAreaGridLayout = ({
 
 export default inject(
   "viewStore",
-  "widgetStore",
-  "editorStore"
+  "editorStore",
+  "layoutStore"
 )(observer(LayoutAreaGridLayout));

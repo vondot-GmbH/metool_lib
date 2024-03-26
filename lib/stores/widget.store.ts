@@ -77,7 +77,13 @@ class WidgetStore {
   getAnalyzedWidgetOptions(
     widgetID: string
   ): AnalyzedWidgetOptions | undefined {
-    return this._analyzedWidgetOptions.get(widgetID) ?? undefined;
+    const options = this._analyzedWidgetOptions.get(widgetID);
+
+    if (options != null) {
+      return options;
+    }
+
+    return this.stores.layoutStore?.getAnalyzedLayoutWidgetOption(widgetID);
   }
 
   getStructuredWidgetHierarchyByWidgetID(
@@ -101,6 +107,31 @@ class WidgetStore {
 
   //! methods
 
+  findWidgetAcrossStores(widgetID: string): WidgetHierarchy | undefined {
+    // search in the structured widget hierarchy
+    const widget = this._structuredWidgetHierarchy.get(widgetID);
+
+    if (widget != null) {
+      return widget;
+    }
+
+    // if the widget is not found in the structured widget hierarchy, search in the layout area widgets
+    return this.stores.layoutStore.getLayoutAreaWidget(widgetID);
+  }
+
+  updateWidgetAcrossStores(widget: WidgetHierarchy): void {
+    const widgetID = widget.widget.widgetID;
+
+    // check if the widget is in the structured widget hierarchy
+    if (this._structuredWidgetHierarchy.has(widgetID)) {
+      this._structuredWidgetHierarchy.set(widgetID, widget);
+      return;
+    }
+
+    // if the widget is not in the structured widget hierarchy, update the layout area widget
+    this.stores.layoutStore.setStructuredLayoutAreaWidget(widgetID, widget);
+  }
+
   // TODO
   async initWidgetsAndProcess(viewID: string): Promise<void> {
     const widgets = await this.fetchWidgetsForView(viewID);
@@ -116,8 +147,7 @@ class WidgetStore {
 
   // update a single option of a widget by the widgetID and the option name
   updateWidgetOption(widgetID: string, optionName: string, value: any): void {
-    const widgetHierarchy =
-      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+    const widgetHierarchy = this.findWidgetAcrossStores(widgetID);
 
     if (widgetHierarchy != null) {
       const updatedWidgetHierarchy = JSON.parse(
@@ -129,7 +159,7 @@ class WidgetStore {
       options[optionName] = value;
       updatedWidgetHierarchy.widget.options = options;
 
-      this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
+      this.updateWidgetAcrossStores(updatedWidgetHierarchy);
 
       this.stores.changeRecordStore.setChangeWidgetRecord(
         widgetID,
@@ -153,8 +183,7 @@ class WidgetStore {
     identifierValue: any;
     updatedProperties: Partial<T>;
   }): void {
-    const widgetHierarchy =
-      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+    const widgetHierarchy = this.findWidgetAcrossStores(widgetID);
 
     if (widgetHierarchy != null) {
       const updatedWidgetHierarchy = JSON.parse(
@@ -172,7 +201,7 @@ class WidgetStore {
 
       updatedWidgetHierarchy.widget.options[optionName] = updatedOptionsArray;
 
-      this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
+      this.updateWidgetAcrossStores(updatedWidgetHierarchy);
 
       this.stores.changeRecordStore.setChangeWidgetRecord(
         widgetID,
@@ -183,8 +212,7 @@ class WidgetStore {
   }
 
   getWidgetOption(widgetID: string, optionName: string): any {
-    const widgetHierarchy =
-      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+    const widgetHierarchy = this.findWidgetAcrossStores(widgetID);
 
     if (widgetHierarchy != null) {
       return widgetHierarchy.widget.options?.[optionName] ?? null;
@@ -192,15 +220,14 @@ class WidgetStore {
   }
 
   getAllOptionsForWidget(widgetID: string): any {
-    const widgetHierarchy =
-      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+    const widgetHierarchy = this.findWidgetAcrossStores(widgetID);
 
     if (widgetHierarchy != null) {
       return widgetHierarchy.widget.options ?? {};
     }
   }
 
-  updateWidgetPositioningForBreakpoint(
+  private updateWidgetPositioningForBreakpoint(
     widgetID: string,
     breakpoint: string,
     positioning: WidgetPositioning

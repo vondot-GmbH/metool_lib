@@ -50,7 +50,10 @@ const RenderPage = ({
   }
 
   return (
-    <RenderPageLayout readonly={readonly}>
+    <RenderPageLayout
+      readonly={readonly}
+      showVisualWidgetOutline={showVisualWidgetOutline}
+    >
       <RenderView
         key={viewIdToRender}
         viewToRender={viewIdToRender}

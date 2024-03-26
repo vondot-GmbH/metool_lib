@@ -162,7 +162,7 @@ export const TableWidgetColumnDetailView = ({
 
         <TextInput
           label="Header Background Color"
-          value={tableColumn.headerBackgroundColor}
+          value={tableColumn?.headerBackgroundColor}
           className={defaultStyles.mt10}
           type="color"
           onValueChange={(value) => {
@@ -182,7 +182,7 @@ export const TableWidgetColumnDetailView = ({
 
         <TextInput
           label="Row Background Color"
-          value={tableColumn.rowBackgroundColor}
+          value={tableColumn?.rowBackgroundColor}
           className={defaultStyles.mt10}
           type="color"
           onValueChange={(value) => {
@@ -202,7 +202,7 @@ export const TableWidgetColumnDetailView = ({
 
         <TextInput
           label="Row Text Color"
-          value={tableColumn.rowTextColor}
+          value={tableColumn?.rowTextColor}
           className={defaultStyles.mt10}
           type="color"
           onValueChange={(value) => {
@@ -222,7 +222,7 @@ export const TableWidgetColumnDetailView = ({
 
         <TextInput
           label="Header Text Color"
-          value={tableColumn.headerTextColor}
+          value={tableColumn?.headerTextColor}
           className={defaultStyles.mt10}
           type="color"
           onValueChange={(value) => {

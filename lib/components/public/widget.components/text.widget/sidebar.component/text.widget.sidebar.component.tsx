@@ -17,17 +17,17 @@ const TextWidgetOptionSidebar = ({
   const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
   // TODO is there a other way to get the selectedWidgetID maby dont need to pass it to the update function
 
-  // const data: string = widgetStore?.getWidgetOption(
-  //   selectedWidgetID ?? "",
-  //   "data"
-  // );
+  const data: string = widgetStore?.getWidgetOption(
+    selectedWidgetID ?? "",
+    "data"
+  );
 
   return (
     <div>
       <CollapsibleSection title="Content">
         <StateInputEditor
           label="Data"
-          value={""}
+          value={data ?? ""}
           className={defaultStyles.mb10}
           onChange={(value: string) => {
             widgetStore?.updateWidgetOption(
