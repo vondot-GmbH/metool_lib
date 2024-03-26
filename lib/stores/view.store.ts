@@ -138,7 +138,7 @@ class ViewStore {
     this.setViews([response]);
   }
 
-  async createAndSaveView(view: View): Promise<void> {
+  async createAndSaveViewForPage(view: View): Promise<void> {
     const createQuery = this.stores.queryStore.getQuery(
       CoreRestQueryType.CREATE_VIEW
     );
@@ -161,6 +161,7 @@ class ViewStore {
 
     this.setCurrentSelectedView(response);
     this.setViews([response]);
+    await this.stores.pageStore.addViewToCurrentPageAndSave(response?.viewID);
   }
 }
 

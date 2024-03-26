@@ -169,6 +169,28 @@ class PageStore {
 
     this.setPages(response);
   }
+
+  async addViewToCurrentPageAndSave(viewID: string): Promise<void> {
+    const view = this.stores.viewStore.getView(viewID);
+    const page = this._currentPageToRender;
+
+    if (view == null || page == null) return;
+
+    const defaultView = page.views.find((view) => view.defaultView);
+
+    const updatedPage = {
+      ...page,
+      views: [
+        ...page.views,
+        {
+          viewID: view.viewID,
+          defaultView: defaultView == null ? true : false,
+        },
+      ],
+    } as Page;
+
+    this.updateAndSavePage(updatedPage);
+  }
 }
 
 export default PageStore;

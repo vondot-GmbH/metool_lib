@@ -83,7 +83,6 @@ const ViewSidebar = ({
 
   const handleAddView = () => {
     const initialView = viewStore?.createInitialView();
-
     setSelectedItem(initialView);
   };
 
