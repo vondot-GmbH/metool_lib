@@ -1,5 +1,6 @@
 import { Layout, Responsive, WidthProvider } from "react-grid-layout";
 import {
+  adjustRowHeight,
   convertDynamicLayouts,
   convertToGridLayout,
   generateGridLayoutBackground,
@@ -8,7 +9,7 @@ import {
   WidgetHierarchyLocation,
   WidgetHierarchyMap,
 } from "../../../../schemas/widget.schemas/widget.schema";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import ViewStore from "../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../stores/widget.store";
@@ -40,6 +41,7 @@ const LayoutAreaGridLayout = ({
   readonly = false,
   selectedWidgetID,
 }: GridLayoutProps): JSX.Element => {
+  const layoutAreaGridRef = useRef<HTMLDivElement>(null);
   const currentBreakpoint = editorStore?.currentBreakpoint ?? "";
 
   const [gridBackground, setGridBackground] = useState("");
@@ -51,7 +53,7 @@ const LayoutAreaGridLayout = ({
     WidgetHierarchyLocation.ROOT
   );
 
-  const rowHeight = configProvider.getRowHeight(
+  const predefinedRowHeight = configProvider.getRowHeight(
     WidgetHierarchyLocation.ROOT,
     currentBreakpoint
   );
@@ -62,19 +64,45 @@ const LayoutAreaGridLayout = ({
 
   const layouts = convertToGridLayout(content, breakpoints);
   const [savedLayouts, setSavedLayouts] = useState(layouts);
+  const [adjustedRowHeight, setAdjustedRowHeight] =
+    useState<number>(predefinedRowHeight);
 
   const dynamicLayouts = useMemo(() => {
     return convertDynamicLayouts(selectedWidgetID, savedLayouts, readonly);
   }, [selectedWidgetID, savedLayouts, readonly]);
 
-  const gridBackgroundStyle = {
-    background: showGrid ? gridBackground : "none",
-    height: "100%",
-  } as any;
+  useEffect(() => {
+    console.log("layoutAreaGridRef.current", layoutAreaGridRef);
+
+    if (layoutAreaGridRef?.current != null && predefinedRowHeight != null) {
+      const calcRowHeight = adjustRowHeight(
+        layoutAreaGridRef?.current?.offsetHeight,
+        predefinedRowHeight
+      );
+
+      if (calcRowHeight != null) {
+        console.log("calcRowHeight", calcRowHeight);
+        console.log("ajusted height ", adjustedRowHeight);
+        setAdjustedRowHeight(calcRowHeight);
+      }
+    }
+
+    const newGridBackground = generateGridLayoutBackground({
+      cols,
+      rowHeight: adjustedRowHeight,
+      currentBreakpoint: currentBreakpoint,
+    });
+    setGridBackground(newGridBackground);
+  }, [currentBreakpoint]);
 
   const onBreakpointChange = (newBreakpoint: string) => {
     editorStore?.setCurrentBreakpoint(newBreakpoint);
   };
+
+  const gridBackgroundStyle = {
+    background: showGrid ? gridBackground : "none",
+    height: "100%",
+  } as any;
 
   // TODO
   const handleDrop = (_layout: any, layoutItem: any, event: any): void => {
@@ -182,25 +210,26 @@ const LayoutAreaGridLayout = ({
     // );
   };
 
-  useEffect(() => {
-    const newGridBackground = generateGridLayoutBackground({
-      cols,
-      rowHeight,
-      currentBreakpoint: currentBreakpoint,
-    });
-    setGridBackground(newGridBackground);
-  }, [currentBreakpoint, cols, rowHeight]);
+  // useEffect(() => {
+  //   const newGridBackground = generateGridLayoutBackground({
+  //     cols,
+  //     rowHeight,
+  //     currentBreakpoint: currentBreakpoint,
+  //   });
+  //   setGridBackground(newGridBackground);
+  // }, [currentBreakpoint, cols, rowHeight]);
 
   return (
     <ResponsiveGridLayout
+      // ref={layoutAreaGridRef}
+      innerRef={layoutAreaGridRef}
       key={key}
-      //   className={styles.gridLayout}
       margin={[0, 0]}
       layouts={dynamicLayouts}
       breakpoints={breakpoints}
       breakpoint={readonly ? undefined : editorStore?.currentBreakpoint}
       cols={cols}
-      rowHeight={rowHeight}
+      rowHeight={30}
       style={gridBackgroundStyle}
       compactType={"vertical"}
       onBreakpointChange={onBreakpointChange}
@@ -214,6 +243,7 @@ const LayoutAreaGridLayout = ({
         setSavedLayouts(layouts);
       }}
     >
+      <div ref={layoutAreaGridRef} style={{ width: "100%", height: "100%" }} />
       {children}
     </ResponsiveGridLayout>
   );

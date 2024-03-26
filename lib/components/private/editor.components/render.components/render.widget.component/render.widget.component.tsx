@@ -23,21 +23,22 @@ import EditorStore from "../../../../../stores/editor.store";
 interface RenderWidgetProps {
   readonly?: boolean;
   widgetToRender: WidgetHierarchy;
+  showVisualWidgetOutline: boolean;
+
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
   stateStore?: StateStore;
-  showVisualWidgetOutline: boolean;
 }
 
 const RenderWidget = ({
   widgetToRender,
   readonly,
+  showVisualWidgetOutline,
   widgetStore,
   viewStore,
   stateStore,
   editorStore,
-  showVisualWidgetOutline,
 }: RenderWidgetProps): JSX.Element => {
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
   const contextMenu = editorStore?.widgetContextMenu;
@@ -219,20 +220,21 @@ const RenderWidget = ({
 
   const handleWidgetClick = (
     event: React.MouseEvent<HTMLDivElement>,
-    widgetID: string
+    selectedWidget: WidgetHierarchy
   ) => {
     if (readonly) return;
     event.stopPropagation();
     event.preventDefault();
-    editorStore?.setSelectWidget(widgetID);
+    editorStore?.setSelectWidget(
+      selectedWidget.widget.widgetID,
+      selectedWidget.location
+    );
   };
 
   return (
     <div
       ref={widgetRef}
-      onDoubleClick={(e) =>
-        handleWidgetClick(e, widgetToRender.widget.widgetID)
-      }
+      onDoubleClick={(e) => handleWidgetClick(e, widgetToRender)}
       className={widgetContainerClassName}
       data-widget-type={widgetToRender.widget.widgetType}
       onContextMenu={(e) =>
