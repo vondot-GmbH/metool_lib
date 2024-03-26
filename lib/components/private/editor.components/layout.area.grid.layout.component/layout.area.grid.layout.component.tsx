@@ -41,13 +41,11 @@ const LayoutAreaGridLayout = ({
   readonly = false,
   selectedWidgetID,
 }: GridLayoutProps): JSX.Element => {
+  const configProvider = ConfigProvider.getInstance();
   const layoutAreaGridRef = useRef<HTMLDivElement>(null);
   const currentBreakpoint = editorStore?.currentBreakpoint ?? "";
-
   const [gridBackground, setGridBackground] = useState("");
   const [showGrid, setShowGrid] = useState(false);
-
-  const configProvider = ConfigProvider.getInstance();
 
   const breakpoints = configProvider.getBreakpointsForAllLayouts(
     WidgetHierarchyLocation.ROOT
@@ -71,9 +69,8 @@ const LayoutAreaGridLayout = ({
     return convertDynamicLayouts(selectedWidgetID, savedLayouts, readonly);
   }, [selectedWidgetID, savedLayouts, readonly]);
 
+  // set the grid background and adjust the row height based on the layout area height
   useEffect(() => {
-    console.log("layoutAreaGridRef.current", layoutAreaGridRef);
-
     if (layoutAreaGridRef?.current != null && predefinedRowHeight != null) {
       const calcRowHeight = adjustRowHeight(
         layoutAreaGridRef?.current?.offsetHeight,
@@ -81,8 +78,6 @@ const LayoutAreaGridLayout = ({
       );
 
       if (calcRowHeight != null) {
-        console.log("calcRowHeight", calcRowHeight);
-        console.log("ajusted height ", adjustedRowHeight);
         setAdjustedRowHeight(calcRowHeight);
       }
     }
@@ -93,7 +88,7 @@ const LayoutAreaGridLayout = ({
       currentBreakpoint: currentBreakpoint,
     });
     setGridBackground(newGridBackground);
-  }, [currentBreakpoint]);
+  }, [currentBreakpoint, cols, adjustedRowHeight, predefinedRowHeight]);
 
   const onBreakpointChange = (newBreakpoint: string) => {
     editorStore?.setCurrentBreakpoint(newBreakpoint);
@@ -210,42 +205,32 @@ const LayoutAreaGridLayout = ({
     // );
   };
 
-  // useEffect(() => {
-  //   const newGridBackground = generateGridLayoutBackground({
-  //     cols,
-  //     rowHeight,
-  //     currentBreakpoint: currentBreakpoint,
-  //   });
-  //   setGridBackground(newGridBackground);
-  // }, [currentBreakpoint, cols, rowHeight]);
-
   return (
-    <ResponsiveGridLayout
-      // ref={layoutAreaGridRef}
-      innerRef={layoutAreaGridRef}
-      key={key}
-      margin={[0, 0]}
-      layouts={dynamicLayouts}
-      breakpoints={breakpoints}
-      breakpoint={readonly ? undefined : editorStore?.currentBreakpoint}
-      cols={cols}
-      rowHeight={30}
-      style={gridBackgroundStyle}
-      compactType={"vertical"}
-      onBreakpointChange={onBreakpointChange}
-      onDragStart={handleDragStart}
-      onDragStop={handleDragStop}
-      onResizeStart={handleResizeStart}
-      onResizeStop={handleResizeStop}
-      onDrop={handleDrop}
-      isDroppable={true}
-      onLayoutChange={(_layout, layouts) => {
-        setSavedLayouts(layouts);
-      }}
-    >
-      <div ref={layoutAreaGridRef} style={{ width: "100%", height: "100%" }} />
-      {children}
-    </ResponsiveGridLayout>
+    <div ref={layoutAreaGridRef} style={{ width: "100%", height: "100%" }}>
+      <ResponsiveGridLayout
+        key={key}
+        margin={[0, 0]}
+        layouts={dynamicLayouts}
+        breakpoints={breakpoints}
+        breakpoint={readonly ? undefined : editorStore?.currentBreakpoint}
+        cols={cols}
+        rowHeight={adjustedRowHeight}
+        style={gridBackgroundStyle}
+        compactType={"vertical"}
+        onBreakpointChange={onBreakpointChange}
+        onDragStart={handleDragStart}
+        onDragStop={handleDragStop}
+        onResizeStart={handleResizeStart}
+        onResizeStop={handleResizeStop}
+        onDrop={handleDrop}
+        isDroppable={true}
+        onLayoutChange={(_layout, layouts) => {
+          setSavedLayouts(layouts);
+        }}
+      >
+        {children}
+      </ResponsiveGridLayout>
+    </div>
   );
 };
 
