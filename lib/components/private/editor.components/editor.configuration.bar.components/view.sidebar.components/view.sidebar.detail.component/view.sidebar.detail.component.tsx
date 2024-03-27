@@ -31,7 +31,7 @@ const ViewSidebarDetail = ({
     if (isEditing) {
       viewStore?.updateAndSaveView(data);
     } else {
-      viewStore?.createAndSaveView(data);
+      viewStore?.createAndSaveViewForPage(data);
     }
   };
 

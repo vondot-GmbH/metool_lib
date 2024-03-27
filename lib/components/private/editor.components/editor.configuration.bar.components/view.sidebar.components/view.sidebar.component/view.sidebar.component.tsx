@@ -5,27 +5,34 @@ import RunningText from "../../../../general.components/text.components/running.
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useMemo, useState } from "react";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
-import { faAdd, faFiles } from "@fortawesome/pro-regular-svg-icons";
+import {
+  faAdd,
+  faFileCircleCheck,
+  faFiles,
+} from "@fortawesome/pro-regular-svg-icons";
 import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
 import ViewStore from "../../../../../../stores/view.store";
 import { View } from "../../../../../../schemas/view.schemas/view.schema";
 import styles from "./view.sidebar.component.module.scss";
 import ViewSidebarDetail from "../view.sidebar.detail.component/view.sidebar.detail.component";
+import PageStore from "../../../../../../stores/page.store";
 
 interface ViewSidebarProps {
   viewStore?: ViewStore;
+  pageStore?: PageStore;
 }
 
-const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
-  const views: View[] = useMemo(() => {
-    return viewStore?.views ?? [];
-  }, [viewStore?.views]);
-
+const ViewSidebar = ({
+  viewStore,
+  pageStore,
+}: ViewSidebarProps): JSX.Element => {
   const [selectedItem, setSelectedItem] = useState<View | undefined>(undefined);
 
   const [isEditing, setIsEditing] = useState<boolean>(
     selectedItem?.viewID != "new"
   );
+
+  const currentViewID = pageStore?.currentViewIdToRender;
 
   useEffect(() => {
     if (selectedItem?.viewID === "new") {
@@ -35,24 +42,47 @@ const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
     }
   }, [selectedItem]);
 
+  // views of the current selected page
+  const views: View[] = useMemo(() => {
+    const currentViewIds = pageStore?.currentPageToRender?.views.map(
+      (view) => view.viewID
+    );
+
+    return viewStore?.views.filter((view) =>
+      currentViewIds?.includes(view.viewID)
+    ) as View[];
+  }, [viewStore?.views, pageStore?.currentPageToRender?.views]);
+
   const itemClassName = (viewID: string | null) => {
     return (
       styles.viewItem +
       " " +
-      (selectedItem?.viewID === viewID ? styles.viewItemSelected : "")
+      (currentViewID === viewID ? styles.viewItemSelected : "")
+    );
+  };
+
+  const getDefaultViewIcon = (view: View) => {
+    const currentPage = pageStore?.currentPageToRender;
+
+    const isDefault = currentPage?.views?.find(
+      (item) => item?.viewID === view.viewID
+    )?.defaultView;
+    return isDefault ? (
+      <FontAwesomeIcon icon={faFileCircleCheck} className={styles.viewIcon} />
+    ) : (
+      <FontAwesomeIcon icon={faFiles} className={styles.viewIcon} />
     );
   };
 
   const handleSelectItem = (viewID: string | null) => {
     if (viewID == null) return;
 
-    const view = viewStore?.getView(viewID);
-    setSelectedItem(view);
+    // Setze den View als den zu rendernden View
+    pageStore?.setCurrentViewIdToRender(viewID);
   };
 
   const handleAddView = () => {
     const initialView = viewStore?.createInitialView();
-
     setSelectedItem(initialView);
   };
 
@@ -60,7 +90,7 @@ const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
     return (
       <>
         <ComponentWrapper
-          title={"Views"}
+          title={`Views von ${pageStore?.currentPageToRender?.name}`}
           action={
             <IconButton
               icon={faAdd}
@@ -80,7 +110,7 @@ const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
                   handleSelectItem(view?.viewID);
                 }}
               >
-                <FontAwesomeIcon icon={faFiles} className={styles.viewIcon} />
+                {getDefaultViewIcon(view)}
                 <RunningText>{view.name}</RunningText>
               </Row>
             );
@@ -92,7 +122,7 @@ const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
 
   return (
     <Row className={styles.configurationSidebar}>
-      <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
+      <ResizableSidebar initialWidth={330} minWidth={200} maxWidth={450}>
         {buildViews()}
       </ResizableSidebar>
 
@@ -108,4 +138,4 @@ const ViewSidebar = ({ viewStore }: ViewSidebarProps): JSX.Element => {
   );
 };
 
-export default inject("viewStore")(observer(ViewSidebar));
+export default inject("viewStore", "pageStore")(observer(ViewSidebar));

@@ -139,7 +139,7 @@ const ResourceSidebar = ({
 
   return (
     <Row className={styles.configurationSidebar}>
-      <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
+      <ResizableSidebar initialWidth={330} minWidth={200} maxWidth={450}>
         {buildCoreResources()}
         {buildDynamicResources()}
       </ResizableSidebar>

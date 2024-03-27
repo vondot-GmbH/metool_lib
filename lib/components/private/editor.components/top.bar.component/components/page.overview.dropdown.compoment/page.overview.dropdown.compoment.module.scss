@@ -1,0 +1,25 @@
+.pageDropdownWrapper {
+  z-index: 100;
+  position: absolute;
+  top: 50px;
+  left: 0;
+  background-color: #f7fafa;
+  display: flex;
+
+  .pagesOverviewList {
+    width: 380px;
+    border-top: 1px solid #d7d6d6;
+    border-right: 1px solid #d7d6d6;
+    height: calc(100vh - 52px);
+  }
+
+  .codeIcon {
+    width: 20px;
+    height: 20px;
+    margin: 0 10px;
+  }
+
+  .pageName {
+    margin-bottom: 5px;
+  }
+}

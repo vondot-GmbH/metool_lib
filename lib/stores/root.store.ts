@@ -1,5 +1,7 @@
 import ChangeRecordStore from "./change.record.store";
 import EditorStore from "./editor.store";
+import LayoutStore from "./layout.store";
+import PageStore from "./page.store";
 import QueryStore from "./query.store";
 import ResourceStore from "./resource.store";
 import StateStore from "./state.store";
@@ -7,6 +9,8 @@ import ViewStore from "./view.store";
 import WidgetStore from "./widget.store";
 
 class RootStore {
+  layoutStore: LayoutStore;
+  pageStore: PageStore;
   viewStore: ViewStore;
   widgetStore: WidgetStore;
   changeRecordStore: ChangeRecordStore;
@@ -16,6 +20,8 @@ class RootStore {
   resourceStore: ResourceStore;
 
   constructor() {
+    this.layoutStore = new LayoutStore(this);
+    this.pageStore = new PageStore(this);
     this.viewStore = new ViewStore(this);
     this.widgetStore = new WidgetStore(this);
     this.changeRecordStore = new ChangeRecordStore(this);

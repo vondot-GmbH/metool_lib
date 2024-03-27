@@ -1,6 +1,5 @@
 import "react-grid-layout/css/styles.css";
 import "react-resizable/css/styles.css";
-import styles from "./render.view.component.module.scss";
 import RenderWidget from "../render.widget.component/render.widget.component";
 import { WidgetHierarchyMap } from "../../../../../schemas/widget.schemas/widget.schema";
 import GridLayout from "../../grid.layout.component/grid.layout.component";
@@ -13,7 +12,7 @@ import ResourceStore from "../../../../../stores/resource.store";
 import { useEffect, useState } from "react";
 import EditorStore from "../../../../../stores/editor.store";
 
-interface RenderScreenProps {
+interface RenderViewProps {
   readonly?: boolean;
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
@@ -31,19 +30,15 @@ const RenderView = ({
   showVisualWidgetOutline = false,
   viewToRender,
   viewStore,
-  resourceStore,
-  queryStore,
-}: RenderScreenProps): JSX.Element => {
+  editorStore,
+}: RenderViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const [structuredWidgets, setStructuredWidgets] = useState<
     WidgetHierarchyMap | undefined
   >(undefined);
 
   useEffect(() => {
-    const loadWidgets = async () => {
-      await resourceStore?.intializeResources();
-      await queryStore?.intializeQueries();
-
+    const initializeRenderView = async () => {
       if (viewToRender) {
         // set the viewID in the viewStore
         await viewStore?.intializeView(viewToRender);
@@ -54,7 +49,7 @@ const RenderView = ({
       }
     };
 
-    loadWidgets();
+    initializeRenderView();
   }, [viewStore, viewToRender, widgetStore]); // TODO INFO reredner added widgetStore
 
   if (isLoading) {
@@ -66,7 +61,7 @@ const RenderView = ({
   );
 
   const preparedRootLevelWidgets = Array.from(rootLevelWidgets.values());
-  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
+  const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
 
   return (
     <GridLayout
@@ -78,10 +73,7 @@ const RenderView = ({
     >
       {preparedRootLevelWidgets.map((rootLevelWidgets) => {
         return (
-          <div
-            key={rootLevelWidgets.widget.positioning.i}
-            className={styles.widgetContainer}
-          >
+          <div key={rootLevelWidgets.widget.positioning.i}>
             <RenderWidget
               showVisualWidgetOutline={showVisualWidgetOutline}
               readonly={readonly}

@@ -1,6 +1,31 @@
 .topBar {
   height: 50px;
   border-bottom: 1px solid #d7d6d6;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .pageDropdownButton {
+    display: flex;
+    align-items: center;
+    margin-left: 10px;
+    cursor: pointer;
+
+    .pageName {
+      border: 1px solid transparent;
+      margin-right: 10px;
+      border: 1px solid #d7d6d6;
+      background-color: #d1d1d18f;
+      padding: 6px 13px;
+      border-radius: 6px;
+
+      &:hover {
+        background-color: #c4c4c48f;
+        border: 1px solid #c7c6c6;
+      }
+    }
+  }
 }
 
 .previewModeButton {

@@ -4,12 +4,14 @@ import ControlledMenu from "../../general.components/context.menu.components/con
 import MenuItem from "../../general.components/context.menu.components/menu.item.component/menu.item.component";
 import WidgetStore from "../../../../stores/widget.store";
 import { useEffect } from "react";
+import EditorStore from "../../../../stores/editor.store";
 
 interface WidgetContextMenuProps {
   isOpen: boolean;
   anchorPoint: { x: number; y: number };
   onClose: () => void;
   widgetStore?: WidgetStore;
+  editorStore?: EditorStore;
 }
 
 const WidgetContextMenu = ({
@@ -17,16 +19,17 @@ const WidgetContextMenu = ({
   anchorPoint,
   onClose,
   widgetStore,
+  editorStore,
 }: WidgetContextMenuProps): JSX.Element => {
   const handleDeleteWidget = () => {
-    const widgetToDelte = widgetStore?.getContextMenuState().selectedWidgetID;
+    const widgetToDelte = editorStore?.widgetContextMenu.selectedWidgetID;
 
     if (widgetToDelte == null) {
       return;
     }
 
     widgetStore?.deleteWidget(widgetToDelte);
-    widgetStore?.setSelectWidget(undefined);
+    editorStore?.setSelectWidget(undefined);
   };
 
   // add event listener to close menu on click outside
@@ -58,4 +61,7 @@ const WidgetContextMenu = ({
   );
 };
 
-export default inject("widgetStore")(observer(WidgetContextMenu));
+export default inject(
+  "widgetStore",
+  "editorStore"
+)(observer(WidgetContextMenu));

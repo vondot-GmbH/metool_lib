@@ -1,6 +1,7 @@
 import {
   Widget,
   WidgetHierarchy,
+  WidgetHierarchyLocation,
   WidgetHierarchyMap,
 } from "../../schemas/widget.schemas/widget.schema";
 
@@ -9,14 +10,26 @@ export const structureWidgetsHierarchy = (
 ): WidgetHierarchyMap => {
   const widgetMap = new Map<string, WidgetHierarchy>();
 
+  const determineWidgetLocation = (widget: Widget): WidgetHierarchyLocation => {
+    if (widget.layoutAreaID && widget.pageID) {
+      return WidgetHierarchyLocation.LAYOUT_AREA;
+    } else if (widget.parentID) {
+      return WidgetHierarchyLocation.NESTED;
+    } else {
+      return WidgetHierarchyLocation.ROOT;
+    }
+  };
+
   // helper function to process widget and its children recursively
   const processWidget = (currentWidget: Widget, parentId: string | null) => {
+    const location = determineWidgetLocation(currentWidget);
+
     // add widget to map if it does not exist
     if (!widgetMap.has(currentWidget.widgetID)) {
       widgetMap.set(currentWidget.widgetID, {
         widget: currentWidget,
         children: [],
-        level: parentId ? "NESTED" : "ROOT",
+        location,
       });
     }
 
@@ -53,7 +66,7 @@ export const getFilteredRootLevelWidgets = (
   const filteredWidgets = new Map<string, WidgetHierarchy>();
 
   for (const [id, widget] of structuredWidgets) {
-    if (widget.level === "ROOT") {
+    if (widget.location === WidgetHierarchyLocation.ROOT) {
       filteredWidgets.set(id, widget);
     }
   }

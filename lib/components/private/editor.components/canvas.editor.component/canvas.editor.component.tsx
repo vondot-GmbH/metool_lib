@@ -4,43 +4,65 @@ import ViewStore from "../../../../stores/view.store";
 import styles from "./canvas.editor.component.module.scss";
 import WidgetStore from "../../../../stores/widget.store";
 import ChangeRecordStore from "../../../../stores/change.record.store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EditorStore from "../../../../stores/editor.store";
 import ResizableScreenWrapper from "../resizable.screen.wrapper.component/resizable.screen.wrapper.component";
 import { EditorMode } from "../../../../globals/enums/editor.enum";
 import OptionSidebar, {
   SidebarProvider,
 } from "../option.sidebar.component/option.sidebar.component";
-import StateStore from "../../../../stores/state.store";
 import QueryStore from "../../../../stores/query.store";
 import ConfigurationSidebar from "../editor.configuration.bar.components/configuration.sidebar.component/configuration.sidebar.component";
 import TopBarComponent from "../top.bar.component/top.bar.component";
 import ResourceStore from "../../../../stores/resource.store";
-import RenderView from "../render.components/render.view.component/render.view.conponent";
+import RenderPage from "../../../private/editor.components/render.components/render.page.component/render.page.component";
+import PageStore from "../../../../stores/page.store";
 
 interface CanvasEditorProps {
-  viewToRender: string;
+  pageToRender: string;
+
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   changeRecordStore?: ChangeRecordStore;
   editorStore?: EditorStore;
-  stateStore?: StateStore;
   queryStore?: QueryStore;
   resourceStore?: ResourceStore;
+  pageStore?: PageStore;
 }
 
 const CanvasEditor = ({
   editorStore,
-  viewToRender,
+  pageToRender,
+  pageStore,
+  resourceStore,
+  queryStore,
 }: CanvasEditorProps): JSX.Element => {
+  const [isLoading, setIsLoading] = useState(true);
   const editorMode = editorStore?.editorMode;
   const readonly = editorMode == EditorMode.PREVIEW;
   const showVisualWidgetOutline = editorStore?.visualWidgetOutlineGuideState;
 
   useEffect(() => {
-    // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
-    editorStore?.initializeEditorBreakpointConfig();
+    const initializeEditor = async () => {
+      // set core data for the editor
+      resourceStore?.intializeResources();
+      queryStore?.intializeQueries();
+
+      // calculate the initial breakpoint configuration (minWidth, maxWidth, defaultWidth) for each breakpoint
+      editorStore?.initializeEditorBreakpointConfig();
+
+      // fetch all pages for the editor to be used in the page overview dropdown
+      await pageStore?.fetchAllPagesAndSave();
+
+      setIsLoading(false);
+    };
+
+    initializeEditor();
   }, []);
+
+  if (isLoading) {
+    return <div>Loading ...</div>;
+  }
 
   return (
     <MainLayout topBars={[<TopBarComponent />]}>
@@ -49,8 +71,8 @@ const CanvasEditor = ({
           <div className={styles.canvasWrapper}>
             <div className={styles.editorCanvasWrapper}>
               <ResizableScreenWrapper>
-                <RenderView
-                  viewToRender={viewToRender}
+                <RenderPage
+                  pageToRender={pageToRender}
                   readonly={readonly}
                   showVisualWidgetOutline={showVisualWidgetOutline}
                 />
@@ -69,7 +91,7 @@ export default inject(
   "widgetStore",
   "changeRecordStore",
   "editorStore",
-  "stateStore",
   "queryStore",
-  "resourceStore"
+  "resourceStore",
+  "pageStore"
 )(observer(CanvasEditor));

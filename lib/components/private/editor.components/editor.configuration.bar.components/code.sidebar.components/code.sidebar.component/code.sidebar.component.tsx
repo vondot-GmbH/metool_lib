@@ -78,7 +78,6 @@ const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
                   className={itemClassName(query?.queryID)}
                   key={query?.queryID}
                   onClick={() => {
-                    console.log("onClick: ", query);
                     handleSelectItem(query?.queryID);
                   }}
                 >
@@ -129,7 +128,7 @@ const CodeSidebar = ({ queryStore }: CodeSidebarProps): JSX.Element => {
 
   return (
     <Row className={styles.configurationSidebar}>
-      <ResizableSidebar initialWidth={300} minWidth={200} maxWidth={400}>
+      <ResizableSidebar initialWidth={330} minWidth={200} maxWidth={450}>
         {buiilCoreQueries()}
         {buildDynamicQueries()}
       </ResizableSidebar>

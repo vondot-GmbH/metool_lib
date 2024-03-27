@@ -4,7 +4,10 @@ import {
   convertToGridLayout,
   generateGridLayoutBackground,
 } from "../../../../globals/helpers/layout.helper";
-import { WidgetHierarchyMap } from "../../../../schemas/widget.schemas/widget.schema";
+import {
+  WidgetHierarchyLocation,
+  WidgetHierarchyMap,
+} from "../../../../schemas/widget.schemas/widget.schema";
 import { useEffect, useMemo, useState } from "react";
 import styles from "./grid.layout.component.module.scss";
 import ViewStore from "../../../../stores/view.store";
@@ -61,16 +64,16 @@ const GridLayout = ({
   const configProvider = ConfigProvider.getInstance();
 
   const breakpoints = configProvider.getBreakpointsForAllLayouts(
-    isNested ? "nested" : "root"
+    isNested ? WidgetHierarchyLocation.NESTED : WidgetHierarchyLocation.ROOT
   );
 
   const rowHeight = configProvider.getRowHeight(
-    isNested ? "nested" : "root",
+    isNested ? WidgetHierarchyLocation.NESTED : WidgetHierarchyLocation.ROOT,
     currentBreakpoint
   );
 
   const cols = configProvider.getColsForAllLayouts(
-    isNested ? "nested" : "root"
+    isNested ? WidgetHierarchyLocation.NESTED : WidgetHierarchyLocation.ROOT
   );
 
   const layouts = convertToGridLayout(content, breakpoints);

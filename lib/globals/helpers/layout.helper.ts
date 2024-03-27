@@ -5,7 +5,6 @@ import {
   WidgetLayouts,
   WidgetPositioning,
 } from "../../schemas/widget.schemas/widget.schema";
-import { PreparedBreakpointConfig } from "../interfaces/config.interface";
 
 // convert widgets to the grid layout format for react-grid-layout
 export const convertToGridLayout = (
@@ -100,6 +99,23 @@ export const convertDynamicLayouts = (
   }
 
   return result;
+};
+
+export const adjustRowHeight = (
+  totalHeight: number,
+  predefinedRowHeight: number
+): number => {
+  const totalRows = totalHeight / predefinedRowHeight;
+  const completeRows = Math.floor(totalRows);
+
+  // If totalRows is already a whole number, no adjustment is needed
+  if (completeRows === totalRows) {
+    return predefinedRowHeight;
+  }
+
+  // Adjust row height to fit complete rows only
+  const adjustedRowHeight = totalHeight / completeRows;
+  return adjustedRowHeight;
 };
 
 // generate grid layout background based on current breakpoint

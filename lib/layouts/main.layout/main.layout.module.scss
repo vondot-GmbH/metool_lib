@@ -4,10 +4,9 @@
   width: 100%;
 
   &.sidebarFirst {
-    flex-direction: row; // Sidebar zuerst (links)
+    flex-direction: row;
 
     .pageContainerSidebar {
-      // Stile für die linke Sidebar
       order: 1;
     }
 
@@ -18,10 +17,9 @@
   }
 
   &.topbarFirst {
-    flex-direction: row; // Topbar zuerst, Sidebar rechts
+    flex-direction: row;
 
     .pageContainerSidebar {
-      // Stile für die rechte Sidebar
       order: 2;
     }
 

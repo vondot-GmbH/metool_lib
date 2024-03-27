@@ -3,11 +3,11 @@ import {
   AnalyzedWidgetOptions,
   Widget,
   WidgetHierarchy,
+  WidgetHierarchyLocation,
   WidgetHierarchyMap,
   WidgetLayouts,
   WidgetPositioning,
 } from "../schemas/widget.schemas/widget.schema";
-import { WidgetContextMenu } from "../globals/interfaces/widget.state.interface";
 import { Layout } from "react-grid-layout";
 import { structureWidgetsHierarchy } from "../globals/helpers/widget.helper";
 import { convertLayoutToPositioningForBreakpoint } from "../globals/helpers/layout.helper";
@@ -22,16 +22,6 @@ class WidgetStore {
   private _structuredWidgetHierarchy: WidgetHierarchyMap = new Map();
   private _analyzedWidgetOptions: Map<string, AnalyzedWidgetOptions> =
     new Map();
-
-  // TODO maby move this to editor store
-  private _selectedWidget: WidgetHierarchy | undefined;
-
-  // TODO maby move this to editor store
-  private _contextMenu: WidgetContextMenu = {
-    isOpen: false,
-    anchorPoint: { x: 0, y: 0 },
-    selectedWidgetID: null,
-  };
 
   private stores: RootStore;
 
@@ -75,22 +65,6 @@ class WidgetStore {
     return this._structuredWidgetHierarchy;
   }
 
-  // TODO
-  async initWidgetsAndProcess(viewID: string): Promise<void> {
-    // this.stores.resourceStore?.intializeResources();
-    // this.stores.queryStore?.intializeQueries();
-
-    const widgets = await this.fetchWidgetsForView(viewID);
-
-    if (widgets == null) {
-      return;
-    }
-
-    runInAction(() => {
-      this.setInitialWidgetAndConvert(widgets);
-    });
-  }
-
   setStructuredWidgetHierarchy(
     widgetID: string,
     newHierarchy: WidgetHierarchy
@@ -98,32 +72,18 @@ class WidgetStore {
     this._structuredWidgetHierarchy.set(widgetID, newHierarchy);
   }
 
-  setSelectWidget(widgetID: string | undefined): void {
-    if (widgetID == null) {
-      this._selectedWidget = undefined;
-      return;
-    }
-
-    const selectedWidget = this._structuredWidgetHierarchy.get(widgetID);
-
-    if (selectedWidget == null) {
-      this._selectedWidget = undefined;
-      return;
-    }
-
-    this._selectedWidget = selectedWidget;
-  }
-
-  setContextMenuState(contextMenu: WidgetContextMenu): void {
-    this._contextMenu = contextMenu;
-  }
-
   //! getter
 
   getAnalyzedWidgetOptions(
     widgetID: string
   ): AnalyzedWidgetOptions | undefined {
-    return this._analyzedWidgetOptions.get(widgetID) ?? undefined;
+    const options = this._analyzedWidgetOptions.get(widgetID);
+
+    if (options != null) {
+      return options;
+    }
+
+    return this.stores.layoutStore?.getAnalyzedLayoutWidgetOption(widgetID);
   }
 
   getStructuredWidgetHierarchyByWidgetID(
@@ -140,24 +100,54 @@ class WidgetStore {
     return this._structuredWidgetHierarchy;
   }
 
-  getSelectedWidget(): WidgetHierarchy | undefined {
-    if (this._selectedWidget == null) {
-      return;
-    }
-
-    return this._selectedWidget;
-  }
-
-  getContextMenuState(): WidgetContextMenu {
-    return JSON.parse(JSON.stringify(this._contextMenu));
+  // TODO rename structuredWidgetHierarchy
+  getStructuredWidget(widgetID: string): WidgetHierarchy | undefined {
+    return this._structuredWidgetHierarchy.get(widgetID);
   }
 
   //! methods
 
+  findWidgetAcrossStores(widgetID: string): WidgetHierarchy | undefined {
+    // search in the structured widget hierarchy
+    const widget = this._structuredWidgetHierarchy.get(widgetID);
+
+    if (widget != null) {
+      return widget;
+    }
+
+    // if the widget is not found in the structured widget hierarchy, search in the layout area widgets
+    return this.stores.layoutStore.getLayoutAreaWidget(widgetID);
+  }
+
+  updateWidgetAcrossStores(widget: WidgetHierarchy): void {
+    const widgetID = widget.widget.widgetID;
+
+    // check if the widget is in the structured widget hierarchy
+    if (this._structuredWidgetHierarchy.has(widgetID)) {
+      this._structuredWidgetHierarchy.set(widgetID, widget);
+      return;
+    }
+
+    // if the widget is not in the structured widget hierarchy, update the layout area widget
+    this.stores.layoutStore.setStructuredLayoutAreaWidget(widgetID, widget);
+  }
+
+  // TODO
+  async initWidgetsAndProcess(viewID: string): Promise<void> {
+    const widgets = await this.fetchWidgetsForView(viewID);
+
+    if (widgets == null) {
+      return;
+    }
+
+    runInAction(() => {
+      this.setInitialWidgetAndConvert(widgets ?? []);
+    });
+  }
+
   // update a single option of a widget by the widgetID and the option name
   updateWidgetOption(widgetID: string, optionName: string, value: any): void {
-    const widgetHierarchy =
-      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+    const widgetHierarchy = this.findWidgetAcrossStores(widgetID);
 
     if (widgetHierarchy != null) {
       const updatedWidgetHierarchy = JSON.parse(
@@ -169,7 +159,7 @@ class WidgetStore {
       options[optionName] = value;
       updatedWidgetHierarchy.widget.options = options;
 
-      this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
+      this.updateWidgetAcrossStores(updatedWidgetHierarchy);
 
       this.stores.changeRecordStore.setChangeWidgetRecord(
         widgetID,
@@ -193,8 +183,7 @@ class WidgetStore {
     identifierValue: any;
     updatedProperties: Partial<T>;
   }): void {
-    const widgetHierarchy =
-      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+    const widgetHierarchy = this.findWidgetAcrossStores(widgetID);
 
     if (widgetHierarchy != null) {
       const updatedWidgetHierarchy = JSON.parse(
@@ -212,7 +201,7 @@ class WidgetStore {
 
       updatedWidgetHierarchy.widget.options[optionName] = updatedOptionsArray;
 
-      this.setStructuredWidgetHierarchy(widgetID, updatedWidgetHierarchy);
+      this.updateWidgetAcrossStores(updatedWidgetHierarchy);
 
       this.stores.changeRecordStore.setChangeWidgetRecord(
         widgetID,
@@ -223,8 +212,7 @@ class WidgetStore {
   }
 
   getWidgetOption(widgetID: string, optionName: string): any {
-    const widgetHierarchy =
-      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+    const widgetHierarchy = this.findWidgetAcrossStores(widgetID);
 
     if (widgetHierarchy != null) {
       return widgetHierarchy.widget.options?.[optionName] ?? null;
@@ -232,15 +220,14 @@ class WidgetStore {
   }
 
   getAllOptionsForWidget(widgetID: string): any {
-    const widgetHierarchy =
-      this.getStructuredWidgetHierarchyByWidgetID(widgetID);
+    const widgetHierarchy = this.findWidgetAcrossStores(widgetID);
 
     if (widgetHierarchy != null) {
       return widgetHierarchy.widget.options ?? {};
     }
   }
 
-  updateWidgetPositioningForBreakpoint(
+  private updateWidgetPositioningForBreakpoint(
     widgetID: string,
     breakpoint: string,
     positioning: WidgetPositioning
@@ -329,7 +316,10 @@ class WidgetStore {
     }
 
     // if this is the root call (not a recursive call), update the parent widget's children list
-    if (isRootCall && widgetToDelete.level === "NESTED") {
+    if (
+      isRootCall &&
+      widgetToDelete.location === WidgetHierarchyLocation.NESTED
+    ) {
       for (const [parentID, parentWidget] of this._structuredWidgetHierarchy) {
         const childIndex = parentWidget.children.indexOf(widgetID);
 
@@ -406,7 +396,9 @@ class WidgetStore {
         } as any,
       },
       children: [],
-      level: parentID ? "NESTED" : "ROOT",
+      location: parentID
+        ? WidgetHierarchyLocation.NESTED
+        : WidgetHierarchyLocation.ROOT,
     };
 
     if (parentID) {
@@ -508,7 +500,7 @@ class WidgetStore {
     );
   }
   // TODO
-  async fetchWidgetsForView(viewID: string): Promise<void> {
+  async fetchWidgetsForView(viewID: string): Promise<Widget[] | undefined> {
     const getWidgetsQuery = this.stores.queryStore.getQuery(
       CoreRestQueryType.GET_WIDGETS
     );
@@ -517,8 +509,9 @@ class WidgetStore {
 
     const response = await queryExecutor.executeRestQuery(
       getWidgetsQuery,
-      { viewID: viewID },
-      this.stores.resourceStore
+      {},
+      this.stores.resourceStore,
+      { viewID: viewID }
     );
 
     return response;

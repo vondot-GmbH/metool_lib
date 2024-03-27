@@ -12,15 +12,18 @@ import MultiSwitch from "../../../../private/general.components/multi.switch.com
 import SpacingEditor from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
 import defaultStyles from "../../../../../styles/index.module.scss";
 import StateInputEditor from "../../../../private/general.components/state.input.text.component/state.input.text.component";
+import EditorStore from "../../../../../stores/editor.store";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
+  editorStore?: EditorStore;
 }
 
 const TableWidgetOptionSidebar = ({
   widgetStore,
+  editorStore,
 }: TableWidgetOptionSidebarProps): JSX.Element => {
-  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
+  const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
 
   // TODO
   const columnOptions: TableColumn[] = widgetStore?.getWidgetOption(
@@ -64,7 +67,7 @@ const TableWidgetOptionSidebar = ({
       <CollapsibleSection title="Content">
         <StateInputEditor
           label="Data"
-          value={tableOptions.data}
+          value={tableOptions?.data}
           className={defaultStyles.mb20}
           onChange={(value: string) => {
             widgetStore?.updateWidgetOption(
@@ -91,7 +94,7 @@ const TableWidgetOptionSidebar = ({
                 );
               }}
             >
-              <RunningText>{item.source}</RunningText>
+              <RunningText>{item?.source}</RunningText>
             </div>
           )}
           onAdd={handleAddColumn}
@@ -102,7 +105,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Header Background Color"
-          value={tableOptions.headerBackgroundColor}
+          value={tableOptions?.headerBackgroundColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -116,7 +119,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Row Background Color"
-          value={tableOptions.rowBackgroundColor}
+          value={tableOptions?.rowBackgroundColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -130,7 +133,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Row Hover Color"
-          value={tableOptions.rowHoverColor}
+          value={tableOptions?.rowHoverColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -144,7 +147,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Border Color"
-          value={tableOptions.borderBottomColor}
+          value={tableOptions?.borderBottomColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -161,10 +164,10 @@ const TableWidgetOptionSidebar = ({
           types={["padding"]}
           initialValues={{
             padding: {
-              top: tableOptions.tableCellPadding?.top,
-              right: tableOptions.tableCellPadding?.right,
-              bottom: tableOptions.tableCellPadding?.bottom,
-              left: tableOptions.tableCellPadding?.left,
+              top: tableOptions?.tableCellPadding?.top,
+              right: tableOptions?.tableCellPadding?.right,
+              bottom: tableOptions?.tableCellPadding?.bottom,
+              left: tableOptions?.tableCellPadding?.left,
             },
           }}
           onChange={(_mode, values) => {
@@ -180,7 +183,7 @@ const TableWidgetOptionSidebar = ({
       <CollapsibleSection title="Interaction">
         <MultiSwitch
           label="Row Selection"
-          initialValue={tableOptions.rowSelectionType}
+          initialValue={tableOptions?.rowSelectionType}
           className={defaultStyles.mt10}
           onChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -209,4 +212,7 @@ const TableWidgetOptionSidebar = ({
   );
 };
 
-export default inject("widgetStore")(observer(TableWidgetOptionSidebar));
+export default inject(
+  "widgetStore",
+  "editorStore"
+)(observer(TableWidgetOptionSidebar));

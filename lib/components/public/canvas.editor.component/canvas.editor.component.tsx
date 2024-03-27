@@ -2,13 +2,13 @@ import StoreProvider from "../../private/store.provider.component/store.provider
 import CanvasEditorComponent from "../../private/editor.components/canvas.editor.component/canvas.editor.component";
 
 interface CanvasEditorProps {
-  viewToRender: string;
+  pageToRender: string;
 }
 
-const CanvasEditor = ({ viewToRender }: CanvasEditorProps): JSX.Element => {
+const CanvasEditor = ({ pageToRender }: CanvasEditorProps): JSX.Element => {
   return (
     <StoreProvider>
-      <CanvasEditorComponent viewToRender={viewToRender} />
+      <CanvasEditorComponent pageToRender={pageToRender} />
     </StoreProvider>
   );
 };

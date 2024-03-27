@@ -50,6 +50,12 @@ export enum CoreRestQueryType {
   UPDATE_VIEW = "updateView",
   DELETE_VIEW = "deleteView",
   CREATE_VIEW = "createView",
+
+  GET_PAGES = "getPages",
+  GET_PAGE_BY_ID = "getPageById",
+  UPDATE_PAGE = "updatePage",
+  DELETE_PAGE = "deletePage",
+  CREATE_PAGE = "createPage",
 }
 
 export interface CoreRestQuerConfig {
@@ -76,6 +82,12 @@ export interface CoreRestQuerConfig {
   [CoreRestQueryType.UPDATE_VIEW]: CoreRestQuery;
   [CoreRestQueryType.DELETE_VIEW]: CoreRestQuery;
   [CoreRestQueryType.CREATE_VIEW]: CoreRestQuery;
+
+  [CoreRestQueryType.GET_PAGES]: CoreRestQuery;
+  [CoreRestQueryType.GET_PAGE_BY_ID]: CoreRestQuery;
+  [CoreRestQueryType.UPDATE_PAGE]: CoreRestQuery;
+  [CoreRestQueryType.DELETE_PAGE]: CoreRestQuery;
+  [CoreRestQueryType.CREATE_PAGE]: CoreRestQuery;
 }
 
 //! QUERY RESPONSE

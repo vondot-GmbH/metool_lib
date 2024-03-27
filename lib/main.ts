@@ -1,11 +1,14 @@
 // public package copmonents
 export { default as CanvasEditorPublic } from "./components/public/canvas.editor.component/canvas.editor.component";
-export { default as RenderView } from "./components/public/render.view.component/render.view.component";
+export { default as RenderPage } from "./components/public/render.page.component/render.pagge.component";
 
 // widgets
 export { TableWidgetConfig as TableWidget } from "./components/public/widget.components/table.widget/table.widget.config";
 export { ContainerWidgetConfig as ContainerWidget } from "./components/public/widget.components/container.widget/container.widget.config";
 export { TextWidgetConfig as TextWidget } from "./components/public/widget.components/text.widget/text.widget.config";
+
+// page layouts
+export { DashboardPageLayoutConfig as DashboardPageLayout } from "./components/public/page.layout.components/dashboard.page.layout/dashboard.page.layout.config";
 
 // init
 export { default as InitializeMetool } from "./config/init";
@@ -13,7 +16,7 @@ export { default as InitializeMetool } from "./config/init";
 // types
 export type {
   WidgetConfig,
-  LayoutConfig,
+  GridLayoutConfig as LayoutConfig,
 } from "./globals/interfaces/config.interface";
 
 export type {

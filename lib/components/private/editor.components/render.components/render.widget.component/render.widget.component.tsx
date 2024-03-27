@@ -18,28 +18,32 @@ import React, { useRef, useState } from "react";
 import SmallText from "../../../general.components/text.components/small.text.component/small.text.component";
 import { WidgetConfig } from "../../../../../main";
 import StateStore from "../../../../../stores/state.store";
+import EditorStore from "../../../../../stores/editor.store";
 
 interface RenderWidgetProps {
   readonly?: boolean;
   widgetToRender: WidgetHierarchy;
+  showVisualWidgetOutline: boolean;
+
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
+  editorStore?: EditorStore;
   stateStore?: StateStore;
-  showVisualWidgetOutline: boolean;
 }
 
 const RenderWidget = ({
   widgetToRender,
   readonly,
+  showVisualWidgetOutline,
   widgetStore,
   viewStore,
   stateStore,
-  showVisualWidgetOutline,
+  editorStore,
 }: RenderWidgetProps): JSX.Element => {
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
-  const contextMenu = widgetStore?.getContextMenuState();
+  const contextMenu = editorStore?.widgetContextMenu;
   const allWidgets = widgetStore?.getStructuredData();
-  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
+  const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
   const widgetRef = useRef(null);
   // @ts-ignore
   const [hoveredWidgetID, setHoveredWidgetID] = useState<string | undefined>();
@@ -69,7 +73,7 @@ const RenderWidget = ({
   const handleCloseContextMenu = () => {
     if (readonly) return;
 
-    widgetStore?.setContextMenuState({
+    editorStore?.setWidgetContextMenu({
       isOpen: false,
       anchorPoint: { x: 0, y: 0 },
       selectedWidgetID: null,
@@ -85,9 +89,9 @@ const RenderWidget = ({
     event.preventDefault();
     event.stopPropagation();
 
-    widgetStore?.setSelectWidget(widgetID);
+    editorStore?.setSelectWidget(widgetID);
 
-    widgetStore?.setContextMenuState({
+    editorStore?.setWidgetContextMenu({
       isOpen: true,
       anchorPoint: {
         x: event.clientX + window.scrollX,
@@ -131,7 +135,7 @@ const RenderWidget = ({
     // convert the map to an array for rendering purposes
     const preparedChildrenWidgets = Array.from(childrenWidgets.values());
 
-    // if there are no nested widgets, return empty grid layout to allow for drag and drop
+    // if there are no nested widgets, return empty grid layout to be able to drop widgets
     // TODO
     if (preparedChildrenWidgets == null || preparedChildrenWidgets.length < 1) {
       return (
@@ -216,20 +220,21 @@ const RenderWidget = ({
 
   const handleWidgetClick = (
     event: React.MouseEvent<HTMLDivElement>,
-    widgetID: string
+    selectedWidget: WidgetHierarchy
   ) => {
     if (readonly) return;
     event.stopPropagation();
     event.preventDefault();
-    widgetStore?.setSelectWidget(widgetID);
+    editorStore?.setSelectWidget(
+      selectedWidget.widget.widgetID,
+      selectedWidget.location
+    );
   };
 
   return (
     <div
       ref={widgetRef}
-      onDoubleClick={(e) =>
-        handleWidgetClick(e, widgetToRender.widget.widgetID)
-      }
+      onDoubleClick={(e) => handleWidgetClick(e, widgetToRender)}
       className={widgetContainerClassName}
       data-widget-type={widgetToRender.widget.widgetType}
       onContextMenu={(e) =>
@@ -255,5 +260,6 @@ const RenderWidget = ({
 export default inject(
   "viewStore",
   "widgetStore",
-  "stateStore"
+  "stateStore",
+  "editorStore"
 )(observer(RenderWidget));

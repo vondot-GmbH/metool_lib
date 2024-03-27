@@ -67,10 +67,8 @@ const OptionSidebar = ({ widgetStore, editorStore }: OptionSidebarProps) => {
   const { pushView, views, titles, popView } = useSidebar();
 
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
-  const selectedWidgetID = widgetStore?.getSelectedWidget()?.widget.widgetID;
-
-  const selectedWidgetType =
-    widgetStore?.getSelectedWidget()?.widget.widgetType;
+  const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
+  const selectedWidgetType = editorStore?.selectedWidget?.widget.widgetType;
 
   const selectedWidgetConfig = registeredWidgets?.find(
     (widget) => widget.type === selectedWidgetType

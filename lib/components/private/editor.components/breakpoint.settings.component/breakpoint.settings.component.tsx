@@ -1,7 +1,6 @@
 import { inject, observer } from "mobx-react";
 import EditorStore from "../../../../stores/editor.store";
 import ConfigProvider from "../../../../config/config.provider";
-import { LayoutConfig } from "../../../../main";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./breakpoint.settings.component.module.scss";
 import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
@@ -15,9 +14,9 @@ const BreakpointSettings = ({
   editorStore,
 }: BreakpointSettingsProps): JSX.Element => {
   const configProvider = ConfigProvider.getInstance();
-  const layoutConfig = configProvider.getLayoutConfig();
   const currentBreakpoint = editorStore?.currentBreakpoint;
-  const preparedLayoutConfigs = prepareLayoutConfigs(layoutConfig);
+  const preparedLayoutConfigs =
+    configProvider.getBreakpointLayoutConfigForLevel("root");
 
   const handleBreakpointChange = (breakpointKey: string) => {
     const config = editorStore?.breakpointEditorConfig[breakpointKey];
@@ -47,7 +46,9 @@ const BreakpointSettings = ({
     <div className={styles.breakpointSettings}>
       {preparedLayoutConfigs.map((layoutConfig) => {
         return (
-          <div key={layoutConfig.key}>{_buildBreakpointItem(layoutConfig)}</div>
+          <div key={layoutConfig.breakpoint}>
+            {_buildBreakpointItem(layoutConfig)}
+          </div>
         );
       })}
 
@@ -56,20 +57,6 @@ const BreakpointSettings = ({
       </Column>
     </div>
   );
-};
-
-// helper function to prepare layout configs for rendering
-const prepareLayoutConfigs = (layoutConfig: LayoutConfig) => {
-  const rootLayoutConfig = layoutConfig.root;
-
-  const preparedLayoutConfigs = Object.entries(rootLayoutConfig).map(
-    ([key, config]) => ({
-      key,
-      ...config,
-    })
-  );
-
-  return preparedLayoutConfigs;
 };
 
 export default inject("editorStore")(observer(BreakpointSettings));

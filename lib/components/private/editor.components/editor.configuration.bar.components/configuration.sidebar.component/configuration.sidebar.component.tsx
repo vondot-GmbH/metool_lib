@@ -42,7 +42,7 @@ const ConfigurationSidebar = ({
   editorStore,
 }: ConfigurationSidebarProps): JSX.Element => {
   const [selectedConfigurationBar, setSelectedConfigurationBar] =
-    useState<TabBarType>(TabBarType.WIDGETS);
+    useState<TabBarType>(TabBarType.VIEWS);
 
   const _buildTabBar = (): JSX.Element | null => {
     if (editorStore?.editorMode != EditorMode.EDIT) {

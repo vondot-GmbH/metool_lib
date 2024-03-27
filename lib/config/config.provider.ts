@@ -1,7 +1,8 @@
 import { DEFAULT_LAYOUT_CONFIG } from "../globals/config/grid.layout.config";
 import {
   BreakpointConfig,
-  LayoutConfig,
+  GridLayoutConfig,
+  CorePageLayoutConfig,
   WidgetConfig,
 } from "../globals/interfaces/config.interface";
 import {
@@ -13,17 +14,38 @@ import {
   CoreResource,
   CoreResourceMap,
 } from "../schemas/resource.schemas/resource.schema";
+import { WidgetHierarchyLocation } from "../schemas/widget.schemas/widget.schema";
 
 class ConfigProvider {
   private static _instance: ConfigProvider;
   private _registeredWidgets: Map<string, WidgetConfig> = new Map();
-  private _layoutConfig: LayoutConfig = { root: {}, nested: {} };
+  private _layoutConfig: GridLayoutConfig = {
+    [WidgetHierarchyLocation.ROOT]: {},
+    [WidgetHierarchyLocation.NESTED]: {},
+  };
   private _coreResources: CoreResourceMap = new Map();
   private _coreQueries: CoreQueryMap = new Map();
+  private _pageLayoutConfigs: Map<string, CorePageLayoutConfig> = new Map();
 
   private constructor() {}
 
   //! setter
+
+  public registerPageLayouts(
+    pageLayoutConfigs: CorePageLayoutConfig[] | undefined
+  ) {
+    if (pageLayoutConfigs == null) {
+      return;
+    }
+
+    pageLayoutConfigs.forEach((pageLayoutConfig) => {
+      if (pageLayoutConfig?.layoutID == null) {
+        return;
+      }
+
+      this._pageLayoutConfigs.set(pageLayoutConfig?.layoutID, pageLayoutConfig);
+    });
+  }
 
   public registerCoreResources(resources: CoreResource[] | undefined) {
     if (resources == null) {
@@ -55,7 +77,7 @@ class ConfigProvider {
     });
   }
 
-  public setLayoutConfig(layoutConfig: LayoutConfig | undefined) {
+  public setLayoutConfig(layoutConfig: GridLayoutConfig | undefined) {
     if (layoutConfig == null) {
       this._layoutConfig = DEFAULT_LAYOUT_CONFIG;
       return;
@@ -65,6 +87,17 @@ class ConfigProvider {
   }
 
   //! getter
+
+  public getPageLayoutConfig(
+    layoutID: string | undefined
+  ): CorePageLayoutConfig | undefined {
+    if (layoutID == null) return;
+    return this._pageLayoutConfigs.get(layoutID);
+  }
+
+  public getPageLayoutConfigs(): CorePageLayoutConfig[] {
+    return Array.from(this._pageLayoutConfigs.values());
+  }
 
   public getCoreResource(resourceKey: string): CoreResource | undefined {
     return this._coreResources.get(resourceKey);
@@ -89,20 +122,36 @@ class ConfigProvider {
     return ConfigProvider._instance;
   }
 
-  public getLayoutConfig(): LayoutConfig {
+  public getLayoutConfig(): GridLayoutConfig {
     return this._layoutConfig;
   }
 
-  public getRowHeight(level: "root" | "nested", breakpoint: string): number {
-    const levelConfig = this._layoutConfig[level];
+  public getBreakpointLayoutConfigForLevel(
+    level: "root" | "nested"
+  ): (BreakpointConfig & { key: string })[] {
+    const rootLayoutConfig = this._layoutConfig[level];
+    const preparedLayoutConfigs = Object.entries(rootLayoutConfig).map(
+      ([key, config]) => ({
+        key,
+        ...config,
+      })
+    );
+    return preparedLayoutConfigs;
+  }
+
+  public getRowHeight(
+    location: WidgetHierarchyLocation,
+    breakpoint: string
+  ): number {
+    const levelConfig = this._layoutConfig[location as keyof GridLayoutConfig];
     const config: BreakpointConfig | undefined = levelConfig[breakpoint];
     return config?.rowHeight;
   }
 
-  public getColsForAllLayouts(level: "root" | "nested"): {
+  public getColsForAllLayouts(location: WidgetHierarchyLocation): {
     [key: string]: number;
   } {
-    const levelConfig = this._layoutConfig[level];
+    const levelConfig = this._layoutConfig[location as keyof GridLayoutConfig];
     const colsForAllLayouts: { [key: string]: number } = {};
 
     Object.keys(levelConfig).forEach((breakpoint) => {
@@ -116,10 +165,10 @@ class ConfigProvider {
     return colsForAllLayouts;
   }
 
-  public getBreakpointsForAllLayouts(level: "root" | "nested"): {
+  public getBreakpointsForAllLayouts(location: WidgetHierarchyLocation): {
     [key: string]: number;
   } {
-    const levelConfig = this._layoutConfig[level];
+    const levelConfig = this._layoutConfig[location as keyof GridLayoutConfig];
     const breakpointsForAllLayouts: { [key: string]: number } = {};
 
     Object.keys(levelConfig).forEach((breakpoint) => {
@@ -133,8 +182,8 @@ class ConfigProvider {
     return breakpointsForAllLayouts;
   }
 
-  public getBreakpoints(level: "root" | "nested"): string[] {
-    return Object.keys(this._layoutConfig[level]);
+  public getBreakpoints(location: WidgetHierarchyLocation): string[] {
+    return Object.keys(this._layoutConfig[location as keyof GridLayoutConfig]);
   }
 
   public getRegisteredWidget(type: string): WidgetConfig | undefined {

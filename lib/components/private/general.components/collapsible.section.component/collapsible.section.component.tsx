@@ -4,14 +4,22 @@ import RunningText from "../text.components/running.text.component/running.text.
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Row from "../row.component/row.component";
 import { faAngleDown, faAngleUp } from "@fortawesome/pro-regular-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 interface CollapsibleSectionProps {
   title: string;
   children: React.ReactNode;
+  initialOpen?: boolean;
+  icon?: IconProp;
 }
 
-const CollapsibleSection = ({ title, children }: CollapsibleSectionProps) => {
-  const [isOpen, setIsOpen] = useState(true);
+const CollapsibleSection = ({
+  title,
+  children,
+  initialOpen = true,
+  icon,
+}: CollapsibleSectionProps) => {
+  const [isOpen, setIsOpen] = useState(initialOpen);
 
   const toggleOpen = () => setIsOpen(!isOpen);
 
@@ -33,7 +41,9 @@ const CollapsibleSection = ({ title, children }: CollapsibleSectionProps) => {
         justifyContent="flex-start"
       >
         {_buildHeaderIcon()}
+
         <RunningText className={styles.sectionTitle}>{title}</RunningText>
+        {icon && <FontAwesomeIcon icon={icon} className={styles.titleIcon} />}
       </Row>
 
       <div className={`${styles.sectionBody} ${isOpen ? styles.open : ""}`}>
