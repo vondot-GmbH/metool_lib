@@ -7,6 +7,7 @@ import { WidgetHierarchyMap } from "../../../../../schemas/widget.schemas/widget
 import PageStore from "../../../../../stores/page.store";
 import RenderWidget from "../render.widget.component/render.widget.component";
 import EditorStore from "../../../../../stores/editor.store";
+import { CorePageLayoutAreaConfig } from "../../../../../globals/interfaces/config.interface";
 
 interface RenderPageLayoutProps {
   children?: React.ReactNode;
@@ -32,7 +33,6 @@ const RenderPageLayout = ({
   const currentBreakpoint = editorStore?.currentBreakpoint;
 
   const [isLoading, setIsLoading] = useState(true);
-
   const [structuredWidgets, setStructuredWidgets] = useState<
     WidgetHierarchyMap | undefined
   >(undefined);
@@ -44,7 +44,6 @@ const RenderPageLayout = ({
   useEffect(() => {
     const initializeRenderPageLayout = async () => {
       if (pageToRender && corePageLayoutConfig) {
-        // set the viewID in the viewStore
         await layoutStore?.initLayoutAreaWidgetsAndProcess(pageToRender);
         const structuredData = layoutStore?.getStructuredLayoutAreaWidget();
         setStructuredWidgets(structuredData);
@@ -63,55 +62,43 @@ const RenderPageLayout = ({
     return <>{children}</>;
   }
 
-  // render the widgets for the given layout area
-  const renderLayoutAreaWidgets = (layoutAreaID: string) => {
+  const renderLayoutAreaWidgets = (
+    layoutAreaConfig: CorePageLayoutAreaConfig
+  ) => {
+    const layoutAreaID = layoutAreaConfig.layoutAreaID;
     const areaWidgets = layoutStore?.getWidgetsForLayoutArea(layoutAreaID);
-
-    if (
-      pageLayoutConfig?.areas == null ||
-      pageLayoutConfig.areas[layoutAreaID] == null
-    ) {
-      return null;
-    }
 
     return (
       <LayoutAreaGridLayout
         key={`layout-area-grid-layout-${layoutAreaID}`}
-        content={structuredWidgets as WidgetHierarchyMap} // TODO
+        content={structuredWidgets as WidgetHierarchyMap}
         readonly={readonly}
         selectedWidgetID={selectedWidgetID}
         layoutAreaID={layoutAreaID}
       >
-        {areaWidgets?.map((widget) => {
-          return (
-            <div key={widget.widget.positioning.i}>
-              <RenderWidget
-                showVisualWidgetOutline={showVisualWidgetOutline}
-                readonly={readonly}
-                widgetToRender={widget}
-                key={widget.widget.positioning.i}
-              />
-            </div>
-          );
-        })}
+        {areaWidgets?.map((widget) => (
+          <div key={widget.widget.widgetID}>
+            <RenderWidget
+              showVisualWidgetOutline={showVisualWidgetOutline}
+              readonly={readonly}
+              widgetToRender={widget}
+            />
+          </div>
+        ))}
       </LayoutAreaGridLayout>
     );
   };
 
-  // extract the layout component and areas from the core layout config
   const { component: LayoutComponent, areas } = corePageLayoutConfig;
 
-  // generate the props for the layout content
   const contentLayoutProps = areas.reduce(
     (props, areaConfig) => {
-      const { layoutAreaID, propName } = areaConfig;
-      props[propName] = renderLayoutAreaWidgets(layoutAreaID);
+      props[areaConfig.propName] = renderLayoutAreaWidgets(areaConfig);
       return props;
     },
     { children: children } as Record<string, React.ReactNode>
   );
 
-  // prepare the props for the layout component
   const layoutProps = {
     currentBreakpoint: currentBreakpoint,
     options: pageLayoutConfig?.options,
@@ -120,7 +107,6 @@ const RenderPageLayout = ({
     ...contentLayoutProps,
   };
 
-  // render the defined layout component with the widgets
   return <LayoutComponent {...layoutProps} />;
 };
 
