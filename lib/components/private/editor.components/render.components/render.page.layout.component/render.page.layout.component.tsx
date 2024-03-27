@@ -29,6 +29,7 @@ const RenderPageLayout = ({
   const pageLayoutConfig = pageStore?.currentPageToRender?.layoutConfig;
   const pageToRender = pageStore?.currentPageToRender?.pageID;
   const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
+  const currentBreakpoint = editorStore?.currentBreakpoint;
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -112,6 +113,7 @@ const RenderPageLayout = ({
 
   // prepare the props for the layout component
   const layoutProps = {
+    currentBreakpoint: currentBreakpoint,
     options: pageLayoutConfig?.options,
     areas: pageLayoutConfig?.areas,
     children: children,

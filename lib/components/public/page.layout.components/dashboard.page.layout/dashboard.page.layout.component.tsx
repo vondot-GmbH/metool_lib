@@ -6,6 +6,7 @@ import {
 } from "../../../../schemas/page.schemas/page.schema";
 
 interface DashboardPageLayoutProps {
+  currentBreakpoint: string;
   options?: LayoutOptions;
   areas?: Record<string, AreaOptions>;
   children: React.ReactNode;
@@ -25,24 +26,24 @@ const DashboardPageLayout = ({
   children,
   sideBar,
   topBar,
+  currentBreakpoint,
 }: DashboardPageLayoutProps): JSX.Element => {
   const layoutType = (options?.layoutType as LayoutType) || "sidebarFirst";
 
   const computeAreaStyle = (areaID: string) => {
     const areaOptions = areas?.[areaID];
+    const breakpointOptions = areaOptions ? areaOptions[currentBreakpoint] : {};
+
     return {
-      backgroundColor: areaOptions?.backgroundColor || options.backgroundColor,
-      height: areaOptions?.height,
-      width: areaOptions?.width,
-      padding: areaOptions?.padding,
-      margin: areaOptions?.margin,
-      maxHeight: areaOptions?.maxHeight,
-      minHeight: areaOptions?.minHeight,
-      maxWidth: areaOptions?.maxWidth,
-      minWidth: areaOptions?.minWidth,
-      border: areaOptions?.border,
-      borderRadius: areaOptions?.borderRadius,
-    };
+      backgroundColor:
+        breakpointOptions.backgroundColor || options.backgroundColor,
+      height: breakpointOptions.height,
+      width: breakpointOptions.width,
+      padding: breakpointOptions.padding,
+      margin: breakpointOptions.margin,
+      border: breakpointOptions.border,
+      borderRadius: breakpointOptions.borderRadius,
+    } as React.CSSProperties;
   };
 
   if (layoutType === "sidebarFirst") {

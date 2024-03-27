@@ -20,6 +20,20 @@ export interface PageLayoutConfig {
 }
 
 export interface AreaOptions {
+  [breakpoint: string]: BreakpointSpecificAreaOptions;
+}
+
+export interface BreakpointAreaOptions {
+  height?: string;
+  width?: string;
+  backgroundColor?: string;
+  padding?: string;
+  margin?: string;
+  border?: string;
+  borderRadius?: string;
+}
+
+export interface BreakpointSpecificAreaOptions {
   height?: string;
   width?: string;
   backgroundColor?: string;

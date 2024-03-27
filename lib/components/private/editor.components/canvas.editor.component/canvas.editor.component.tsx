@@ -11,7 +11,6 @@ import { EditorMode } from "../../../../globals/enums/editor.enum";
 import OptionSidebar, {
   SidebarProvider,
 } from "../option.sidebar.component/option.sidebar.component";
-import StateStore from "../../../../stores/state.store";
 import QueryStore from "../../../../stores/query.store";
 import ConfigurationSidebar from "../editor.configuration.bar.components/configuration.sidebar.component/configuration.sidebar.component";
 import TopBarComponent from "../top.bar.component/top.bar.component";
@@ -21,11 +20,11 @@ import PageStore from "../../../../stores/page.store";
 
 interface CanvasEditorProps {
   pageToRender: string;
+
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
   changeRecordStore?: ChangeRecordStore;
   editorStore?: EditorStore;
-  stateStore?: StateStore;
   queryStore?: QueryStore;
   resourceStore?: ResourceStore;
   pageStore?: PageStore;
@@ -92,7 +91,6 @@ export default inject(
   "widgetStore",
   "changeRecordStore",
   "editorStore",
-  "stateStore",
   "queryStore",
   "resourceStore",
   "pageStore"
