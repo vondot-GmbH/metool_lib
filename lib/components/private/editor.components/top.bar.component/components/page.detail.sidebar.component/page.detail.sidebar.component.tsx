@@ -53,15 +53,18 @@ const PageDetailSidebar = ({
     const page = {
       ...data,
       layoutConfig: {
+        ...data.layoutConfig,
         layoutID: selectedPageLayout.layoutID,
       },
     };
 
-    if (isEditing) {
-      pageStore?.updateAndSavePage(page);
-    } else {
-      pageStore?.createAndSavePage(page);
-    }
+    console.log(JSON.stringify(page, null, 2));
+
+    // if (isEditing) {
+    //   pageStore?.updateAndSavePage(page);
+    // } else {
+    //   pageStore?.createAndSavePage(page);
+    // }
   };
 
   return (
@@ -74,7 +77,7 @@ const PageDetailSidebar = ({
             <IconButton
               className={defaultStyles.mr10}
               type="submit"
-              form="rest-query-form"
+              form="dashboard-page-layout-form"
               icon={isEditing ? faFloppyDisk : faPlus}
               label={isEditing ? "Speichern" : "Hinzufügen"}
               showBorder

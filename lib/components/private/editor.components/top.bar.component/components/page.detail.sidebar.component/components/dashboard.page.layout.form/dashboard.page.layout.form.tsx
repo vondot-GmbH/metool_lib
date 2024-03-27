@@ -8,9 +8,10 @@ import {
 import defaultStyles from "../../../../../../../../styles/index.module.scss";
 import CollapsibleSection from "../../../../../../general.components/collapsible.section.component/collapsible.section.component";
 import ConfigProvider from "../../../../../../../../config/config.provider";
+import { useEffect } from "react";
 
 interface DashboardPageLayoutFormProps {
-  initialPage?: Page;
+  initialPage: Page;
   onFormSubmit: (page: Page) => void;
   disabled?: boolean;
 }
@@ -23,6 +24,23 @@ const DashboardPageLayoutForm = ({
   const configProvider = ConfigProvider.getInstance();
   const brakpointLayoutConfigs =
     configProvider.getBreakpointLayoutConfigForLevel("root");
+  const coreLayoutConfig = configProvider.getPageLayoutConfig(
+    initialPage?.layoutConfig?.layoutID
+  );
+
+  // Liste der definierten Bereichs-IDs in initialPage
+  const definedAreaIDs = initialPage?.layoutConfig?.areas
+    ? Object.keys(initialPage.layoutConfig.areas)
+    : [];
+
+  // Liste der in der Core-Konfiguration verfügbaren Bereichs-IDs
+  const availableAreaIDs =
+    coreLayoutConfig?.areas.map((area) => area.layoutAreaID) ?? [];
+
+  // Fehlende Bereichs-IDs ermitteln
+  const missingAreaIDs = availableAreaIDs.filter(
+    (areaID) => !definedAreaIDs.includes(areaID)
+  );
 
   const {
     register,
@@ -37,10 +55,30 @@ const DashboardPageLayoutForm = ({
     defaultValues: (initialPage as any) ?? {},
   });
 
-  const { fields } = useFieldArray({
-    control,
-    name: "areas",
-  });
+  useEffect(() => {
+    definedAreaIDs.forEach((areaID) => {
+      const areaOptions = initialPage?.layoutConfig?.areas?.[areaID];
+      if (areaOptions) {
+        Object.entries(areaOptions).forEach(([breakpoint, options]) => {
+          Object.entries(options).forEach(([optionName, value]) => {
+            setValue(
+              `layoutConfig.areas.${areaID}.${breakpoint}.${optionName}`,
+              value
+            );
+          });
+        });
+      }
+    });
+  }, [initialPage, setValue, definedAreaIDs]);
+
+  const addArea = (areaID: string) => {
+    console.log("addArea", areaID);
+    setValue(`layoutConfig.areas.${areaID}`, {
+      small: {},
+      medium: {},
+      large: {},
+    });
+  };
 
   return (
     <form
@@ -58,19 +96,45 @@ const DashboardPageLayoutForm = ({
         disabled={disabled}
       />
 
-      {brakpointLayoutConfigs &&
-        brakpointLayoutConfigs.map((layoutConfig) => {
-          return (
+      {missingAreaIDs.map((areaID) => (
+        <button
+          key={areaID}
+          type="button"
+          onClick={() => {
+            addArea(areaID);
+          }}
+        >
+          {`Add ${areaID}`}
+        </button>
+      ))}
+
+      {definedAreaIDs.map((areaID) => (
+        <div key={areaID}>
+          <h3>Layout Area: {areaID}</h3>
+          {["small", "medium", "large"].map((breakpoint) => (
             <CollapsibleSection
-              key={layoutConfig.breakpoint}
-              title={layoutConfig.title ?? "-"}
+              key={breakpoint}
+              title={`${breakpoint.toUpperCase()} Breakpoint`}
               initialOpen={false}
-              icon={layoutConfig.icon}
             >
-              <div>test</div>
+              <TextInput
+                {...register(
+                  `layoutConfig.areas.${areaID}.${breakpoint}.height`
+                )}
+                label="Height"
+                disabled={disabled}
+              />
+              <TextInput
+                {...register(
+                  `layoutConfig.areas.${areaID}.${breakpoint}.backgroundColor`
+                )}
+                label="Background Color"
+                disabled={disabled}
+              />
             </CollapsibleSection>
-          );
-        })}
+          ))}
+        </div>
+      ))}
     </form>
   );
 };
