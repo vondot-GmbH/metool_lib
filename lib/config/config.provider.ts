@@ -128,7 +128,7 @@ class ConfigProvider {
 
   public getBreakpointLayoutConfigForLevel(
     level: "root" | "nested"
-  ): BreakpointConfig[] {
+  ): (BreakpointConfig & { key: string })[] {
     const rootLayoutConfig = this._layoutConfig[level];
     const preparedLayoutConfigs = Object.entries(rootLayoutConfig).map(
       ([key, config]) => ({

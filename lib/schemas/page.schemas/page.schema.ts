@@ -16,13 +16,15 @@ export interface PageView {
 export interface PageLayoutConfig {
   layoutID: string;
   options?: LayoutOptions;
-  areas?: Record<string, AreaOptions>;
+  areas?: AreaOptions[];
 }
 
 export interface AreaOptions {
-  [breakpoint: string]: BreakpointSpecificAreaOptions;
+  layoutAreaID: string;
+  options: {
+    [breakpoint: string]: BreakpointSpecificAreaOptions;
+  };
 }
-
 export interface BreakpointAreaOptions {
   height?: string;
   width?: string;
@@ -48,19 +50,7 @@ export interface LayoutOptions {
   layoutType?: string;
 }
 
-export const pageSchema = yup.object().shape({
-  name: yup.string().required(),
-});
-
-export const layoutConfigSchema = yup.object().shape({
-  layoutID: yup.string().required(),
-  options: yup.object().shape({
-    backgroundColor: yup.string(),
-    layoutType: yup.string(),
-  }),
-});
-
-export const areaOptionsSchema = yup.object().shape({
+const breakpointSpecificAreaOptionsSchema = yup.object().shape({
   height: yup.string().notRequired(),
   width: yup.string().notRequired(),
   backgroundColor: yup.string().notRequired(),
@@ -68,4 +58,39 @@ export const areaOptionsSchema = yup.object().shape({
   margin: yup.string().notRequired(),
   border: yup.string().notRequired(),
   borderRadius: yup.string().notRequired(),
+});
+
+const areaOptionsSchema = yup.object().shape({
+  layoutAreaID: yup.string().required(),
+  options: yup
+    .object()
+    .shape({
+      small: breakpointSpecificAreaOptionsSchema,
+      medium: breakpointSpecificAreaOptionsSchema,
+      large: breakpointSpecificAreaOptionsSchema,
+    })
+    .required(),
+});
+
+const layoutOptionsSchema = yup.object().shape({
+  backgroundColor: yup.string().notRequired(),
+  layoutType: yup.string().notRequired(),
+});
+
+const pageLayoutConfigSchema = yup.object().shape({
+  layoutID: yup.string().required(),
+  options: layoutOptionsSchema,
+  areas: yup.array().of(areaOptionsSchema).notRequired(),
+});
+
+export const pageSchema = yup.object().shape({
+  name: yup.string().required(),
+  pageID: yup.string().required(),
+  views: yup.array().of(
+    yup.object().shape({
+      viewID: yup.string().required(),
+      defaultView: yup.bool().required(),
+    })
+  ),
+  layoutConfig: pageLayoutConfigSchema,
 });

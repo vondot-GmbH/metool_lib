@@ -108,7 +108,6 @@ const PageOverviewDropdown = ({
           renderItem={(item: Page) => {
             return buildPageItem(item);
           }}
-          onAddNew={() => {}} // TODO
         />
       </div>
       {selectedItem != null && (

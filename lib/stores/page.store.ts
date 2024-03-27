@@ -129,6 +129,7 @@ class PageStore {
     if (response == null || response?.pageID == null) return;
 
     this.setCurrentPageToRender(response);
+    this.setPages([response]);
   }
 
   async createAndSavePage(page: Page): Promise<void> {
@@ -153,6 +154,7 @@ class PageStore {
     if (response == null || response?.pageID == null) return;
 
     this.setCurrentPageToRender(response);
+    this.setPages([response]);
   }
 
   async fetchAllPagesAndSave(): Promise<void> {

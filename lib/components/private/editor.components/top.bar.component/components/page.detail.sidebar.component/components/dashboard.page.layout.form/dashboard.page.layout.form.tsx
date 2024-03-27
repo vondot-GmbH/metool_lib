@@ -1,14 +1,22 @@
-import { useFieldArray, useForm } from "react-hook-form";
-import TextInput from "../../../../../../general.components/outlined.text.input.component/outlined.text.input.component";
+import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import TextInput from "../../../../../../general.components/outlined.text.input.component/outlined.text.input.component";
+import CollapsibleSection from "../../../../../../general.components/collapsible.section.component/collapsible.section.component";
 import {
   Page,
   pageSchema,
 } from "../../../../../../../../schemas/page.schemas/page.schema";
-import defaultStyles from "../../../../../../../../styles/index.module.scss";
-import CollapsibleSection from "../../../../../../general.components/collapsible.section.component/collapsible.section.component";
 import ConfigProvider from "../../../../../../../../config/config.provider";
-import { useEffect } from "react";
+import defaultStyles from "../../../../../../../../styles/index.module.scss";
+import IconButton from "../../../../../../general.components/icon.button.component/icon.button.component";
+import { faTrash } from "@fortawesome/pro-regular-svg-icons";
+import styles from "./dashboard.page.layout.form.module.scss";
+import RunningText from "../../../../../../general.components/text.components/running.text.component/running.text.component";
+import SelectDropDown from "../../../../../../general.components/select.dropdown.component/select.dropdown.component";
+import {
+  DASHBOARD_PAGE_LAYOUT_SIDEBAR_AREA_DEFAULT,
+  DASHBOARD_PAGE_LAYOUT_TOPBAR_AREA_DEFAULT,
+} from "../../../../../../../../globals/config/page.layout.config";
 
 interface DashboardPageLayoutFormProps {
   initialPage: Page;
@@ -20,28 +28,8 @@ const DashboardPageLayoutForm = ({
   onFormSubmit,
   initialPage,
   disabled = false,
-}: DashboardPageLayoutFormProps): JSX.Element | null => {
+}: DashboardPageLayoutFormProps) => {
   const configProvider = ConfigProvider.getInstance();
-  const brakpointLayoutConfigs =
-    configProvider.getBreakpointLayoutConfigForLevel("root");
-  const coreLayoutConfig = configProvider.getPageLayoutConfig(
-    initialPage?.layoutConfig?.layoutID
-  );
-
-  // Liste der definierten Bereichs-IDs in initialPage
-  const definedAreaIDs = initialPage?.layoutConfig?.areas
-    ? Object.keys(initialPage.layoutConfig.areas)
-    : [];
-
-  // Liste der in der Core-Konfiguration verfügbaren Bereichs-IDs
-  const availableAreaIDs =
-    coreLayoutConfig?.areas.map((area) => area.layoutAreaID) ?? [];
-
-  // Fehlende Bereichs-IDs ermitteln
-  const missingAreaIDs = availableAreaIDs.filter(
-    (areaID) => !definedAreaIDs.includes(areaID)
-  );
-
   const {
     register,
     control,
@@ -50,91 +38,161 @@ const DashboardPageLayoutForm = ({
     formState: { errors },
   } = useForm({
     resolver: yupResolver(pageSchema),
-    mode: "onTouched",
-    reValidateMode: "onChange",
-    defaultValues: (initialPage as any) ?? {},
+    defaultValues: { ...initialPage },
   });
 
-  useEffect(() => {
-    definedAreaIDs.forEach((areaID) => {
-      const areaOptions = initialPage?.layoutConfig?.areas?.[areaID];
-      if (areaOptions) {
-        Object.entries(areaOptions).forEach(([breakpoint, options]) => {
-          Object.entries(options).forEach(([optionName, value]) => {
-            setValue(
-              `layoutConfig.areas.${areaID}.${breakpoint}.${optionName}`,
-              value
-            );
-          });
-        });
-      }
-    });
-  }, [initialPage, setValue, definedAreaIDs]);
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "layoutConfig.areas",
+  });
 
-  const addArea = (areaID: string) => {
-    console.log("addArea", areaID);
-    setValue(`layoutConfig.areas.${areaID}`, {
-      small: {},
-      medium: {},
-      large: {},
-    });
+  const coreLayoutConfig = configProvider.getPageLayoutConfig(
+    initialPage?.layoutConfig?.layoutID
+  );
+
+  const rootBreakpoints =
+    configProvider?.getBreakpointLayoutConfigForLevel("root");
+
+  const layoutTypeItems = [
+    {
+      label: "Sidebar First",
+      value: "sidebarFirst",
+    },
+    {
+      label: "Topbar First",
+      value: "topbarFirst",
+    },
+  ];
+
+  const addPageLayoutArea = (areaID: string) => {
+    let defaultValues = { layoutAreaID: areaID } as any;
+    switch (areaID) {
+      case "sidebar":
+        defaultValues = DASHBOARD_PAGE_LAYOUT_SIDEBAR_AREA_DEFAULT;
+        break;
+      case "topbar":
+        defaultValues = DASHBOARD_PAGE_LAYOUT_TOPBAR_AREA_DEFAULT;
+        break;
+      default:
+        defaultValues = {};
+    }
+    append(defaultValues);
   };
 
   return (
     <form
       id="dashboard-page-layout-form"
-      onSubmit={handleSubmit((data, e) => {
-        e?.preventDefault();
-        onFormSubmit(data as Page);
-      })}
+      onSubmit={handleSubmit((data) => onFormSubmit(data as Page))}
     >
       <TextInput
         {...register("name")}
         label="Page Name"
-        className={defaultStyles.mt10}
+        className={defaultStyles.mt20}
         validationMessage={errors.name?.message?.toString()}
         disabled={disabled}
       />
 
-      {missingAreaIDs.map((areaID) => (
-        <button
-          key={areaID}
-          type="button"
-          onClick={() => {
-            addArea(areaID);
-          }}
-        >
-          {`Add ${areaID}`}
-        </button>
-      ))}
+      <SelectDropDown
+        className={defaultStyles.mb20}
+        label="Layout Type"
+        selectedItem={initialPage?.layoutConfig?.options?.layoutType}
+        items={layoutTypeItems}
+        disabled={disabled}
+        onChange={(item) => {
+          if (item?.value != null) {
+            setValue("layoutConfig.options.layoutType", item?.value);
+          }
+        }}
+      />
 
-      {definedAreaIDs.map((areaID) => (
-        <div key={areaID}>
-          <h3>Layout Area: {areaID}</h3>
-          {["small", "medium", "large"].map((breakpoint) => (
-            <CollapsibleSection
-              key={breakpoint}
-              title={`${breakpoint.toUpperCase()} Breakpoint`}
-              initialOpen={false}
-            >
-              <TextInput
-                {...register(
-                  `layoutConfig.areas.${areaID}.${breakpoint}.height`
-                )}
-                label="Height"
-                disabled={disabled}
-              />
-              <TextInput
-                {...register(
-                  `layoutConfig.areas.${areaID}.${breakpoint}.backgroundColor`
-                )}
-                label="Background Color"
-                disabled={disabled}
-              />
-            </CollapsibleSection>
-          ))}
+      <div className={styles.layoutAreaWrapper}>
+        <RunningText>Layout Areas</RunningText>
+
+        <div className={styles.availableLayoutAreas}>
+          {coreLayoutConfig?.areas
+            .filter(
+              (coreArea) =>
+                !fields.some(
+                  (field) => field.layoutAreaID === coreArea.layoutAreaID
+                )
+            )
+            .map((area) => (
+              <button
+                className={styles.addLayoutAreaButton}
+                key={area.layoutAreaID}
+                type="button"
+                onClick={() => addPageLayoutArea(area.layoutAreaID)}
+              >
+                Add {area.layoutAreaID}
+              </button>
+            ))}
         </div>
-      ))}
+
+        {fields.map((field, index) => (
+          <div key={field.id} className={styles.layoutArea}>
+            <div className={styles.layoutAreaHeader}>
+              <RunningText className={styles.layoutAreaName}>
+                {field.layoutAreaID}
+              </RunningText>
+              <IconButton
+                icon={faTrash}
+                onClick={() => remove(index)}
+                showBorder
+              />
+            </div>
+            {rootBreakpoints.map((breakpoint) => (
+              <CollapsibleSection
+                key={breakpoint.key}
+                title={`${breakpoint.title}`}
+                initialOpen={false}
+                icon={breakpoint.icon}
+              >
+                <TextInput
+                  {...register(
+                    `layoutConfig.areas[${index}].options.${breakpoint.key}.height` as any
+                  )}
+                  label="Height"
+                  disabled={disabled}
+                />
+                <TextInput
+                  {...register(
+                    `layoutConfig.areas[${index}].options.${breakpoint.key}.width` as any
+                  )}
+                  label="Width"
+                  disabled={disabled}
+                />
+
+                <TextInput
+                  type="color"
+                  {...register(
+                    `layoutConfig.areas[${index}].options.${breakpoint.key}.backgroundColor` as any
+                  )}
+                  label="Background Color"
+                  disabled={disabled}
+                />
+
+                <TextInput
+                  type="text"
+                  {...register(
+                    `layoutConfig.areas[${index}].options.${breakpoint.key}.border` as any
+                  )}
+                  label="Border"
+                  disabled={disabled}
+                />
+
+                <TextInput
+                  type="text"
+                  {...register(
+                    `layoutConfig.areas[${index}].options.${breakpoint.key}.borderRadius` as any
+                  )}
+                  label="borderRadius"
+                  disabled={disabled}
+                />
+              </CollapsibleSection>
+            ))}
+          </div>
+        ))}
+      </div>
     </form>
   );
 };

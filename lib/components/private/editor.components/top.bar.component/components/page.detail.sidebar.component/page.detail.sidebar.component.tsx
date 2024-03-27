@@ -49,7 +49,6 @@ const PageDetailSidebar = ({
       return;
     }
 
-    // TODO
     const page = {
       ...data,
       layoutConfig: {
@@ -58,13 +57,11 @@ const PageDetailSidebar = ({
       },
     };
 
-    console.log(JSON.stringify(page, null, 2));
-
-    // if (isEditing) {
-    //   pageStore?.updateAndSavePage(page);
-    // } else {
-    //   pageStore?.createAndSavePage(page);
-    // }
+    if (isEditing) {
+      pageStore?.updateAndSavePage(page);
+    } else {
+      pageStore?.createAndSavePage(page);
+    }
   };
 
   return (

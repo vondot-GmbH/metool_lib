@@ -8,10 +8,10 @@ import {
 interface DashboardPageLayoutProps {
   currentBreakpoint: string;
   options?: LayoutOptions;
-  areas?: Record<string, AreaOptions>;
+  areas?: AreaOptions[];
   children: React.ReactNode;
-  sideBar: React.ReactNode;
-  topBar: React.ReactNode;
+  sideBar?: React.ReactNode;
+  topBar?: React.ReactNode;
 }
 
 const defaultLayoutOptions: LayoutOptions = {
@@ -31,8 +31,10 @@ const DashboardPageLayout = ({
   const layoutType = (options?.layoutType as LayoutType) || "sidebarFirst";
 
   const computeAreaStyle = (areaID: string) => {
-    const areaOptions = areas?.[areaID];
-    const breakpointOptions = areaOptions ? areaOptions[currentBreakpoint] : {};
+    const areaOptions = areas?.find((area) => area.layoutAreaID === areaID);
+    const breakpointOptions = areaOptions
+      ? areaOptions.options[currentBreakpoint] || {}
+      : {};
 
     return {
       backgroundColor:
@@ -45,6 +47,9 @@ const DashboardPageLayout = ({
       borderRadius: breakpointOptions.borderRadius,
     } as React.CSSProperties;
   };
+
+  console.log("computeAreaStyle(sidebar)");
+  console.log(computeAreaStyle("sidebar"));
 
   if (layoutType === "sidebarFirst") {
     return (

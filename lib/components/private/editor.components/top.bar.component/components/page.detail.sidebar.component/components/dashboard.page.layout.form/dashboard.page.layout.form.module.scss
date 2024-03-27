@@ -1,0 +1,47 @@
+.layoutAreaWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  border-radius: 6px;
+  padding: 7px;
+
+  .availableLayoutAreas {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    padding: 10px 7px;
+    border-radius: 6px;
+    background-color: #f2f4f4;
+    border: 1px solid #d9d8d8;
+
+    .addLayoutAreaButton {
+      padding: 7px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      border: none;
+      background-color: #d9d8d8;
+
+      &:hover {
+        background-color: #c4c3c3;
+      }
+    }
+  }
+
+  .layoutArea {
+    background-color: #f2f4f4;
+    border-radius: 6px;
+
+    .layoutAreaHeader {
+      border-radius: 6px 6px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 7px;
+      background-color: #d9d8d8;
+
+      .layoutAreaName {
+        font-weight: bold;
+      }
+    }
+  }
+}
