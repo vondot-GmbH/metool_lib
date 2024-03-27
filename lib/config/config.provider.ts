@@ -95,6 +95,10 @@ class ConfigProvider {
     return this._pageLayoutConfigs.get(layoutID);
   }
 
+  public getPageLayoutConfigs(): CorePageLayoutConfig[] {
+    return Array.from(this._pageLayoutConfigs.values());
+  }
+
   public getCoreResource(resourceKey: string): CoreResource | undefined {
     return this._coreResources.get(resourceKey);
   }
@@ -120,6 +124,19 @@ class ConfigProvider {
 
   public getLayoutConfig(): GridLayoutConfig {
     return this._layoutConfig;
+  }
+
+  public getBreakpointLayoutConfigForLevel(
+    level: "root" | "nested"
+  ): BreakpointConfig[] {
+    const rootLayoutConfig = this._layoutConfig[level];
+    const preparedLayoutConfigs = Object.entries(rootLayoutConfig).map(
+      ([key, config]) => ({
+        key,
+        ...config,
+      })
+    );
+    return preparedLayoutConfigs;
   }
 
   public getRowHeight(

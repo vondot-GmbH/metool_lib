@@ -113,6 +113,7 @@ const PageOverviewDropdown = ({
       </div>
       {selectedItem != null && (
         <PageDetailSidebar
+          key={selectedItem?.pageID}
           selectedItem={selectedItem}
           isEditing={isEditing}
           onClose={() => setSelectedItem(undefined)}
