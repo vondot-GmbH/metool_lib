@@ -48,9 +48,6 @@ const DashboardPageLayout = ({
     } as React.CSSProperties;
   };
 
-  console.log("computeAreaStyle(sidebar)");
-  console.log(computeAreaStyle("sidebar"));
-
   if (layoutType === "sidebarFirst") {
     return (
       <div className={styles.sidebarFirstContainer}>
