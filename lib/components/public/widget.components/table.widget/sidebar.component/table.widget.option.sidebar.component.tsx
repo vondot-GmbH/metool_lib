@@ -24,20 +24,15 @@ const TableWidgetOptionSidebar = ({
   editorStore,
 }: TableWidgetOptionSidebarProps): JSX.Element => {
   const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
-
-  // TODO
-  const columnOptions: TableColumn[] = widgetStore?.getWidgetOption(
-    selectedWidgetID ?? "",
-    "columns"
-  );
-
-  const tableOptions: TableOptions = widgetStore?.getAllOptionsForWidget(
+  const options: TableOptions = widgetStore?.getAllOptionsForWidget(
     selectedWidgetID ?? ""
   );
 
   const { pushView } = useSidebar();
 
   const handleAddColumn = (): void => {
+    const columnOptions: TableColumn[] = options?.columns;
+
     const newColumn = {
       columnID: UUID(),
       source: "neue Spalte",
@@ -67,7 +62,7 @@ const TableWidgetOptionSidebar = ({
       <CollapsibleSection title="Content">
         <StateInputEditor
           label="Data"
-          value={tableOptions?.data}
+          value={options?.data}
           className={defaultStyles.mb20}
           onChange={(value: string) => {
             widgetStore?.updateWidgetOption(
@@ -80,7 +75,7 @@ const TableWidgetOptionSidebar = ({
 
         <MultiFieldDropdownEditor
           label="Columns"
-          items={columnOptions}
+          items={options?.columns}
           renderListItem={(item: TableColumn) => (
             <div
               onClick={() => {
@@ -105,7 +100,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Header Background Color"
-          value={tableOptions?.headerBackgroundColor}
+          value={options?.headerBackgroundColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -119,7 +114,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Row Background Color"
-          value={tableOptions?.rowBackgroundColor}
+          value={options?.rowBackgroundColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -133,7 +128,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Row Hover Color"
-          value={tableOptions?.rowHoverColor}
+          value={options?.rowHoverColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -147,7 +142,7 @@ const TableWidgetOptionSidebar = ({
         <TextInput
           type="color"
           label="Border Color"
-          value={tableOptions?.borderBottomColor}
+          value={options?.borderBottomColor}
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -164,10 +159,10 @@ const TableWidgetOptionSidebar = ({
           types={["padding"]}
           initialValues={{
             padding: {
-              top: tableOptions?.tableCellPadding?.top,
-              right: tableOptions?.tableCellPadding?.right,
-              bottom: tableOptions?.tableCellPadding?.bottom,
-              left: tableOptions?.tableCellPadding?.left,
+              top: options?.tableCellPadding?.top,
+              right: options?.tableCellPadding?.right,
+              bottom: options?.tableCellPadding?.bottom,
+              left: options?.tableCellPadding?.left,
             },
           }}
           onChange={(_mode, values) => {
@@ -183,7 +178,7 @@ const TableWidgetOptionSidebar = ({
       <CollapsibleSection title="Interaction">
         <MultiSwitch
           label="Row Selection"
-          initialValue={tableOptions?.rowSelectionType}
+          initialValue={options?.rowSelectionType}
           className={defaultStyles.mt10}
           onChange={(value) => {
             widgetStore?.updateWidgetOption(

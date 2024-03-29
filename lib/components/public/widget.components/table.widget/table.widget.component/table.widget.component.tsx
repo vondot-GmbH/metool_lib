@@ -20,29 +20,29 @@ const TableWidget = ({
   widgetID,
   widgetStore,
   stateStore,
-  navigationStore,
 }: TableWidgetProps): JSX.Element => {
-  const [usersData, setUsersData] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const tableOptions: TableOptions =
+    widgetStore?.getAllOptionsForWidget(widgetID);
 
   useEffect(() => {
     const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
-
     if (!analized) return;
 
     stateStore?.initializeDynamicOptions(
       widgetID,
       analized,
-      (data) => {
-        setIsLoading(data?.isLoading);
-        setUsersData(data.data);
+      (options) => {
+        setIsLoading(options?.isLoading);
+        console.log("options?.isLoading");
+        console.log(options?.isLoading);
+        setData(options?.data);
       },
       _getInitialTableWidgetState()
     );
   }, []);
-
-  const tableOptions: TableOptions =
-    widgetStore?.getAllOptionsForWidget(widgetID);
 
   const prepareColumns = (tableOptions: TableOptions): TableColumn[] => {
     return tableOptions?.columns?.map((column) => ({
@@ -80,7 +80,7 @@ const TableWidget = ({
     <Table
       key={widgetID}
       columns={(prepareColumns(tableOptions) as any[]) || []}
-      data={usersData || []}
+      data={data || []}
       rowKey="id"
       noDataText="No data available"
       defaultBorderBottomColor={tableOptions?.borderBottomColor}

@@ -6,28 +6,25 @@ import { v4 as UUID } from "uuid";
 import { useSidebar } from "../../../../private/editor.components/option.sidebar.component/option.sidebar.component";
 import EditorStore from "../../../../../stores/editor.store";
 import NavigationMenuItemDetailView from "./navigation.menu.item.detail.view.component";
-import SelectDropDown from "../../../../private/general.components/select.dropdown.component/select.dropdown.component";
+import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
+import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
+import {
+  NavigationMenuItem,
+  NavigationMenuOptions,
+} from "../schemas/navigation.menu.schema";
 
 interface NavigationWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
 }
 
-// TODO find a place for all widget option interfaces (for all widgets)
-export interface NavigationMenuItem {
-  id: string;
-  label: string;
-  actionType: "navigate_to_view" | "navigate_to_page";
-  targetID: string;
-}
-
 const orientationOptions = [
   {
-    label: "horizontal",
+    label: "Horizontal",
     value: "horizontal",
   },
   {
-    label: "vertical",
+    label: "Vertical",
     value: "vertical",
   },
 ];
@@ -37,14 +34,15 @@ const NavigationWidgetOptionSidebar = ({
   editorStore,
 }: NavigationWidgetOptionSidebarProps): JSX.Element => {
   const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
-  const navigationItems: NavigationMenuItem[] = widgetStore?.getWidgetOption(
-    selectedWidgetID ?? "",
-    "items"
+  const options: NavigationMenuOptions = widgetStore?.getAllOptionsForWidget(
+    selectedWidgetID ?? ""
   );
 
   const { pushView } = useSidebar();
 
   const handleAddNavigationItem = (): void => {
+    const navigationItems: NavigationMenuItem[] = options?.items;
+
     const newItem: NavigationMenuItem = {
       id: UUID(),
       label: "New Item",
@@ -61,7 +59,7 @@ const NavigationWidgetOptionSidebar = ({
       <CollapsibleSection title="Content">
         <MultiFieldDropdownEditor
           label="Items"
-          items={navigationItems}
+          items={options?.items}
           renderListItem={(item: NavigationMenuItem) => (
             <div
               onClick={() =>
@@ -75,7 +73,7 @@ const NavigationWidgetOptionSidebar = ({
                 )
               }
             >
-              {item.label}
+              <RunningText> {item.label}</RunningText>
             </div>
           )}
           onAdd={handleAddNavigationItem}
@@ -83,26 +81,22 @@ const NavigationWidgetOptionSidebar = ({
       </CollapsibleSection>
 
       <CollapsibleSection title="Style">
-        <SelectDropDown
+        <MultiSwitch
           label="Orientation"
-          selectedItem={orientationOptions?.find(
-            (option) =>
-              option.value ===
-              widgetStore?.getWidgetOption(
-                selectedWidgetID ?? "",
-                "orientation"
-              )
+          initialValue={widgetStore?.getWidgetOption(
+            selectedWidgetID ?? "",
+            "orientation"
           )}
-          items={orientationOptions ?? []}
-          onChange={(item) => {
-            if (item?.value != null) {
+          onChange={(value: any) => {
+            if (value != null) {
               widgetStore?.updateWidgetOption(
                 selectedWidgetID ?? "",
                 "orientation",
-                item?.value
+                value
               );
             }
           }}
+          options={orientationOptions}
         />
       </CollapsibleSection>
     </div>

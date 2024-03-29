@@ -3,8 +3,8 @@ import TextInput from "../../../../private/general.components/outlined.text.inpu
 
 import defaultStyles from "../../../../../styles/index.module.scss";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
-import { NavigationMenuItem } from "./navigation.menu.widget.option.sidebar.component";
 import SelectDropDown from "../../../../private/general.components/select.dropdown.component/select.dropdown.component";
+import { NavigationMenuItem } from "../schemas/navigation.menu.schema";
 
 interface NavigationMenuItemDetailViewProps {
   menuItem: NavigationMenuItem;
@@ -51,12 +51,9 @@ const NavigationMenuItemDetailView = ({
         />
 
         <SelectDropDown
+          key={menuItem?.actionType}
           label="Action Type"
-          selectedItem={
-            actionTypeOptions.find(
-              (option) => option.value === menuItem?.actionType
-            ) ?? null
-          }
+          selectedItem={menuItem.actionType}
           items={actionTypeOptions ?? []}
           onChange={(item) => {
             if (item?.value != null) {
