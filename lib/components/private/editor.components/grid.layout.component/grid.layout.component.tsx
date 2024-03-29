@@ -248,6 +248,7 @@ const GridLayout = ({
       onResizeStop={handleResizeStop}
       onDrop={handleDrop}
       isDroppable={true}
+      isDraggable={selectedWidgetID != null && !readonly}
       onLayoutChange={(_layout, layouts) => {
         setSavedLayouts(layouts);
       }}

@@ -93,7 +93,7 @@ export const convertDynamicLayouts = (
 
       result[breakpoint].push({
         ...layout,
-        static: isStatic,
+        // static: isStatic, // TODO isDraggable solves this issue for now
       });
     }
   }
