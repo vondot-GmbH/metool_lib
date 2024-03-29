@@ -13,6 +13,7 @@ import SpacingEditor from "../../../../private/general.components/spacing.editor
 import defaultStyles from "../../../../../styles/index.module.scss";
 import StateInputEditor from "../../../../private/general.components/state.input.text.component/state.input.text.component";
 import EditorStore from "../../../../../stores/editor.store";
+import ThemeDropdown from "../../../../private/general.components/input.components/theme.dropdown.component/theme.dropdown.component";
 
 interface TableWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -97,18 +98,19 @@ const TableWidgetOptionSidebar = ({
       </CollapsibleSection>
 
       <CollapsibleSection title="Style">
-        <TextInput
-          type="color"
+        <ThemeDropdown
+          category="colors"
           label="Header Background Color"
-          value={options?.headerBackgroundColor}
-          className={defaultStyles.mt10}
-          onValueChange={(value) => {
-            widgetStore?.updateWidgetOption(
-              selectedWidgetID ?? "",
-              "headerBackgroundColor",
-              value
-            );
+          onChange={(item) => {
+            if (item?.value != null) {
+              widgetStore?.updateWidgetOption(
+                selectedWidgetID ?? "",
+                "headerBackgroundColor",
+                item?.value
+              );
+            }
           }}
+          selectedItem={options?.headerBackgroundColor}
         />
 
         <TextInput

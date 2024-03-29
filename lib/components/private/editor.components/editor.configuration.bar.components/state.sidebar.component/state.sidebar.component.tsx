@@ -2,7 +2,7 @@ import { inject, observer } from "mobx-react";
 import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import WidgetStore from "../../../../../stores/widget.store";
 import ComponentWrapper from "../../../general.components/component.wrapper.component/component.wrapper.component";
-import SelectDropDown from "../../../general.components/select.dropdown.component/select.dropdown.component";
+import SelectDropDown from "../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import { useEffect, useState } from "react";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";

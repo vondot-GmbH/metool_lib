@@ -12,7 +12,7 @@ import IconButton from "../../../../../../general.components/icon.button.compone
 import { faTrash } from "@fortawesome/pro-regular-svg-icons";
 import styles from "./dashboard.page.layout.form.module.scss";
 import RunningText from "../../../../../../general.components/text.components/running.text.component/running.text.component";
-import SelectDropDown from "../../../../../../general.components/select.dropdown.component/select.dropdown.component";
+import SelectDropDown from "../../../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import {
   DASHBOARD_PAGE_LAYOUT_SIDEBAR_AREA_DEFAULT,
   DASHBOARD_PAGE_LAYOUT_TOPBAR_AREA_DEFAULT,

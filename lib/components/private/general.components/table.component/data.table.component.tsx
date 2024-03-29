@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import classNames from "classnames";
 import styles from "./data.table.component.module.scss";
 import Skeleton from "react-loading-skeleton";

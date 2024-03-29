@@ -25,6 +25,25 @@ import { NavigationMenuWidgetConfig } from "../lib/components/public/widget.comp
 
 // initialize metool
 InitializeMetool({
+  themeConfig: {
+    colors: {
+      colorPrimary: "#2bbf8c",
+      colorPrimaryHighlight: "#2bbf8c",
+      colorPrimaryUltralight: "#e6f9f4",
+      colorSecondary: "#000000",
+      colorSecondaryHighlight: "#5c5c5c",
+      colorBackground: "#ffffff",
+      colorInverted: "#000000",
+      colorSurface: "rgb(248, 250, 250)",
+      colorSurfaceDark: "#f2f2f2",
+      colorBorder: "#dddddd",
+      colorError: "#fd5d5d",
+      colorSuccess: "rgb(92, 195, 122)",
+      colorHover: "hsla(158, 66%, 51%, 0.1)",
+      colorWarning: "#f8b400",
+      colorDisabled: "#cacecd",
+    },
+  },
   coreQueryConfig: coreQueryConfig,
   coreResources: [coreResources],
   widgets: [
@@ -89,9 +108,9 @@ Gleap.initialize("YZ6N1CITLut6MeqEhbITgwBid7oB7nc6");
 function App() {
   return (
     <div className="main-container">
-      {/* <CanvasEditorPublic pageToRender="5f404b6b9I6b4c3017f99979" /> */}
+      <CanvasEditorPublic pageToRender="5f404b6b9I6b4c3017f99979" />
 
-      <RenderPage pageToRender="5f404b6b9I6b4c3017f99979" />
+      {/* <RenderPage pageToRender="5f404b6b9I6b4c3017f99979" /> */}
     </div>
   );
 }

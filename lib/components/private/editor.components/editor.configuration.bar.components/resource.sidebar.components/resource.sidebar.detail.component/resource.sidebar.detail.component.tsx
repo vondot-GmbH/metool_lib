@@ -4,7 +4,7 @@ import ResizableSidebar from "../../../../general.components/resizable.sidbear.c
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
 import ResourceStore from "../../../../../../stores/resource.store";
 import defaultStyles from "../../../../../../styles/index.module.scss";
-import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
+import SelectDropDown from "../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import { DataSourceType } from "../../../../../../main";
 import { useState } from "react";
 import {

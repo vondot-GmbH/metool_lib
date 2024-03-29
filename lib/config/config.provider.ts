@@ -4,6 +4,9 @@ import {
   GridLayoutConfig,
   CorePageLayoutConfig,
   WidgetConfig,
+  ThemeConfig,
+  PreparedThemeConfig,
+  ThemeOption,
 } from "../globals/interfaces/config.interface";
 import {
   CoreQuery,
@@ -26,6 +29,7 @@ class ConfigProvider {
   private _coreResources: CoreResourceMap = new Map();
   private _coreQueries: CoreQueryMap = new Map();
   private _pageLayoutConfigs: Map<string, CorePageLayoutConfig> = new Map();
+  private _preparedThemeConfig: PreparedThemeConfig[] = [];
 
   private constructor() {}
 
@@ -84,6 +88,42 @@ class ConfigProvider {
     }
 
     this._layoutConfig = layoutConfig;
+  }
+
+  // TODO Comment
+  public registerThemeConfig(themeConfig?: ThemeConfig): void {
+    const root = document.documentElement;
+    const preparedConfig: PreparedThemeConfig[] = [];
+
+    if (themeConfig == null) {
+      return;
+    }
+
+    for (const category in themeConfig) {
+      const categoryConfig = themeConfig[category];
+      if (!categoryConfig) continue;
+
+      const options: ThemeOption[] = [];
+
+      for (const key in categoryConfig) {
+        const value = categoryConfig[key] as string;
+        const formattedValue = `--${category}-${key}`;
+        root.style.setProperty(formattedValue, value);
+
+        options.push({
+          label: key,
+          value: value,
+          formattedValue: formattedValue,
+        });
+      }
+
+      preparedConfig.push({
+        category,
+        options,
+      });
+    }
+
+    this._preparedThemeConfig = preparedConfig;
   }
 
   //! getter
@@ -192,6 +232,16 @@ class ConfigProvider {
 
   public getRegisteredWidgets(): WidgetConfig[] {
     return Array.from(this._registeredWidgets.values());
+  }
+
+  public getThemeVariablesForCategory(
+    category: keyof ThemeConfig
+  ): ThemeOption[] | undefined {
+    const filteredVariables = this._preparedThemeConfig.find(
+      (themeConfig) => themeConfig.category === category
+    );
+
+    return filteredVariables?.options;
   }
 }
 

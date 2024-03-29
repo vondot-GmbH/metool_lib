@@ -5,7 +5,7 @@ import ResizableSidebar from "../../../../general.components/resizable.sidbear.c
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
 import QueryStore from "../../../../../../stores/query.store";
 import RestQueryForm from "../code.sidebar.component/components/rest.query.form/rest.query.form";
-import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
+import SelectDropDown from "../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import ResourceStore from "../../../../../../stores/resource.store";
 import { DataSourceType, Resource } from "../../../../../../main";
 import { RestQuery } from "../../../../../../schemas/query.schemas/query.schema";

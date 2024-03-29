@@ -10,7 +10,7 @@ import defaultStyles from "../../../../../../styles/index.module.scss";
 import { useCallback, useMemo, useState } from "react";
 import ConfigProvider from "../../../../../../config/config.provider";
 import { CorePageLayoutConfig } from "../../../../../../globals/interfaces/config.interface";
-import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
+import SelectDropDown from "../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import DashboardPageLayoutForm from "./components/dashboard.page.layout.form/dashboard.page.layout.form";
 
 interface PageDetailSidebarProps {

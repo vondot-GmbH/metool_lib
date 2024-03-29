@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import Select, { ActionMeta } from "react-select";
 import classNames from "classnames";
 import styles from "./select.dropdown.component.module.scss";
+import Row from "../../row.component/row.component";
+import Image from "../../image.component/image.component";
+import SmallText from "../../text.components/small.text.component/small.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Image from "../image.component/image.component";
-import Row from "../row.component/row.component";
-import RunningText from "../text.components/running.text.component/running.text.component";
-import SmallText from "../text.components/small.text.component/small.text.component";
+import RunningText from "../../text.components/running.text.component/running.text.component";
 
 interface SelectDropDownProps {
   items: any[];

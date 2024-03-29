@@ -41,3 +41,25 @@ export interface CorePageLayoutAreaConfig {
   propName: string;
   allowedWidgetTypes?: string[];
 }
+
+// theme config
+
+export interface ThemeConfig {
+  [key: string]: Record<string, string> | undefined;
+  colors?: Record<string, string>;
+  fonts?: Record<string, string>;
+  spacing?: Record<string, string>;
+  borderRadius?: Record<string, string>;
+  boxShadow?: Record<string, string>;
+}
+
+export interface ThemeOption {
+  label: string;
+  value: string;
+  formattedValue: string;
+}
+
+export interface PreparedThemeConfig {
+  category: string;
+  options: ThemeOption[];
+}

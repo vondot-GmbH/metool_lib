@@ -8,7 +8,7 @@ import {
   restQuerySchema,
 } from "../../../../../../../../schemas/query.schemas/query.schema";
 import Row from "../../../../../../general.components/row.component/row.component";
-import SelectDropDown from "../../../../../../general.components/select.dropdown.component/select.dropdown.component";
+import SelectDropDown from "../../../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import { Resource } from "../../../../../../../../main";
 import SizedContainer from "../../../../../../general.components/sized.container.component/sized.container.component";
 
