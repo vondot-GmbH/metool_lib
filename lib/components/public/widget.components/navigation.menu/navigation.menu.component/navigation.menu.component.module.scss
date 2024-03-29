@@ -1,0 +1,21 @@
+.navigationWidget {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  &.horizontal {
+    flex-direction: row;
+  }
+
+  .navigationItem {
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    background-color: #eee;
+    transition: background-color 0.3s;
+
+    &:hover {
+      background-color: #ddd;
+    }
+  }
+}

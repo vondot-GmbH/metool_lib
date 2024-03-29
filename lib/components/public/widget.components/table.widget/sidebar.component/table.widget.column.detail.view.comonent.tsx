@@ -11,6 +11,7 @@ interface DetailViewProps {
   selectedWidgetID?: string;
 }
 
+// TODO export below and check inject stores
 export const TableWidgetColumnDetailView = ({
   tableColumn,
   widgetStore,

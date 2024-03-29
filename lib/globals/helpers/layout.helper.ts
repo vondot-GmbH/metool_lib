@@ -130,8 +130,8 @@ export const generateGridLayoutBackground = (args: {
   const columnWidth = `calc(100% / ${cols[currentBreakpoint]})`;
 
   // generate vertical and horizontal lines for grid
-  const verticalLines = `linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 2px)`;
-  const horizontalLines = `linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 2px)`;
+  const verticalLines = `linear-gradient(to right, #dedede 1px, transparent 0.5px)`;
+  const horizontalLines = `linear-gradient(to bottom, #dedede 1px, transparent 0.5px)`;
 
   // return grid background value
   return `${verticalLines} 0 0 / ${columnWidth} 100%, ${horizontalLines} 0 0 / 100% ${rowHeight}px`;

@@ -1,7 +1,6 @@
 .widgetSidebar {
   .widgetPreviewContainer {
-    max-width: 72px;
-    width: 100%;
+    width: 70px;
     cursor: grab;
 
     .imageWrapper {
@@ -12,7 +11,7 @@
       height: 55px;
 
       .widgetIcon {
-        padding: 3px;
+        margin: 5px;
       }
     }
 

@@ -6,6 +6,7 @@ export { default as RenderPage } from "./components/public/render.page.component
 export { TableWidgetConfig as TableWidget } from "./components/public/widget.components/table.widget/table.widget.config";
 export { ContainerWidgetConfig as ContainerWidget } from "./components/public/widget.components/container.widget/container.widget.config";
 export { TextWidgetConfig as TextWidget } from "./components/public/widget.components/text.widget/text.widget.config";
+export { NavigationMenuWidgetConfig as NavigationMenuWidget } from "./components/public/widget.components/navigation.menu/navigation.menu.config";
 
 // page layouts
 export { DashboardPageLayoutConfig as DashboardPageLayout } from "./components/public/page.layout.components/dashboard.page.layout/dashboard.page.layout.config";

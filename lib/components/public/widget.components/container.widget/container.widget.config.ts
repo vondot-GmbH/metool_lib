@@ -1,5 +1,5 @@
 import { WidgetConfig } from "../../../../globals/interfaces/config.interface";
-import containerWidgetComponent from "./container.widget.component";
+import containerWidgetComponent from "./container.widget.component/container.widget.component";
 import ContainerWidgetIcon from "./container.svg";
 
 export const ContainerWidgetConfig: WidgetConfig = {

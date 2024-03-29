@@ -19,6 +19,7 @@ import {
   faTabletScreenButton,
 } from "@fortawesome/pro-regular-svg-icons";
 import { coreQueryConfig, coreResources } from "./metool.config";
+import { NavigationMenuWidgetConfig } from "../lib/components/public/widget.components/navigation.menu/navigation.menu.config";
 
 //! TEST REACT PROJECT FOR METOOL LIBRARY (ONLY FOR DEVELOPMENT PURPOSES)
 
@@ -26,7 +27,12 @@ import { coreQueryConfig, coreResources } from "./metool.config";
 InitializeMetool({
   coreQueryConfig: coreQueryConfig,
   coreResources: [coreResources],
-  widgets: [TableWidget, ContainerWidget, TextWidget],
+  widgets: [
+    TableWidget,
+    ContainerWidget,
+    TextWidget,
+    NavigationMenuWidgetConfig,
+  ],
   pageLayoutConfigs: [DashboardPageLayout],
   gridLayoutConfig: {
     nested: {

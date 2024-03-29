@@ -6,19 +6,24 @@ import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import Table from "../../../../private/general.components/table.component/data.table.component";
 import { TableOptions, TableColumn } from "../schemas/table.widget.schema";
+import NavigationStore from "../../../../../stores/navigation.store";
+import TableWidgetLoadingComponent from "../table.widget.loading.component/table.widget.loading.component";
 
 interface TableWidgetProps {
   widgetID: string;
   widgetStore?: WidgetStore;
   stateStore?: StateStore;
+  navigationStore?: NavigationStore;
 }
 
 const TableWidget = ({
   widgetID,
   widgetStore,
   stateStore,
+  navigationStore,
 }: TableWidgetProps): JSX.Element => {
   const [usersData, setUsersData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
@@ -66,6 +71,10 @@ const TableWidget = ({
     }
   };
 
+  if (isLoading) {
+    return <TableWidgetLoadingComponent count={5} />;
+  }
+
   return (
     <Table
       key={widgetID}
@@ -92,6 +101,7 @@ const TableWidget = ({
   );
 };
 
+// TODO move this
 const _getInitialTableWidgetState = (): TableWidgetState => {
   const tableState = {
     isLoading: null,
@@ -104,4 +114,8 @@ const _getInitialTableWidgetState = (): TableWidgetState => {
   return tableState as TableWidgetState;
 };
 
-export default inject("widgetStore", "stateStore")(observer(TableWidget));
+export default inject(
+  "widgetStore",
+  "stateStore",
+  "navigationStore"
+)(observer(TableWidget));

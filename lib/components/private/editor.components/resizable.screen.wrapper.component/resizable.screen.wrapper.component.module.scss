@@ -9,7 +9,9 @@
 
   .contentContainer {
     height: 100%;
-    background-color: #e5e5e573;
+
+    border-left: 1px solid #d7d6d6;
+    border-right: 1px solid #d7d6d6;
     width: calc(100% - 30px);
   }
 
