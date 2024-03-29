@@ -107,10 +107,6 @@ class LayoutStore {
   async initLayoutAreaWidgetsAndProcess(pageID: string): Promise<void> {
     const widgets = await this.fetchLayoutWidgetsForPage(pageID);
 
-    if (widgets == null) {
-      return;
-    }
-
     runInAction(() => {
       this.setInitialLayoutAreaWidgetAndConvert(widgets ?? []);
     });

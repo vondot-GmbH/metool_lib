@@ -34,6 +34,7 @@ const TableWidget = ({
       widgetID,
       analized,
       (data) => {
+        setIsLoading(data?.isLoading);
         setUsersData(data.data);
       },
       _getInitialTableWidgetState()

@@ -46,7 +46,7 @@ const RenderPage = ({
   }, [initialPageToRender]);
 
   if (isLoading || viewIdToRender == null) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   return (

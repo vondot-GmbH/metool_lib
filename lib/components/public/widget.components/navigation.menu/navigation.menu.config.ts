@@ -4,7 +4,7 @@ import navigationMenuComponent from "./navigation.menu.component/navigation.menu
 import navigationMenuWidgetOptionSidebar from "./sidebar.component/navigation.menu.widget.option.sidebar.component";
 
 export const NavigationMenuWidgetConfig: WidgetConfig = {
-  name: "Navigation Menu",
+  name: "navigation menu",
   type: "NAVIGATION_MENU_WIDGET",
   component: navigationMenuComponent,
   sidebarComponent: navigationMenuWidgetOptionSidebar,

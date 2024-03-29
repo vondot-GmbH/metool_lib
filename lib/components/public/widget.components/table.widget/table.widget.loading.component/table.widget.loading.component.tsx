@@ -12,6 +12,14 @@ const TableWidgetLoadingComponent = ({
 }: TableWidgetLoadingComponentProps): JSX.Element => {
   return (
     <>
+      <div className={styles.skeletonTableHeaderWrapper}>
+        <Skeleton
+          count={1}
+          baseColor="#e1e3e3"
+          className={styles.skeletonTableHeader}
+          height={35}
+        />
+      </div>
       {Array(count)
         .fill(count)
         .map((_, i) => {

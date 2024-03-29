@@ -31,12 +31,12 @@ class QueryStore {
     const fetchAllQueries =
       this.stores.editorStore?.editorMode == EditorMode.EDIT ? true : false;
 
-    // Verwende map und flat, um eine flache Liste aller Abhängigkeiten zu erstellen
+    // create a flat list of all dependencies from the analyzedWidgetOptions
     const allDependencies = Array.from(analyzedWidgetOptions.values())
       .map((analyzedWidgetOption) => analyzedWidgetOption.dependencies)
       .flat();
 
-    // Filtere die flache Liste, um nur Abhängigkeiten mit dem Selector 'queries' zu erhalten
+    // filter out all dependencies that are queries
     const queryDependencies = allDependencies.filter(
       (dependency) => dependency.selector === "queries"
     );

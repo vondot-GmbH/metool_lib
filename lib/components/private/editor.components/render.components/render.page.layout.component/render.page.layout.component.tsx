@@ -55,7 +55,7 @@ const RenderPageLayout = ({
   }, [pageToRender]);
 
   if (isLoading) {
-    return <div>Loading... page layout</div>;
+    return <div></div>;
   }
 
   if (corePageLayoutConfig == null) {
@@ -70,7 +70,7 @@ const RenderPageLayout = ({
 
     return (
       <LayoutAreaGridLayout
-        key={`layout-area-grid-layout-${layoutAreaID}`}
+        key={`layout-area-grid-layout-${layoutAreaID}-${areaWidgets?.length}`}
         content={structuredWidgets as WidgetHierarchyMap}
         readonly={readonly}
         selectedWidgetID={selectedWidgetID}

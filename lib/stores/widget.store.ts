@@ -136,10 +136,6 @@ class WidgetStore {
   async initWidgetsAndProcess(viewID: string): Promise<void> {
     const widgets = await this.fetchWidgetsForView(viewID);
 
-    if (widgets == null) {
-      return;
-    }
-
     runInAction(() => {
       this.setInitialWidgetAndConvert(widgets ?? []);
     });

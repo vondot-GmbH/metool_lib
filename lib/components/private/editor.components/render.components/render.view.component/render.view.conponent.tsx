@@ -50,10 +50,10 @@ const RenderView = ({
     };
 
     initializeRenderView();
-  }, [viewStore, viewToRender, widgetStore]); // TODO INFO reredner added widgetStore
+  }, [viewStore, viewToRender, widgetStore]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   const rootLevelWidgets = getFilteredRootLevelWidgets(
@@ -66,7 +66,7 @@ const RenderView = ({
   return (
     <GridLayout
       selectedWidgetID={selectedWidgetID}
-      key={"top-level-grid"}
+      key={`top-level-grid-${preparedRootLevelWidgets?.length}`}
       content={rootLevelWidgets}
       onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
       readonly={readonly}

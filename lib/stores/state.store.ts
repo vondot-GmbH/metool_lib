@@ -274,6 +274,12 @@ export class StateStore {
   async executeAndProcessRestQueries(queries: RestQuery[]): Promise<void> {
     for (const query of queries) {
       if (query?.queryID == null) continue;
+      this.setStateValue(
+        StateSelector.QUERIES,
+        query.queryID,
+        "isLoading",
+        true
+      );
 
       const response = await queryExecutor.executeRestQuery(
         query,
@@ -293,6 +299,12 @@ export class StateStore {
 
       // process pending subscriptions
       this.processPendingSubscriptions(StateSelector.QUERIES, query.queryID);
+      this.setStateValue(
+        StateSelector.QUERIES,
+        query.queryID,
+        "isLoading",
+        false
+      );
     }
   }
 }
