@@ -33,7 +33,7 @@ const ThemeDropdown = ({
 
     const options = themeConfig?.map((option) => ({
       label: option.label,
-      value: `var(${option.formattedValue})`,
+      value: option.formattedValue,
       color: category === "colors" ? option.value : undefined,
     }));
 
@@ -41,6 +41,10 @@ const ThemeDropdown = ({
       setThemeOptions(options);
     }
   }, [category]);
+
+  if (!themeOptions) {
+    return null;
+  }
 
   return (
     <SelectDropDown

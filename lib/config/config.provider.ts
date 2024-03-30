@@ -1,4 +1,5 @@
 import { DEFAULT_LAYOUT_CONFIG } from "../globals/config/grid.layout.config";
+import { formatThemeVariableLabel } from "../globals/helpers/config.helper";
 import {
   BreakpointConfig,
   GridLayoutConfig,
@@ -90,7 +91,7 @@ class ConfigProvider {
     this._layoutConfig = layoutConfig;
   }
 
-  // TODO Comment
+  // registers the theme configuration and sets CSS custom properties in the document root
   public registerThemeConfig(themeConfig?: ThemeConfig): void {
     const root = document.documentElement;
     const preparedConfig: PreparedThemeConfig[] = [];
@@ -99,6 +100,7 @@ class ConfigProvider {
       return;
     }
 
+    // loop over each category in the theme configuration (e.g., colors, fonts)
     for (const category in themeConfig) {
       const categoryConfig = themeConfig[category];
       if (!categoryConfig) continue;
@@ -108,15 +110,19 @@ class ConfigProvider {
       for (const key in categoryConfig) {
         const value = categoryConfig[key] as string;
         const formattedValue = `--${category}-${key}`;
+
+        // Set the CSS custom property on the root element
         root.style.setProperty(formattedValue, value);
 
+        // push the prepared variable to the options array
         options.push({
-          label: key,
+          label: formatThemeVariableLabel(key), // Format the label for readability
           value: value,
-          formattedValue: formattedValue,
+          formattedValue: `var(${formattedValue})`,
         });
       }
 
+      // Push the category with its options to the prepared configuration for the usage of ThemeDropdown
       preparedConfig.push({
         category,
         options,
