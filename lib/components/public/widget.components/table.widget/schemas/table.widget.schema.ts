@@ -1,13 +1,11 @@
-import { SpacingModeValues } from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
-
 export interface TableOptions {
   data: string;
   columns: TableColumn[];
   emptyStateText: string;
   rowSelectionType: "single" | "multiple" | "none";
-  headerStyles?: CSSStyles; // Stile für den gesamten Kopfbereich
-  headerCellStyles?: CSSStyles; // Stile für einzelne Kopfzellen
-  bodyRowStyles?: CSSStyles; // Stile für Zeilen im Body-Bereich
+  headerStyles?: CSSStyles;
+  headerCellStyles?: CSSStyles;
+  bodyRowStyles?: CSSStyles;
   bodyCellStyles?: CSSStyles;
 }
 
@@ -15,9 +13,9 @@ export interface TableColumn {
   columnID: string;
   source: string;
   label: string;
-  textAlign: "left" | "center" | "right";
+  // textAlign: "left" | "center" | "right";
   format?: "string" | "number" | "date";
-  columnStyles?: CSSStyles; // Stile für die gesamte Spalte
+  columnStyles?: CSSStyles;
 }
 
 interface CSSStyles {

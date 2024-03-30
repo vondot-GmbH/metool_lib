@@ -1,0 +1,59 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  overflow: hidden;
+  margin-bottom: 20px;
+  position: relative;
+
+  .containerHeader {
+    padding: 0 15px;
+    height: 45px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.propertyRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e0e0e0;
+  padding: 15px;
+
+  &:nth-last-child(1) {
+    border-bottom: none;
+  }
+
+  .propertyRowInput {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.typeSelector {
+  position: absolute;
+  top: 45px;
+  right: 0;
+  width: 100%;
+  background-color: #f7f7f7;
+  border-top: 1px solid #e0e0e0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.typeOption {
+  padding: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+}

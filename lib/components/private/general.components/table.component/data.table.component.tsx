@@ -2,130 +2,6 @@ import React, { useState } from "react";
 import styles from "./data.table.component.module.scss";
 import Checkbox from "../checkbox.component/checkbox.component";
 
-// interface TableColumn<T> {
-//   label: string;
-//   source: keyof T;
-//   textAlign?: "left" | "center" | "right";
-//   render?: (value: any, record: T) => React.ReactNode;
-// }
-
-// interface TableProps<T> {
-//   columns: TableColumn<T>[];
-//   data: T[];
-//   rowKey: keyof T;
-//   isLoading?: boolean;
-//   noDataText?: string;
-//   rowSelectionType?: "single" | "multiple" | "none";
-//   onSelectionDataChange?: (selectedData: T[]) => void;
-//   headerStyle?: React.CSSProperties;
-//   rowStyle?: React.CSSProperties;
-//   cellStyle?: React.CSSProperties;
-// }
-
-// function Table<T>({
-//   columns,
-//   data,
-//   rowKey,
-//   isLoading = false,
-//   noDataText = "No data available",
-//   rowSelectionType = "none",
-//   onSelectionDataChange,
-//   headerStyle,
-//   rowStyle,
-//   cellStyle,
-// }: TableProps<T>) {
-//   const [selectedRowKeys, setSelectedRowKeys] = useState<Array<T[keyof T]>>([]);
-
-//   const handleRowSelectionChange = (recordKey: T[keyof T]) => {
-//     if (rowSelectionType === "none") return;
-
-//     let newSelectedRowKeys = [...selectedRowKeys];
-//     if (rowSelectionType === "single") {
-//       newSelectedRowKeys = [recordKey];
-//     } else if (rowSelectionType === "multiple") {
-//       newSelectedRowKeys.includes(recordKey)
-//         ? newSelectedRowKeys.splice(newSelectedRowKeys.indexOf(recordKey), 1)
-//         : newSelectedRowKeys.push(recordKey);
-//     }
-
-//     setSelectedRowKeys(newSelectedRowKeys);
-//     onSelectionDataChange &&
-//       onSelectionDataChange(
-//         data.filter((record) => newSelectedRowKeys.includes(record[rowKey]))
-//       );
-//   };
-
-//   const buildHeader = () => (
-//     <thead>
-//       <tr style={headerStyle}>
-//         {rowSelectionType !== "none" && (
-//           <th className={styles.selectionColumn}>#</th>
-//         )}
-//         {columns.map((column, index) => (
-//           <th
-//             key={index}
-//             style={{ textAlign: column.textAlign, ...headerStyle }}
-//           >
-//             {column.label}
-//           </th>
-//         ))}
-//       </tr>
-//     </thead>
-//   );
-
-//   const buildRow = (record: T) => {
-//     const isSelected = selectedRowKeys.includes(record[rowKey]);
-//     const rowClass = isSelected ? styles.selectedRow : "";
-
-//     return (
-//       <tr
-//         key={record[rowKey] as React.Key}
-//         className={rowClass}
-//         style={rowStyle}
-//         onClick={() => handleRowSelectionChange(record[rowKey])}
-//       >
-//         {rowSelectionType !== "none" && buildSelectionCell(record)}
-//         {columns.map((column, colIndex) => buildCell(column, record, colIndex))}
-//       </tr>
-//     );
-//   };
-
-//   const buildSelectionCell = (record: T) => (
-//     <td className={styles.selectionCell} style={cellStyle}>
-//       <Checkbox
-//         checked={selectedRowKeys.includes(record[rowKey])}
-//         onChange={() => handleRowSelectionChange(record[rowKey])}
-//       />
-//     </td>
-//   );
-
-//   const buildCell = (column: TableColumn<T>, record: T, colIndex: number) => (
-//     <td key={colIndex} className={styles.cell} style={cellStyle}>
-//       {column.render
-//         ? column.render(record[column.source], record)
-//         : (record[column.source] as React.ReactNode)}
-//     </td>
-//   );
-
-//   return (
-//     <div className={styles.tableContainer} style={rowStyle}>
-//       <table className={styles.table}>
-//         {buildHeader()}
-//         <tbody>
-//           {!isLoading && data.length > 0 && data.map(buildRow)}
-//           {!isLoading && data.length === 0 && (
-//             <tr>
-//               <td colSpan={columns.length}>{noDataText}</td>
-//             </tr>
-//           )}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// }
-
-// export default Table;
-
 export interface TableColumn<T> {
   label: string;
   source: keyof T;
@@ -143,9 +19,9 @@ interface TableProps<T> {
   rowSelectionType?: "single" | "multiple" | "none";
   onSelectionDataChange?: (selectedData: T[]) => void;
   headerStyles?: React.CSSProperties;
-  headerCellStyles?: React.CSSProperties; // Neues Prop für Zellenstile im Kopfbereich
-  bodyRowStyles?: React.CSSProperties; // Neues Prop für Zeilenstile im Body-Bereich
-  bodyCellStyles?: React.CSSProperties; // Neues Prop für Zellenstile im Body-Bereich
+  headerCellStyles?: React.CSSProperties;
+  bodyRowStyles?: React.CSSProperties;
+  bodyCellStyles?: React.CSSProperties;
 }
 
 function Table<T>({
