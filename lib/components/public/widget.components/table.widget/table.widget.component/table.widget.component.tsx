@@ -4,10 +4,11 @@ import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import { TableWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
 import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
-import Table from "../../../../private/general.components/table.component/data.table.component";
-import { TableOptions, TableColumn } from "../schemas/table.widget.schema";
+import Table, {
+  TableColumn,
+} from "../../../../private/general.components/table.component/data.table.component";
+import { TableOptions } from "../schemas/table.widget.schema";
 import NavigationStore from "../../../../../stores/navigation.store";
-import TableWidgetLoadingComponent from "../table.widget.loading.component/table.widget.loading.component";
 
 interface TableWidgetProps {
   widgetID: string;
@@ -36,22 +37,21 @@ const TableWidget = ({
       analized,
       (options) => {
         setIsLoading(options?.isLoading);
-        console.log("options?.isLoading");
-        console.log(options?.isLoading);
         setData(options?.data);
       },
       _getInitialTableWidgetState()
     );
   }, []);
 
-  const prepareColumns = (tableOptions: TableOptions): TableColumn[] => {
-    return tableOptions?.columns?.map((column) => ({
-      ...column,
-      headerBackgroundColor: column?.headerBackgroundColor,
-      rowBackgroundColor: column.rowBackgroundColor,
-      borderBottomColor: tableOptions.borderBottomColor,
-      render: (value: any) => <RunningText>{value}</RunningText>,
-    }));
+  const prepareColumns = (tableOptions: TableOptions): TableColumn<any>[] => {
+    return tableOptions?.columns?.map(
+      (column) =>
+        ({
+          ...column,
+          columnStyles: column.columnStyles,
+          render: (value: any) => <RunningText>{value}</RunningText>,
+        } as TableColumn<any>)
+    );
   };
 
   const handleSelectionDataChange = (selectedData: any) => {
@@ -72,31 +72,21 @@ const TableWidget = ({
     }
   };
 
-  if (isLoading) {
-    return <TableWidgetLoadingComponent count={5} />;
-  }
-
   return (
     <Table
+      isLoading={isLoading}
       key={widgetID}
       columns={(prepareColumns(tableOptions) as any[]) || []}
       data={data || []}
       rowKey="id"
+      headerStyles={tableOptions?.headerStyles}
+      bodyCellStyles={tableOptions?.bodyCellStyles}
+      bodyRowStyles={tableOptions?.bodyRowStyles}
+      headerCellStyles={tableOptions?.headerCellStyles}
       noDataText="No data available"
-      defaultBorderBottomColor={tableOptions?.borderBottomColor}
-      defaultHeaderBackgroundColor={tableOptions?.headerBackgroundColor}
-      defaultRowBackgroundColor={tableOptions?.rowBackgroundColor}
-      rowHoverColor={tableOptions?.rowHoverColor}
       rowSelectionType={tableOptions?.rowSelectionType}
-      rowSelectionBackgroundColor={tableOptions?.rowSelectionBackgroundColor}
-      tableCellPadding={tableOptions?.tableCellPadding}
       onSelectionDataChange={(selectedData) => {
         handleSelectionDataChange(selectedData);
-      }}
-      onSelectionIndexChange={() => {
-        // TODO: Implement this
-        // console.log("selectedIndexes");
-        // console.log(selectedIndexes);
       }}
     />
   );

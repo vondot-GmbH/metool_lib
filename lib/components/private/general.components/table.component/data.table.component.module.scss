@@ -1,49 +1,64 @@
-.tableWrapper {
-  overflow-x: auto;
-}
+// .tableWrapper {
+//   overflow-x: auto;
+// }
+
+// .tableContainer {
+//   width: 100%;
+//   border-collapse: collapse;
+
+//   th,
+//   td {
+//     padding: 10px;
+//     text-align: left;
+//   }
+
+//   .resizeHandle {
+//     position: absolute;
+//     right: 0;
+//     top: 0;
+//     bottom: 0;
+//     width: 10px;
+//     cursor: col-resize;
+//     user-select: none;
+
+//     &:hover {
+//       background-color: #ddd;
+//     }
+//   }
+
+//   tr:hover {
+//     background-color: var(--row-hover-color, #f5f5f5);
+//   }
+
+//   .rowSelected {
+//     background-color: var(--row-selected-color, #e2e2e2);
+//   }
+// }
 
 .tableContainer {
-  min-width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-
-  .tableCell {
-    position: relative;
-    padding: var(--cell-padding, 10px);
-  }
-
-  .selectionColumn {
-    width: 25px;
-    text-align: center;
-  }
-
-  .rowHover:not(.rowSelected) {
-    &:hover {
-      background-color: var(--row-hover-color, transparent);
-    }
-  }
-
-  .rowSelected {
-    background-color: var(--row-selected-color, transparent);
-  }
-
-  .fillColumn,
-  .fillColumnHeader {
-    width: auto;
-    border-bottom: 1px solid transparent;
-  }
+  overflow-x: auto;
+  // Weitere Container-Stile
 }
 
-.resizeHandle {
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 10px;
-  cursor: col-resize;
-  user-select: none;
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  // Weitere Table-Stile
+}
 
-  &:hover {
-    background-color: #ddd;
-  }
+.selectionColumn {
+  width: 50px; // oder ein anderer fester Wert
+  text-align: center;
+  // Weitere Selection-Column-Stile
+}
+
+.cell,
+.selectionCell {
+  padding: 10px;
+  // Weitere Cell-Stile
+}
+
+.selectedRow {
+  background-color: #f2f2f2; // Beispiel für ausgewählte Zeile
+  // Weitere Selected-Row-Stile
 }

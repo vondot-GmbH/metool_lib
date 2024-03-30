@@ -3,16 +3,12 @@ import { SpacingModeValues } from "../../../../private/general.components/spacin
 export interface TableOptions {
   data: string;
   columns: TableColumn[];
-  headerTextColor?: string; // TODO not used
-  rowTextColor?: string; // TODO not used
-  headerBackgroundColor?: string;
-  rowBackgroundColor?: string;
-  borderBottomColor?: string;
-  rowHoverColor?: string;
   emptyStateText: string;
-  rowSelectionBackgroundColor?: string;
   rowSelectionType: "single" | "multiple" | "none";
-  tableCellPadding: SpacingModeValues;
+  headerStyles?: CSSStyles; // Stile für den gesamten Kopfbereich
+  headerCellStyles?: CSSStyles; // Stile für einzelne Kopfzellen
+  bodyRowStyles?: CSSStyles; // Stile für Zeilen im Body-Bereich
+  bodyCellStyles?: CSSStyles;
 }
 
 export interface TableColumn {
@@ -21,11 +17,17 @@ export interface TableColumn {
   label: string;
   textAlign: "left" | "center" | "right";
   format?: "string" | "number" | "date";
-  resizable?: boolean;
-  minWidth?: number;
-  maxWidth?: number;
-  headerTextColor?: string; // TODO not used
-  rowTextColor?: string; // TODO not used
-  headerBackgroundColor?: string;
-  rowBackgroundColor?: string;
+  columnStyles?: CSSStyles; // Stile für die gesamte Spalte
+}
+
+interface CSSStyles {
+  color?: string;
+  backgroundColor?: string;
+  padding?: string;
+  margin?: string;
+  textAlign?: "left" | "center" | "right";
+  borderRadius?: string;
+  border?: string;
+  minWidth?: string;
+  maxWidth?: string;
 }
