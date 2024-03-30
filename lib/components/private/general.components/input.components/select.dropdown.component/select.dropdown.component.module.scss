@@ -4,7 +4,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   width: 100%;
-  margin-bottom: 15px;
+  // margin-bottom: 15px;
 
   &Disabled {
     cursor: not-allowed;
@@ -37,6 +37,7 @@
   height: 18px;
   border-radius: 4px;
   margin-right: 10px;
+  border: 1px solid #dddddd;
 }
 
 .dropdownSelectionControl {

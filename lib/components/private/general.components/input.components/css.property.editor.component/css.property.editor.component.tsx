@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import styles from "./css.property.editor.component.module.scss";
 import TextInput from "../../outlined.text.input.component/outlined.text.input.component";
 import SmallText from "../../text.components/small.text.component/small.text.component";
 import IconButton from "../../icon.button.component/icon.button.component";
 import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
-import RunningText from "../../text.components/running.text.component/running.text.component";
 import ThemeDropdown from "../theme.dropdown.component/theme.dropdown.component";
+import { useClickedOutside } from "../../../../../globals/helpers/hook.helper";
 
 // types of available CSS properties
 enum CssPropertyType {
@@ -37,13 +37,31 @@ const CSSPropertyEditor = ({
   initialProperties = {},
   label = "CSS Properties",
 }: CSSPropertyEditorProps) => {
+  const typeSelectorRef = useRef<HTMLDivElement>(null);
+  const [isTypeSelectorOpen, setIsTypeSelectorOpen] = useState(false);
+  const [typeSelectorPosition, setTypeSelectorPosition] = useState({
+    top: 0,
+    left: 0,
+  });
   const [properties, setProperties] = useState<CSSProperty[]>(
     Object.entries(initialProperties).map(([type, value]) => ({
       type: type as CssPropertyType,
       value,
     }))
   );
-  const [isTypeSelectorOpen, setIsTypeSelectorOpen] = useState(false);
+
+  useClickedOutside(typeSelectorRef, () => {
+    setIsTypeSelectorOpen(false);
+  });
+
+  const handleAddPropertyClick = (event: React.MouseEvent) => {
+    const buttonRect = event.currentTarget.getBoundingClientRect();
+    setTypeSelectorPosition({
+      top: buttonRect.bottom + window.scrollY + 5,
+      left: buttonRect.left + window.scrollX - 170,
+    });
+    setIsTypeSelectorOpen(!isTypeSelectorOpen);
+  };
 
   const handleAddProperty = (type: CssPropertyType) => {
     setIsTypeSelectorOpen(false);
@@ -110,17 +128,24 @@ const CSSPropertyEditor = ({
         <SmallText>{label}</SmallText>
         <IconButton
           icon={faPlus}
-          onClick={() => setIsTypeSelectorOpen(!isTypeSelectorOpen)}
+          onClick={(event) => handleAddPropertyClick(event)}
         />
         {isTypeSelectorOpen && (
-          <div className={styles.typeSelector}>
+          <div
+            ref={typeSelectorRef}
+            className={styles.typeSelector}
+            style={{
+              top: `${typeSelectorPosition.top}px`,
+              left: `${typeSelectorPosition.left}px`,
+            }}
+          >
             {cssPropertiesConfig.map((config) => (
               <div
                 key={config.type}
                 className={styles.typeOption}
                 onClick={() => handleAddProperty(config.type)}
               >
-                <RunningText>{config.label}</RunningText>
+                <SmallText>{config.label}</SmallText>
               </div>
             ))}
           </div>
@@ -132,6 +157,12 @@ const CSSPropertyEditor = ({
           <IconButton icon={faX} onClick={() => handleRemoveProperty(index)} />
         </div>
       ))}
+
+      {!properties.length && (
+        <div className={styles.emptyState}>
+          <SmallText>No properties added yet</SmallText>
+        </div>
+      )}
     </div>
   );
 };
