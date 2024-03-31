@@ -4,6 +4,7 @@ import defaultStyles from "../../../../../styles/index.module.scss";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
 import SelectDropDown from "../../../../private/general.components/input.components/select.dropdown.component/select.dropdown.component";
 import { NavigationMenuItem } from "../schemas/navigation.menu.schema";
+import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
 
 interface NavigationMenuItemDetailViewProps {
   menuItem: NavigationMenuItem;
@@ -33,7 +34,7 @@ const NavigationMenuItemDetailView = ({
         <TextInput
           label="Label"
           value={menuItem?.label}
-          className={defaultStyles.mb20}
+          className={defaultStyles.mb10}
           onValueChange={(value) => {
             if (value != null) {
               widgetStore?.updateWidgetOptionArrayItem<NavigationMenuItem>({
@@ -54,6 +55,7 @@ const NavigationMenuItemDetailView = ({
           label="Action Type"
           selectedItem={menuItem.actionType}
           items={actionTypeOptions ?? []}
+          className={defaultStyles.mb20}
           onChange={(item) => {
             if (item?.value != null) {
               widgetStore?.updateWidgetOptionArrayItem<NavigationMenuItem>({
@@ -86,6 +88,26 @@ const NavigationMenuItemDetailView = ({
               });
             }
           }}
+        />
+      </CollapsibleSection>
+
+      <CollapsibleSection title="Style">
+        <CSSPropertyEditor
+          label="Menu Item Styles"
+          onChange={(properties: Record<string, string>) => {
+            widgetStore?.updateWidgetOptionArrayItem<NavigationMenuItem>({
+              widgetID: selectedWidgetID ?? "",
+              optionName: "items",
+              identifierField: "id",
+              identifierValue: menuItem.id,
+              updatedProperties: {
+                naviationMenuItemStyles: properties,
+              },
+            });
+          }}
+          initialProperties={
+            menuItem.naviationMenuItemStyles as Record<string, string>
+          }
         />
       </CollapsibleSection>
     </div>

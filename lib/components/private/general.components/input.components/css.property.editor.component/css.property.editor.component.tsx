@@ -25,6 +25,7 @@ enum CssPropertyType {
   BorderBottom = "borderBottom",
   MinWidth = "minWidth",
   MaxWidth = "maxWidth",
+  Gap = "gap",
 }
 
 // assign CSS properties to the corresponding type
@@ -45,6 +46,7 @@ const cssPropertiesConfig = [
   { label: "Border Radius", type: CssPropertyType.BorderRadius },
   { label: "Min Width", type: CssPropertyType.MinWidth },
   { label: "Max Width", type: CssPropertyType.MaxWidth },
+  { label: "Gap", type: CssPropertyType.Gap },
 ];
 
 interface CSSProperty {

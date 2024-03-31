@@ -12,6 +12,7 @@ import {
   NavigationMenuItem,
   NavigationMenuOptions,
 } from "../schemas/navigation.menu.schema";
+import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
 
 interface NavigationWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -97,6 +98,20 @@ const NavigationWidgetOptionSidebar = ({
             }
           }}
           options={orientationOptions}
+        />
+
+        <CSSPropertyEditor
+          label="Menu Wrapper Styles"
+          onChange={(properties: Record<string, string>) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "navigationMenuItemWrapperStyles",
+              properties
+            );
+          }}
+          initialProperties={
+            options?.navigationMenuItemWrapperStyles as Record<string, string>
+          }
         />
       </CollapsibleSection>
     </div>

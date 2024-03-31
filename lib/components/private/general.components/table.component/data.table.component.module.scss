@@ -4,31 +4,35 @@
   width: 100%;
 }
 
-.header,
+.header {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.headerCell {
+  flex: 1 1 0%;
+  padding: 10px;
+  text-align: left;
+}
+
 .row {
   display: flex;
   flex-direction: row;
+  gap: 8px;
+
+  &:hover {
+    background-color: #e7f4f0;
+  }
 }
 
-.headerCell,
 .cell {
   flex: 1;
   padding: 10px;
   text-align: left;
-  width: 100%;
 }
 
-.row {
-  &:hover {
-    background-color: #f2f2f2;
-  }
-}
-
-.noData {
-  padding: 20px;
-  text-align: center;
-}
-
+.noData,
 .loading {
   padding: 20px;
   text-align: center;

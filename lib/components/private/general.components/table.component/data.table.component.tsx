@@ -78,7 +78,7 @@ const Table = <T,>({
     </div>
   );
 
-  const renderRow = (record: T, rowIndex: number) => (
+  const renderRow = (record: T) => (
     <div
       key={record[rowKey] as React.Key}
       className={styles.row}

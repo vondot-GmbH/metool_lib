@@ -11,11 +11,10 @@
     padding: 10px;
     border: none;
     cursor: pointer;
-    background-color: #eee;
-    transition: background-color 0.3s;
+    background-color: transparent;
 
     &:hover {
-      background-color: #ddd;
+      font-weight: bold;
     }
   }
 }

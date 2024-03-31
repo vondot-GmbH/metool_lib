@@ -46,11 +46,13 @@ const NavigationWidget = ({
           ? styles.horizontal
           : styles.vertical
       }`}
+      style={{ ...widgetOptions?.navigationMenuItemWrapperStyles }}
     >
-      {widgetOptions?.items?.map((item) => (
+      {widgetOptions?.items?.map((item, i) => (
         <button
           key={item.id}
           className={styles.navigationItem}
+          style={{ ...widgetOptions?.items[i]?.naviationMenuItemStyles }}
           onClick={() => handleNavigation(item?.targetID, item?.actionType)}
         >
           {item.label}
