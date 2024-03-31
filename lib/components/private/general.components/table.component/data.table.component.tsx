@@ -24,7 +24,7 @@ interface TableProps<T> {
   bodyCellStyles?: React.CSSProperties;
 }
 
-function Table<T>({
+const Table = <T,>({
   columns,
   data,
   rowKey,
@@ -36,7 +36,7 @@ function Table<T>({
   headerCellStyles,
   bodyRowStyles,
   bodyCellStyles,
-}: TableProps<T>) {
+}: TableProps<T>) => {
   const [selectedRowKeys, setSelectedRowKeys] = useState<Array<T[keyof T]>>([]);
 
   const handleRowSelectionChange = (recordKey: T[keyof T]) => {
@@ -46,96 +46,82 @@ function Table<T>({
     if (rowSelectionType === "single") {
       newSelectedRowKeys = [recordKey];
     } else if (rowSelectionType === "multiple") {
-      newSelectedRowKeys.includes(recordKey)
-        ? newSelectedRowKeys.splice(newSelectedRowKeys.indexOf(recordKey), 1)
-        : newSelectedRowKeys.push(recordKey);
+      if (newSelectedRowKeys.includes(recordKey)) {
+        newSelectedRowKeys.splice(newSelectedRowKeys.indexOf(recordKey), 1);
+      } else {
+        newSelectedRowKeys.push(recordKey);
+      }
     }
 
     setSelectedRowKeys(newSelectedRowKeys);
-    onSelectionDataChange &&
-      onSelectionDataChange(
-        data.filter((record) => newSelectedRowKeys.includes(record[rowKey]))
-      );
-  };
-
-  const buildHeader = () => (
-    <thead>
-      <tr style={{ ...headerStyles }}>
-        {rowSelectionType !== "none" && (
-          <th
-            className={styles.selectionColumn}
-            style={{ ...headerCellStyles }}
-          >
-            #
-          </th>
-        )}
-        {columns.map((column, index) => (
-          <th
-            key={index}
-            style={{ ...headerCellStyles, ...column?.columnStyles }}
-          >
-            {column.label}
-          </th>
-        ))}
-      </tr>
-    </thead>
-  );
-
-  const buildRow = (record: T) => {
-    const isSelected = selectedRowKeys.includes(record[rowKey]);
-    const rowClass = isSelected ? styles.selectedRow : "";
-
-    return (
-      <tr
-        key={record[rowKey] as React.Key}
-        className={rowClass}
-        style={{ ...bodyRowStyles }}
-        onClick={() => handleRowSelectionChange(record[rowKey])}
-      >
-        {rowSelectionType !== "none" && buildSelectionCell(record)}
-        {columns.map((column, colIndex) => buildCell(column, record, colIndex))}
-      </tr>
+    onSelectionDataChange?.(
+      data.filter((record) => newSelectedRowKeys.includes(record[rowKey]))
     );
   };
 
-  const buildSelectionCell = (record: T) => (
-    <td className={styles.selectionCell} style={{ ...bodyCellStyles }}>
-      <Checkbox
-        checked={selectedRowKeys.includes(record[rowKey])}
-        onChange={() => handleRowSelectionChange(record[rowKey])}
-      />
-    </td>
+  const renderHeader = () => (
+    <div className={styles.header} style={{ ...headerStyles }}>
+      {rowSelectionType !== "none" && (
+        <div className={styles.headerCell} style={{ ...headerCellStyles }}>
+          #
+        </div>
+      )}
+      {columns.map((column, index) => (
+        <div
+          key={index}
+          className={styles.headerCell}
+          style={{ ...headerCellStyles, ...column.columnStyles }}
+        >
+          {column.label}
+        </div>
+      ))}
+    </div>
   );
 
-  const buildCell = (column: TableColumn<T>, record: T, colIndex: number) => (
-    <td
-      key={colIndex}
-      className={styles.cell}
-      style={{ ...bodyCellStyles, ...column?.columnStyles }}
+  const renderRow = (record: T, rowIndex: number) => (
+    <div
+      key={record[rowKey] as React.Key}
+      className={styles.row}
+      style={{ ...bodyRowStyles }}
+      onClick={() => handleRowSelectionChange(record[rowKey])}
     >
-      {column.render
-        ? column.render(record[column.source], record)
-        : (record[column.source] as React.ReactNode)}
-    </td>
+      {rowSelectionType !== "none" && (
+        <div className={styles.cell} style={{ ...bodyCellStyles }}>
+          <Checkbox
+            checked={selectedRowKeys.includes(record[rowKey])}
+            onChange={() => handleRowSelectionChange(record[rowKey])}
+          />
+        </div>
+      )}
+      {columns.map((column, colIndex) => (
+        <div
+          key={colIndex}
+          className={styles.cell}
+          style={{ ...bodyCellStyles, ...column.columnStyles }}
+        >
+          {column.render
+            ? column.render(record[column.source], record)
+            : (record[column.source] as React.ReactNode)}
+        </div>
+      ))}
+    </div>
   );
 
   return (
-    <div className={styles.tableContainer}>
-      <table className={styles.table}>
-        {buildHeader()}
-        <tbody>
-          {!isLoading && data.length > 0 && data.map(buildRow)}
-          {!isLoading && data.length === 0 && (
-            <tr>
-              <td colSpan={columns.length} style={{ ...bodyRowStyles }}>
-                {noDataText}
-              </td>
-            </tr>
+    <div className={styles.table}>
+      {!isLoading && (
+        <>
+          {renderHeader()}
+          {data.length > 0 ? (
+            data.map(renderRow)
+          ) : (
+            <div className={styles.noData}>{noDataText}</div>
           )}
-        </tbody>
-      </table>
+        </>
+      )}
+      {isLoading && <div className={styles.loading}>Loading...</div>}
     </div>
   );
-}
+};
 
 export default Table;
