@@ -21,6 +21,7 @@ interface ThemeDropdownProps {
   disabled?: boolean;
   className?: string;
   category: ThemeCategory;
+  variant?: "small" | "default";
 }
 
 const ThemeDropdown = ({
@@ -31,6 +32,7 @@ const ThemeDropdown = ({
   disabled = false,
   className,
   category,
+  variant = "small",
 }: ThemeDropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -41,6 +43,11 @@ const ThemeDropdown = ({
 
   const dropdownClassName = classNames(styles.dropdown, className, {
     [styles.disabled]: disabled,
+  });
+
+  const selectedItemClassName = classNames({
+    [styles.selectedItem]: true,
+    [styles.selectedItemSmall]: variant === "small",
   });
 
   useEffect(() => {
@@ -70,7 +77,11 @@ const ThemeDropdown = ({
     setIsOpen(false);
   };
 
-  const buildOptionItem = (option: ThemeOption, handleClick?: () => void) => {
+  const buildOptionItem = (
+    option: ThemeOption,
+    handleClick?: () => void,
+    variant: "small" | "default" = "default"
+  ) => {
     return (
       <div
         key={option.value}
@@ -83,19 +94,25 @@ const ThemeDropdown = ({
             style={{ backgroundColor: option.value }}
           />
         )}
-        <SmallText>{option.label}</SmallText>
+
+        {variant === "default" && (
+          <SmallText className={styles.optionLabel}>{option.label}</SmallText>
+        )}
       </div>
     );
   };
 
-  const selectedOption = themeOptions.find(
-    (option) => option.formattedValue === selectedItem
-  );
-  const selectedItemElement = selectedOption ? (
-    buildOptionItem(selectedOption)
-  ) : (
-    <RunningText>{placeholder}</RunningText>
-  );
+  const buildSelectedItemElement = () => {
+    const selectedOption = themeOptions.find(
+      (option) => option.formattedValue === selectedItem
+    );
+
+    if (selectedOption == null) {
+      return <RunningText>{placeholder}</RunningText>;
+    }
+
+    return buildOptionItem(selectedOption, handleToggleDropdown, variant);
+  };
 
   return (
     <div className={dropdownClassName} ref={dropdownRef}>
@@ -104,9 +121,7 @@ const ThemeDropdown = ({
           <SmallText>{label}</SmallText>
         </div>
       )}
-      <div className={styles.selectedItem} onClick={handleToggleDropdown}>
-        {selectedItemElement}
-      </div>
+      <div className={selectedItemClassName}>{buildSelectedItemElement()}</div>
       {isOpen &&
         ReactDOM.createPortal(
           <div

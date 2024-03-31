@@ -1,6 +1,7 @@
 .dropdown {
   position: relative;
   display: inline-block;
+  width: 100%;
 
   &.disabled {
     pointer-events: none;
@@ -12,6 +13,7 @@
   }
 
   .selectedItem {
+    width: 100%;
     border: 1px solid #ccc;
     background-color: #fff;
     cursor: pointer;
@@ -19,6 +21,10 @@
 
     &:hover {
       background-color: #f7f7f7;
+    }
+
+    &Small {
+      width: 35px;
     }
   }
 }
@@ -36,21 +42,24 @@
 }
 
 .option {
-  padding: 10px;
   cursor: pointer;
   display: flex;
   align-items: center;
+  padding: 8px;
 
   &:hover {
     background-color: #f0f0f0;
   }
 
   .colorIndicator {
-    width: 17px;
-    height: 17px;
+    width: 18px;
+    height: 18px;
     border-radius: 3px;
     border: 0.5px solid #ccc;
     display: inline-block;
-    margin-right: 8px;
+  }
+
+  .optionLabel {
+    margin-left: 10px;
   }
 }
