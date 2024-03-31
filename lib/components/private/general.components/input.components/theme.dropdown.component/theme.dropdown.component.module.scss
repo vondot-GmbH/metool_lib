@@ -23,8 +23,24 @@
       background-color: #f7f7f7;
     }
 
+    .optionPlaceholder {
+      padding: 8px;
+    }
+
     &Small {
       width: 35px;
+    }
+  }
+
+  .selectedItemPlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f7f7f7;
     }
   }
 }
@@ -56,10 +72,17 @@
     height: 18px;
     border-radius: 3px;
     border: 0.5px solid #ccc;
-    display: inline-block;
   }
 
   .optionLabel {
     margin-left: 10px;
   }
+}
+
+.colorIndicatorTransparent {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px dashed #ccc;
+  background-color: transparent;
 }

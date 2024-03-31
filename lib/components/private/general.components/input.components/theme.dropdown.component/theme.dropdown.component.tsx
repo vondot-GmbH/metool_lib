@@ -28,11 +28,11 @@ const ThemeDropdown = ({
   onChange,
   selectedItem,
   label,
-  placeholder = "Select a theme variable",
   disabled = false,
   className,
   category,
-  variant = "small",
+  variant = "default",
+  placeholder = "Select a theme variable",
 }: ThemeDropdownProps) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const optionsRef = useRef<HTMLDivElement>(null);
@@ -49,6 +49,8 @@ const ThemeDropdown = ({
     [styles.selectedItem]: true,
     [styles.selectedItemSmall]: variant === "small",
   });
+
+  const handleToggleDropdown = () => !disabled && setIsOpen(!isOpen);
 
   useEffect(() => {
     const configProvider = ConfigProvider.getInstance();
@@ -69,8 +71,6 @@ const ThemeDropdown = ({
   }, [isOpen]);
 
   useClickedOutside(optionsRef, () => setIsOpen(false));
-
-  const handleToggleDropdown = () => !disabled && setIsOpen(!isOpen);
 
   const handleOptionSelect = (option: ThemeOption) => {
     onChange(option.formattedValue);
@@ -108,7 +108,30 @@ const ThemeDropdown = ({
     );
 
     if (selectedOption == null) {
-      return <RunningText>{placeholder}</RunningText>;
+      if (variant === "small") {
+        return (
+          <div
+            className={styles.selectedItemPlaceholder}
+            onClick={handleToggleDropdown}
+          >
+            <div
+              className={classNames(
+                styles.colorIndicator,
+                styles.colorIndicatorTransparent
+              )}
+            />
+          </div>
+        );
+      } else {
+        return (
+          <RunningText
+            onClick={handleToggleDropdown}
+            className={styles.optionPlaceholder}
+          >
+            {placeholder}
+          </RunningText>
+        );
+      }
     }
 
     return buildOptionItem(selectedOption, handleToggleDropdown, variant);
