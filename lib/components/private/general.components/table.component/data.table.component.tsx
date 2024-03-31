@@ -108,7 +108,11 @@ function Table<T>({
   );
 
   const buildCell = (column: TableColumn<T>, record: T, colIndex: number) => (
-    <td key={colIndex} className={styles.cell} style={{ ...bodyCellStyles }}>
+    <td
+      key={colIndex}
+      className={styles.cell}
+      style={{ ...bodyCellStyles, ...column?.columnStyles }}
+    >
       {column.render
         ? column.render(record[column.source], record)
         : (record[column.source] as React.ReactNode)}
