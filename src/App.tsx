@@ -27,6 +27,8 @@ import { NavigationMenuWidgetConfig } from "../lib/components/public/widget.comp
 InitializeMetool({
   themeConfig: {
     colors: {
+      colorBorder: "#babbbb",
+
       colorPrimary: "#2bbf8c",
       colorPrimaryHighlight: "#2bbf8c",
       colorPrimaryUltralight: "#e6f9f4",
@@ -36,7 +38,6 @@ InitializeMetool({
       colorInverted: "#000000",
       colorSurface: "rgb(248, 250, 250)",
       colorSurfaceDark: "#f2f2f2",
-      colorBorder: "#dddddd",
       colorError: "#fd5d5d",
       colorSuccess: "rgb(92, 195, 122)",
       colorHover: "hsla(158, 66%, 51%, 0.1)",

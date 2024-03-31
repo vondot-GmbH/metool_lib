@@ -80,11 +80,12 @@ const ThemeDropdown = ({
   const buildOptionItem = (
     option: ThemeOption,
     handleClick?: () => void,
-    variant: "small" | "default" = "default"
+    variant: "small" | "default" = "default",
+    index?: number
   ) => {
     return (
       <div
-        key={option.value}
+        key={`option-${option.formattedValue}-${index ?? 1}`}
         className={styles.option}
         onClick={handleClick ? () => handleClick() : undefined}
       >
@@ -156,8 +157,13 @@ const ThemeDropdown = ({
               position: "fixed",
             }}
           >
-            {themeOptions.map((option) =>
-              buildOptionItem(option, () => handleOptionSelect(option))
+            {themeOptions.map((option, i) =>
+              buildOptionItem(
+                option,
+                () => handleOptionSelect(option),
+                undefined,
+                i
+              )
             )}
           </div>,
           document.body

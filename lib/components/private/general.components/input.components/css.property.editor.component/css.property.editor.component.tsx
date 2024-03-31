@@ -6,19 +6,45 @@ import IconButton from "../../icon.button.component/icon.button.component";
 import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
 import ThemeDropdown from "../theme.dropdown.component/theme.dropdown.component";
 import { useClickedOutside } from "../../../../../globals/helpers/hook.helper";
+import BorderEditor from "../border.input.component/border.input.component";
+import MultiSwitch from "../../multi.switch.component/multi.switch.component";
 
 // types of available CSS properties
 enum CssPropertyType {
   Color = "color",
   BackgroundColor = "backgroundColor",
   FontSize = "fontSize",
+  Padding = "padding",
+  Margin = "margin",
+  TextAlign = "textAlign",
+  BorderRadius = "borderRadius",
+  Border = "border",
+  BorderLeft = "borderLeft",
+  BorderRight = "borderRight",
+  BorderTop = "borderTop",
+  BorderBottom = "borderBottom",
+  MinWidth = "minWidth",
+  MaxWidth = "maxWidth",
 }
 
 // assign CSS properties to the corresponding type
+
+// TODO make a generall border type
 const cssPropertiesConfig = [
   { label: "Background Color", type: CssPropertyType.BackgroundColor },
   { label: "Text Color", type: CssPropertyType.Color },
   { label: "Font Size", type: CssPropertyType.FontSize },
+  { label: "Border", type: CssPropertyType.Border },
+  { label: "Border Left", type: CssPropertyType.BorderLeft },
+  { label: "Border Right", type: CssPropertyType.BorderRight },
+  { label: "Border Top", type: CssPropertyType.BorderTop },
+  { label: "Border Bottom", type: CssPropertyType.BorderBottom },
+  { label: "Padding", type: CssPropertyType.Padding },
+  { label: "Margin", type: CssPropertyType.Margin },
+  { label: "Text Align", type: CssPropertyType.TextAlign },
+  { label: "Border Radius", type: CssPropertyType.BorderRadius },
+  { label: "Min Width", type: CssPropertyType.MinWidth },
+  { label: "Max Width", type: CssPropertyType.MaxWidth },
 ];
 
 interface CSSProperty {
@@ -103,10 +129,52 @@ const CSSPropertyEditor = ({
                 (config) => config.type === property.type
               )?.label || ""
             }
-            onChange={(item) => handlePropertyChange(index, item.value)}
+            onChange={(item) => handlePropertyChange(index, item)}
             selectedItem={property.value}
           />
         );
+
+      case CssPropertyType.Border:
+      case CssPropertyType.BorderLeft:
+      case CssPropertyType.BorderRight:
+      case CssPropertyType.BorderTop:
+      case CssPropertyType.BorderBottom:
+        return (
+          <BorderEditor
+            initialValue={property.value}
+            onChange={(value) => {
+              handlePropertyChange(index, value);
+            }}
+          />
+        );
+
+      case CssPropertyType.TextAlign:
+        return (
+          <MultiSwitch
+            label="Text Align"
+            initialValue={property.value}
+            onChange={(value: any) => {
+              if (value != null) {
+                handlePropertyChange(index, value);
+              }
+            }}
+            options={[
+              {
+                label: "Left",
+                value: "left",
+              },
+              {
+                label: "Center",
+                value: "center",
+              },
+              {
+                label: "Right",
+                value: "right",
+              },
+            ]}
+          />
+        );
+
       default:
         return (
           <TextInput
@@ -116,7 +184,7 @@ const CSSPropertyEditor = ({
               )?.label
             }
             value={property.value}
-            onChange={(value) => handlePropertyChange(index, value as any)}
+            onValueChange={(value) => handlePropertyChange(index, value as any)}
           />
         );
     }

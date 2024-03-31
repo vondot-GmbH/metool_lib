@@ -1,0 +1,24 @@
+.borderEditorWrapper {
+  justify-content: center;
+
+  .styleWrapper {
+    margin: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+
+    .styleLabel {
+      margin-bottom: 10px;
+    }
+
+    .styleButton {
+      height: 20px;
+    }
+  }
+}
+
+.borderInputLabel {
+  margin-bottom: 10px;
+  margin-left: 5px;
+}
