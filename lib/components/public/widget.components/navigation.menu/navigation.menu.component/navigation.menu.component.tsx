@@ -51,7 +51,8 @@ const NavigationWidget = ({
       {widgetOptions?.items?.map((item, i) => (
         <button
           key={item.id}
-          className={styles.navigationItem}
+          // TODO Implement the active state
+          className={styles.navigationItemActive + " " + styles.navigationItem}
           style={{ ...widgetOptions?.items[i]?.naviationMenuItemStyles }}
           onClick={() => handleNavigation(item?.targetID, item?.actionType)}
         >
