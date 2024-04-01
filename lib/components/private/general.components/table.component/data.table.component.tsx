@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./data.table.component.module.scss";
 import Checkbox from "../checkbox.component/checkbox.component";
+import TableWidgetLoadingComponent from "../../../public/widget.components/table.widget/table.widget.loading.component/table.widget.loading.component";
 
 export interface TableColumn<T> {
   label: string;
@@ -107,19 +108,18 @@ const Table = <T,>({
     </div>
   );
 
+  if (isLoading) {
+    return <TableWidgetLoadingComponent count={7} />;
+  }
+
   return (
     <div className={styles.table}>
-      {!isLoading && (
-        <>
-          {renderHeader()}
-          {data.length > 0 ? (
-            data.map(renderRow)
-          ) : (
-            <div className={styles.noData}>{noDataText}</div>
-          )}
-        </>
+      {renderHeader()}
+      {data.length > 0 ? (
+        data.map(renderRow)
+      ) : (
+        <div className={styles.noData}>{noDataText}</div>
       )}
-      {isLoading && <div className={styles.loading}>Loading...</div>}
     </div>
   );
 };
