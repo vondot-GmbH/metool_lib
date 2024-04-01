@@ -8,6 +8,7 @@ import ThemeDropdown from "../theme.dropdown.component/theme.dropdown.component"
 import { useClickedOutside } from "../../../../../globals/helpers/hook.helper";
 import BorderEditor from "../border.input.component/border.input.component";
 import MultiSwitch from "../../multi.switch.component/multi.switch.component";
+import RunningText from "../../text.components/running.text.component/running.text.component";
 
 // types of available CSS properties
 enum CssPropertyType {
@@ -195,7 +196,7 @@ const CSSPropertyEditor = ({
   return (
     <div className={styles.container}>
       <div className={styles.containerHeader}>
-        <SmallText>{label}</SmallText>
+        <RunningText>{label}</RunningText>
         <IconButton
           icon={faPlus}
           onClick={(event) => handleAddPropertyClick(event)}
@@ -203,7 +204,7 @@ const CSSPropertyEditor = ({
         {isTypeSelectorOpen && (
           <div
             ref={typeSelectorRef}
-            className={styles.typeSelector}
+            className={styles.typeSelectorDropdown}
             style={{
               top: `${typeSelectorPosition.top}px`,
               left: `${typeSelectorPosition.left}px`,

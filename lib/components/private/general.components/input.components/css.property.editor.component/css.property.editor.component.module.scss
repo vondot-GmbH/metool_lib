@@ -7,7 +7,6 @@
   background-color: #fff;
   overflow: hidden;
   margin-bottom: 20px;
-  // position: relative;
 
   .containerHeader {
     padding: 0 10px;
@@ -46,20 +45,26 @@
   }
 }
 
-.typeSelector {
+.typeSelectorDropdown {
   position: absolute;
   width: 200px;
-  background-color: #f7f7f7;
+  background-color: #fff;
   border-top: 1px solid #e0e0e0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   z-index: 100;
   transition: all 0.5s;
   overflow-y: auto;
+  max-height: 260px;
+  overflow-y: scroll;
 }
 
 .typeOption {
   padding: 10px;
   cursor: pointer;
+
+  .optionLabel {
+    font-weight: bold;
+  }
 
   &:hover {
     background-color: #f0f0f0;

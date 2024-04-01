@@ -38,6 +38,7 @@ const ThemeDropdown = ({
   const optionsRef = useRef<HTMLDivElement>(null);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [dropdownWidth, setDropdownWidth] = useState(270);
   const [themeOptions, setThemeOptions] = useState<ThemeOption[]>([]);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
 
@@ -63,10 +64,18 @@ const ThemeDropdown = ({
   useEffect(() => {
     if (isOpen && dropdownRef.current) {
       const rect = dropdownRef.current.getBoundingClientRect();
+
+      // if the variant is small, we need to adjust the left position of the dropdown
+      const left =
+        variant === "small" ? rect.left - (dropdownWidth - 35) : rect.left;
+
       setDropdownPosition({
         top: rect.bottom + window.scrollY,
-        left: rect.left + window.scrollX,
+        left: left,
       });
+
+      // only set the width for the dropdown if it is the default variant
+      if (variant == "default") setDropdownWidth(rect.width);
     }
   }, [isOpen]);
 
@@ -154,6 +163,7 @@ const ThemeDropdown = ({
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,
+              width: `${dropdownWidth}px`,
               position: "fixed",
             }}
           >
