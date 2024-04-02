@@ -178,6 +178,7 @@ const RenderWidget = ({
               widgetStore={widgetStore}
               viewStore={viewStore}
               stateStore={stateStore}
+              editorStore={editorStore}
             />
           </div>
         ))}

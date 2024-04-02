@@ -14,7 +14,7 @@ import {
 } from "../schemas/navigation.menu.schema";
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
 
-interface NavigationWidgetOptionSidebarProps {
+interface NavigationMenuWidgetSidebarProps {
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
 }
@@ -30,10 +30,10 @@ const orientationOptions = [
   },
 ];
 
-const NavigationWidgetOptionSidebar = ({
+const NavigationMenuWidgetSidebar = ({
   widgetStore,
   editorStore,
-}: NavigationWidgetOptionSidebarProps): JSX.Element => {
+}: NavigationMenuWidgetSidebarProps): JSX.Element => {
   const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
   const options: NavigationMenuOptions = widgetStore?.getAllOptionsForWidget(
     selectedWidgetID ?? ""
@@ -121,4 +121,4 @@ const NavigationWidgetOptionSidebar = ({
 export default inject(
   "widgetStore",
   "editorStore"
-)(observer(NavigationWidgetOptionSidebar));
+)(observer(NavigationMenuWidgetSidebar));

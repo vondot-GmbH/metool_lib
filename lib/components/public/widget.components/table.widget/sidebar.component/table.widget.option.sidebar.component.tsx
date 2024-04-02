@@ -13,15 +13,15 @@ import StateInputEditor from "../../../../private/general.components/state.input
 import EditorStore from "../../../../../stores/editor.store";
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
 
-interface TableWidgetOptionSidebarProps {
+interface TableWidgetSidebarProps {
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
 }
 
-const TableWidgetOptionSidebar = ({
+const TableWidgetSidebar = ({
   widgetStore,
   editorStore,
-}: TableWidgetOptionSidebarProps): JSX.Element => {
+}: TableWidgetSidebarProps): JSX.Element => {
   const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
   const options: TableOptions = widgetStore?.getAllOptionsForWidget(
     selectedWidgetID ?? ""
@@ -182,4 +182,4 @@ const TableWidgetOptionSidebar = ({
 export default inject(
   "widgetStore",
   "editorStore"
-)(observer(TableWidgetOptionSidebar));
+)(observer(TableWidgetSidebar));

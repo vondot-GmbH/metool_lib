@@ -6,19 +6,19 @@ import StateStore from "../../../../../stores/state.store";
 import { NavigationMenuOptions } from "../schemas/navigation.menu.schema";
 import { useEffect } from "react";
 
-interface NavigationWidgetProps {
+interface NavigationMenuWidgetProps {
   widgetID: string;
   widgetStore?: WidgetStore;
   stateStore?: StateStore;
   navigationStore?: NavigationStore;
 }
 
-const NavigationWidget = ({
+const NavigationMenuWidget = ({
   widgetID,
   widgetStore,
   navigationStore,
   stateStore,
-}: NavigationWidgetProps) => {
+}: NavigationMenuWidgetProps) => {
   const widgetOptions: NavigationMenuOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);
 
@@ -67,4 +67,4 @@ export default inject(
   "widgetStore",
   "stateStore",
   "navigationStore"
-)(observer(NavigationWidget));
+)(observer(NavigationMenuWidget));

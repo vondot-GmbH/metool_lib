@@ -1,16 +1,33 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { inject, observer } from "mobx-react";
 import styles from "./container.widget.component.module.scss";
+import WidgetStore from "../../../../../stores/widget.store";
+import { ContainerOptions } from "../schemas/container.widget.schema";
 
 interface ContainerWidgetProps {
   widgetID: string;
   children?: React.ReactNode;
+  widgetStore?: WidgetStore;
 }
 
-const ContainerWidget: React.FC<ContainerWidgetProps> = ({
+const ContainerWidget = ({
+  widgetID,
   children,
-}): JSX.Element => {
-  return <div className={styles.containerWidget}>{children}</div>;
+  widgetStore,
+}: ContainerWidgetProps): JSX.Element => {
+  const containerOptions: ContainerOptions =
+    widgetStore?.getAllOptionsForWidget(widgetID);
+
+  return (
+    <div
+      className={styles.containerWidget}
+      style={{
+        ...containerOptions?.containerStyles,
+      }}
+    >
+      {children}
+    </div>
+  );
 };
 
 export default inject("widgetStore", "stateStore")(observer(ContainerWidget));

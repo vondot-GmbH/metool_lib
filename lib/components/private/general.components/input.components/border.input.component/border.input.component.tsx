@@ -37,7 +37,6 @@ const BorderEditor: React.FC<BorderEditorProps> = ({
     const { initialThickness, initialStyle, initialColor } =
       parseInitialValue(initialValue);
 
-    console.log(initialThickness, initialStyle, initialColor);
     setThickness(initialThickness);
     setColor(initialColor);
     const foundIndex = borderStyles.findIndex(

@@ -10,8 +10,6 @@ interface ComponentWrapperProps {
   className?: string;
 }
 
-// TODO add dynamic padding and other things to this component
-
 const ComponentWrapper = ({
   children,
   title,
