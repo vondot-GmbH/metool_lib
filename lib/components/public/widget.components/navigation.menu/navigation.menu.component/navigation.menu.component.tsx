@@ -5,6 +5,7 @@ import styles from "./navigation.menu.component.module.scss";
 import StateStore from "../../../../../stores/state.store";
 import { NavigationMenuOptions } from "../schemas/navigation.menu.schema";
 import { useEffect } from "react";
+import { NavigationParams } from "../../../../../globals/interfaces/navigation.interface";
 
 interface NavigationMenuWidgetProps {
   widgetID: string;
@@ -30,15 +31,14 @@ const NavigationMenuWidget = ({
     stateStore?.initializeDynamicOptions(widgetID, analized, () => {}, {});
   }, []);
 
+  // TODO only for testing save it in the db as navigationparams type
   const handleNavigation = (tagetID: string, actionType: string) => {
-    const preparedtagetID = tagetID != null && tagetID != "" ? tagetID : null;
-    if (preparedtagetID == null) return;
+    const navigationParams = {
+      actionType: actionType,
+      targetID: tagetID,
+    } as NavigationParams;
 
-    if (actionType === "navigate_to_view") {
-      navigationStore?.navigateToView(tagetID);
-    } else if (actionType === "navigate_to_page") {
-      navigationStore?.navigateToPage(tagetID);
-    }
+    navigationStore?.navigate(navigationParams);
   };
 
   return (

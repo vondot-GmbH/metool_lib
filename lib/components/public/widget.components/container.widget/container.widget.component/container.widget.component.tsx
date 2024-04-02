@@ -3,23 +3,29 @@ import { inject, observer } from "mobx-react";
 import styles from "./container.widget.component.module.scss";
 import WidgetStore from "../../../../../stores/widget.store";
 import { ContainerOptions } from "../schemas/container.widget.schema";
+import NavigationStore from "../../../../../stores/navigation.store";
 
 interface ContainerWidgetProps {
   widgetID: string;
   children?: React.ReactNode;
   widgetStore?: WidgetStore;
+  navigationStore?: NavigationStore;
 }
 
 const ContainerWidget = ({
   widgetID,
   children,
   widgetStore,
+  navigationStore,
 }: ContainerWidgetProps): JSX.Element => {
   const containerOptions: ContainerOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);
 
   return (
     <div
+      onClick={() => {
+        navigationStore?.goBack();
+      }}
       className={styles.containerWidget}
       style={{
         ...containerOptions?.containerStyles,
@@ -30,4 +36,8 @@ const ContainerWidget = ({
   );
 };
 
-export default inject("widgetStore", "stateStore")(observer(ContainerWidget));
+export default inject(
+  "widgetStore",
+  "stateStore",
+  "navigationStore"
+)(observer(ContainerWidget));
