@@ -30,11 +30,13 @@ const NavigationMenuWidget = ({
     stateStore?.initializeDynamicOptions(widgetID, analized, () => {}, {});
   }, []);
 
-  // TODO only for testing purposes
   const handleNavigation = (tagetID: string, actionType: string) => {
-    if (tagetID || actionType === "navigate_to_view") {
+    const preparedtagetID = tagetID != null && tagetID != "" ? tagetID : null;
+    if (preparedtagetID == null) return;
+
+    if (actionType === "navigate_to_view") {
       navigationStore?.navigateToView(tagetID);
-    } else if (tagetID || actionType === "navigate_to_page") {
+    } else if (actionType === "navigate_to_page") {
       navigationStore?.navigateToPage(tagetID);
     }
   };
