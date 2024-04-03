@@ -5,6 +5,6 @@ export interface NavigationParams {
 }
 
 export enum NavigationActionType {
-  VIEW = "navigate_to_view",
-  PAGE = "navigate_to_page",
+  NAV_TO_VIEW = "NAV_TO_VIEW",
+  NAV_TO_PAGE = "NAV_TO_PAGE",
 }

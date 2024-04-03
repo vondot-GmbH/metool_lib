@@ -43,6 +43,21 @@ class ViewStore {
     return this._views.get(viewID);
   }
 
+  getViewIDsForCurrentPage(): string[] {
+    return (
+      this.stores.pageStore.currentPageToRender?.views.map(
+        (view) => view.viewID
+      ) || []
+    );
+  }
+
+  get viewsForCurrentPage(): View[] {
+    const viewIDs = this.getViewIDsForCurrentPage();
+    return Array.from(this._views.values()).filter((view) =>
+      viewIDs.includes(view.viewID)
+    );
+  }
+
   //! Methods
 
   createInitialView(): View {

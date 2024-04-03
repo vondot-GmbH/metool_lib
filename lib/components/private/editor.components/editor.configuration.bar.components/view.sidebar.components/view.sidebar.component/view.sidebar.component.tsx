@@ -2,7 +2,7 @@ import { inject, observer } from "mobx-react";
 import Row from "../../../../general.components/row.component/row.component";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import {
   faEdit,
@@ -43,15 +43,7 @@ const ViewSidebar = ({
   }, [selectedItem]);
 
   // views of the current selected page
-  const views: View[] = useMemo(() => {
-    const currentViewIds = pageStore?.currentPageToRender?.views.map(
-      (view) => view.viewID
-    );
-
-    return viewStore?.views.filter((view) =>
-      currentViewIds?.includes(view.viewID)
-    ) as View[];
-  }, [viewStore?.views, pageStore?.currentPageToRender?.views]);
+  const views: View[] = viewStore?.viewsForCurrentPage || [];
 
   const itemClassName = (viewID: string | null) => {
     return (

@@ -19,6 +19,8 @@ import TitleText from "../../general.components/text.components/title.text.compo
 import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
 import IconButton from "../../general.components/icon.button.component/icon.button.component";
 import { faX } from "@fortawesome/pro-regular-svg-icons";
+import ViewStore from "../../../../stores/view.store";
+import PageStore from "../../../../stores/page.store";
 
 const SidebarContext = createContext({
   views: [] as ReactNode[],
@@ -61,9 +63,16 @@ export const useSidebar = () => useContext(SidebarContext);
 export interface OptionSidebarProps {
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
+  viewStore?: ViewStore;
+  pageStore?: PageStore;
 }
 
-const OptionSidebar = ({ widgetStore, editorStore }: OptionSidebarProps) => {
+const OptionSidebar = ({
+  widgetStore,
+  editorStore,
+  viewStore,
+  pageStore,
+}: OptionSidebarProps) => {
   const { pushView, views, titles, popView } = useSidebar();
 
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
@@ -88,7 +97,15 @@ const OptionSidebar = ({ widgetStore, editorStore }: OptionSidebarProps) => {
     const SidebarComponent = selectedWidgetConfig.sidebarComponent;
 
     pushView(
-      [<SidebarComponent widgetStore={widgetStore} key={selectedWidgetType} />],
+      [
+        <SidebarComponent
+          key={selectedWidgetType}
+          widgetStore={widgetStore}
+          pageStore={pageStore}
+          viewStore={viewStore}
+          editorStore={editorStore}
+        />,
+      ],
       "",
       true
     );
@@ -137,4 +154,9 @@ const OptionSidebar = ({ widgetStore, editorStore }: OptionSidebarProps) => {
   );
 };
 
-export default inject("widgetStore", "editorStore")(observer(OptionSidebar));
+export default inject(
+  "widgetStore",
+  "editorStore",
+  "viewStore",
+  "pageStore"
+)(observer(OptionSidebar));

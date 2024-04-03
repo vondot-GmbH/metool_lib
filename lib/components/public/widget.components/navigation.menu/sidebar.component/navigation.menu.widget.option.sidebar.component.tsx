@@ -5,7 +5,7 @@ import MultiFieldDropdownEditor from "../../../../private/general.components/mul
 import { v4 as UUID } from "uuid";
 import { useSidebar } from "../../../../private/editor.components/option.sidebar.component/option.sidebar.component";
 import EditorStore from "../../../../../stores/editor.store";
-import NavigationMenuItemDetailView from "./navigation.menu.item.detail.view.component";
+import NavigationMenuItemDetailView from "./components/navigation.menu.item.detail.view.component";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
 import {
@@ -13,10 +13,14 @@ import {
   NavigationMenuOptions,
 } from "../schemas/navigation.menu.schema";
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
+import ViewStore from "../../../../../stores/view.store";
+import PageStore from "../../../../../stores/page.store";
 
 interface NavigationMenuWidgetSidebarProps {
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
+  viewStore?: ViewStore;
+  pageStore?: PageStore;
 }
 
 const orientationOptions = [
@@ -44,12 +48,11 @@ const NavigationMenuWidgetSidebar = ({
   const handleAddNavigationItem = (): void => {
     const navigationItems: NavigationMenuItem[] = options?.items;
 
-    const newItem: NavigationMenuItem = {
+    const newItem = {
       id: UUID(),
       label: "New Item",
-      targetID: "",
-      actionType: "navigate_to_view",
-    };
+      navigationParams: {},
+    } as NavigationMenuItem;
 
     const newItems = [...(navigationItems || []), newItem];
     widgetStore?.updateWidgetOption(selectedWidgetID ?? "", "items", newItems);
@@ -120,5 +123,7 @@ const NavigationMenuWidgetSidebar = ({
 
 export default inject(
   "widgetStore",
-  "editorStore"
+  "editorStore",
+  "pageStore",
+  "viewStore"
 )(observer(NavigationMenuWidgetSidebar));

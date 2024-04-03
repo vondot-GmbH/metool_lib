@@ -31,13 +31,7 @@ const NavigationMenuWidget = ({
     stateStore?.initializeDynamicOptions(widgetID, analized, () => {}, {});
   }, []);
 
-  // TODO only for testing save it in the db as navigationparams type
-  const handleNavigation = (tagetID: string, actionType: string) => {
-    const navigationParams = {
-      actionType: actionType,
-      targetID: tagetID,
-    } as NavigationParams;
-
+  const handleNavigation = (navigationParams: NavigationParams) => {
     navigationStore?.navigate(navigationParams);
   };
 
@@ -56,7 +50,7 @@ const NavigationMenuWidget = ({
           // TODO Implement the active state
           className={styles.navigationItemActive + " " + styles.navigationItem}
           style={{ ...widgetOptions?.items[i]?.naviationMenuItemStyles }}
-          onClick={() => handleNavigation(item?.targetID, item?.actionType)}
+          onClick={() => handleNavigation(item?.navigationParams)}
         >
           {item.label}
         </button>

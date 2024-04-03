@@ -32,9 +32,11 @@ class NavigationStore {
     if (targetID == null) return;
 
     // handle the navigation based on the action type
-    if (navigationParams.actionType === NavigationActionType.VIEW) {
+    if (navigationParams.actionType === NavigationActionType.NAV_TO_VIEW) {
       await this.handleNavigateToView(targetID);
-    } else if (navigationParams.actionType === NavigationActionType.PAGE) {
+    } else if (
+      navigationParams.actionType === NavigationActionType.NAV_TO_PAGE
+    ) {
       await this.handleNavigateToPage(targetID, viewID);
     }
 
@@ -76,7 +78,9 @@ class NavigationStore {
     const { actionType } = navigationParams;
 
     const identifierID =
-      actionType === NavigationActionType.VIEW ? "currentView" : "currentPage";
+      actionType === NavigationActionType.NAV_TO_VIEW
+        ? "currentView"
+        : "currentPage";
 
     Object.entries(navigationParams).forEach(([key, value]) => {
       if (key !== "actionType") {
