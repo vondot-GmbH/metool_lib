@@ -70,6 +70,26 @@ class NavigationStore {
     }
   };
 
+  initializeCurrentNavigationStates = (
+    navigationParams: NavigationParams
+  ): void => {
+    const { actionType } = navigationParams;
+
+    const identifierID =
+      actionType === NavigationActionType.VIEW ? "currentView" : "currentPage";
+
+    Object.entries(navigationParams).forEach(([key, value]) => {
+      if (key !== "actionType") {
+        this.stores.stateStore.setStateValue(
+          StateSelector.NAVIGATION,
+          identifierID,
+          key,
+          value
+        );
+      }
+    });
+  };
+
   private handleNavigateToView = async (viewId: string): Promise<void> => {
     await this.stores.viewStore.intializeView(viewId);
     this.stores.pageStore.setCurrentViewIdToRender(viewId);
@@ -108,29 +128,6 @@ class NavigationStore {
 
     this._navigationHistoryIndex = this._navigationHistory.length - 1;
   }
-
-  private initializeCurrentNavigationStates = (
-    navigationParams: NavigationParams
-  ): void => {
-    const selector =
-      navigationParams.actionType === NavigationActionType.VIEW
-        ? StateSelector.VIEWS
-        : StateSelector.PAGES;
-
-    const identifierID =
-      selector === StateSelector.VIEWS ? "currentView" : "currentPage";
-
-    Object.entries(navigationParams).forEach(([key, value]) => {
-      if (key !== "actionType") {
-        this.stores.stateStore.setStateValue(
-          selector,
-          identifierID,
-          key,
-          value
-        );
-      }
-    });
-  };
 }
 
 export default NavigationStore;

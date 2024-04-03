@@ -8,8 +8,7 @@ import RootStore from "./root.store";
 export enum StateSelector {
   WIDGETS = "widgets",
   QUERIES = "queries",
-  VIEWS = "views",
-  PAGES = "pages",
+  NAVIGATION = "navigation",
 }
 
 interface WidgetState {

@@ -93,6 +93,32 @@ class ViewStore {
     return response;
   }
 
+  // TODO
+
+  // async getViewById(viewID: string): Promise<View | undefined> {
+  //   let view = this.getView(viewID);
+
+  //   if (view == null) {
+  //     const viewQuery = this.stores.queryStore.getQuery(
+  //       CoreRestQueryType.GET_VIEW_BY_ID
+  //     );
+
+  //     if (viewQuery == null || viewID == null) return;
+
+  //     view = await queryExecutor.executeRestQuery(
+  //       viewQuery,
+  //       {
+  //         viewID: viewID,
+  //       },
+  //       this.stores.resourceStore
+  //     );
+
+  //     if (view == null) return;
+  //   }
+
+  //   return view;
+  // }
+
   async fetchAndSaveViewById(viewID: string): Promise<void> {
     const viewQuery = this.stores.queryStore.getQuery(
       CoreRestQueryType.GET_VIEW_BY_ID

@@ -7,6 +7,8 @@ import { useEffect, useState } from "react";
 import PageStore from "../../../../../stores/page.store";
 import RenderPageLayout from "../render.page.layout.component/render.page.layout.component";
 import LayoutStore from "../../../../../stores/layout.store";
+import NavigationStore from "../../../../../stores/navigation.store";
+import { NavigationActionType } from "../../../../../globals/interfaces/navigation.interface";
 
 interface RenderPageProps {
   readonly?: boolean;
@@ -15,6 +17,7 @@ interface RenderPageProps {
   resourceStore?: ResourceStore;
   pageStore?: PageStore;
   layoutStore?: LayoutStore;
+  navigationStore?: NavigationStore;
 
   showVisualWidgetOutline?: boolean;
   pageToRender: string;
@@ -27,6 +30,7 @@ const RenderPage = ({
   resourceStore,
   queryStore,
   pageStore,
+  navigationStore,
 }: RenderPageProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const viewIdToRender = pageStore?.currentViewIdToRender;
@@ -38,6 +42,13 @@ const RenderPage = ({
 
       // set the initial page to render
       await pageStore?.setAndFetchPageToRender(initialPageToRender);
+
+      // Initialize navigation states for the current page
+      navigationStore?.initializeCurrentNavigationStates({
+        targetID: initialPageToRender,
+        actionType: NavigationActionType.PAGE,
+        params: {}, // TODO
+      });
 
       setIsLoading(false);
     };
@@ -69,5 +80,6 @@ export default inject(
   "pageStore",
   "queryStore",
   "resourceStore",
-  "layoutStore"
+  "layoutStore",
+  "navigationStore"
 )(observer(RenderPage));

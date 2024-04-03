@@ -11,6 +11,8 @@ import QueryStore from "../../../../../stores/query.store";
 import ResourceStore from "../../../../../stores/resource.store";
 import { useEffect, useState } from "react";
 import EditorStore from "../../../../../stores/editor.store";
+import NavigationStore from "../../../../../stores/navigation.store";
+import { NavigationActionType } from "../../../../../globals/interfaces/navigation.interface";
 
 interface RenderViewProps {
   readonly?: boolean;
@@ -19,6 +21,7 @@ interface RenderViewProps {
   queryStore?: QueryStore;
   editorStore?: EditorStore;
   resourceStore?: ResourceStore;
+  navigationStore?: NavigationStore;
 
   showVisualWidgetOutline?: boolean;
   viewToRender: string;
@@ -31,6 +34,7 @@ const RenderView = ({
   viewToRender,
   viewStore,
   editorStore,
+  navigationStore,
 }: RenderViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const [structuredWidgets, setStructuredWidgets] = useState<
@@ -45,6 +49,14 @@ const RenderView = ({
         await widgetStore?.initWidgetsAndProcess(viewToRender);
         const structuredData = widgetStore?.getStructuredData();
         setStructuredWidgets(structuredData);
+
+        // Initialize navigation states for the current view
+        navigationStore?.initializeCurrentNavigationStates({
+          targetID: viewToRender,
+          actionType: NavigationActionType.VIEW,
+          params: {}, // TODO
+        });
+
         setIsLoading(false);
       }
     };
@@ -92,5 +104,6 @@ export default inject(
   "widgetStore",
   "queryStore",
   "resourceStore",
-  "editorStore"
+  "editorStore",
+  "navigationStore"
 )(observer(RenderView));
