@@ -21,6 +21,8 @@ interface KeyValueInputProps {
   register?: any;
   keyLabel?: string;
   valueLabel?: string;
+  keyFieldName?: string;
+  valueFieldName?: string;
   arrayFieldName?: string;
   disabled?: boolean;
   className?: string;
@@ -37,13 +39,14 @@ const KeyValueInput = ({
   register,
   keyLabel = "key",
   valueLabel = "value",
+  keyFieldName = "key",
+  valueFieldName = "value",
   arrayFieldName,
   disabled = false,
   className,
   validationErrors,
 }: KeyValueInputProps) => {
-  const [internalEntries, setInternalEntries] =
-    useState<KeyValue[]>(defaultEntries);
+  const [internalEntries, setInternalEntries] = useState<any[]>(defaultEntries);
 
   useEffect(() => {
     if (!fields) {
@@ -53,9 +56,12 @@ const KeyValueInput = ({
 
   const handleAddEntry = () => {
     if (append) {
-      append({ key: "", value: "" });
+      append({ [keyFieldName]: "", [valueFieldName]: "" });
     } else {
-      setInternalEntries([...internalEntries, { key: "", value: "" }]);
+      setInternalEntries([
+        ...internalEntries,
+        { [keyFieldName]: "", [valueFieldName]: "" },
+      ]);
     }
   };
 
@@ -77,23 +83,29 @@ const KeyValueInput = ({
       {label && <RunningText className={styles.label}>{label}</RunningText>}
       {entries.map((field, index) => {
         const keyError =
-          validationErrors?.[arrayFieldName as any]?.[index]?.key?.message;
+          validationErrors?.[arrayFieldName as any]?.[index]?.[keyFieldName]
+            ?.message;
         const valueError =
-          validationErrors?.[arrayFieldName as any]?.[index]?.value?.message;
+          validationErrors?.[arrayFieldName as any]?.[index]?.[valueFieldName]
+            ?.message;
 
         return (
-          <Row key={field.key + index} className={styles.row}>
+          <Row key={field[keyFieldName] + index} className={styles.row}>
             <TextInput
-              {...(register ? register(`${arrayFieldName}.${index}.key`) : {})}
+              {...(register
+                ? register(`${arrayFieldName}.${index}.${keyFieldName}`)
+                : {})}
               validationMessage={keyError}
-              defaultValue={field.key}
+              defaultValue={field[keyFieldName]}
               placeholder={keyLabel}
               disabled={disabled}
               onChange={(e) =>
                 !register &&
                 setInternalEntries((entries) =>
                   entries.map((entry, i) =>
-                    i === index ? { ...entry, key: e.target.value } : entry
+                    i === index
+                      ? { ...entry, [keyFieldName]: e.target.value }
+                      : entry
                   )
                 )
               }
@@ -102,16 +114,18 @@ const KeyValueInput = ({
             <TextInput
               disabled={disabled}
               {...(register
-                ? register(`${arrayFieldName}.${index}.value`)
+                ? register(`${arrayFieldName}.${index}.${valueFieldName}`)
                 : {})}
               validationMessage={valueError}
-              defaultValue={field.value}
+              defaultValue={field[valueFieldName]}
               placeholder={valueLabel}
               onChange={(e) =>
                 !register &&
                 setInternalEntries((entries) =>
                   entries.map((entry, i) =>
-                    i === index ? { ...entry, value: e.target.value } : entry
+                    i === index
+                      ? { ...entry, [valueFieldName]: e.target.value }
+                      : entry
                   )
                 )
               }

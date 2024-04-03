@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import defaultStyles from "../../../../../../../styles/index.module.scss";
 import {
@@ -6,6 +6,7 @@ import {
   viewSchema,
 } from "../../../../../../../schemas/view.schemas/view.schema";
 import TextInput from "../../../../../general.components/outlined.text.input.component/outlined.text.input.component";
+import KeyValueInput from "../../../../../general.components/key.value.input.component/key.value.input.conponent";
 
 interface ViewFormProps {
   initialView?: View;
@@ -19,6 +20,7 @@ const ViewForm = ({
   disabled = false,
 }: ViewFormProps): JSX.Element | null => {
   const {
+    control,
     register,
     handleSubmit,
     formState: { errors },
@@ -27,6 +29,15 @@ const ViewForm = ({
     mode: "onTouched",
     reValidateMode: "onChange",
     defaultValues: initialView ?? {},
+  });
+
+  const {
+    fields: viewParams,
+    append: appendParam,
+    remove: removeParam,
+  } = useFieldArray({
+    control,
+    name: "params",
   });
 
   return (
@@ -43,6 +54,23 @@ const ViewForm = ({
         className={defaultStyles.mb10}
         validationMessage={errors.name?.message?.toString()}
         disabled={disabled}
+      />
+
+      <KeyValueInput
+        className={defaultStyles.mb20}
+        disabled={disabled}
+        label="View Params"
+        fields={viewParams}
+        append={appendParam}
+        remove={removeParam}
+        register={register}
+        arrayFieldName={"params"}
+        validationErrors={errors}
+        addLabel="Add Param"
+        keyFieldName="key"
+        valueFieldName="type"
+        keyLabel="Key"
+        valueLabel="Type"
       />
     </form>
   );
