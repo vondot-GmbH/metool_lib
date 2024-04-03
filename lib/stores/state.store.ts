@@ -8,6 +8,8 @@ import RootStore from "./root.store";
 export enum StateSelector {
   WIDGETS = "widgets",
   QUERIES = "queries",
+  VIEWS = "views",
+  PAGES = "pages",
 }
 
 interface WidgetState {
@@ -47,7 +49,6 @@ export class StateStore {
   ): string {
     return `${selector}.${identifierID}.${keys.join(".")}`;
   }
-
   initializeStates(
     initialStateConfigs: {
       selector: StateSelector;
@@ -112,6 +113,9 @@ export class StateStore {
       category: string;
       entities: Array<{ id: string; label?: string }>;
     }> = [];
+
+    console.log("Object.keys(StateSelector)");
+    console.log(Object.keys(StateSelector));
 
     // Durchlaufen aller Schlüsselwerte von StateSelector
     Object.keys(StateSelector).forEach((selectorKey) => {

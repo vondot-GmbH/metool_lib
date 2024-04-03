@@ -4,6 +4,7 @@ import {
   NavigationActionType,
   NavigationParams,
 } from "../globals/interfaces/navigation.interface";
+import { StateSelector } from "./state.store";
 
 class NavigationStore {
   private stores: RootStore;
@@ -36,6 +37,9 @@ class NavigationStore {
     } else if (navigationParams.actionType === NavigationActionType.PAGE) {
       await this.handleNavigateToPage(targetID, viewID);
     }
+
+    // update the current navigation states
+    this.initializeCurrentNavigationStates(navigationParams);
 
     // updates the navigation history unless navigating back or forward.
     if (!this._isNavigatingBackOrForward) {
@@ -104,6 +108,29 @@ class NavigationStore {
 
     this._navigationHistoryIndex = this._navigationHistory.length - 1;
   }
+
+  private initializeCurrentNavigationStates = (
+    navigationParams: NavigationParams
+  ): void => {
+    const selector =
+      navigationParams.actionType === NavigationActionType.VIEW
+        ? StateSelector.VIEWS
+        : StateSelector.PAGES;
+
+    const identifierID =
+      selector === StateSelector.VIEWS ? "currentView" : "currentPage";
+
+    Object.entries(navigationParams).forEach(([key, value]) => {
+      if (key !== "actionType") {
+        this.stores.stateStore.setStateValue(
+          selector,
+          identifierID,
+          key,
+          value
+        );
+      }
+    });
+  };
 }
 
 export default NavigationStore;
