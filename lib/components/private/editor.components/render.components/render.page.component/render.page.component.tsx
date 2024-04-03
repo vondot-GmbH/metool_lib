@@ -8,7 +8,7 @@ import PageStore from "../../../../../stores/page.store";
 import RenderPageLayout from "../render.page.layout.component/render.page.layout.component";
 import LayoutStore from "../../../../../stores/layout.store";
 import NavigationStore from "../../../../../stores/navigation.store";
-import { NavigationActionType } from "../../../../../globals/interfaces/navigation.interface";
+import { NavigationParams } from "../../../../../globals/interfaces/navigation.interface";
 
 interface RenderPageProps {
   readonly?: boolean;
@@ -20,7 +20,7 @@ interface RenderPageProps {
   navigationStore?: NavigationStore;
 
   showVisualWidgetOutline?: boolean;
-  pageToRender: string;
+  pageToRender: NavigationParams;
 }
 
 const RenderPage = ({
@@ -41,14 +41,13 @@ const RenderPage = ({
       queryStore?.intializeQueries();
 
       // set the initial page to render
-      await pageStore?.setAndFetchPageToRender(initialPageToRender);
+      await pageStore?.setAndFetchPageToRender(
+        initialPageToRender.targetID,
+        initialPageToRender.params?.viewID
+      );
 
       // Initialize navigation states for the current page
-      navigationStore?.initializeCurrentNavigationStates({
-        targetID: initialPageToRender,
-        actionType: NavigationActionType.PAGE,
-        params: {}, // TODO
-      });
+      navigationStore?.initializeCurrentNavigationStates(initialPageToRender);
 
       setIsLoading(false);
     };

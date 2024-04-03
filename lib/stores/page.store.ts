@@ -20,15 +20,22 @@ class PageStore {
 
   //! Setter
 
-  setAndFetchPageToRender = async (pageID: string): Promise<void> => {
+  setAndFetchPageToRender = async (
+    pageID: string,
+    viewID?: string
+  ): Promise<void> => {
     const page = await this.fetchAndSavePageById(pageID);
+    let defaultViewId = viewID;
 
     if (!page) return;
 
     // find the default view of the page and set it as the current view to render
-    const defaultViewId =
-      page.views.find((view) => view.defaultView)?.viewID ||
-      page.views[0]?.viewID;
+    if (defaultViewId == null) {
+      defaultViewId =
+        page.views.find((view) => view.defaultView)?.viewID ||
+        page.views[0]?.viewID;
+    }
+
     this.setCurrentViewIdToRender(defaultViewId);
 
     const viewIDs = page.views.map((view) => view.viewID);

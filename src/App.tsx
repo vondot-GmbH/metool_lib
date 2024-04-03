@@ -20,6 +20,7 @@ import {
 } from "@fortawesome/pro-regular-svg-icons";
 import { coreQueryConfig, coreResources } from "./metool.config";
 import { NavigationMenuWidgetConfig } from "../lib/components/public/widget.components/navigation.menu/navigation.menu.config";
+import { NavigationActionType } from "../lib/globals/interfaces/navigation.interface";
 
 //! TEST REACT PROJECT FOR METOOL LIBRARY (ONLY FOR DEVELOPMENT PURPOSES)
 
@@ -109,9 +110,25 @@ Gleap.initialize("YZ6N1CITLut6MeqEhbITgwBid7oB7nc6");
 function App() {
   return (
     <div className="main-container">
-      <CanvasEditorPublic pageToRender="5f404b6b9I6b4c3017f99979" />
+      <CanvasEditorPublic
+        pageToRender={{
+          actionType: NavigationActionType.PAGE, // TODO set fixed type for actionType in intrerface
+          targetID: "5f404b6b9I6b4c3017f99979",
+          params: {
+            viewID: "a5cb6b75c3c64d738acd7b21281463c4",
+          },
+        }}
+      />
 
-      {/* <RenderPage pageToRender="5f404b6b9I6b4c3017f99979" /> */}
+      {/* <RenderPage
+        pageToRender={{
+          actionType: NavigationActionType.PAGE, // TODO set fixed type for actionType in intrerface
+          targetID: "5f404b6b9I6b4c3017f99979",
+          params: {
+            viewID: "a5cb6b75c3c64d738acd7b21281463c4",
+          },
+        }}
+      /> */}
     </div>
   );
 }
