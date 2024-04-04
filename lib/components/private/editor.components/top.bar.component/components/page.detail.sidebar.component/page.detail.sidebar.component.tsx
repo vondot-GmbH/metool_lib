@@ -11,7 +11,7 @@ import { useCallback, useMemo, useState } from "react";
 import ConfigProvider from "../../../../../../config/config.provider";
 import { CorePageLayoutConfig } from "../../../../../../globals/interfaces/config.interface";
 import SelectDropDown from "../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
-import DashboardPageForm from "./components/dashboard.page.form/dashboard.page.form";
+import DashboardPageForm from "./components/dashboard.page.form.component/dashboard.page.form.component";
 
 interface PageDetailSidebarProps {
   pageStore?: PageStore;

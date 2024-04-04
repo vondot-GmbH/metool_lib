@@ -59,7 +59,20 @@ const NavigationConfigurator = ({
           }
         />
       ));
+    } else if (actionType === NavigationActionType.NAV_TO_PAGE && targetID) {
+      const page = pageStore?.getPage(targetID);
+      return page?.params?.map((param) => (
+        <TextInput
+          key={param.key}
+          label={param.key}
+          value={params[param.key] || ""}
+          onValueChange={(newValue) =>
+            setParams({ ...params, [param.key]: newValue })
+          }
+        />
+      ));
     }
+
     // Return empty array if no params to render
     return [];
   };

@@ -10,7 +10,7 @@ import ConfigProvider from "../../../../../../../../config/config.provider";
 import defaultStyles from "../../../../../../../../styles/index.module.scss";
 import IconButton from "../../../../../../general.components/icon.button.component/icon.button.component";
 import { faTrash } from "@fortawesome/pro-regular-svg-icons";
-import styles from "./dashboard.page.form.module.scss";
+import styles from "./dashboard.page.form.component.module.scss";
 import RunningText from "../../../../../../general.components/text.components/running.text.component/running.text.component";
 import SelectDropDown from "../../../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import {
