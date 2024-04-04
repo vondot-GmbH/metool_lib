@@ -1,17 +1,17 @@
 import { inject, observer } from "mobx-react";
 import PageStore from "../../../../../../stores/page.store";
 import GenericList from "../../../../general.components/list.components/generic.list.component/generic.list.component";
-import Row from "../../../../general.components/row.component/row.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./page.overview.dropdown.compoment.module.scss";
 import { Page } from "../../../../../../schemas/page.schemas/page.schema";
 import { faEdit, faFolderOpen } from "@fortawesome/pro-regular-svg-icons";
 import SmallText from "../../../../general.components/text.components/small.text.component/small.text.component";
-import Column from "../../../../general.components/column.component/column.component";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
+import Column from "../../../../general.components/ui.components/column.component/column.component";
 import { useEffect, useState } from "react";
 import PageDetailSidebar from "../page.detail.sidebar.component/page.detail.sidebar.component";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface PageOverviewDropdownProps {
   pageStore?: PageStore;

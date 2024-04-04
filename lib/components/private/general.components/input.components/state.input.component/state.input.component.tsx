@@ -1,17 +1,17 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import SmallText from "../text.components/small.text.component/small.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCode, faText } from "@fortawesome/pro-regular-svg-icons";
-import styles from "./state.input.text.component.module.scss";
+import styles from "./state.input.component.module.scss";
 import { inject, observer } from "mobx-react";
-import StateStore from "../../../../stores/state.store";
 import fuzzysort from "fuzzysort";
 import { debounce } from "lodash";
-import { useClickedOutside } from "../../../../globals/helpers/hook.helper";
 import classNames from "classnames";
-import { isValidStateSyntax } from "../../../../globals/helpers/state.helper";
+import StateStore from "../../../../../stores/state.store";
+import { isValidStateSyntax } from "../../../../../globals/helpers/state.helper";
+import { useClickedOutside } from "../../../../../globals/helpers/hook.helper";
+import SmallText from "../../text.components/small.text.component/small.text.component";
 
-interface StateInputEditorProps {
+interface StateInputProps {
   label?: string;
   value: string;
   onChange: (value: string) => void;
@@ -29,13 +29,13 @@ enum InputType {
   FIXED = "fixed",
 }
 
-const StateInputEditor = ({
+const StateInput = ({
   label,
   value,
   onChange,
   stateStore,
   className,
-}: StateInputEditorProps) => {
+}: StateInputProps) => {
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -199,4 +199,4 @@ const StateInputEditor = ({
   );
 };
 
-export default inject("stateStore")(observer(StateInputEditor));
+export default inject("stateStore")(observer(StateInput));

@@ -12,15 +12,15 @@ import EditorStore from "../../../../stores/editor.store";
 import { EditorMode } from "../../../../globals/enums/editor.enum";
 import { inject, observer } from "mobx-react";
 import ConfigProvider from "../../../../config/config.provider";
-import Row from "../../general.components/row.component/row.component";
-import Column from "../../general.components/column.component/column.component";
+import Row from "../../general.components/ui.components/row.component/row.component";
+import Column from "../../general.components/ui.components/column.component/column.component";
 import Image from "../../general.components/image.component/image.component";
 import TitleText from "../../general.components/text.components/title.text.component/title.text.component";
 import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
-import IconButton from "../../general.components/icon.button.component/icon.button.component";
 import { faX } from "@fortawesome/pro-regular-svg-icons";
 import ViewStore from "../../../../stores/view.store";
 import PageStore from "../../../../stores/page.store";
+import IconButton from "../../general.components/button.components/icon.button.component/icon.button.component";
 
 const SidebarContext = createContext({
   views: [] as ReactNode[],

@@ -1,5 +1,5 @@
 import { inject, observer } from "mobx-react";
-import Row from "../../../../general.components/row.component/row.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
@@ -9,13 +9,13 @@ import {
   faFileCircleCheck,
   faFiles,
 } from "@fortawesome/pro-regular-svg-icons";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
 import ViewStore from "../../../../../../stores/view.store";
 import { View } from "../../../../../../schemas/view.schemas/view.schema";
 import styles from "./view.sidebar.component.module.scss";
 import ViewSidebarDetail from "../view.sidebar.detail.component/view.sidebar.detail.component";
 import PageStore from "../../../../../../stores/page.store";
 import GenericList from "../../../../general.components/list.components/generic.list.component/generic.list.component";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface ViewSidebarProps {
   viewStore?: ViewStore;

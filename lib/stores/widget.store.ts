@@ -15,7 +15,7 @@ import { extractDependenciesAndNonDependencies } from "../globals/helpers/state.
 import { runInAction } from "mobx";
 import RootStore from "./root.store";
 import { CoreRestQueryType } from "../schemas/query.schemas/query.schema";
-import { queryExecutor } from "../provider/http/http.rest.query.client";
+import { queryExecutor } from "../providers/http/http.rest.query.client";
 import { ChangeRecord } from "../globals/interfaces/change.record.interface";
 
 class WidgetStore {

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from "./navigation.configurator.component.module.scss";
 import SelectDropDown from "../select.dropdown.component/select.dropdown.component";
-import TextInput from "../../outlined.text.input.component/outlined.text.input.component";
+import TextInput from "../text.input.component/text.input.component";
 import { inject, observer } from "mobx-react";
 import PageStore from "../../../../../stores/page.store";
 import ViewStore from "../../../../../stores/view.store";

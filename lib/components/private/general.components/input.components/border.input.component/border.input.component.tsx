@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import ThemeDropdown from "../theme.dropdown.component/theme.dropdown.component";
-import TextInput from "../../outlined.text.input.component/outlined.text.input.component";
+import TextInput from "../text.input.component/text.input.component";
 import {
   faSquare,
   faSquareDashed,
   faSquareDashedCirclePlus,
 } from "@fortawesome/pro-regular-svg-icons";
-import Row from "../../row.component/row.component";
+import Row from "../../ui.components/row.component/row.component";
 import SmallText from "../../text.components/small.text.component/small.text.component";
 import styles from "./border.input.component.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

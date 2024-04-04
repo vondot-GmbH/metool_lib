@@ -9,12 +9,12 @@ import {
   ActionType,
   EventType,
 } from "../../../../../globals/enums/widget.enum";
-import IconButton from "../../icon.button.component/icon.button.component";
-import Row from "../../row.component/row.component";
+import Row from "../../ui.components/row.component/row.component";
 import SelectDropDown from "../select.dropdown.component/select.dropdown.component";
 import { faX } from "@fortawesome/pro-regular-svg-icons";
 import RunningText from "../../text.components/running.text.component/running.text.component";
 import defaultStyles from "../../../../../styles/index.module.scss";
+import IconButton from "../../button.components/icon.button.component/icon.button.component";
 
 interface EventHandlerEditorProps {
   initialEvents?: WidgetEvent[];

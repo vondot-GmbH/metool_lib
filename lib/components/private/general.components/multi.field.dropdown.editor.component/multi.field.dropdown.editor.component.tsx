@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import styles from "./multi.field.dropdown.editor.component.module.scss";
 import RunningText from "../text.components/running.text.component/running.text.component";
-import IconButton from "../icon.button.component/icon.button.component";
 import { faAdd } from "@fortawesome/pro-regular-svg-icons";
 import ReactDOM from "react-dom";
 import { useClickedOutside } from "../../../../globals/helpers/hook.helper";
+import IconButton from "../button.components/icon.button.component/icon.button.component";
 
 interface MultiFieldDropdownEditorProps {
   label: string;

@@ -7,7 +7,6 @@ import { useSidebar } from "../../../../private/editor.components/option.sidebar
 import EditorStore from "../../../../../stores/editor.store";
 import NavigationMenuItemDetailView from "./components/navigation.menu.item.detail.view.component";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
-import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
 import {
   NavigationMenuItem,
   NavigationMenuOptions,
@@ -15,6 +14,7 @@ import {
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
 import ViewStore from "../../../../../stores/view.store";
 import PageStore from "../../../../../stores/page.store";
+import MultiSwitch from "../../../../private/general.components/input.components/multi.switch.component/multi.switch.component";
 
 interface NavigationMenuWidgetSidebarProps {
   widgetStore?: WidgetStore;

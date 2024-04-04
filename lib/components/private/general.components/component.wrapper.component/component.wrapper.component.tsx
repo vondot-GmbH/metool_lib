@@ -1,5 +1,5 @@
 import classNames from "classnames";
-import Row from "../row.component/row.component";
+import Row from "../ui.components/row.component/row.component";
 import TitleText from "../text.components/title.text.component/title.text.component";
 import styles from "./component.wrapper.component.module.scss";
 

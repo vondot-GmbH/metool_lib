@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./collapsible.section.component.module.scss";
 import RunningText from "../text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Row from "../row.component/row.component";
+import Row from "../ui.components/row.component/row.component";
 import { faAngleDown, faAngleUp } from "@fortawesome/pro-regular-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 

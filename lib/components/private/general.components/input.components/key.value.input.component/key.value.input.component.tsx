@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import Row from "../row.component/row.component";
-import styles from "./key.value.input.conponent.module.scss";
-import RunningText from "../text.components/running.text.component/running.text.component";
-import TextInput from "../outlined.text.input.component/outlined.text.input.component";
-import IconButton from "../icon.button.component/icon.button.component";
+import styles from "./key.value.input.component.module.scss";
 import { faAdd, faX } from "@fortawesome/pro-regular-svg-icons";
+import Row from "../../ui.components/row.component/row.component";
+import RunningText from "../../text.components/running.text.component/running.text.component";
+import TextInput from "../text.input.component/text.input.component";
+import IconButton from "../../button.components/icon.button.component/icon.button.component";
 
 interface KeyValue {
   key: string;

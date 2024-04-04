@@ -1,6 +1,6 @@
 import Skeleton from "react-loading-skeleton";
-import Column from "../../../../private/general.components/column.component/column.component";
-import Spacer from "../../../../private/general.components/spacer.component/spacer.component";
+import Column from "../../../../private/general.components/ui.components/column.component/column.component";
+import Spacer from "../../../../private/general.components/ui.components/spacer.component/spacer.component";
 import styles from "./table.widget.loading.component.module.scss";
 import "react-loading-skeleton/dist/skeleton.css";
 interface TableWidgetLoadingComponentProps {

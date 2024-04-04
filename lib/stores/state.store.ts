@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { PubSubProvider } from "../provider/pub.sub.provider";
+import { PubSubProvider } from "../providers/pub.sub.provider";
 import {
   extractDependenciesAndNonDependencies,
   generateStateKey,
@@ -8,7 +8,7 @@ import {
   updateOptionAtPath,
 } from "../globals/helpers/state.helper";
 import { RestQuery } from "../schemas/query.schemas/query.schema";
-import { queryExecutor } from "../provider/http/http.rest.query.client";
+import { queryExecutor } from "../providers/http/http.rest.query.client";
 import RootStore from "./root.store";
 
 export enum StateSelector {

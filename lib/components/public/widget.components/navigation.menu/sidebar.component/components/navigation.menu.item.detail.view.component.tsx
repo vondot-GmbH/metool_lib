@@ -1,5 +1,5 @@
 import WidgetStore from "../../../../../../stores/widget.store";
-import TextInput from "../../../../../private/general.components/outlined.text.input.component/outlined.text.input.component";
+import TextInput from "../../../../../private/general.components/input.components/text.input.component/text.input.component";
 import defaultStyles from "../../../../../../styles/index.module.scss";
 import CollapsibleSection from "../../../../../private/general.components/collapsible.section.component/collapsible.section.component";
 import { NavigationMenuItem } from "../../schemas/navigation.menu.schema";

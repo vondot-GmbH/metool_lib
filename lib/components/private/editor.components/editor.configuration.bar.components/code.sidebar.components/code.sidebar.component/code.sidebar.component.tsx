@@ -2,7 +2,7 @@ import { inject, observer } from "mobx-react";
 import QueryStore from "../../../../../../stores/query.store";
 import WidgetStore from "../../../../../../stores/widget.store";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
-import Row from "../../../../general.components/row.component/row.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import styles from "./code.sidebar.component.module.scss";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,7 +14,7 @@ import {
 import CodeSidebarDetail from "../code.sidebar.detail.component/code.sidebar.detail.component";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import { faAdd, faCode } from "@fortawesome/pro-regular-svg-icons";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface CodeSidebarProps {
   widgetStore?: WidgetStore;

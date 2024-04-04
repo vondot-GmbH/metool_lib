@@ -2,7 +2,7 @@ import { useState } from "react";
 import styles from "./multi.switch.component.module.scss";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import RunningText from "../text.components/running.text.component/running.text.component";
+import RunningText from "../../text.components/running.text.component/running.text.component";
 
 interface Option {
   label?: string;

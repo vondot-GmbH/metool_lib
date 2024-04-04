@@ -7,12 +7,12 @@ import { useSidebar } from "../../../../private/editor.components/option.sidebar
 import { TableColumn, TableOptions } from "../schemas/table.widget.schema";
 import { TableWidgetColumnDetailView } from "./table.widget.column.detail.view.comonent";
 import { v4 as UUID } from "uuid";
-import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
 import defaultStyles from "../../../../../styles/index.module.scss";
-import StateInputEditor from "../../../../private/general.components/state.input.text.component/state.input.text.component";
 import EditorStore from "../../../../../stores/editor.store";
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
 import EventHandlerEditor from "../../../../private/general.components/input.components/event.handler.editor.component/event.handler.editor.component";
+import MultiSwitch from "../../../../private/general.components/input.components/multi.switch.component/multi.switch.component";
+import StateInput from "../../../../private/general.components/input.components/state.input.component/state.input.component";
 
 interface TableWidgetSidebarProps {
   widgetStore?: WidgetStore;
@@ -60,7 +60,7 @@ const TableWidgetSidebar = ({
   return (
     <div>
       <CollapsibleSection title="Content">
-        <StateInputEditor
+        <StateInput
           label="Data"
           value={options?.data}
           className={defaultStyles.mb20}

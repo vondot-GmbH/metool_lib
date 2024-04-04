@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import classNames from "classnames";
 import styles from "./filled.button.component.module.scss";
-import RunningText from "../text.components/running.text.component/running.text.component";
+import RunningText from "../../text.components/running.text.component/running.text.component";
 
 interface FilledButtonProps {
   color?: "primary" | "secondary" | "danger" | "warning";

@@ -8,7 +8,7 @@ import {
 import ConfigProvider from "../config/config.provider";
 import { Dependency, StateSelector } from "./state.store";
 import { AnalyzedWidgetOptions } from "../schemas/widget.schemas/widget.schema";
-import { queryExecutor } from "../provider/http/http.rest.query.client";
+import { queryExecutor } from "../providers/http/http.rest.query.client";
 import RootStore from "./root.store";
 import { getUniqueID } from "../globals/helpers/global.helper";
 import { EditorMode } from "../globals/enums/editor.enum";

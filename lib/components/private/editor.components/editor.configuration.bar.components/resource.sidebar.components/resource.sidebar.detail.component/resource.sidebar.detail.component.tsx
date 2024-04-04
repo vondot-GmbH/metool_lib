@@ -12,9 +12,9 @@ import {
   RestResource,
 } from "../../../../../../schemas/resource.schemas/resource.schema";
 import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
-import Row from "../../../../general.components/row.component/row.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import ResourceRestForm from "../resource.sidebar.component/components/resource.rest.form/resource.rest.form";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface ResourceSidebarDetailProps {
   resourceStore?: ResourceStore;

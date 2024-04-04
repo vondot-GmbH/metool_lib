@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styles from "./data.table.component.module.scss";
-import Checkbox from "../checkbox.component/checkbox.component";
-import TableWidgetLoadingComponent from "../../../public/widget.components/table.widget/table.widget.loading.component/table.widget.loading.component";
+import TableWidgetLoadingComponent from "../../../../public/widget.components/table.widget/table.widget.loading.component/table.widget.loading.component";
+import Checkbox from "../../input.components/checkbox.component/checkbox.component";
 
 export interface TableColumn<T> {
   label: string;

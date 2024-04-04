@@ -1,10 +1,10 @@
-// FilledButton.module.scss
-$fallback-font-size: 16px; // Füge einen Fallback-Wert für die Schriftgröße hinzu
-$fallback-font-weight: 500; // Füge einen Fallback-Wert für die Schriftstärke hinzu
-$fallback-color-primary: #0876eb; // Füge einen Fallback-Wert für die Primärfarbe hinzu
-$fallback-color-error: #dc3545; // Füge einen Fallback-Wert für die Fehlerfarbe hinzu
-$fallback-color-secondary: #6c757d; // Füge einen Fallback-Wert für die Sekundärfarbe hinzu
-$fallback-color-warning: #ffc107; // Füge einen Fallback-Wert für die Warnfarbe hinzu
+// TODO create global styles and variables
+$fallback-font-size: 16px;
+$fallback-font-weight: 500;
+$fallback-color-primary: #0876eb;
+$fallback-color-error: #dc3545;
+$fallback-color-secondary: #6c757d;
+$fallback-color-warning: #ffc107;
 
 .filledButton {
   position: relative;

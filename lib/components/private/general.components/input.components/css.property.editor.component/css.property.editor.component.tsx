@@ -1,14 +1,14 @@
 import { useRef, useState } from "react";
 import styles from "./css.property.editor.component.module.scss";
-import TextInput from "../../outlined.text.input.component/outlined.text.input.component";
+import TextInput from "../text.input.component/text.input.component";
 import SmallText from "../../text.components/small.text.component/small.text.component";
-import IconButton from "../../icon.button.component/icon.button.component";
 import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
 import ThemeDropdown from "../theme.dropdown.component/theme.dropdown.component";
 import { useClickedOutside } from "../../../../../globals/helpers/hook.helper";
 import BorderEditor from "../border.input.component/border.input.component";
-import MultiSwitch from "../../multi.switch.component/multi.switch.component";
 import RunningText from "../../text.components/running.text.component/running.text.component";
+import MultiSwitch from "../multi.switch.component/multi.switch.component";
+import IconButton from "../../button.components/icon.button.component/icon.button.component";
 
 // types of available CSS properties
 enum CssPropertyType {

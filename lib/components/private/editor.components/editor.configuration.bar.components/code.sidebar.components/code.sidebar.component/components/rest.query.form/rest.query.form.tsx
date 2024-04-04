@@ -1,16 +1,16 @@
 import { useFieldArray, useForm } from "react-hook-form";
-import TextInput from "../../../../../../general.components/outlined.text.input.component/outlined.text.input.component";
+import TextInput from "../../../../../../general.components/input.components/text.input.component/text.input.component";
 import { yupResolver } from "@hookform/resolvers/yup";
 import defaultStyles from "../../../../../../../../styles/index.module.scss";
-import KeyValueInput from "../../../../../../general.components/key.value.input.component/key.value.input.conponent";
 import {
   RestQuery,
   restQuerySchema,
 } from "../../../../../../../../schemas/query.schemas/query.schema";
-import Row from "../../../../../../general.components/row.component/row.component";
+import Row from "../../../../../../general.components/ui.components/row.component/row.component";
 import SelectDropDown from "../../../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import { Resource } from "../../../../../../../../main";
-import SizedContainer from "../../../../../../general.components/sized.container.component/sized.container.component";
+import SizedContainer from "../../../../../../general.components/ui.components/sized.container.component/sized.container.component";
+import KeyValueInput from "../../../../../../general.components/input.components/key.value.input.component/key.value.input.component";
 
 interface RestQueryFormprops {
   initialQuery?: RestQuery;

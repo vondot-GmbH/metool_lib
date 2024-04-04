@@ -89,7 +89,8 @@ export const convertDynamicLayouts = (
     // go through each layout for the current breakpoint and add the adjusted layout to the result
     for (const layout of layoutsForBreakpoint) {
       // if the grid is readonly or the selected widget is not the current widget, set the layout to static
-      const isStatic = readonly || (selectedWidgetID !== layout.i && !readonly);
+
+      // const isStatic = readonly || (selectedWidgetID !== layout.i && !readonly);
 
       result[breakpoint].push({
         ...layout,

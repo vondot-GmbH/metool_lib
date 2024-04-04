@@ -1,4 +1,4 @@
-import RunningText from "../text.components/running.text.component/running.text.component";
+import RunningText from "../../text.components/running.text.component/running.text.component";
 import styles from "./checkbox.component.module.scss";
 
 interface CheckboxProps {

@@ -1,6 +1,6 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import TextInput from "../../../../../../general.components/outlined.text.input.component/outlined.text.input.component";
+import TextInput from "../../../../../../general.components/input.components/text.input.component/text.input.component";
 import CollapsibleSection from "../../../../../../general.components/collapsible.section.component/collapsible.section.component";
 import {
   Page,
@@ -8,7 +8,6 @@ import {
 } from "../../../../../../../../schemas/page.schemas/page.schema";
 import ConfigProvider from "../../../../../../../../config/config.provider";
 import defaultStyles from "../../../../../../../../styles/index.module.scss";
-import IconButton from "../../../../../../general.components/icon.button.component/icon.button.component";
 import { faTrash } from "@fortawesome/pro-regular-svg-icons";
 import styles from "./dashboard.page.form.component.module.scss";
 import RunningText from "../../../../../../general.components/text.components/running.text.component/running.text.component";
@@ -17,7 +16,8 @@ import {
   DASHBOARD_PAGE_LAYOUT_SIDEBAR_AREA_DEFAULT,
   DASHBOARD_PAGE_LAYOUT_TOPBAR_AREA_DEFAULT,
 } from "../../../../../../../../globals/config/page.layout.config";
-import KeyValueInput from "../../../../../../general.components/key.value.input.component/key.value.input.conponent";
+import KeyValueInput from "../../../../../../general.components/input.components/key.value.input.component/key.value.input.component";
+import IconButton from "../../../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface DashboardPageFormProps {
   initialPage: Page;

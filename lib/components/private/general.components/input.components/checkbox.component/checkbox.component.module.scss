@@ -4,8 +4,6 @@
   margin-bottom: 15px;
   cursor: pointer;
   user-select: none;
-  // padding-left: 30px;
-  // margin: 10px 0;
 }
 
 .checkboxInput {
@@ -22,10 +20,6 @@
   width: 15px;
   background-color: #eee;
   border-radius: 5px;
-}
-
-.checkboxWrapper:hover .checkmark {
-  // background-color: #ccc;
 }
 
 .checkboxWrapper input:checked ~ .checkmark {

@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import Table, {
   TableColumn,
-} from "../../../../private/general.components/table.component/data.table.component";
+} from "../../../../private/general.components/list.components/table.component/data.table.component";
 import { TableOptions } from "../schemas/table.widget.schema";
 import NavigationStore from "../../../../../stores/navigation.store";
 import { NavigationActionType } from "../../../../../globals/interfaces/navigation.interface";

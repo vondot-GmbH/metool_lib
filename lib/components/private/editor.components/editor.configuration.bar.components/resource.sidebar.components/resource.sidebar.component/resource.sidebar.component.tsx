@@ -1,6 +1,6 @@
 import { inject, observer } from "mobx-react";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
-import Row from "../../../../general.components/row.component/row.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import styles from "./resource.sidebar.component.module.scss";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,8 +12,8 @@ import {
 } from "../../../../../../schemas/resource.schemas/resource.schema";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import { faAdd, faDatabase } from "@fortawesome/pro-regular-svg-icons";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
 import ResourceSidebarDetailComponent from "../resource.sidebar.detail.component/resource.sidebar.detail.component";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface ResourceSidebarProps {
   resourceStore?: ResourceStore;

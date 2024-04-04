@@ -5,8 +5,8 @@ import {
   View,
   viewSchema,
 } from "../../../../../../../schemas/view.schemas/view.schema";
-import TextInput from "../../../../../general.components/outlined.text.input.component/outlined.text.input.component";
-import KeyValueInput from "../../../../../general.components/key.value.input.component/key.value.input.conponent";
+import TextInput from "../../../../../general.components/input.components/text.input.component/text.input.component";
+import KeyValueInput from "../../../../../general.components/input.components/key.value.input.component/key.value.input.component";
 
 interface ViewFormProps {
   initialView?: View;

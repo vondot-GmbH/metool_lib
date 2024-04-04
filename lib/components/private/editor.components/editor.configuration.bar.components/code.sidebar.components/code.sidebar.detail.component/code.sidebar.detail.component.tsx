@@ -9,10 +9,10 @@ import SelectDropDown from "../../../../general.components/input.components/sele
 import ResourceStore from "../../../../../../stores/resource.store";
 import { DataSourceType, Resource } from "../../../../../../main";
 import { RestQuery } from "../../../../../../schemas/query.schemas/query.schema";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
-import Row from "../../../../general.components/row.component/row.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons";
 import defaultStyles from "../../../../../../styles/index.module.scss";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface CodeSidebarDetailProps {
   queryStore?: QueryStore;

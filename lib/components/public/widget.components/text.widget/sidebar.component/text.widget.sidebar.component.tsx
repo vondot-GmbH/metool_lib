@@ -1,9 +1,9 @@
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
-import StateInputEditor from "../../../../private/general.components/state.input.text.component/state.input.text.component";
 import defaultStyles from "../../../../../styles/index.module.scss";
 import EditorStore from "../../../../../stores/editor.store";
+import StateInput from "../../../../private/general.components/input.components/state.input.component/state.input.component";
 
 interface TextWidgetOptionSidebarProps {
   widgetStore?: WidgetStore;
@@ -25,7 +25,7 @@ const TextWidgetOptionSidebar = ({
   return (
     <div>
       <CollapsibleSection title="Content">
-        <StateInputEditor
+        <StateInput
           label="Data"
           value={data ?? ""}
           className={defaultStyles.mb10}

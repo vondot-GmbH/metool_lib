@@ -1,6 +1,6 @@
 import WidgetStore from "../../../../../stores/widget.store";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
-import TextInput from "../../../../private/general.components/outlined.text.input.component/outlined.text.input.component";
+import TextInput from "../../../../private/general.components/input.components/text.input.component/text.input.component";
 import { TableColumn } from "../schemas/table.widget.schema";
 import defaultStyles from "../../../../../styles/index.module.scss";
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";

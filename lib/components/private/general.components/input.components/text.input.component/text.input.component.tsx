@@ -7,9 +7,9 @@ import React, {
 import classNames from "classnames";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import styles from "./outlined.text.input.component.module.scss";
-import Column from "../column.component/column.component";
-import RunningText from "../text.components/running.text.component/running.text.component";
+import styles from "./text.input.component.module.scss";
+import Column from "../../ui.components/column.component/column.component";
+import RunningText from "../../text.components/running.text.component/running.text.component";
 
 interface TextInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "className"> {
@@ -38,22 +38,6 @@ const TextInput = forwardRef(
     ref: ForwardedRef<HTMLInputElement>
   ): JSX.Element => {
     const [inputValue, setInputValue] = useState(props.value);
-
-    // TODO
-    // const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
-    //   if (type === "number" && onValueChange) {
-    //     const value = parseFloat(event.target.value);
-    //     if (!isNaN(value)) {
-    //       onValueChange(value);
-    //     }
-    //   } else {
-    //     onValueChange?.(event.target.value);
-    //   }
-    // };
-
-    // const handleChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    //   setInputValue(event.target.value);
-    // };
 
     const handleBlur = (event: React.FocusEvent<HTMLInputElement>): void => {
       if (type === "number") {
