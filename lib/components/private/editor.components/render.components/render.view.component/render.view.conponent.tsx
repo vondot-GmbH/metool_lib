@@ -46,15 +46,16 @@ const RenderView = ({
       if (viewToRender) {
         // set the viewID in the viewStore
         await viewStore?.intializeView(viewToRender);
-        await widgetStore?.initWidgetsAndProcess(viewToRender);
-        const structuredData = widgetStore?.getStructuredData();
-        setStructuredWidgets(structuredData);
 
         // Initialize navigation states for the current view
         navigationStore?.initializeCurrentNavigationStates({
           targetID: viewToRender,
           actionType: NavigationActionType.NAV_TO_VIEW,
         });
+
+        await widgetStore?.initWidgetsAndProcess(viewToRender);
+        const structuredData = widgetStore?.getStructuredData();
+        setStructuredWidgets(structuredData);
 
         setIsLoading(false);
       }

@@ -1,4 +1,16 @@
-import { Dependency } from "../../stores/state.store";
+import StateStore, {
+  Dependency,
+  ResolvedDependency,
+  StateSelector,
+} from "../../stores/state.store";
+
+export const generateStateKey = (
+  selector: StateSelector,
+  identifierID: string,
+  ...keys: string[]
+): string => {
+  return `${selector}.${identifierID}.${keys.join(".")}`;
+};
 
 export const isValidStateSyntax = (value: string): boolean => {
   if (value?.includes("{{") && value?.includes("}}")) {
@@ -52,17 +64,17 @@ export const addDependency = (
 };
 
 export const extractDependenciesAndNonDependencies = (
-  options: any,
+  object: any,
   path: string[] = []
 ): DependenciesResult => {
-  if (options == null) {
+  if (object == null) {
     return { dependencies: [], nonDependencies: {} };
   }
 
   const dependencies: Dependency[] = [];
-  const nonDependencies: WidgetOptions = Array.isArray(options) ? [] : {};
+  const nonDependencies: WidgetOptions = Array.isArray(object) ? [] : {};
 
-  Object.entries(options).forEach(([key, value]) => {
+  Object.entries(object).forEach(([key, value]) => {
     const currentPath = [...path, key];
     if (isDependency(value)) {
       addDependency(dependencies, value as any, currentPath);
@@ -103,3 +115,54 @@ export const updateOptionAtPath = (
   current[segments[segments.length - 1]] = newValue;
   return options;
 };
+
+export const resolveDependencies = (
+  dependencies: Dependency[],
+  stateStore: StateStore
+): ResolvedDependency[] => {
+  return dependencies
+    .map((dependency) => {
+      const { selector, identifierID, stateKeys } = dependency;
+      const placeholder = `${selector}.${identifierID}.${stateKeys.join(".")}`;
+
+      const resolvedValue = resolveNestedStateValue(
+        stateStore,
+        selector as StateSelector,
+        identifierID,
+        stateKeys
+      );
+
+      return {
+        dependency,
+        resolvedDependency: {
+          dependency: placeholder,
+          resolvedValue,
+        },
+      };
+    })
+    .filter(
+      (resolvedDependency) =>
+        resolvedDependency.resolvedDependency.resolvedValue !== undefined
+    );
+};
+export function resolveNestedStateValue(
+  stateStore: StateStore,
+  selector: StateSelector,
+  identifierID: string,
+  stateKeys: string[]
+): any {
+  let resolvedValue = stateStore.globalStates.get(
+    generateStateKey(selector, identifierID, stateKeys[0])
+  );
+
+  if (stateKeys.length > 1 && typeof resolvedValue === "object") {
+    for (let i = 1; i < stateKeys.length; i++) {
+      resolvedValue = resolvedValue[stateKeys[i]];
+      if (resolvedValue === undefined) {
+        break;
+      }
+    }
+  }
+
+  return resolvedValue;
+}

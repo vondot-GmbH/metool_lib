@@ -54,7 +54,7 @@ const StateInputEditor = ({
   useClickedOutside(editorRef, () => setShowSuggestions(false));
 
   useEffect(() => {
-    const globalStates = stateStore?.getAllStates();
+    const globalStates = stateStore?.globalStates;
     const stateSuggestions: string[] = globalStates
       ? Array.from(globalStates.keys())
       : [];

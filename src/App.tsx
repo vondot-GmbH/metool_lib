@@ -112,7 +112,7 @@ function App() {
     <div className="main-container">
       <CanvasEditorPublic
         pageToRender={{
-          actionType: NavigationActionType.PAGE, // TODO set fixed type for actionType in intrerface
+          actionType: NavigationActionType.NAV_TO_PAGE, // TODO set fixed type for actionType in intrerface
           targetID: "5f404b6b9I6b4c3017f99979",
           params: {
             viewID: "a5cb6b75c3c64d738acd7b21281463c4",

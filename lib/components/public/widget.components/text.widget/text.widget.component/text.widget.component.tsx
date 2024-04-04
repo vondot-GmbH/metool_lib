@@ -1,8 +1,8 @@
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
-import StateStore, { StateSelector } from "../../../../../stores/state.store";
+import StateStore from "../../../../../stores/state.store";
 import { TextWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 
 interface TextWidgetProps {
@@ -16,6 +16,7 @@ const TextWidget = ({
   widgetStore,
   stateStore,
 }: TextWidgetProps): JSX.Element => {
+  const [data, setData] = useState<any>(null);
   useEffect(() => {
     const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
     if (!analized) return;
@@ -23,20 +24,16 @@ const TextWidget = ({
     stateStore?.initializeDynamicOptions(
       widgetID,
       analized,
-      () => {},
+      (options) => {
+        setData(options?.data);
+      },
       _getInitialTextWidgetState()
     );
   }, []);
 
-  const data = stateStore?.getWidgetStateValue(
-    StateSelector.WIDGETS,
-    widgetID,
-    "data"
-  );
-
   return (
     <div>
-      <RunningText>{JSON.stringify(data ?? "----")}</RunningText>
+      <RunningText>{JSON.stringify(data ?? "no data")}</RunningText>
     </div>
   );
 };
