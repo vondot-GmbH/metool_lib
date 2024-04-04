@@ -1,3 +1,5 @@
+import { ActionType, EventType } from "../enums/widget.enum";
+
 export interface CSSStyles {
   color?: string;
   backgroundColor?: string;
@@ -9,4 +11,14 @@ export interface CSSStyles {
   minWidth?: string;
   maxWidth?: string;
   gap?: string;
+}
+
+export interface WidgetEvent {
+  eventType: EventType;
+  actions: EventAction[];
+}
+
+export interface EventAction {
+  actionType: ActionType;
+  payload: any;
 }

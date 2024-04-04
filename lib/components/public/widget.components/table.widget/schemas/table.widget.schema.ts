@@ -1,4 +1,7 @@
-import { CSSStyles } from "../../../../../globals/interfaces/widget.option.interface";
+import {
+  CSSStyles,
+  WidgetEvent,
+} from "../../../../../globals/interfaces/widget.option.interface";
 
 export interface TableOptions {
   data: string;
@@ -9,6 +12,7 @@ export interface TableOptions {
   headerCellStyles?: CSSStyles;
   bodyRowStyles?: CSSStyles;
   bodyCellStyles?: CSSStyles;
+  events: WidgetEvent[];
 }
 
 export interface TableColumn {

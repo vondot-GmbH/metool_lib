@@ -12,6 +12,7 @@ import defaultStyles from "../../../../../styles/index.module.scss";
 import StateInputEditor from "../../../../private/general.components/state.input.text.component/state.input.text.component";
 import EditorStore from "../../../../../stores/editor.store";
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
+import EventHandlerEditor from "../../../../private/general.components/input.components/event.handler.editor.component/event.handler.editor.component";
 
 interface TableWidgetSidebarProps {
   widgetStore?: WidgetStore;
@@ -96,6 +97,17 @@ const TableWidgetSidebar = ({
       </CollapsibleSection>
 
       <CollapsibleSection title="Interaction">
+        <EventHandlerEditor
+          initialEvents={options?.events}
+          onChange={(events) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "events",
+              events
+            );
+          }}
+        />
+
         <MultiSwitch
           label="Row Selection"
           initialValue={options?.rowSelectionType}
