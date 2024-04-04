@@ -10,6 +10,8 @@ import {
   NavigationParams,
 } from "../../../../../globals/interfaces/navigation.interface";
 
+// TODO add validation to the navigation configurator
+
 interface SelectOption {
   label: string;
   value: string;
@@ -28,7 +30,55 @@ const NavigationConfigurator = ({
   pageStore,
   viewStore,
 }: NavigationConfiguratorProps) => {
-  // Convert pages and views to select options
+  const [actionType, setActionType] = useState<NavigationActionType>(
+    initialParams?.actionType || NavigationActionType.NAV_TO_VIEW
+  );
+
+  const [targetID, setTargetID] = useState<string>(
+    initialParams?.targetID || ""
+  );
+
+  const [params, setParams] = useState<Record<string, any>>(
+    initialParams?.params || {}
+  );
+
+  useEffect(() => {
+    onNavigationParamsChange({ actionType, targetID, params });
+  }, [actionType, targetID, params]);
+
+  const renderParamsInputs = () => {
+    if (actionType === NavigationActionType.NAV_TO_VIEW && targetID) {
+      const view = viewStore?.getView(targetID);
+      return view?.params?.map((param) => (
+        <TextInput
+          key={param.key}
+          label={param.key}
+          value={params[param.key] || ""}
+          onValueChange={(newValue) =>
+            setParams({ ...params, [param.key]: newValue })
+          }
+        />
+      ));
+    }
+    // Return empty array if no params to render
+    return [];
+  };
+
+  const handleActionTypeChange = (selectedOption: SelectOption | null) => {
+    if (selectedOption) {
+      setActionType(selectedOption.value as NavigationActionType);
+      setTargetID("");
+      setParams({});
+    }
+  };
+
+  const handleTargetChange = (selectedOption: SelectOption | null) => {
+    if (selectedOption) {
+      setTargetID(selectedOption.value);
+      setParams({});
+    }
+  };
+
   const pageOptions: SelectOption[] =
     pageStore?.pages.map((page) => ({
       label: page.name,
@@ -41,83 +91,39 @@ const NavigationConfigurator = ({
       value: view.viewID,
     })) || [];
 
-  // States for action type, target ID, and params
-  const [actionType, setActionType] = useState(
-    initialParams?.actionType || NavigationActionType.NAV_TO_VIEW
-  );
-  const [targetID, setTargetID] = useState(initialParams?.targetID || "");
-  const [params, setParams] = useState<Record<string, any>>(
-    initialParams?.params || {}
-  );
-
-  // Effect to trigger callback on state change
-  useEffect(() => {
-    onNavigationParamsChange({ actionType, targetID, params });
-  }, [actionType, targetID, params]);
-
-  // Handlers for select change
-  const handleActionTypeChange = (selectedOption: SelectOption | null) => {
-    if (!selectedOption) return;
-    setActionType(selectedOption.value as NavigationActionType);
-    // Reset targetID and params when action type changes
-    setTargetID("");
-    setParams({});
-  };
-
-  const handleTargetChange = (selectedOption: SelectOption | null) => {
-    if (!selectedOption) return;
-    setTargetID(selectedOption.value);
-    // Set default params based on the selected target
-    const defaultParams =
-      actionType === NavigationActionType.NAV_TO_VIEW
-        ? { viewID: selectedOption.value }
-        : { pageID: selectedOption.value };
-    setParams(defaultParams);
-  };
-
-  // Options for action type dropdown
-  const actionTypeOptions = [
-    { value: NavigationActionType.NAV_TO_VIEW, label: "Navigate to View" },
-    { value: NavigationActionType.NAV_TO_PAGE, label: "Navigate to Page" },
-  ];
-
-  // Determine the current options based on the selected action type
   const currentOptions =
     actionType === NavigationActionType.NAV_TO_VIEW ? viewOptions : pageOptions;
-
-  const targetSelectLabel =
-    actionType === NavigationActionType.NAV_TO_VIEW
-      ? "Select View"
-      : "Select Page";
 
   return (
     <div className={styles.navigationConfigurator}>
       <SelectDropDown
         label="Action Type"
-        items={actionTypeOptions}
+        items={[
+          {
+            label: "Navigate to View",
+            value: NavigationActionType.NAV_TO_VIEW,
+          },
+          {
+            label: "Navigate to Page",
+            value: NavigationActionType.NAV_TO_PAGE,
+          },
+        ]}
         selectedItem={actionType}
         onChange={handleActionTypeChange}
       />
 
       <SelectDropDown
-        label={targetSelectLabel}
-        key={actionType} // Re-render component when actionType changes
+        label={
+          actionType === NavigationActionType.NAV_TO_VIEW
+            ? "Select View"
+            : "Select Page"
+        }
         items={currentOptions}
         selectedItem={targetID}
         onChange={handleTargetChange}
       />
 
-      {/* Dynamically generate parameter inputs */}
-      {Object.entries(params).map(([key, value]) => (
-        <TextInput
-          key={key}
-          label={key}
-          value={value}
-          onValueChange={(newValue) =>
-            setParams({ ...params, [key]: newValue })
-          }
-        />
-      ))}
+      {renderParamsInputs()}
     </div>
   );
 };

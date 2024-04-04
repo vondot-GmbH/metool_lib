@@ -53,8 +53,7 @@ const RenderView = ({
         // Initialize navigation states for the current view
         navigationStore?.initializeCurrentNavigationStates({
           targetID: viewToRender,
-          actionType: NavigationActionType.VIEW,
-          params: {}, // TODO
+          actionType: NavigationActionType.NAV_TO_VIEW,
         });
 
         setIsLoading(false);

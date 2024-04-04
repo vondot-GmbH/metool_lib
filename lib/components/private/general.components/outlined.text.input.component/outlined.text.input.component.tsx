@@ -10,7 +10,6 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import styles from "./outlined.text.input.component.module.scss";
 import Column from "../column.component/column.component";
 import RunningText from "../text.components/running.text.component/running.text.component";
-import SmallText from "../text.components/small.text.component/small.text.component";
 
 interface TextInputProps
   extends Omit<InputHTMLAttributes<HTMLInputElement>, "className"> {
@@ -100,13 +99,6 @@ const TextInput = forwardRef(
             onBlur={handleBlur}
           />
         </div>
-        {validationMessage ? (
-          <SmallText className={styles.errorText}>
-            {validationMessage}
-          </SmallText>
-        ) : (
-          <SmallText className={styles.errorText}>&nbsp;</SmallText>
-        )}
       </Column>
     );
   }

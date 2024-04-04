@@ -23,9 +23,6 @@ const ContainerWidget = ({
 
   return (
     <div
-      onClick={() => {
-        navigationStore?.goBack();
-      }}
       className={styles.containerWidget}
       style={{
         ...containerOptions?.containerStyles,

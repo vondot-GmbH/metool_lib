@@ -8,7 +8,7 @@ import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 import ResizableSidebar from "../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import { faCode, faTable } from "@fortawesome/pro-light-svg-icons";
-import { faFile, faFolderOpen } from "@fortawesome/pro-regular-svg-icons";
+import { faCompass } from "@fortawesome/pro-regular-svg-icons";
 
 interface StateSidebarProps {
   stateStore?: StateStore;
@@ -35,10 +35,8 @@ const StateSidebar = ({ stateStore }: StateSidebarProps): JSX.Element => {
         return faTable;
       case StateSelector.QUERIES:
         return faCode;
-      case StateSelector.VIEWS:
-        return faFile;
-      case StateSelector.PAGES:
-        return faFolderOpen;
+      case StateSelector.NAVIGATION:
+        return faCompass;
       default:
         return faCode;
     }
