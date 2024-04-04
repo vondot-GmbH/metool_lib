@@ -104,7 +104,6 @@ class NavigationStore {
     viewID?: string
   ): Promise<void> => {
     await this.stores.pageStore.setAndFetchPageToRender(pageId);
-
     if (viewID != null) {
       await this.stores.viewStore.intializeView(viewID);
       this.stores.pageStore.setCurrentViewIdToRender(viewID);

@@ -1,6 +1,6 @@
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
-import StateStore, { StateSelector } from "../../../../../stores/state.store";
+import StateStore from "../../../../../stores/state.store";
 import { TableWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
 import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
@@ -9,6 +9,7 @@ import Table, {
 } from "../../../../private/general.components/table.component/data.table.component";
 import { TableOptions } from "../schemas/table.widget.schema";
 import NavigationStore from "../../../../../stores/navigation.store";
+import { NavigationActionType } from "../../../../../globals/interfaces/navigation.interface";
 
 interface TableWidgetProps {
   widgetID: string;
@@ -21,6 +22,7 @@ const TableWidget = ({
   widgetID,
   widgetStore,
   stateStore,
+  navigationStore,
 }: TableWidgetProps): JSX.Element => {
   const [data, setData] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -54,22 +56,31 @@ const TableWidget = ({
     );
   };
 
-  const handleSelectionDataChange = (selectedData: any) => {
-    if (tableOptions?.rowSelectionType === "single") {
-      stateStore?.setStateValue(
-        StateSelector.WIDGETS,
-        widgetID,
-        "selectedSourceRow",
-        selectedData
-      );
-    } else if (tableOptions?.rowSelectionType === "multiple") {
-      stateStore?.setStateValue(
-        StateSelector.WIDGETS,
-        widgetID,
-        "selectedSourceRows",
-        selectedData
-      );
-    }
+  const handleSelectionDataChange = (selectedData: any[]) => {
+    console.log("nav", navigationStore);
+    navigationStore?.navigate({
+      actionType: NavigationActionType.NAV_TO_PAGE,
+      targetID: "5f404b6b9I6b4c3017f99979",
+      params: {
+        userID: selectedData?.[0]?.id,
+      },
+    });
+
+    // if (tableOptions?.rowSelectionType === "single") {
+    //   stateStore?.setStateValue(
+    //     StateSelector.WIDGETS,
+    //     widgetID,
+    //     "selectedSourceRow",
+    //     selectedData
+    //   );
+    // } else if (tableOptions?.rowSelectionType === "multiple") {
+    //   stateStore?.setStateValue(
+    //     StateSelector.WIDGETS,
+    //     widgetID,
+    //     "selectedSourceRows",
+    //     selectedData
+    //   );
+    // }
   };
 
   return (
@@ -86,6 +97,7 @@ const TableWidget = ({
       noDataText="No data available"
       rowSelectionType={tableOptions?.rowSelectionType}
       onSelectionDataChange={(selectedData) => {
+        console.log("selectedData", selectedData);
         handleSelectionDataChange(selectedData);
       }}
     />

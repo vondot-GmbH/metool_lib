@@ -10,25 +10,26 @@ import ConfigProvider from "../../../../../../../../config/config.provider";
 import defaultStyles from "../../../../../../../../styles/index.module.scss";
 import IconButton from "../../../../../../general.components/icon.button.component/icon.button.component";
 import { faTrash } from "@fortawesome/pro-regular-svg-icons";
-import styles from "./dashboard.page.layout.form.module.scss";
+import styles from "./dashboard.page.form.module.scss";
 import RunningText from "../../../../../../general.components/text.components/running.text.component/running.text.component";
 import SelectDropDown from "../../../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import {
   DASHBOARD_PAGE_LAYOUT_SIDEBAR_AREA_DEFAULT,
   DASHBOARD_PAGE_LAYOUT_TOPBAR_AREA_DEFAULT,
 } from "../../../../../../../../globals/config/page.layout.config";
+import KeyValueInput from "../../../../../../general.components/key.value.input.component/key.value.input.conponent";
 
-interface DashboardPageLayoutFormProps {
+interface DashboardPageFormProps {
   initialPage: Page;
   onFormSubmit: (page: Page) => void;
   disabled?: boolean;
 }
 
-const DashboardPageLayoutForm = ({
+const DashboardPageForm = ({
   onFormSubmit,
   initialPage,
   disabled = false,
-}: DashboardPageLayoutFormProps) => {
+}: DashboardPageFormProps) => {
   const configProvider = ConfigProvider.getInstance();
   const {
     register,
@@ -44,6 +45,15 @@ const DashboardPageLayoutForm = ({
   const { fields, append, remove } = useFieldArray({
     control,
     name: "layoutConfig.areas",
+  });
+
+  const {
+    fields: pageParams,
+    append: appendParam,
+    remove: removeParam,
+  } = useFieldArray({
+    control,
+    name: "params",
   });
 
   const coreLayoutConfig = configProvider.getPageLayoutConfig(
@@ -93,7 +103,7 @@ const DashboardPageLayoutForm = ({
       />
 
       <SelectDropDown
-        className={defaultStyles.mb20}
+        className={defaultStyles.mt20}
         label="Layout Type"
         selectedItem={initialPage?.layoutConfig?.options?.layoutType}
         items={layoutTypeItems}
@@ -105,6 +115,24 @@ const DashboardPageLayoutForm = ({
         }}
       />
 
+      <KeyValueInput
+        className={defaultStyles.mt20}
+        disabled={disabled}
+        label="Page Params"
+        fields={pageParams}
+        append={appendParam}
+        remove={removeParam}
+        register={register}
+        arrayFieldName={"params"}
+        validationErrors={errors}
+        addLabel="Add Param"
+        keyFieldName="key"
+        valueFieldName="type"
+        keyLabel="Key"
+        valueLabel="Type"
+      />
+
+      {/* //TODO make a own component for that */}
       <div className={styles.layoutAreaWrapper}>
         <RunningText>Layout Areas</RunningText>
 
@@ -197,4 +225,4 @@ const DashboardPageLayoutForm = ({
   );
 };
 
-export default DashboardPageLayoutForm;
+export default DashboardPageForm;

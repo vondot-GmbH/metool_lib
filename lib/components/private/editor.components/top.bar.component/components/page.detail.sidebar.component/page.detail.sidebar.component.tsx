@@ -11,7 +11,7 @@ import { useCallback, useMemo, useState } from "react";
 import ConfigProvider from "../../../../../../config/config.provider";
 import { CorePageLayoutConfig } from "../../../../../../globals/interfaces/config.interface";
 import SelectDropDown from "../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
-import DashboardPageLayoutForm from "./components/dashboard.page.layout.form/dashboard.page.layout.form";
+import DashboardPageForm from "./components/dashboard.page.form/dashboard.page.form";
 
 interface PageDetailSidebarProps {
   pageStore?: PageStore;
@@ -96,7 +96,7 @@ const PageDetailSidebar = ({
       />
 
       {selectedPageLayout?.layoutID === "defaultDashboardLayout" && (
-        <DashboardPageLayoutForm
+        <DashboardPageForm
           onFormSubmit={handleSubmit}
           disabled={false}
           initialPage={selectedItem}

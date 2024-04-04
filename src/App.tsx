@@ -59,21 +59,21 @@ InitializeMetool({
     nested: {
       large: {
         cols: 48,
-        rowHeight: 30,
+        rowHeight: 20,
         icon: faHandPointer,
         title: "Large",
         breakpoint: 1200,
       },
       medium: {
         cols: 24,
-        rowHeight: 30,
+        rowHeight: 20,
         icon: faHardDrive,
         title: "Medium",
         breakpoint: 900,
       },
       small: {
         cols: 16,
-        rowHeight: 30,
+        rowHeight: 20,
         icon: faHardDrive,
         title: "Small",
         breakpoint: 440,
@@ -82,21 +82,21 @@ InitializeMetool({
     root: {
       large: {
         cols: 24,
-        rowHeight: 30,
+        rowHeight: 20,
         icon: faDisplay,
         title: "Large",
         breakpoint: 1200,
       },
       medium: {
         cols: 12,
-        rowHeight: 30,
+        rowHeight: 20,
         icon: faTabletScreenButton,
         title: "Medium",
         breakpoint: 900,
       },
       small: {
         cols: 8,
-        rowHeight: 30,
+        rowHeight: 20,
         icon: faMobileNotch,
         title: "Small",
         breakpoint: 440,
@@ -114,9 +114,9 @@ function App() {
         pageToRender={{
           actionType: NavigationActionType.NAV_TO_PAGE, // TODO set fixed type for actionType in intrerface
           targetID: "5f404b6b9I6b4c3017f99979",
-          params: {
-            viewID: "a5cb6b75c3c64d738acd7b21281463c4",
-          },
+          // params: {
+          //   viewID: "a5cb6b75c3c64d738acd7b21281463c4",
+          // },
         }}
       />
 

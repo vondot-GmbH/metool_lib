@@ -6,6 +6,7 @@ export interface Page {
   name: string;
   layoutConfig: PageLayoutConfig;
   views: PageView[];
+  params?: { key: string; type: string }[]; // TODO make a type for this
 }
 
 export interface PageView {
@@ -93,4 +94,13 @@ export const pageSchema = yup.object().shape({
     })
   ),
   layoutConfig: pageLayoutConfigSchema,
+  params: yup.array().of(
+    yup
+      .object()
+      .shape({
+        key: yup.string().required(),
+        type: yup.string().required(),
+      })
+      .notRequired()
+  ),
 });
