@@ -16,14 +16,21 @@ import RunningText from "../../text.components/running.text.component/running.te
 import defaultStyles from "../../../../../styles/index.module.scss";
 import IconButton from "../../button.components/icon.button.component/icon.button.component";
 
+export interface AvailableEvents {
+  label: string;
+  value: EventType;
+}
+
 interface EventHandlerEditorProps {
   initialEvents?: WidgetEvent[];
   onChange: (events: WidgetEvent[]) => void;
+  availableEvents?: AvailableEvents[];
 }
 
 const EventHandlerEditor: React.FC<EventHandlerEditorProps> = ({
   onChange,
   initialEvents = [],
+  availableEvents = [],
 }) => {
   const [events, setEvents] = useState<WidgetEvent[]>(initialEvents);
 
@@ -97,9 +104,9 @@ const EventHandlerEditor: React.FC<EventHandlerEditorProps> = ({
             <SelectDropDown
               className={defaultStyles.mb10}
               label="Event Type"
-              items={Object.values(EventType).map((type) => ({
-                label: type,
-                value: type,
+              items={availableEvents.map((event) => ({
+                label: event.label,
+                value: event.value,
               }))}
               selectedItem={item.eventType}
               onChange={(selectedOption) =>
@@ -117,7 +124,9 @@ const EventHandlerEditor: React.FC<EventHandlerEditorProps> = ({
 
   const renderListItem = (item: WidgetEvent, index: number) => (
     <Row key={index} alignItems="center" justifyContent="space-between">
-      <RunningText>{item.eventType}</RunningText>
+      <RunningText>
+        {availableEvents.find((e) => e.value === item.eventType)?.label}
+      </RunningText>
       <IconButton icon={faX} onClick={() => handleRemoveEvent(index)} />
     </Row>
   );

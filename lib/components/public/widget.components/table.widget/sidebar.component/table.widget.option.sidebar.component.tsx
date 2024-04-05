@@ -10,9 +10,12 @@ import { v4 as UUID } from "uuid";
 import defaultStyles from "../../../../../styles/index.module.scss";
 import EditorStore from "../../../../../stores/editor.store";
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
-import EventHandlerEditor from "../../../../private/general.components/input.components/event.handler.editor.component/event.handler.editor.component";
+import EventHandlerEditor, {
+  AvailableEvents,
+} from "../../../../private/general.components/input.components/event.handler.editor.component/event.handler.editor.component";
 import MultiSwitch from "../../../../private/general.components/input.components/multi.switch.component/multi.switch.component";
 import StateInput from "../../../../private/general.components/input.components/state.input.component/state.input.component";
+import { EventType } from "../../../../../globals/enums/widget.enum";
 
 interface TableWidgetSidebarProps {
   widgetStore?: WidgetStore;
@@ -29,6 +32,28 @@ const TableWidgetSidebar = ({
   );
 
   const { pushView } = useSidebar();
+
+  const availableEvents: AvailableEvents[] = [
+    {
+      label: "On Row Click",
+      value: EventType.ON_CLICK_ROW,
+    },
+  ];
+
+  const rowSelectionOptions = [
+    {
+      label: "Single",
+      value: "single",
+    },
+    {
+      label: "Multiple",
+      value: "multiple",
+    },
+    {
+      label: "None",
+      value: "none",
+    },
+  ];
 
   const handleAddColumn = (): void => {
     const columnOptions: TableColumn[] = options?.columns;
@@ -99,6 +124,7 @@ const TableWidgetSidebar = ({
       <CollapsibleSection title="Interaction">
         <EventHandlerEditor
           initialEvents={options?.events}
+          availableEvents={availableEvents}
           onChange={(events) => {
             widgetStore?.updateWidgetOption(
               selectedWidgetID ?? "",
@@ -119,20 +145,7 @@ const TableWidgetSidebar = ({
               value
             );
           }}
-          options={[
-            {
-              label: "Single",
-              value: "single",
-            },
-            {
-              label: "Multiple",
-              value: "multiple",
-            },
-            {
-              label: "None",
-              value: "none",
-            },
-          ]}
+          options={rowSelectionOptions}
         />
       </CollapsibleSection>
 

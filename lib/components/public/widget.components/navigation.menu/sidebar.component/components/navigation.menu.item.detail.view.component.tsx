@@ -44,8 +44,6 @@ const NavigationMenuItemDetailView = ({
           }}
         />
 
-        <p>navigation configurator</p>
-
         <NavigationConfigurator
           onNavigationParamsChange={(params) => {
             widgetStore?.updateWidgetOptionArrayItem<NavigationMenuItem>({
