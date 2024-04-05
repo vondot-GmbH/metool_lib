@@ -2,6 +2,7 @@ import {
   GridLayoutConfig,
   CorePageLayoutConfig,
   WidgetConfig,
+  ThemeConfig,
 } from "../globals/interfaces/config.interface";
 import { CoreRestQuerConfig } from "../schemas/query.schemas/query.schema";
 import { CoreResource } from "../schemas/resource.schemas/resource.schema";
@@ -13,6 +14,7 @@ interface InitOptions {
   coreResources?: CoreResource[];
   coreQueryConfig: CoreRestQuerConfig;
   pageLayoutConfigs?: CorePageLayoutConfig[];
+  themeConfig?: ThemeConfig;
 }
 
 const initialize = ({
@@ -21,6 +23,7 @@ const initialize = ({
   coreResources,
   coreQueryConfig,
   pageLayoutConfigs,
+  themeConfig,
 }: InitOptions) => {
   const configProvider = ConfigProvider.getInstance();
 
@@ -29,6 +32,7 @@ const initialize = ({
   configProvider.registerCoreResources(coreResources);
   configProvider.registerCoreQueries(coreQueryConfig);
   configProvider.registerPageLayouts(pageLayoutConfigs);
+  configProvider.registerThemeConfig(themeConfig);
 };
 
 export default initialize;

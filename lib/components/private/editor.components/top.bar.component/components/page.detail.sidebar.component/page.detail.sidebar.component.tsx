@@ -3,15 +3,15 @@ import PageStore from "../../../../../../stores/page.store";
 import styles from "./page.detail.sidebar.component.module.scss";
 import { Page } from "../../../../../../schemas/page.schemas/page.schema";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
-import Row from "../../../../general.components/row.component/row.component";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import { faFloppyDisk, faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
 import defaultStyles from "../../../../../../styles/index.module.scss";
 import { useCallback, useMemo, useState } from "react";
 import ConfigProvider from "../../../../../../config/config.provider";
 import { CorePageLayoutConfig } from "../../../../../../globals/interfaces/config.interface";
-import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
-import DashboardPageLayoutForm from "./components/dashboard.page.layout.form/dashboard.page.layout.form";
+import SelectDropDown from "../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
+import DashboardPageForm from "./components/dashboard.page.form.component/dashboard.page.form.component";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface PageDetailSidebarProps {
   pageStore?: PageStore;
@@ -96,7 +96,7 @@ const PageDetailSidebar = ({
       />
 
       {selectedPageLayout?.layoutID === "defaultDashboardLayout" && (
-        <DashboardPageLayoutForm
+        <DashboardPageForm
           onFormSubmit={handleSubmit}
           disabled={false}
           initialPage={selectedItem}

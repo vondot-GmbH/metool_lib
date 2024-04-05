@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Column from "../../general.components/column.component/column.component";
-import SizedContainer from "../../general.components/sized.container.component/sized.container.component";
+import Column from "../../general.components/ui.components/column.component/column.component";
+import SizedContainer from "../../general.components/ui.components/sized.container.component/sized.container.component";
 import TitleText from "../../general.components/text.components/title.text.component/title.text.component";
 import BreakpointSettings from "../breakpoint.settings.component/breakpoint.settings.component";
 import { EditorMode } from "../../../../globals/enums/editor.enum";

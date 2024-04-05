@@ -6,38 +6,58 @@ import CollapsibleSection from "../../../../private/general.components/collapsib
 import { useSidebar } from "../../../../private/editor.components/option.sidebar.component/option.sidebar.component";
 import { TableColumn, TableOptions } from "../schemas/table.widget.schema";
 import { TableWidgetColumnDetailView } from "./table.widget.column.detail.view.comonent";
-import TextInput from "../../../../private/general.components/outlined.text.input.component/outlined.text.input.component";
 import { v4 as UUID } from "uuid";
-import MultiSwitch from "../../../../private/general.components/multi.switch.component/multi.switch.component";
-import SpacingEditor from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
 import defaultStyles from "../../../../../styles/index.module.scss";
-import StateInputEditor from "../../../../private/general.components/state.input.text.component/state.input.text.component";
 import EditorStore from "../../../../../stores/editor.store";
+import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
+import EventHandlerEditor, {
+  AvailableEvents,
+} from "../../../../private/general.components/input.components/event.handler.editor.component/event.handler.editor.component";
+import MultiSwitch from "../../../../private/general.components/input.components/multi.switch.component/multi.switch.component";
+import StateInput from "../../../../private/general.components/input.components/state.input.component/state.input.component";
+import { EventType } from "../../../../../globals/enums/widget.enum";
 
-interface TableWidgetOptionSidebarProps {
+interface TableWidgetSidebarProps {
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
 }
 
-const TableWidgetOptionSidebar = ({
+const TableWidgetSidebar = ({
   widgetStore,
   editorStore,
-}: TableWidgetOptionSidebarProps): JSX.Element => {
+}: TableWidgetSidebarProps): JSX.Element => {
   const selectedWidgetID = editorStore?.selectedWidget?.widget.widgetID;
-
-  // TODO
-  const columnOptions: TableColumn[] = widgetStore?.getWidgetOption(
-    selectedWidgetID ?? "",
-    "columns"
-  );
-
-  const tableOptions: TableOptions = widgetStore?.getAllOptionsForWidget(
+  const options: TableOptions = widgetStore?.getAllOptionsForWidget(
     selectedWidgetID ?? ""
   );
 
   const { pushView } = useSidebar();
 
+  const availableEvents: AvailableEvents[] = [
+    {
+      label: "On Row Click",
+      value: EventType.ON_CLICK_ROW,
+    },
+  ];
+
+  const rowSelectionOptions = [
+    {
+      label: "Single",
+      value: "single",
+    },
+    {
+      label: "Multiple",
+      value: "multiple",
+    },
+    {
+      label: "None",
+      value: "none",
+    },
+  ];
+
   const handleAddColumn = (): void => {
+    const columnOptions: TableColumn[] = options?.columns;
+
     const newColumn = {
       columnID: UUID(),
       source: "neue Spalte",
@@ -65,9 +85,9 @@ const TableWidgetOptionSidebar = ({
   return (
     <div>
       <CollapsibleSection title="Content">
-        <StateInputEditor
+        <StateInput
           label="Data"
-          value={tableOptions?.data}
+          value={options?.data}
           className={defaultStyles.mb20}
           onChange={(value: string) => {
             widgetStore?.updateWidgetOption(
@@ -80,7 +100,7 @@ const TableWidgetOptionSidebar = ({
 
         <MultiFieldDropdownEditor
           label="Columns"
-          items={columnOptions}
+          items={options?.columns}
           renderListItem={(item: TableColumn) => (
             <div
               onClick={() => {
@@ -101,89 +121,22 @@ const TableWidgetOptionSidebar = ({
         />
       </CollapsibleSection>
 
-      <CollapsibleSection title="Style">
-        <TextInput
-          type="color"
-          label="Header Background Color"
-          value={tableOptions?.headerBackgroundColor}
-          className={defaultStyles.mt10}
-          onValueChange={(value) => {
-            widgetStore?.updateWidgetOption(
-              selectedWidgetID ?? "",
-              "headerBackgroundColor",
-              value
-            );
-          }}
-        />
-
-        <TextInput
-          type="color"
-          label="Row Background Color"
-          value={tableOptions?.rowBackgroundColor}
-          className={defaultStyles.mt10}
-          onValueChange={(value) => {
-            widgetStore?.updateWidgetOption(
-              selectedWidgetID ?? "",
-              "rowBackgroundColor",
-              value
-            );
-          }}
-        />
-
-        <TextInput
-          type="color"
-          label="Row Hover Color"
-          value={tableOptions?.rowHoverColor}
-          className={defaultStyles.mt10}
-          onValueChange={(value) => {
-            widgetStore?.updateWidgetOption(
-              selectedWidgetID ?? "",
-              "rowHoverColor",
-              value
-            );
-          }}
-        />
-
-        <TextInput
-          type="color"
-          label="Border Color"
-          value={tableOptions?.borderBottomColor}
-          className={defaultStyles.mt10}
-          onValueChange={(value) => {
-            widgetStore?.updateWidgetOption(
-              selectedWidgetID ?? "",
-              "borderBottomColor",
-              value
-            );
-          }}
-        />
-
-        <SpacingEditor
-          className={defaultStyles.mt10}
-          label="Cell Padding"
-          types={["padding"]}
-          initialValues={{
-            padding: {
-              top: tableOptions?.tableCellPadding?.top,
-              right: tableOptions?.tableCellPadding?.right,
-              bottom: tableOptions?.tableCellPadding?.bottom,
-              left: tableOptions?.tableCellPadding?.left,
-            },
-          }}
-          onChange={(_mode, values) => {
-            widgetStore?.updateWidgetOption(
-              selectedWidgetID ?? "",
-              "tableCellPadding",
-              values
-            );
-          }}
-        />
-      </CollapsibleSection>
-
       <CollapsibleSection title="Interaction">
+        <EventHandlerEditor
+          initialEvents={options?.events}
+          availableEvents={availableEvents}
+          onChange={(events) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "events",
+              events
+            );
+          }}
+        />
+
         <MultiSwitch
           label="Row Selection"
-          initialValue={tableOptions?.rowSelectionType}
+          initialValue={options?.rowSelectionType}
           className={defaultStyles.mt10}
           onChange={(value) => {
             widgetStore?.updateWidgetOption(
@@ -192,20 +145,59 @@ const TableWidgetOptionSidebar = ({
               value
             );
           }}
-          options={[
-            {
-              label: "Single",
-              value: "single",
-            },
-            {
-              label: "Multiple",
-              value: "multiple",
-            },
-            {
-              label: "None",
-              value: "none",
-            },
-          ]}
+          options={rowSelectionOptions}
+        />
+      </CollapsibleSection>
+
+      <CollapsibleSection title="Style">
+        <CSSPropertyEditor
+          label="Header Styles"
+          onChange={(properties: Record<string, string>) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "headerStyles",
+              properties
+            );
+          }}
+          initialProperties={options?.headerStyles as Record<string, string>}
+        />
+
+        <CSSPropertyEditor
+          label="Header Cell Styles"
+          onChange={(properties: Record<string, string>) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "headerCellStyles",
+              properties
+            );
+          }}
+          initialProperties={
+            options?.headerCellStyles as Record<string, string>
+          }
+        />
+
+        <CSSPropertyEditor
+          label="Body Row Styles"
+          onChange={(properties: Record<string, string>) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "bodyRowStyles",
+              properties
+            );
+          }}
+          initialProperties={options?.bodyRowStyles as Record<string, string>}
+        />
+
+        <CSSPropertyEditor
+          label="Body Cell Styles"
+          onChange={(properties: Record<string, string>) => {
+            widgetStore?.updateWidgetOption(
+              selectedWidgetID ?? "",
+              "bodyCellStyles",
+              properties
+            );
+          }}
+          initialProperties={options?.bodyCellStyles as Record<string, string>}
         />
       </CollapsibleSection>
     </div>
@@ -215,4 +207,4 @@ const TableWidgetOptionSidebar = ({
 export default inject(
   "widgetStore",
   "editorStore"
-)(observer(TableWidgetOptionSidebar));
+)(observer(TableWidgetSidebar));

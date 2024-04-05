@@ -4,59 +4,76 @@ import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import { TableWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
 import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
-import Table from "../../../../private/general.components/table.component/data.table.component";
-import { TableOptions, TableColumn } from "../schemas/table.widget.schema";
+import Table, {
+  TableColumn,
+} from "../../../../private/general.components/list.components/table.component/data.table.component";
+import { TableOptions } from "../schemas/table.widget.schema";
+import NavigationStore from "../../../../../stores/navigation.store";
+import { handleWidgetEvent } from "../../../../../globals/helpers/event.helper";
+import { EventType } from "../../../../../globals/enums/widget.enum";
 
 interface TableWidgetProps {
   widgetID: string;
   widgetStore?: WidgetStore;
   stateStore?: StateStore;
+  navigationStore?: NavigationStore;
 }
 
 const TableWidget = ({
   widgetID,
   widgetStore,
   stateStore,
+  navigationStore,
 }: TableWidgetProps): JSX.Element => {
-  const [usersData, setUsersData] = useState<any[]>([]);
+  const [data, setData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const tableOptions: TableOptions =
+    widgetStore?.getAllOptionsForWidget(widgetID);
 
   useEffect(() => {
     const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
-
     if (!analized) return;
 
     stateStore?.initializeDynamicOptions(
       widgetID,
       analized,
-      (data) => {
-        setUsersData(data.data);
+      (options) => {
+        setIsLoading(options?.isLoading);
+        setData(options?.data);
       },
       _getInitialTableWidgetState()
     );
   }, []);
 
-  const tableOptions: TableOptions =
-    widgetStore?.getAllOptionsForWidget(widgetID);
-
-  const prepareColumns = (tableOptions: TableOptions): TableColumn[] => {
-    return tableOptions?.columns?.map((column) => ({
-      ...column,
-      headerBackgroundColor: column?.headerBackgroundColor,
-      rowBackgroundColor: column.rowBackgroundColor,
-      borderBottomColor: tableOptions.borderBottomColor,
-      render: (value: any) => <RunningText>{value}</RunningText>,
-    }));
+  const prepareColumns = (tableOptions: TableOptions): TableColumn<any>[] => {
+    return tableOptions?.columns?.map(
+      (column) =>
+        ({
+          ...column,
+          columnStyles: column.columnStyles,
+          render: (value: any) => <RunningText>{value}</RunningText>,
+        } as TableColumn<any>)
+    );
   };
 
-  const handleSelectionDataChange = (selectedData: any) => {
+  const handleSelectionDataChange = (selectedData: any[]) => {
     if (tableOptions?.rowSelectionType === "single") {
       stateStore?.setStateValue(
         StateSelector.WIDGETS,
         widgetID,
         "selectedSourceRow",
-        selectedData
+        selectedData[0] || null
       );
+
+      handleWidgetEvent({
+        widgetOptions: tableOptions,
+        eventType: EventType.ON_CLICK_ROW,
+        navigationStore,
+        stateStore,
+      });
     } else if (tableOptions?.rowSelectionType === "multiple") {
+      // TODO hanle that if the state logic is refactored (handle array of selected rows)
       stateStore?.setStateValue(
         StateSelector.WIDGETS,
         widgetID,
@@ -68,30 +85,25 @@ const TableWidget = ({
 
   return (
     <Table
+      isLoading={isLoading}
       key={widgetID}
       columns={(prepareColumns(tableOptions) as any[]) || []}
-      data={usersData || []}
+      data={data || []}
       rowKey="id"
+      headerStyles={tableOptions?.headerStyles}
+      bodyCellStyles={tableOptions?.bodyCellStyles}
+      bodyRowStyles={tableOptions?.bodyRowStyles}
+      headerCellStyles={tableOptions?.headerCellStyles}
       noDataText="No data available"
-      defaultBorderBottomColor={tableOptions?.borderBottomColor}
-      defaultHeaderBackgroundColor={tableOptions?.headerBackgroundColor}
-      defaultRowBackgroundColor={tableOptions?.rowBackgroundColor}
-      rowHoverColor={tableOptions?.rowHoverColor}
       rowSelectionType={tableOptions?.rowSelectionType}
-      rowSelectionBackgroundColor={tableOptions?.rowSelectionBackgroundColor}
-      tableCellPadding={tableOptions?.tableCellPadding}
       onSelectionDataChange={(selectedData) => {
         handleSelectionDataChange(selectedData);
-      }}
-      onSelectionIndexChange={() => {
-        // TODO: Implement this
-        // console.log("selectedIndexes");
-        // console.log(selectedIndexes);
       }}
     />
   );
 };
 
+// TODO move this
 const _getInitialTableWidgetState = (): TableWidgetState => {
   const tableState = {
     isLoading: null,
@@ -104,4 +116,8 @@ const _getInitialTableWidgetState = (): TableWidgetState => {
   return tableState as TableWidgetState;
 };
 
-export default inject("widgetStore", "stateStore")(observer(TableWidget));
+export default inject(
+  "widgetStore",
+  "stateStore",
+  "navigationStore"
+)(observer(TableWidget));

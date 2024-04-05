@@ -1,13 +1,13 @@
 import { WidgetConfig } from "../../../../globals/interfaces/config.interface";
-import textWidgetSidebarComponent from "./sidebar.component/text.widget.sidebar.component";
+import TextWidgetSidebar from "./sidebar.component/text.widget.sidebar.component";
 import TextWidgetIcon from "./text.svg";
-import textWidgetComponent from "./text.widget.component/text.widget.component";
+import TextWidget from "./text.widget.component/text.widget.component";
 
 export const TextWidgetConfig: WidgetConfig = {
   name: "text",
   type: "TEXT_WIDGET",
-  component: textWidgetComponent,
+  component: TextWidget,
   icon: TextWidgetIcon,
   canHaveChildren: false,
-  sidebarComponent: textWidgetSidebarComponent,
+  sidebarComponent: TextWidgetSidebar,
 };

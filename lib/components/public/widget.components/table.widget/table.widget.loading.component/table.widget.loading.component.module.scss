@@ -1,0 +1,21 @@
+.skeletonDataItemWrapper {
+  overflow: hidden;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 15px;
+  box-sizing: border-box;
+  align-items: center;
+  z-index: 100;
+
+  .skeletonDataItemTextContainer {
+    flex: 2;
+    padding-left: 10px;
+    text-overflow: ellipsis;
+    z-index: 100;
+  }
+}
+
+.skeletonTableHeaderWrapper {
+  padding: 0 15px;
+}

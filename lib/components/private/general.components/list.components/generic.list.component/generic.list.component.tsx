@@ -1,8 +1,8 @@
 import styles from "./generic.list.component.module.scss";
 import ComponentWrapper from "../../component.wrapper.component/component.wrapper.component";
-import Row from "../../row.component/row.component";
-import IconButton from "../../icon.button.component/icon.button.component";
+import Row from "../../ui.components/row.component/row.component";
 import { faPlus } from "@fortawesome/pro-regular-svg-icons";
+import IconButton from "../../button.components/icon.button.component/icon.button.component";
 
 interface GenericListProps<T> {
   title: string;

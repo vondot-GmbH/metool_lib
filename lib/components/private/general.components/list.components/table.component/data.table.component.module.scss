@@ -1,0 +1,37 @@
+.table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.headerCell {
+  flex: 1 1 0%;
+  padding: 10px;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+
+  &:hover {
+    background-color: #e7f4f0;
+  }
+}
+
+.cell {
+  flex: 1;
+  padding: 10px;
+}
+
+.noData,
+.loading {
+  padding: 20px;
+  text-align: center;
+}

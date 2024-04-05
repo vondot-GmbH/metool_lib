@@ -89,11 +89,12 @@ export const convertDynamicLayouts = (
     // go through each layout for the current breakpoint and add the adjusted layout to the result
     for (const layout of layoutsForBreakpoint) {
       // if the grid is readonly or the selected widget is not the current widget, set the layout to static
-      const isStatic = readonly || (selectedWidgetID !== layout.i && !readonly);
+
+      // const isStatic = readonly || (selectedWidgetID !== layout.i && !readonly);
 
       result[breakpoint].push({
         ...layout,
-        static: isStatic,
+        // static: isStatic, // TODO isDraggable solves this issue for now
       });
     }
   }
@@ -130,8 +131,8 @@ export const generateGridLayoutBackground = (args: {
   const columnWidth = `calc(100% / ${cols[currentBreakpoint]})`;
 
   // generate vertical and horizontal lines for grid
-  const verticalLines = `linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 2px)`;
-  const horizontalLines = `linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 2px)`;
+  const verticalLines = `linear-gradient(to right, #dedede 1px, transparent 0.5px)`;
+  const horizontalLines = `linear-gradient(to bottom, #dedede 1px, transparent 0.5px)`;
 
   // return grid background value
   return `${verticalLines} 0 0 / ${columnWidth} 100%, ${horizontalLines} 0 0 / 100% ${rowHeight}px`;

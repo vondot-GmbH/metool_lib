@@ -3,10 +3,10 @@ import {
   resourceRestSchema,
 } from "../../../../../../../../schemas/resource.schemas/resource.schema";
 import { useFieldArray, useForm } from "react-hook-form";
-import TextInput from "../../../../../../general.components/outlined.text.input.component/outlined.text.input.component";
+import TextInput from "../../../../../../general.components/input.components/text.input.component/text.input.component";
 import { yupResolver } from "@hookform/resolvers/yup";
 import defaultStyles from "../../../../../../../../styles/index.module.scss";
-import KeyValueInput from "../../../../../../general.components/key.value.input.component/key.value.input.conponent";
+import KeyValueInput from "../../../../../../general.components/input.components/key.value.input.component/key.value.input.component";
 
 interface ResourceRestFormProps {
   iniitialResource?: RestResource;

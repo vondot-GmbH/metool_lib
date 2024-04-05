@@ -17,9 +17,10 @@ import TopBarComponent from "../top.bar.component/top.bar.component";
 import ResourceStore from "../../../../stores/resource.store";
 import RenderPage from "../../../private/editor.components/render.components/render.page.component/render.page.component";
 import PageStore from "../../../../stores/page.store";
+import { NavigationParams } from "../../../../globals/interfaces/navigation.interface";
 
 interface CanvasEditorProps {
-  pageToRender: string;
+  pageToRender: NavigationParams;
 
   viewStore?: ViewStore;
   widgetStore?: WidgetStore;
@@ -61,7 +62,7 @@ const CanvasEditor = ({
   }, []);
 
   if (isLoading) {
-    return <div>Loading ...</div>;
+    return <div></div>;
   }
 
   return (

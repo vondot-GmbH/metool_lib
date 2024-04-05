@@ -1,13 +1,20 @@
 import { makeAutoObservable } from "mobx";
-import { PubSubProvider } from "../provider/pub.sub.provider";
-import { updateOptionAtPath } from "../globals/helpers/state.helper";
+import { PubSubProvider } from "../providers/pub.sub.provider";
+import {
+  extractDependenciesAndNonDependencies,
+  generateStateKey,
+  resolveDependencies,
+  resolveNestedStateValue,
+  updateOptionAtPath,
+} from "../globals/helpers/state.helper";
 import { RestQuery } from "../schemas/query.schemas/query.schema";
-import { queryExecutor } from "../provider/http/http.rest.query.client";
+import { queryExecutor } from "../providers/http/http.rest.query.client";
 import RootStore from "./root.store";
 
 export enum StateSelector {
   WIDGETS = "widgets",
   QUERIES = "queries",
+  NAVIGATION = "navigation",
 }
 
 interface WidgetState {
@@ -28,24 +35,24 @@ export interface Dependency {
   stateKeys: string[];
 }
 
+export interface ResolvedDependency {
+  dependency: Dependency;
+  resolvedDependency: {
+    dependency: string;
+    resolvedValue: any;
+  };
+}
+
 export class StateStore {
-  private globalStates: Map<string, WidgetState> = new Map();
-  private pubSub: PubSubProvider = PubSubProvider.getInstance();
-  private pendingSubscriptions: PendingSubscription[] = [];
+  private _globalStates: Map<string, WidgetState> = new Map();
+  private _pubSub: PubSubProvider = PubSubProvider.getInstance();
+  private _pendingSubscriptions: PendingSubscription[] = [];
 
   private stores: RootStore;
 
   constructor(rootStore: RootStore) {
     this.stores = rootStore;
     makeAutoObservable(this);
-  }
-
-  private generateStateKey(
-    selector: StateSelector,
-    identifierID: string,
-    ...keys: string[]
-  ): string {
-    return `${selector}.${identifierID}.${keys.join(".")}`;
   }
 
   initializeStates(
@@ -69,18 +76,18 @@ export class StateStore {
     key: string,
     value: any
   ) {
-    const stateKey = this.generateStateKey(selector, identifierID, key);
-    this.globalStates.set(stateKey, value);
-    this.pubSub.publish(`stateChange:${stateKey}`, value);
+    const stateKey = generateStateKey(selector, identifierID, key);
+    this._globalStates.set(stateKey, value);
+    this._pubSub.publish(`stateChange:${stateKey}`, value);
   }
 
-  getWidgetStateValue(
+  getStateValue(
     selector: StateSelector,
     identifierID: string,
     key: string
   ): any {
-    const stateKey = this.generateStateKey(selector, identifierID, key);
-    return this.globalStates.get(stateKey);
+    const splittedKey = key.split(".");
+    return resolveNestedStateValue(this, selector, identifierID, splittedKey);
   }
 
   getStatesForEntity(
@@ -90,7 +97,7 @@ export class StateStore {
     const states: Record<string, any> = {};
     const prefix = `${selector}.${entityID}.`;
 
-    this.globalStates.forEach((value, key) => {
+    this._globalStates.forEach((value, key) => {
       if (key.startsWith(prefix)) {
         const stateKey = key.substring(prefix.length);
         states[stateKey] = value;
@@ -100,8 +107,8 @@ export class StateStore {
     return states;
   }
 
-  getAllStates(): Map<string, WidgetState> {
-    return this.globalStates;
+  get globalStates(): Map<string, WidgetState> {
+    return this._globalStates;
   }
 
   getStateSummary(): Array<{
@@ -123,7 +130,7 @@ export class StateStore {
           {};
 
         // Durchlaufen aller globalen States und Hinzufügen, falls sie zur aktuellen Kategorie gehören
-        this.globalStates.forEach((_, key) => {
+        this._globalStates.forEach((_, key) => {
           const [stateSelector, entityID] = key.split(".");
           if (stateSelector === category) {
             // Vermeiden von Duplikaten durch Verwendung einer Map
@@ -148,12 +155,12 @@ export class StateStore {
     keys: string[],
     callback: (value: any) => void
   ) {
-    const stateKey = this.generateStateKey(selector, identifierID, ...keys);
+    const stateKey = generateStateKey(selector, identifierID, ...keys);
 
-    if (this.globalStates.has(stateKey)) {
-      this.pubSub.subscribe(`stateChange:${stateKey}`, callback);
+    if (this._globalStates.has(stateKey)) {
+      this._pubSub.subscribe(`stateChange:${stateKey}`, callback);
     } else {
-      this.pendingSubscriptions.push({
+      this._pendingSubscriptions.push({
         selector,
         identifierID,
         stateKeys: keys,
@@ -164,9 +171,9 @@ export class StateStore {
 
   processPendingSubscriptions(selector: StateSelector, identifierID: string) {
     const prefix = `${selector}.${identifierID}.`;
-    const subscriptionsToProcess = this.pendingSubscriptions.filter(
+    const subscriptionsToProcess = this._pendingSubscriptions.filter(
       (subscription) =>
-        this.generateStateKey(
+        generateStateKey(
           subscription.selector,
           subscription.identifierID,
           ...subscription.stateKeys
@@ -174,15 +181,15 @@ export class StateStore {
     );
 
     subscriptionsToProcess.forEach((subscription) => {
-      const stateKey = this.generateStateKey(
+      const stateKey = generateStateKey(
         subscription.selector,
         subscription.identifierID,
         ...subscription.stateKeys
       );
-      this.pubSub.subscribe(`stateChange:${stateKey}`, subscription.callback);
+      this._pubSub.subscribe(`stateChange:${stateKey}`, subscription.callback);
     });
 
-    this.pendingSubscriptions = this.pendingSubscriptions.filter(
+    this._pendingSubscriptions = this._pendingSubscriptions.filter(
       (subscription) => !subscriptionsToProcess?.includes(subscription)
     );
   }
@@ -274,10 +281,30 @@ export class StateStore {
   async executeAndProcessRestQueries(queries: RestQuery[]): Promise<void> {
     for (const query of queries) {
       if (query?.queryID == null) continue;
+      this.setStateValue(
+        StateSelector.QUERIES,
+        query.queryID,
+        "isLoading",
+        true
+      );
+
+      const extractedDep = extractDependenciesAndNonDependencies(query);
+
+      const resolvedDependencies = resolveDependencies(
+        extractedDep.dependencies,
+        this.stores.stateStore
+      );
+
+      const resolvedVariables: Record<string, string> = {};
+
+      for (const { resolvedDependency } of resolvedDependencies) {
+        resolvedVariables[resolvedDependency.dependency] =
+          resolvedDependency.resolvedValue;
+      }
 
       const response = await queryExecutor.executeRestQuery(
         query,
-        {},
+        resolvedVariables,
         this.stores.resourceStore
       );
 
@@ -293,6 +320,12 @@ export class StateStore {
 
       // process pending subscriptions
       this.processPendingSubscriptions(StateSelector.QUERIES, query.queryID);
+      this.setStateValue(
+        StateSelector.QUERIES,
+        query.queryID,
+        "isLoading",
+        false
+      );
     }
   }
 }

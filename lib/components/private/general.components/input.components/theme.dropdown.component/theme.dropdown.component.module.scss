@@ -1,0 +1,88 @@
+.dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  &.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .label {
+    margin-bottom: 4px;
+  }
+
+  .selectedItem {
+    width: 100%;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: #f7f7f7;
+    }
+
+    .optionPlaceholder {
+      padding: 8px;
+    }
+
+    &Small {
+      width: 35px;
+    }
+  }
+
+  .selectedItemPlaceholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #f7f7f7;
+    }
+  }
+}
+
+.options {
+  position: absolute;
+  z-index: 10000;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-height: 260px;
+  overflow-y: auto;
+  width: auto;
+}
+
+.option {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 8px;
+
+  &:hover {
+    background-color: #f0f0f0;
+  }
+
+  .colorIndicator {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    border: 0.5px solid #ccc;
+  }
+
+  .optionLabel {
+    margin-left: 10px;
+  }
+}
+
+.colorIndicatorTransparent {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px dashed #ccc;
+  background-color: transparent;
+}

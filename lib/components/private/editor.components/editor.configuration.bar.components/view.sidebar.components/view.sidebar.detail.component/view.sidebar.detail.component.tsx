@@ -3,12 +3,12 @@ import { View } from "../../../../../../schemas/view.schemas/view.schema";
 import ViewStore from "../../../../../../stores/view.store";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
-import Row from "../../../../general.components/row.component/row.component";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import defaultStyles from "../../../../../../styles/index.module.scss";
 import { faPlus, faX } from "@fortawesome/pro-regular-svg-icons";
 import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons";
 import ViewForm from "../components/view.form.component/view.form.component";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface ViewSidebarDetailProps {
   viewStore?: ViewStore;

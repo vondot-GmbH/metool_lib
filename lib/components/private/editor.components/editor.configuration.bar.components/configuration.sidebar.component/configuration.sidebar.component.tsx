@@ -1,7 +1,7 @@
 import { inject, observer } from "mobx-react";
 import QueryStore from "../../../../../stores/query.store";
 import WidgetStore from "../../../../../stores/widget.store";
-import IconTabBar from "../../../general.components/icon.tab.bar.component/icon.tab.bar.component";
+import IconTabBar from "../../icon.tab.bar.component/icon.tab.bar.component";
 import EditorStore from "../../../../../stores/editor.store";
 import { EditorMode } from "../../../../../globals/enums/editor.enum";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import WidgetSidebar from "../widget.sidebar.component/widget.sidebar.component"
 import CodeSidebar from "../code.sidebar.components/code.sidebar.component/code.sidebar.component";
 import StateStore from "../../../../../stores/state.store";
 import styles from "./configuration.sidebar.component.module.scss";
-import Row from "../../../general.components/row.component/row.component";
+import Row from "../../../general.components/ui.components/row.component/row.component";
 import ResourceStore from "../../../../../stores/resource.store";
 import {
   faCode,

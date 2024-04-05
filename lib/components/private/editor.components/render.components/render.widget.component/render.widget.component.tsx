@@ -19,6 +19,7 @@ import SmallText from "../../../general.components/text.components/small.text.co
 import { WidgetConfig } from "../../../../../main";
 import StateStore from "../../../../../stores/state.store";
 import EditorStore from "../../../../../stores/editor.store";
+import NavigationStore from "../../../../../stores/navigation.store";
 
 interface RenderWidgetProps {
   readonly?: boolean;
@@ -29,6 +30,7 @@ interface RenderWidgetProps {
   widgetStore?: WidgetStore;
   editorStore?: EditorStore;
   stateStore?: StateStore;
+  navigationStore?: NavigationStore;
 }
 
 const RenderWidget = ({
@@ -39,6 +41,7 @@ const RenderWidget = ({
   viewStore,
   stateStore,
   editorStore,
+  navigationStore,
 }: RenderWidgetProps): JSX.Element => {
   const registeredWidgets = ConfigProvider.getInstance().getRegisteredWidgets();
   const contextMenu = editorStore?.widgetContextMenu;
@@ -175,6 +178,7 @@ const RenderWidget = ({
               widgetStore={widgetStore}
               viewStore={viewStore}
               stateStore={stateStore}
+              editorStore={editorStore}
             />
           </div>
         ))}
@@ -197,6 +201,7 @@ const RenderWidget = ({
       widgetID: widgetToRender.widget.widgetID,
       widgetStore,
       stateStore,
+      navigationStore,
       children: renderNestedWidgets(widget),
     });
   }, [
@@ -261,5 +266,6 @@ export default inject(
   "viewStore",
   "widgetStore",
   "stateStore",
-  "editorStore"
+  "editorStore",
+  "navigationStore"
 )(observer(RenderWidget));

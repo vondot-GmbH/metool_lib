@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import RootStore from "./root.store";
 import { CoreRestQueryType } from "../schemas/query.schemas/query.schema";
-import { queryExecutor } from "../provider/http/http.rest.query.client";
+import { queryExecutor } from "../providers/http/http.rest.query.client";
 import { View } from "../schemas/view.schemas/view.schema";
 import { getUniqueID } from "../globals/helpers/global.helper";
 
@@ -41,6 +41,21 @@ class ViewStore {
 
   getView(viewID: string): View | undefined {
     return this._views.get(viewID);
+  }
+
+  getViewIDsForCurrentPage(): string[] {
+    return (
+      this.stores.pageStore.currentPageToRender?.views.map(
+        (view) => view.viewID
+      ) || []
+    );
+  }
+
+  get viewsForCurrentPage(): View[] {
+    const viewIDs = this.getViewIDsForCurrentPage();
+    return Array.from(this._views.values()).filter((view) =>
+      viewIDs.includes(view.viewID)
+    );
   }
 
   //! Methods
@@ -92,6 +107,31 @@ class ViewStore {
 
     return response;
   }
+
+  // TODO
+  // async getViewById(viewID: string): Promise<View | undefined> {
+  //   let view = this.getView(viewID);
+
+  //   if (view == null) {
+  //     const viewQuery = this.stores.queryStore.getQuery(
+  //       CoreRestQueryType.GET_VIEW_BY_ID
+  //     );
+
+  //     if (viewQuery == null || viewID == null) return;
+
+  //     view = await queryExecutor.executeRestQuery(
+  //       viewQuery,
+  //       {
+  //         viewID: viewID,
+  //       },
+  //       this.stores.resourceStore
+  //     );
+
+  //     if (view == null) return;
+  //   }
+
+  //   return view;
+  // }
 
   async fetchAndSaveViewById(viewID: string): Promise<void> {
     const viewQuery = this.stores.queryStore.getQuery(

@@ -11,6 +11,8 @@ import QueryStore from "../../../../../stores/query.store";
 import ResourceStore from "../../../../../stores/resource.store";
 import { useEffect, useState } from "react";
 import EditorStore from "../../../../../stores/editor.store";
+import NavigationStore from "../../../../../stores/navigation.store";
+import { NavigationActionType } from "../../../../../globals/interfaces/navigation.interface";
 
 interface RenderViewProps {
   readonly?: boolean;
@@ -19,6 +21,7 @@ interface RenderViewProps {
   queryStore?: QueryStore;
   editorStore?: EditorStore;
   resourceStore?: ResourceStore;
+  navigationStore?: NavigationStore;
 
   showVisualWidgetOutline?: boolean;
   viewToRender: string;
@@ -31,6 +34,7 @@ const RenderView = ({
   viewToRender,
   viewStore,
   editorStore,
+  navigationStore,
 }: RenderViewProps): JSX.Element => {
   const [isLoading, setIsLoading] = useState(true);
   const [structuredWidgets, setStructuredWidgets] = useState<
@@ -42,18 +46,26 @@ const RenderView = ({
       if (viewToRender) {
         // set the viewID in the viewStore
         await viewStore?.intializeView(viewToRender);
+
+        // Initialize navigation states for the current view
+        navigationStore?.initializeCurrentNavigationStates({
+          targetID: viewToRender,
+          actionType: NavigationActionType.NAV_TO_VIEW,
+        });
+
         await widgetStore?.initWidgetsAndProcess(viewToRender);
         const structuredData = widgetStore?.getStructuredData();
         setStructuredWidgets(structuredData);
+
         setIsLoading(false);
       }
     };
 
     initializeRenderView();
-  }, [viewStore, viewToRender, widgetStore]); // TODO INFO reredner added widgetStore
+  }, [viewStore, viewToRender, widgetStore]);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div></div>;
   }
 
   const rootLevelWidgets = getFilteredRootLevelWidgets(
@@ -66,7 +78,7 @@ const RenderView = ({
   return (
     <GridLayout
       selectedWidgetID={selectedWidgetID}
-      key={"top-level-grid"}
+      key={`top-level-grid-${preparedRootLevelWidgets?.length}`}
       content={rootLevelWidgets}
       onDragStart={(_a, _b, _c, _d, e) => e.stopPropagation()}
       readonly={readonly}
@@ -92,5 +104,6 @@ export default inject(
   "widgetStore",
   "queryStore",
   "resourceStore",
-  "editorStore"
+  "editorStore",
+  "navigationStore"
 )(observer(RenderView));

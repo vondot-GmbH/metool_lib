@@ -1,11 +1,13 @@
 import { WidgetConfig } from "../../../../globals/interfaces/config.interface";
-import containerWidgetComponent from "./container.widget.component";
+import ContainerWidget from "./container.widget.component/container.widget.component";
 import ContainerWidgetIcon from "./container.svg";
+import ContainerWidgetSidebar from "./sidebar.component/container.widget.sidebar.component";
 
 export const ContainerWidgetConfig: WidgetConfig = {
   name: "container",
   type: "CONTAINER_WIDGET",
-  component: containerWidgetComponent,
+  component: ContainerWidget,
   icon: ContainerWidgetIcon,
+  sidebarComponent: ContainerWidgetSidebar,
   canHaveChildren: true,
 };

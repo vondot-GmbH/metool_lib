@@ -4,7 +4,7 @@ import ConfigProvider from "../../../../config/config.provider";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styles from "./breakpoint.settings.component.module.scss";
 import RunningText from "../../general.components/text.components/running.text.component/running.text.component";
-import Column from "../../general.components/column.component/column.component";
+import Column from "../../general.components/ui.components/column.component/column.component";
 
 interface BreakpointSettingsProps {
   editorStore?: EditorStore;

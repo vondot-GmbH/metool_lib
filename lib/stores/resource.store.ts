@@ -7,7 +7,7 @@ import {
 } from "../schemas/resource.schemas/resource.schema";
 import { makeAutoObservable } from "mobx";
 import { CoreRestQueryType } from "../schemas/query.schemas/query.schema";
-import { queryExecutor } from "../provider/http/http.rest.query.client";
+import { queryExecutor } from "../providers/http/http.rest.query.client";
 import RootStore from "./root.store";
 import { getUniqueID } from "../globals/helpers/global.helper";
 

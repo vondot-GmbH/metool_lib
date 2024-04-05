@@ -2,12 +2,13 @@ import { inject, observer } from "mobx-react";
 import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import WidgetStore from "../../../../../stores/widget.store";
 import ComponentWrapper from "../../../general.components/component.wrapper.component/component.wrapper.component";
-import SelectDropDown from "../../../general.components/select.dropdown.component/select.dropdown.component";
+import SelectDropDown from "../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import { useEffect, useState } from "react";
 import JsonView from "react18-json-view";
 import "react18-json-view/src/style.css";
 import ResizableSidebar from "../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import { faCode, faTable } from "@fortawesome/pro-light-svg-icons";
+import { faCompass } from "@fortawesome/pro-regular-svg-icons";
 
 interface StateSidebarProps {
   stateStore?: StateStore;
@@ -15,6 +16,7 @@ interface StateSidebarProps {
 }
 
 const StateSidebar = ({ stateStore }: StateSidebarProps): JSX.Element => {
+  // TODO rename preparedWidgets to preparedStates or something else
   const [preparedWidgets, setPreparedWidgets] = useState<any[] | undefined>(
     undefined
   );
@@ -33,6 +35,8 @@ const StateSidebar = ({ stateStore }: StateSidebarProps): JSX.Element => {
         return faTable;
       case StateSelector.QUERIES:
         return faCode;
+      case StateSelector.NAVIGATION:
+        return faCompass;
       default:
         return faCode;
     }

@@ -5,14 +5,14 @@ import ResizableSidebar from "../../../../general.components/resizable.sidbear.c
 import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
 import QueryStore from "../../../../../../stores/query.store";
 import RestQueryForm from "../code.sidebar.component/components/rest.query.form/rest.query.form";
-import SelectDropDown from "../../../../general.components/select.dropdown.component/select.dropdown.component";
+import SelectDropDown from "../../../../general.components/input.components/select.dropdown.component/select.dropdown.component";
 import ResourceStore from "../../../../../../stores/resource.store";
 import { DataSourceType, Resource } from "../../../../../../main";
 import { RestQuery } from "../../../../../../schemas/query.schemas/query.schema";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
-import Row from "../../../../general.components/row.component/row.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import { faFloppyDisk } from "@fortawesome/free-regular-svg-icons";
 import defaultStyles from "../../../../../../styles/index.module.scss";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface CodeSidebarDetailProps {
   queryStore?: QueryStore;

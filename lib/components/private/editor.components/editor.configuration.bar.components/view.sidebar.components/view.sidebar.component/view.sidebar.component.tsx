@@ -1,21 +1,21 @@
 import { inject, observer } from "mobx-react";
-import ComponentWrapper from "../../../../general.components/component.wrapper.component/component.wrapper.component";
-import Row from "../../../../general.components/row.component/row.component";
+import Row from "../../../../general.components/ui.components/row.component/row.component";
 import RunningText from "../../../../general.components/text.components/running.text.component/running.text.component";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import ResizableSidebar from "../../../../general.components/resizable.sidbear.component/resizable.sidebar.component";
 import {
-  faAdd,
+  faEdit,
   faFileCircleCheck,
   faFiles,
 } from "@fortawesome/pro-regular-svg-icons";
-import IconButton from "../../../../general.components/icon.button.component/icon.button.component";
 import ViewStore from "../../../../../../stores/view.store";
 import { View } from "../../../../../../schemas/view.schemas/view.schema";
 import styles from "./view.sidebar.component.module.scss";
 import ViewSidebarDetail from "../view.sidebar.detail.component/view.sidebar.detail.component";
 import PageStore from "../../../../../../stores/page.store";
+import GenericList from "../../../../general.components/list.components/generic.list.component/generic.list.component";
+import IconButton from "../../../../general.components/button.components/icon.button.component/icon.button.component";
 
 interface ViewSidebarProps {
   viewStore?: ViewStore;
@@ -43,15 +43,7 @@ const ViewSidebar = ({
   }, [selectedItem]);
 
   // views of the current selected page
-  const views: View[] = useMemo(() => {
-    const currentViewIds = pageStore?.currentPageToRender?.views.map(
-      (view) => view.viewID
-    );
-
-    return viewStore?.views.filter((view) =>
-      currentViewIds?.includes(view.viewID)
-    ) as View[];
-  }, [viewStore?.views, pageStore?.currentPageToRender?.views]);
+  const views: View[] = viewStore?.viewsForCurrentPage || [];
 
   const itemClassName = (viewID: string | null) => {
     return (
@@ -74,10 +66,9 @@ const ViewSidebar = ({
     );
   };
 
-  const handleSelectItem = (viewID: string | null) => {
+  const handleSetViewToRender = (viewID: string | null) => {
     if (viewID == null) return;
 
-    // Setze den View als den zu rendernden View
     pageStore?.setCurrentViewIdToRender(viewID);
   };
 
@@ -86,44 +77,46 @@ const ViewSidebar = ({
     setSelectedItem(initialView);
   };
 
-  const buildViews = (): JSX.Element => {
+  const buildViewItem = (view: View) => {
     return (
-      <>
-        <ComponentWrapper
-          title={`Views von ${pageStore?.currentPageToRender?.name}`}
-          action={
-            <IconButton
-              icon={faAdd}
-              showBorder
-              onClick={() => {
-                handleAddView();
-              }}
-            />
-          }
-        >
-          {views?.map((view: View) => {
-            return (
-              <Row
-                className={itemClassName(view?.viewID)}
-                key={view.viewID}
-                onClick={() => {
-                  handleSelectItem(view?.viewID);
-                }}
-              >
-                {getDefaultViewIcon(view)}
-                <RunningText>{view.name}</RunningText>
-              </Row>
-            );
-          })}
-        </ComponentWrapper>
-      </>
+      <Row
+        justifyContent="space-between"
+        alignItems="center"
+        className={itemClassName(view?.viewID)}
+        key={view.viewID}
+      >
+        <Row>
+          {getDefaultViewIcon(view)}
+          <RunningText>{view.name}</RunningText>
+        </Row>
+        <IconButton
+          icon={faEdit}
+          onClick={() => {
+            setSelectedItem(view);
+          }}
+        />
+      </Row>
     );
   };
 
   return (
     <Row className={styles.configurationSidebar}>
       <ResizableSidebar initialWidth={330} minWidth={200} maxWidth={450}>
-        {buildViews()}
+        <GenericList
+          onAddNew={() => {
+            handleAddView();
+          }}
+          title={`Views von ${pageStore?.currentPageToRender?.name}`}
+          items={views ?? []}
+          identifierKey="viewID"
+          selectedIdentifier={currentViewID}
+          onSelectItem={(selectedItem: View) => {
+            handleSetViewToRender(selectedItem?.viewID);
+          }}
+          renderItem={(item: View) => {
+            return buildViewItem(item);
+          }}
+        />
       </ResizableSidebar>
 
       {selectedItem != null && (

@@ -1,9 +1,13 @@
 import { DEFAULT_LAYOUT_CONFIG } from "../globals/config/grid.layout.config";
+import { formatThemeVariableLabel } from "../globals/helpers/config.helper";
 import {
   BreakpointConfig,
   GridLayoutConfig,
   CorePageLayoutConfig,
   WidgetConfig,
+  ThemeConfig,
+  PreparedThemeConfig,
+  ThemeOption,
 } from "../globals/interfaces/config.interface";
 import {
   CoreQuery,
@@ -26,6 +30,7 @@ class ConfigProvider {
   private _coreResources: CoreResourceMap = new Map();
   private _coreQueries: CoreQueryMap = new Map();
   private _pageLayoutConfigs: Map<string, CorePageLayoutConfig> = new Map();
+  private _preparedThemeConfig: PreparedThemeConfig[] = [];
 
   private constructor() {}
 
@@ -84,6 +89,47 @@ class ConfigProvider {
     }
 
     this._layoutConfig = layoutConfig;
+  }
+
+  // registers the theme configuration and sets CSS custom properties in the document root
+  public registerThemeConfig(themeConfig?: ThemeConfig): void {
+    const root = document.documentElement;
+    const preparedConfig: PreparedThemeConfig[] = [];
+
+    if (themeConfig == null) {
+      return;
+    }
+
+    // loop over each category in the theme configuration (e.g., colors, fonts)
+    for (const category in themeConfig) {
+      const categoryConfig = themeConfig[category];
+      if (!categoryConfig) continue;
+
+      const options: ThemeOption[] = [];
+
+      for (const key in categoryConfig) {
+        const value = categoryConfig[key] as string;
+        const formattedValue = `--${category}-${key}`;
+
+        // Set the CSS custom property on the root element
+        root.style.setProperty(formattedValue, value);
+
+        // push the prepared variable to the options array
+        options.push({
+          label: formatThemeVariableLabel(key), // Format the label for readability
+          value: value,
+          formattedValue: `var(${formattedValue})`,
+        });
+      }
+
+      // Push the category with its options to the prepared configuration for the usage of ThemeDropdown
+      preparedConfig.push({
+        category,
+        options,
+      });
+    }
+
+    this._preparedThemeConfig = preparedConfig;
   }
 
   //! getter
@@ -192,6 +238,16 @@ class ConfigProvider {
 
   public getRegisteredWidgets(): WidgetConfig[] {
     return Array.from(this._registeredWidgets.values());
+  }
+
+  public getThemeVariablesForCategory(
+    category: keyof ThemeConfig
+  ): ThemeOption[] | undefined {
+    const filteredVariables = this._preparedThemeConfig.find(
+      (themeConfig) => themeConfig.category === category
+    );
+
+    return filteredVariables?.options;
   }
 }
 

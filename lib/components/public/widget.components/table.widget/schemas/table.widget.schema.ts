@@ -1,31 +1,24 @@
-import { SpacingModeValues } from "../../../../private/general.components/spacing.editor.component/spacing.editor.component";
+import {
+  CSSStyles,
+  WidgetEvent,
+} from "../../../../../globals/interfaces/widget.option.interface";
 
 export interface TableOptions {
   data: string;
   columns: TableColumn[];
-  headerTextColor?: string; // TODO not used
-  rowTextColor?: string; // TODO not used
-  headerBackgroundColor?: string;
-  rowBackgroundColor?: string;
-  borderBottomColor?: string;
-  rowHoverColor?: string;
   emptyStateText: string;
-  rowSelectionBackgroundColor?: string;
   rowSelectionType: "single" | "multiple" | "none";
-  tableCellPadding: SpacingModeValues;
+  headerStyles?: CSSStyles;
+  headerCellStyles?: CSSStyles;
+  bodyRowStyles?: CSSStyles;
+  bodyCellStyles?: CSSStyles;
+  events: WidgetEvent[];
 }
 
 export interface TableColumn {
   columnID: string;
   source: string;
   label: string;
-  textAlign: "left" | "center" | "right";
   format?: "string" | "number" | "date";
-  resizable?: boolean;
-  minWidth?: number;
-  maxWidth?: number;
-  headerTextColor?: string; // TODO not used
-  rowTextColor?: string; // TODO not used
-  headerBackgroundColor?: string;
-  rowBackgroundColor?: string;
+  columnStyles?: CSSStyles;
 }

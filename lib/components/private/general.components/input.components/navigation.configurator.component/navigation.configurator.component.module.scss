@@ -1,0 +1,44 @@
+.navigationConfigurator {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  overflow: hidden;
+  margin-bottom: 20px;
+
+  .headerContainer {
+    padding: 15px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .bodyContainer {
+    padding: 10px;
+
+    .actionTypeSelect {
+      margin-bottom: 10px;
+    }
+
+    .targetSelect {
+      margin-bottom: 10px;
+    }
+
+    .paramInput {
+      margin-bottom: 10px;
+    }
+  }
+}
+
+.selectInput {
+  margin-bottom: 10px;
+}
+
+.textInput {
+  margin-bottom: 10px;
+}
