@@ -66,7 +66,6 @@ const TableWidget = ({
         selectedData[0] || null
       );
 
-      // TODO
       handleWidgetEvent({
         widgetOptions: tableOptions,
         eventType: EventType.ON_CLICK_ROW,
@@ -74,6 +73,7 @@ const TableWidget = ({
         stateStore,
       });
     } else if (tableOptions?.rowSelectionType === "multiple") {
+      // TODO hanle that if the state logic is refactored (handle array of selected rows)
       stateStore?.setStateValue(
         StateSelector.WIDGETS,
         widgetID,
