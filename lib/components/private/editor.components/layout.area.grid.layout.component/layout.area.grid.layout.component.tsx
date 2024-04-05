@@ -68,8 +68,8 @@ const LayoutAreaGridLayout = ({
     useState<number>(predefinedRowHeight);
 
   const dynamicLayouts = useMemo(() => {
-    return convertDynamicLayouts(selectedWidgetID, savedLayouts, readonly);
-  }, [selectedWidgetID, savedLayouts, readonly]);
+    return convertDynamicLayouts(savedLayouts);
+  }, [savedLayouts]);
 
   // set the grid background and adjust the row height based on the layout area height
   useEffect(() => {
@@ -139,28 +139,14 @@ const LayoutAreaGridLayout = ({
     setSavedLayouts(updatedSavedLayouts);
   };
 
-  const handleDragStart = (
-    layout: any,
-    oldItem: any,
-    newItem: any,
-    placeholder: any,
-    event: any,
-    element: any
-  ) => {
+  const handleDragStart = (event: any) => {
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(true);
     editorStore?.setVisualWidgetOutlineGuide(true);
   };
 
-  const handleDragStop = (
-    layout: Layout[],
-    oldItem: Layout,
-    newItem: Layout,
-    placeholder: Layout,
-    event: MouseEvent,
-    element: HTMLElement
-  ) => {
+  const handleDragStop = (layout: Layout[], event: MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(false);
@@ -173,28 +159,14 @@ const LayoutAreaGridLayout = ({
     );
   };
 
-  const handleResizeStart = (
-    layout: Layout[],
-    oldItem: Layout,
-    newItem: Layout,
-    placeholder: Layout,
-    event: MouseEvent,
-    element: HTMLElement
-  ) => {
+  const handleResizeStart = (event: MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(true);
     editorStore?.setVisualWidgetOutlineGuide(true);
   };
 
-  const handleResizeStop = (
-    layout: Layout[],
-    oldItem: Layout,
-    newItem: Layout,
-    placeholder: Layout,
-    event: MouseEvent,
-    element: HTMLElement
-  ) => {
+  const handleResizeStop = (layout: Layout[], event: MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(false);
@@ -221,9 +193,22 @@ const LayoutAreaGridLayout = ({
         compactType={"vertical"}
         onBreakpointChange={onBreakpointChange}
         onDragStart={handleDragStart}
-        onDragStop={handleDragStop}
-        onResizeStart={handleResizeStart}
-        onResizeStop={handleResizeStop}
+        onDragStop={(layout, _oldItem, _newItem, _placeholder, event) => {
+          handleDragStop(layout, event);
+        }}
+        onResizeStart={(
+          _layout,
+          _oldItem,
+          _newItem,
+          _placeholder,
+          event,
+          _element
+        ) => {
+          handleResizeStart(event);
+        }}
+        onResizeStop={(layout, _oldItem, _newItem, _placeholder, event) => {
+          handleResizeStop(layout, event);
+        }}
         onDrop={handleDrop}
         isDroppable={true}
         isDraggable={selectedWidgetID != null && !readonly}

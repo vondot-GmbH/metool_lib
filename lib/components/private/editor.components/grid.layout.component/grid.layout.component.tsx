@@ -80,8 +80,8 @@ const GridLayout = ({
   const [savedLayouts, setSavedLayouts] = useState(layouts);
 
   const dynamicLayouts = useMemo(() => {
-    return convertDynamicLayouts(selectedWidgetID, savedLayouts, readonly);
-  }, [selectedWidgetID, savedLayouts, readonly]);
+    return convertDynamicLayouts(savedLayouts);
+  }, [savedLayouts]);
 
   const gridBackgroundStyle = {
     background: showGrid ? gridBackground : "none",

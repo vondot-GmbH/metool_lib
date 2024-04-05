@@ -16,7 +16,6 @@ const ContainerWidget = ({
   widgetID,
   children,
   widgetStore,
-  navigationStore,
 }: ContainerWidgetProps): JSX.Element => {
   const containerOptions: ContainerOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);

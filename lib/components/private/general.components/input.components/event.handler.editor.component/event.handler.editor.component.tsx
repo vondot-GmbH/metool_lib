@@ -95,7 +95,7 @@ const EventHandlerEditor: React.FC<EventHandlerEditorProps> = ({
   const renderDetailView = (
     item: WidgetEvent,
     index: number | null,
-    onClose: () => void
+    _onClose: () => void
   ) => (
     <div>
       {index != null &&

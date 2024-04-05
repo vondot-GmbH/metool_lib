@@ -72,13 +72,7 @@ export const convertLayoutToPositioningForBreakpoint = (
   return positioningRecord;
 };
 
-// adding static properties to the layout
-// only for display purposes in the editor (not for saving)
-export const convertDynamicLayouts = (
-  selectedWidgetID: string | undefined,
-  layouts: any,
-  readonly: boolean
-) => {
+export const convertDynamicLayouts = (layouts: { [key: string]: Layout[] }) => {
   const result = {} as any;
 
   // go through each breakpoint
@@ -88,13 +82,8 @@ export const convertDynamicLayouts = (
 
     // go through each layout for the current breakpoint and add the adjusted layout to the result
     for (const layout of layoutsForBreakpoint) {
-      // if the grid is readonly or the selected widget is not the current widget, set the layout to static
-
-      // const isStatic = readonly || (selectedWidgetID !== layout.i && !readonly);
-
       result[breakpoint].push({
         ...layout,
-        // static: isStatic, // TODO isDraggable solves this issue for now
       });
     }
   }

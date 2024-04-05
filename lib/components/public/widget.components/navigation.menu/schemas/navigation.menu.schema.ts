@@ -12,6 +12,6 @@ export interface NavigationMenuOptions {
 export interface NavigationMenuItem {
   id: string;
   label: string;
-  events: WidgetEvent[];
+  events?: WidgetEvent[];
   naviationMenuItemStyles?: CSSStyles;
 }
