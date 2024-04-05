@@ -1,5 +1,7 @@
-import { NavigationParams } from "../../../../../globals/interfaces/navigation.interface";
-import { CSSStyles } from "../../../../../globals/interfaces/widget.option.interface";
+import {
+  CSSStyles,
+  WidgetEvent,
+} from "../../../../../globals/interfaces/widget.option.interface";
 
 export interface NavigationMenuOptions {
   items: NavigationMenuItem[];
@@ -10,6 +12,6 @@ export interface NavigationMenuOptions {
 export interface NavigationMenuItem {
   id: string;
   label: string;
-  navigationParams: NavigationParams;
+  events: WidgetEvent[];
   naviationMenuItemStyles?: CSSStyles;
 }

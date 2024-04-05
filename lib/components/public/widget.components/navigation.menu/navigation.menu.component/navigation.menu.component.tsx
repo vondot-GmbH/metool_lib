@@ -3,9 +3,13 @@ import WidgetStore from "../../../../../stores/widget.store";
 import NavigationStore from "../../../../../stores/navigation.store";
 import styles from "./navigation.menu.component.module.scss";
 import StateStore from "../../../../../stores/state.store";
-import { NavigationMenuOptions } from "../schemas/navigation.menu.schema";
+import {
+  NavigationMenuItem,
+  NavigationMenuOptions,
+} from "../schemas/navigation.menu.schema";
 import { useEffect } from "react";
-import { NavigationParams } from "../../../../../globals/interfaces/navigation.interface";
+import { handleWidgetEvent } from "../../../../../globals/helpers/event.helper";
+import { EventType } from "../../../../../globals/enums/widget.enum";
 
 interface NavigationMenuWidgetProps {
   widgetID: string;
@@ -31,8 +35,13 @@ const NavigationMenuWidget = ({
     stateStore?.initializeDynamicOptions(widgetID, analized, () => {}, {});
   }, []);
 
-  const handleNavigation = (navigationParams: NavigationParams) => {
-    navigationStore?.navigate(navigationParams);
+  const handleOnClick = (item: NavigationMenuItem) => {
+    handleWidgetEvent({
+      widgetOptions: item,
+      eventType: EventType.ON_CLICK_ITEM,
+      navigationStore,
+      stateStore,
+    });
   };
 
   return (
@@ -50,7 +59,7 @@ const NavigationMenuWidget = ({
           // TODO Implement the active state
           className={styles.navigationItemActive + " " + styles.navigationItem}
           style={{ ...widgetOptions?.items[i]?.naviationMenuItemStyles }}
-          onClick={() => handleNavigation(item?.navigationParams)}
+          onClick={() => handleOnClick(item)}
         >
           {item.label}
         </button>

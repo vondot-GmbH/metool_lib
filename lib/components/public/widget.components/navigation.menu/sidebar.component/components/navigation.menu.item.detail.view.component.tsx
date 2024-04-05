@@ -7,7 +7,10 @@ import CSSPropertyEditor from "../../../../../private/general.components/input.c
 import PageStore from "../../../../../../stores/page.store";
 import ViewStore from "../../../../../../stores/view.store";
 import { inject, observer } from "mobx-react";
-import NavigationConfigurator from "../../../../../private/general.components/input.components/navigation.configurator.component/navigation.configurator.component";
+import EventHandlerEditor, {
+  AvailableEvents,
+} from "../../../../../private/general.components/input.components/event.handler.editor.component/event.handler.editor.component";
+import { EventType } from "../../../../../../globals/enums/widget.enum";
 
 interface NavigationMenuItemDetailViewProps {
   menuItem: NavigationMenuItem;
@@ -22,6 +25,13 @@ const NavigationMenuItemDetailView = ({
   widgetStore,
   selectedWidgetID,
 }: NavigationMenuItemDetailViewProps): JSX.Element => {
+  const availableEvents: AvailableEvents[] = [
+    {
+      label: "On Item Click",
+      value: EventType.ON_CLICK_ITEM,
+    },
+  ];
+
   return (
     <div>
       <CollapsibleSection title="Content">
@@ -44,19 +54,20 @@ const NavigationMenuItemDetailView = ({
           }}
         />
 
-        <NavigationConfigurator
-          onNavigationParamsChange={(params) => {
+        <EventHandlerEditor
+          initialEvents={menuItem?.events}
+          availableEvents={availableEvents}
+          onChange={(events) => {
             widgetStore?.updateWidgetOptionArrayItem<NavigationMenuItem>({
               widgetID: selectedWidgetID ?? "",
               optionName: "items",
               identifierField: "id",
               identifierValue: menuItem.id,
               updatedProperties: {
-                navigationParams: params,
+                events: events,
               },
             });
           }}
-          initialParams={menuItem.navigationParams}
         />
       </CollapsibleSection>
 

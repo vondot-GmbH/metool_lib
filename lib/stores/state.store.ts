@@ -302,8 +302,6 @@ export class StateStore {
           resolvedDependency.resolvedValue;
       }
 
-      if (query?.queryID == "getUserByID") console.log(resolvedVariables);
-
       const response = await queryExecutor.executeRestQuery(
         query,
         resolvedVariables,

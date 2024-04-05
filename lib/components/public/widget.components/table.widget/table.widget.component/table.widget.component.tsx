@@ -1,6 +1,6 @@
 import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
-import StateStore from "../../../../../stores/state.store";
+import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import { TableWidgetState } from "../../../../../globals/interfaces/widget.state.interface";
 import { useEffect, useState } from "react";
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
@@ -9,7 +9,8 @@ import Table, {
 } from "../../../../private/general.components/list.components/table.component/data.table.component";
 import { TableOptions } from "../schemas/table.widget.schema";
 import NavigationStore from "../../../../../stores/navigation.store";
-import { NavigationActionType } from "../../../../../globals/interfaces/navigation.interface";
+import { handleWidgetEvent } from "../../../../../globals/helpers/event.helper";
+import { EventType } from "../../../../../globals/enums/widget.enum";
 
 interface TableWidgetProps {
   widgetID: string;
@@ -57,30 +58,29 @@ const TableWidget = ({
   };
 
   const handleSelectionDataChange = (selectedData: any[]) => {
-    console.log("nav", navigationStore);
-    navigationStore?.navigate({
-      actionType: NavigationActionType.NAV_TO_PAGE,
-      targetID: "5f404b6b9I6b4c3017f99979",
-      params: {
-        userID: selectedData?.[0]?.id,
-      },
-    });
+    if (tableOptions?.rowSelectionType === "single") {
+      stateStore?.setStateValue(
+        StateSelector.WIDGETS,
+        widgetID,
+        "selectedSourceRow",
+        selectedData[0] || null
+      );
 
-    // if (tableOptions?.rowSelectionType === "single") {
-    //   stateStore?.setStateValue(
-    //     StateSelector.WIDGETS,
-    //     widgetID,
-    //     "selectedSourceRow",
-    //     selectedData
-    //   );
-    // } else if (tableOptions?.rowSelectionType === "multiple") {
-    //   stateStore?.setStateValue(
-    //     StateSelector.WIDGETS,
-    //     widgetID,
-    //     "selectedSourceRows",
-    //     selectedData
-    //   );
-    // }
+      // TODO
+      handleWidgetEvent({
+        widgetOptions: tableOptions,
+        eventType: EventType.ON_CLICK_ROW,
+        navigationStore,
+        stateStore,
+      });
+    } else if (tableOptions?.rowSelectionType === "multiple") {
+      stateStore?.setStateValue(
+        StateSelector.WIDGETS,
+        widgetID,
+        "selectedSourceRows",
+        selectedData
+      );
+    }
   };
 
   return (
@@ -97,7 +97,6 @@ const TableWidget = ({
       noDataText="No data available"
       rowSelectionType={tableOptions?.rowSelectionType}
       onSelectionDataChange={(selectedData) => {
-        console.log("selectedData", selectedData);
         handleSelectionDataChange(selectedData);
       }}
     />
