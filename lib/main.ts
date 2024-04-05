@@ -16,9 +16,15 @@ export { default as InitializeMetool } from "./config/init";
 
 // types
 export type {
+  GridLayoutConfig,
   WidgetConfig,
   GridLayoutConfig as LayoutConfig,
 } from "./globals/interfaces/config.interface";
+
+export type {
+  NavigationActionType,
+  NavigationParams,
+} from "./globals/interfaces/navigation.interface";
 
 export type {
   Resource,

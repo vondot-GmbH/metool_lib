@@ -62,7 +62,7 @@ export interface CoreRestQuerConfig {
   [CoreRestQueryType.GET_QUERIES]: CoreRestQuery;
   [CoreRestQueryType.GET_QUERIES_BY_ID]: CoreRestQuery;
   [CoreRestQueryType.UPDATE_QUERY]: CoreRestQuery;
-  [CoreRestQueryType.UPDATE_QUERY]: CoreRestQuery;
+  [CoreRestQueryType.DELETE_QUERY]: CoreRestQuery;
   [CoreRestQueryType.CREATE_QUERY]: CoreRestQuery;
 
   [CoreRestQueryType.GET_RESOURCES]: CoreRestQuery;

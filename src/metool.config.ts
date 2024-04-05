@@ -142,16 +142,6 @@ export const coreQueryConfig = {
     method: "GET",
     url: "/widgets",
     core: true,
-    // params: [
-    //   {
-    //     key: "viewID",
-    //     value: "{{viewID}}",
-    //   },
-    //   {
-    //     key: "pageID",
-    //     value: "{{pageID}}",
-    //   },
-    // ],
   },
 
   createWidget: {

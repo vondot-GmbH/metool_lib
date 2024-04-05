@@ -26,6 +26,8 @@ export interface AreaOptions {
     [breakpoint: string]: BreakpointSpecificAreaOptions;
   };
 }
+
+// TODO add css schema instead
 export interface BreakpointAreaOptions {
   height?: string;
   width?: string;
