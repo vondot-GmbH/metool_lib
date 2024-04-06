@@ -48,6 +48,7 @@ const RenderPage = ({
 
       // Initialize navigation states for the current page
       navigationStore?.initializeCurrentNavigationStates(initialPageToRender);
+      navigationStore?.updateNavigationHistory(initialPageToRender);
 
       setIsLoading(false);
     };

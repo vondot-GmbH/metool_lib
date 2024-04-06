@@ -120,7 +120,7 @@ class NavigationStore {
   };
 
   // method to update the navigation history with new parameters.
-  private updateNavigationHistory(navigationParams: NavigationParams): void {
+  public updateNavigationHistory(navigationParams: NavigationParams): void {
     this._navigationHistory = this._navigationHistory.slice(
       0,
       this._navigationHistoryIndex + 1
