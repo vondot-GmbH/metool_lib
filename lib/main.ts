@@ -44,3 +44,8 @@ export type {
 export { DataSourceType } from "./schemas/resource.schemas/resource.schema";
 
 export type { WidgetStore, NavigationStore, StateStore, EditorStore };
+
+// components
+
+export { default as CollapsibleSection } from "./components/private/general.components/collapsible.section.component/collapsible.section.component";
+export { default as StateInput } from "./components/private/general.components/input.components/state.input.component/state.input.component";
