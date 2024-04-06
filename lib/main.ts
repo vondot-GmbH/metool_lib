@@ -1,3 +1,8 @@
+import EditorStore from "./stores/editor.store";
+import NavigationStore from "./stores/navigation.store";
+import StateStore from "./stores/state.store";
+import WidgetStore from "./stores/widget.store";
+
 // public package copmonents
 export { default as CanvasEditorPublic } from "./components/public/canvas.editor.component/canvas.editor.component";
 export { default as RenderPage } from "./components/public/render.page.component/render.pagge.component";
@@ -30,6 +35,7 @@ export type {
   Resource,
   CoreResource,
 } from "./schemas/resource.schemas/resource.schema";
+
 export type {
   Query,
   CoreRestQuerConfig,
@@ -37,5 +43,4 @@ export type {
 
 export { DataSourceType } from "./schemas/resource.schemas/resource.schema";
 
-// TODO check if this is needed
-export { default as MetoolStoreProvider } from "./components/private/store.provider.component/store.provider.component";
+export type { WidgetStore, NavigationStore, StateStore, EditorStore };
