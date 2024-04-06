@@ -62,8 +62,8 @@ const Table = <T,>({
 
   const renderHeader = () => (
     <div className={styles.header} style={{ ...headerStyles }}>
-      {rowSelectionType !== "none" && (
-        <div className={styles.headerCell} style={{ ...headerCellStyles }}>
+      {rowSelectionType === "multiple" && (
+        <div className={styles.selectCell} style={{ ...headerCellStyles }}>
           #
         </div>
       )}
@@ -86,8 +86,8 @@ const Table = <T,>({
       style={{ ...bodyRowStyles }}
       onClick={() => handleRowSelectionChange(record[rowKey])}
     >
-      {rowSelectionType !== "none" && (
-        <div className={styles.cell} style={{ ...bodyCellStyles }}>
+      {rowSelectionType === "multiple" && (
+        <div className={styles.selectCell} style={{ ...bodyCellStyles }}>
           <Checkbox
             checked={selectedRowKeys.includes(record[rowKey])}
             onChange={() => handleRowSelectionChange(record[rowKey])}

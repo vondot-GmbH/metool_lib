@@ -30,6 +30,13 @@
   padding: 10px;
 }
 
+.selectCell {
+  flex: 1;
+  padding: 10px;
+  max-width: 35px;
+  min-width: 35px;
+}
+
 .noData,
 .loading {
   padding: 20px;
