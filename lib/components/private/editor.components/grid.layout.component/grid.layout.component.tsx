@@ -102,7 +102,7 @@ const GridLayout = ({
 
   // TODO
   const handleDrop = (_layout: any, layoutItem: any, event: any): void => {
-    if (currentBreakpoint == null) {
+    if (currentBreakpoint == null || readonly) {
       return;
     }
 
@@ -146,6 +146,8 @@ const GridLayout = ({
     event: any,
     element: any
   ) => {
+    if (readonly) return;
+
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(true);
@@ -163,6 +165,8 @@ const GridLayout = ({
     event: MouseEvent,
     element: HTMLElement
   ) => {
+    if (readonly) return;
+
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(false);
@@ -186,6 +190,8 @@ const GridLayout = ({
     event: MouseEvent,
     element: HTMLElement
   ) => {
+    if (readonly) return;
+
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(true);
@@ -203,6 +209,8 @@ const GridLayout = ({
     event: MouseEvent,
     element: HTMLElement
   ) => {
+    if (readonly) return;
+
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(false);
@@ -239,7 +247,7 @@ const GridLayout = ({
       }
       cols={cols}
       rowHeight={rowHeight}
-      style={gridBackgroundStyle}
+      style={!readonly ? gridBackgroundStyle : {}}
       compactType={"vertical"}
       onBreakpointChange={onBreakpointChange}
       onDragStart={handleDragStart}
@@ -247,8 +255,9 @@ const GridLayout = ({
       onResizeStart={handleResizeStart}
       onResizeStop={handleResizeStop}
       onDrop={handleDrop}
-      isDroppable={true}
+      isDroppable={!readonly}
       isDraggable={selectedWidgetID != null && !readonly}
+      isResizable={selectedWidgetID != null && !readonly}
       onLayoutChange={(_layout, layouts) => {
         setSavedLayouts(layouts);
       }}

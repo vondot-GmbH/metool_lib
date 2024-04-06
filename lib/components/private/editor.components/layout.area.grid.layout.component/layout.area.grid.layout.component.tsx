@@ -103,7 +103,7 @@ const LayoutAreaGridLayout = ({
 
   // TODO
   const handleDrop = (_layout: any, layoutItem: any, event: any): void => {
-    if (currentBreakpoint == null) {
+    if (currentBreakpoint == null || readonly) {
       return;
     }
 
@@ -140,6 +140,8 @@ const LayoutAreaGridLayout = ({
   };
 
   const handleDragStart = (event: any) => {
+    if (readonly) return;
+
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(true);
@@ -147,6 +149,8 @@ const LayoutAreaGridLayout = ({
   };
 
   const handleDragStop = (layout: Layout[], event: MouseEvent) => {
+    if (readonly) return;
+
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(false);
@@ -167,6 +171,8 @@ const LayoutAreaGridLayout = ({
   };
 
   const handleResizeStop = (layout: Layout[], event: MouseEvent) => {
+    if (readonly) return;
+
     event.stopPropagation();
     event.preventDefault();
     setShowGrid(false);
@@ -189,7 +195,7 @@ const LayoutAreaGridLayout = ({
         breakpoint={readonly ? undefined : editorStore?.currentBreakpoint}
         cols={cols}
         rowHeight={adjustedRowHeight}
-        style={gridBackgroundStyle}
+        style={!readonly ? gridBackgroundStyle : {}}
         compactType={"vertical"}
         onBreakpointChange={onBreakpointChange}
         onDragStart={(
@@ -219,8 +225,9 @@ const LayoutAreaGridLayout = ({
           handleResizeStop(layout, event);
         }}
         onDrop={handleDrop}
-        isDroppable={true}
+        isDroppable={!readonly}
         isDraggable={selectedWidgetID != null && !readonly}
+        isResizable={selectedWidgetID != null && !readonly}
         onLayoutChange={(_layout, layouts) => {
           setSavedLayouts(layouts);
         }}
