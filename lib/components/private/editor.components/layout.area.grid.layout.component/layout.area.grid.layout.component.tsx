@@ -192,7 +192,16 @@ const LayoutAreaGridLayout = ({
         style={gridBackgroundStyle}
         compactType={"vertical"}
         onBreakpointChange={onBreakpointChange}
-        onDragStart={handleDragStart}
+        onDragStart={(
+          _layout,
+          _oldItem,
+          _newItem,
+          _placeholder,
+          event,
+          _element
+        ) => {
+          handleDragStart(event);
+        }}
         onDragStop={(layout, _oldItem, _newItem, _placeholder, event) => {
           handleDragStop(layout, event);
         }}
