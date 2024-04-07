@@ -1,13 +1,13 @@
 import WidgetStore from "../../../../../stores/widget.store";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
 import TextInput from "../../../../private/general.components/input.components/text.input.component/text.input.component";
-import { TableColumn } from "../schemas/table.widget.schema";
 import defaultStyles from "../../../../../styles/index.module.scss";
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
 import SelectDropDown from "../../../../private/general.components/input.components/select.dropdown.component/select.dropdown.component";
+import { TableColumnOptions } from "../schemas/table.widget.schema";
 
 interface DetailViewProps {
-  tableColumn: TableColumn;
+  tableColumn: TableColumnOptions;
   widgetStore?: WidgetStore;
   selectedWidgetID?: string;
 }
@@ -37,7 +37,7 @@ export const TableWidgetColumnDetailView = ({
           value={tableColumn.source}
           onValueChange={(value) => {
             if (value != null) {
-              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+              widgetStore?.updateWidgetOptionArrayItem<TableColumnOptions>({
                 widgetID: selectedWidgetID ?? "",
                 optionName: "columns",
                 identifierField: "columnID",
@@ -56,7 +56,7 @@ export const TableWidgetColumnDetailView = ({
           selectedItem={tableColumn?.format}
           onChange={(item) => {
             if (item?.value != null) {
-              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+              widgetStore?.updateWidgetOptionArrayItem<TableColumnOptions>({
                 widgetID: selectedWidgetID ?? "",
                 optionName: "columns",
                 identifierField: "columnID",
@@ -75,7 +75,7 @@ export const TableWidgetColumnDetailView = ({
           className={defaultStyles.mt10}
           onValueChange={(value) => {
             if (value != null) {
-              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+              widgetStore?.updateWidgetOptionArrayItem<TableColumnOptions>({
                 widgetID: selectedWidgetID ?? "",
                 optionName: "columns",
                 identifierField: "columnID",
@@ -93,7 +93,7 @@ export const TableWidgetColumnDetailView = ({
         <CSSPropertyEditor
           label="Column Styles"
           onChange={(properties: Record<string, string>) => {
-            widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+            widgetStore?.updateWidgetOptionArrayItem<TableColumnOptions>({
               widgetID: selectedWidgetID ?? "",
               optionName: "columns",
               identifierField: "columnID",
