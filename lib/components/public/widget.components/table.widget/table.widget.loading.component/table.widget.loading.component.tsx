@@ -29,8 +29,8 @@ const TableWidgetLoadingComponent = ({
                 <div>
                   <Skeleton
                     count={1}
-                    width={40}
-                    height={40}
+                    width={50}
+                    height={50}
                     baseColor="#e1e3e3"
                   />
                 </div>

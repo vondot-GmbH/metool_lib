@@ -7,10 +7,14 @@ import RunningText from "../../../../private/general.components/text.components/
 import Table, {
   TableColumn,
 } from "../../../../private/general.components/list.components/table.component/data.table.component";
-import { TableOptions } from "../schemas/table.widget.schema";
+import {
+  TableOptions,
+  TableColumnOptions,
+} from "../schemas/table.widget.schema";
 import NavigationStore from "../../../../../stores/navigation.store";
 import { handleWidgetEvent } from "../../../../../globals/helpers/event.helper";
 import { EventType } from "../../../../../globals/enums/widget.enum";
+import Image from "../../../../private/general.components/image.component/image.component";
 
 interface TableWidgetProps {
   widgetID: string;
@@ -46,13 +50,24 @@ const TableWidget = ({
     );
   }, []);
 
+  const renderColumn = (columnOptions: TableColumnOptions, value: any) => {
+    switch (columnOptions.format) {
+      case "string":
+        return <RunningText>{value}</RunningText>;
+      case "image":
+        return <Image size="M" imageUrl={value} />;
+      default:
+        return <RunningText>{value}</RunningText>;
+    }
+  };
+
   const prepareColumns = (tableOptions: TableOptions): TableColumn<any>[] => {
     return tableOptions?.columns?.map(
       (column) =>
         ({
           ...column,
           columnStyles: column.columnStyles,
-          render: (value: any) => <RunningText>{value}</RunningText>,
+          render: (value: any) => renderColumn(column, value),
         } as TableColumn<any>)
     );
   };

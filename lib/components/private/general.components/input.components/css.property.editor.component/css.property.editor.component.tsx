@@ -27,6 +27,7 @@ enum CssPropertyType {
   MinWidth = "minWidth",
   MaxWidth = "maxWidth",
   Gap = "gap",
+  AlignItems = "alignItems",
 }
 
 // assign CSS properties to the corresponding type
@@ -48,6 +49,7 @@ const cssPropertiesConfig = [
   { label: "Min Width", type: CssPropertyType.MinWidth },
   { label: "Max Width", type: CssPropertyType.MaxWidth },
   { label: "Gap", type: CssPropertyType.Gap },
+  { label: "Align Items", type: CssPropertyType.AlignItems },
 ];
 
 interface CSSProperty {
@@ -152,6 +154,7 @@ const CSSPropertyEditor = ({
         );
 
       case CssPropertyType.TextAlign:
+      case CssPropertyType.AlignItems:
         return (
           <MultiSwitch
             label="Text Align"

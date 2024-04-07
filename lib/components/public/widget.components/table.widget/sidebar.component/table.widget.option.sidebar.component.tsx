@@ -4,7 +4,10 @@ import MultiFieldDropdownEditor from "../../../../private/general.components/mul
 import RunningText from "../../../../private/general.components/text.components/running.text.component/running.text.component";
 import CollapsibleSection from "../../../../private/general.components/collapsible.section.component/collapsible.section.component";
 import { useSidebar } from "../../../../private/editor.components/option.sidebar.component/option.sidebar.component";
-import { TableColumn, TableOptions } from "../schemas/table.widget.schema";
+import {
+  TableColumnOptions,
+  TableOptions,
+} from "../schemas/table.widget.schema";
 import { TableWidgetColumnDetailView } from "./table.widget.column.detail.view.comonent";
 import { v4 as UUID } from "uuid";
 import defaultStyles from "../../../../../styles/index.module.scss";
@@ -56,7 +59,7 @@ const TableWidgetSidebar = ({
   ];
 
   const handleAddColumn = (): void => {
-    const columnOptions: TableColumn[] = options?.columns;
+    const columnOptions: TableColumnOptions[] = options?.columns;
 
     const newColumn = {
       columnID: UUID(),
@@ -67,7 +70,7 @@ const TableWidgetSidebar = ({
       maxWidth: 200,
       minWidth: 100,
       resizable: true,
-    } as TableColumn;
+    } as TableColumnOptions;
 
     let newColumnOptions = [newColumn];
 
@@ -101,7 +104,7 @@ const TableWidgetSidebar = ({
         <MultiFieldDropdownEditor
           label="Columns"
           items={options?.columns}
-          renderListItem={(item: TableColumn) => (
+          renderListItem={(item: TableColumnOptions) => (
             <div
               onClick={() => {
                 pushView(

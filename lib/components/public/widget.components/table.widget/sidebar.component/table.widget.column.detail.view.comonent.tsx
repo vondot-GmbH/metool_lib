@@ -4,6 +4,7 @@ import TextInput from "../../../../private/general.components/input.components/t
 import { TableColumn } from "../schemas/table.widget.schema";
 import defaultStyles from "../../../../../styles/index.module.scss";
 import CSSPropertyEditor from "../../../../private/general.components/input.components/css.property.editor.component/css.property.editor.component";
+import SelectDropDown from "../../../../private/general.components/input.components/select.dropdown.component/select.dropdown.component";
 
 interface DetailViewProps {
   tableColumn: TableColumn;
@@ -17,6 +18,17 @@ export const TableWidgetColumnDetailView = ({
   widgetStore,
   selectedWidgetID,
 }: DetailViewProps): JSX.Element => {
+  const formatOptions = [
+    {
+      label: "Text",
+      value: "string",
+    },
+    {
+      label: "Image",
+      value: "image",
+    },
+  ];
+
   return (
     <div>
       <CollapsibleSection title="Content">
@@ -32,6 +44,25 @@ export const TableWidgetColumnDetailView = ({
                 identifierValue: tableColumn.columnID,
                 updatedProperties: {
                   source: value as string,
+                },
+              });
+            }
+          }}
+        />
+
+        <SelectDropDown
+          label={"Format"}
+          items={formatOptions}
+          selectedItem={tableColumn?.format}
+          onChange={(item) => {
+            if (item?.value != null) {
+              widgetStore?.updateWidgetOptionArrayItem<TableColumn>({
+                widgetID: selectedWidgetID ?? "",
+                optionName: "columns",
+                identifierField: "columnID",
+                identifierValue: tableColumn.columnID,
+                updatedProperties: {
+                  format: item?.value,
                 },
               });
             }

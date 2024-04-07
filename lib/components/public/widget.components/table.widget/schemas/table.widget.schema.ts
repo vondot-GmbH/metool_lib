@@ -5,7 +5,7 @@ import {
 
 export interface TableOptions {
   data: string;
-  columns: TableColumn[];
+  columns: TableColumnOptions[];
   emptyStateText: string;
   rowSelectionType: "single" | "multiple" | "none";
   headerStyles?: CSSStyles;
@@ -15,10 +15,10 @@ export interface TableOptions {
   events: WidgetEvent[];
 }
 
-export interface TableColumn {
+export interface TableColumnOptions {
   columnID: string;
   source: string;
   label: string;
-  format?: "string" | "number" | "date";
+  format?: "string" | "image";
   columnStyles?: CSSStyles;
 }
