@@ -288,34 +288,43 @@ export class StateStore {
         true
       );
 
-      const extractedDep = extractDependenciesAndNonDependencies(query);
+      try {
+        const extractedDep = extractDependenciesAndNonDependencies(query);
 
-      const resolvedDependencies = resolveDependencies(
-        extractedDep.dependencies,
-        this.stores.stateStore
-      );
-
-      const resolvedVariables: Record<string, string> = {};
-
-      for (const { resolvedDependency } of resolvedDependencies) {
-        resolvedVariables[resolvedDependency.dependency] =
-          resolvedDependency.resolvedValue;
-      }
-
-      const response = await queryExecutor.executeRestQuery(
-        query,
-        resolvedVariables,
-        this.stores.resourceStore
-      );
-
-      if (response) {
-        this.setStateValue(
-          StateSelector.QUERIES,
-          query.queryID,
-          "data",
-          response
+        const resolvedDependencies = resolveDependencies(
+          extractedDep.dependencies,
+          this.stores.stateStore
         );
-        this.setStateValue(StateSelector.QUERIES, query.queryID, "status", 200);
+
+        const resolvedVariables: Record<string, string> = {};
+
+        for (const { resolvedDependency } of resolvedDependencies) {
+          resolvedVariables[resolvedDependency.dependency] =
+            resolvedDependency.resolvedValue;
+        }
+
+        const response = await queryExecutor.executeRestQuery(
+          query,
+          resolvedVariables,
+          this.stores.resourceStore
+        );
+
+        if (response) {
+          this.setStateValue(
+            StateSelector.QUERIES,
+            query.queryID,
+            "data",
+            response
+          );
+          this.setStateValue(
+            StateSelector.QUERIES,
+            query.queryID,
+            "status",
+            200
+          );
+        }
+      } catch (error) {
+        this.setStateValue(StateSelector.QUERIES, query.queryID, "status", 500);
       }
 
       // process pending subscriptions
