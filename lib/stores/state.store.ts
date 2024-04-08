@@ -325,6 +325,7 @@ export class StateStore {
         }
       } catch (error) {
         this.setStateValue(StateSelector.QUERIES, query.queryID, "status", 500);
+        this.setStateValue(StateSelector.QUERIES, query.queryID, "data", null);
       }
 
       // process pending subscriptions
