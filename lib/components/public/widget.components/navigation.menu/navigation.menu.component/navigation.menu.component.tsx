@@ -2,7 +2,7 @@ import { inject, observer } from "mobx-react";
 import WidgetStore from "../../../../../stores/widget.store";
 import NavigationStore from "../../../../../stores/navigation.store";
 import styles from "./navigation.menu.component.module.scss";
-import StateStore from "../../../../../stores/state.store";
+import StateStore, { StateSelector } from "../../../../../stores/state.store";
 import {
   NavigationMenuItem,
   NavigationMenuOptions,
@@ -10,6 +10,7 @@ import {
 import { useEffect } from "react";
 import { handleWidgetEvent } from "../../../../../globals/helpers/event.helper";
 import { EventType } from "../../../../../globals/enums/widget.enum";
+import classNames from "classnames";
 
 interface NavigationMenuWidgetProps {
   widgetID: string;
@@ -26,6 +27,24 @@ const NavigationMenuWidget = ({
 }: NavigationMenuWidgetProps) => {
   const widgetOptions: NavigationMenuOptions =
     widgetStore?.getAllOptionsForWidget(widgetID);
+
+  const navigationWidgetClassNames = classNames(styles.navigationWidget, {
+    [styles.horizontal]: widgetOptions?.orientation === "horizontal",
+    [styles.vertical]: widgetOptions?.orientation === "vertical",
+  });
+
+  // TODO hardcoded for FIBO
+  const getItemClassNames = (item: NavigationMenuItem) => {
+    return classNames(styles.navigationItem, {
+      [styles.navigationItemActive]: isViewActive(item),
+    });
+  };
+
+  const currentViewID = stateStore?.getStateValue(
+    StateSelector.NAVIGATION,
+    "currentView",
+    "targetID"
+  );
 
   useEffect(() => {
     const analized = widgetStore?.getAnalyzedWidgetOptions(widgetID);
@@ -44,20 +63,24 @@ const NavigationMenuWidget = ({
     });
   };
 
+  const isViewActive = (item: NavigationMenuItem) => {
+    const eventTargetID = item.events?.find(
+      (event) => event.eventType === EventType.ON_CLICK_ITEM
+    )?.actions[0].payload?.targetID;
+
+    return eventTargetID === currentViewID;
+  };
+
   return (
     <div
-      className={`${styles.navigationWidget} ${
-        widgetOptions?.orientation === "horizontal"
-          ? styles.horizontal
-          : styles.vertical
-      }`}
+      className={navigationWidgetClassNames}
       style={{ ...widgetOptions?.navigationMenuItemWrapperStyles }}
     >
       {widgetOptions?.items?.map((item, i) => (
         <button
           key={item.id}
           // TODO Implement the active state
-          className={styles.navigationItemActive + " " + styles.navigationItem}
+          className={getItemClassNames(item)}
           style={{ ...widgetOptions?.items[i]?.naviationMenuItemStyles }}
           onClick={() => handleOnClick(item)}
         >

@@ -8,18 +8,13 @@
   }
 
   .navigationItem {
-    padding: 5px;
+    padding: 4px 2px 2px 2px;
     border: none;
     cursor: pointer;
     background-color: transparent;
     border-bottom: 1.5px solid transparent;
 
-    &:hover {
-      // font-weight: bold;
-    }
-
     &Active {
-      // font-weight: bold;
       border-bottom: 1.5px solid #2bbf8c;
     }
   }
